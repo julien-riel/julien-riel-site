@@ -1,0 +1,33 @@
+{
+  "name": "julien-riel-site",
+  "version": "1.0.0",
+  "description": "Blog sur l'informatique et l'IA - julien-riel.com",
+  "type": "module",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy",
+    "clean": "rm -rf _site"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julien-riel/julien-riel-site.git"
+  },
+  "keywords": [
+    "blog",
+    "eleventy",
+    "vite",
+    "informatique",
+    "ia"
+  ],
+  "author": "Julien Riel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julien-riel/julien-riel-site/issues"
+  },
+  "homepage": "https://github.com/julien-riel/julien-riel-site#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-plugin-vite": "^7.0.0",
+    "vite": "^7.3.0"
+  }
+}

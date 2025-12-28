@@ -9,10 +9,10 @@ Site de blog sur l'informatique et l'IA, construit avec Eleventy + Vite.
 ## Phase 1 : Structure du projet
 
 ### 1.1 Initialisation
-- [ ] Initialiser npm (`package.json`)
-- [ ] Installer Eleventy (`@11ty/eleventy`)
-- [ ] Installer Vite (`vite`)
-- [ ] Configurer l'intégration Eleventy + Vite
+- [x] Initialiser npm (`package.json`)
+- [x] Installer Eleventy (`@11ty/eleventy`)
+- [x] Installer Vite (`vite`)
+- [x] Configurer l'intégration Eleventy + Vite
 
 ### 1.2 Arborescence des dossiers
 ```
@@ -35,9 +35,9 @@ julien-riel-site/
 ```
 
 ### 1.3 Fichiers de configuration
-- [ ] `.eleventy.js` - Configuration Eleventy
-- [ ] `vite.config.js` - Configuration Vite
-- [ ] `.gitignore`
+- [x] `eleventy.config.js` - Configuration Eleventy
+- [x] `vite.config.js` - Configuration Vite
+- [x] `.gitignore`
 
 ---
 

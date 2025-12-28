@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ metadata.language }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if title %}{{ title }} | {% endif %}{{ metadata.title }}</title>
+  <meta name="description" content="{{ description or metadata.description }}">
+  <meta name="author" content="{{ metadata.author.name }}">
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="logo">{{ metadata.title }}</a>
+      <ul>
+        {% for item in navigation %}
+        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer>
+    <p>&copy; {{ metadata.author.name }}</p>
+  </footer>
+
+  <script type="module" src="/assets/js/main.js"></script>
+</body>
+</html>

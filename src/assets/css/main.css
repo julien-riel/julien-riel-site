@@ -1,0 +1,119 @@
+/* Reset et base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #2563eb;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f9fafb;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+
+/* Layout */
+header,
+main,
+footer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Navigation */
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+header nav .logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+header nav ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+header nav a {
+  text-decoration: none;
+  color: var(--color-text-muted);
+}
+
+header nav a:hover {
+  color: var(--color-primary);
+}
+
+/* Hero */
+.hero {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Posts */
+.posts {
+  padding: 2rem 0;
+}
+
+.posts h2 {
+  margin-bottom: 1.5rem;
+}
+
+.post-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-list article h3 {
+  margin-bottom: 0.5rem;
+}
+
+.post-list article h3 a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.post-list article h3 a:hover {
+  color: var(--color-primary);
+}
+
+.post-list time {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* Footer */
+footer {
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+  color: var(--color-text-muted);
+}

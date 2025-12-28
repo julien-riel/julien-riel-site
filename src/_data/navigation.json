@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Accueil",
+    "url": "/"
+  },
+  {
+    "label": "Articles",
+    "url": "/posts/"
+  },
+  {
+    "label": "Tags",
+    "url": "/tags/"
+  }
+]
