@@ -4,8 +4,8 @@
    Colors: Copper/Amber + Teal + Warm Cream
    ========================================================================== */
 
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap');
+/* Google Fonts - loaded via preload in HTML for performance */
+/* font-display: swap ensures text is visible during font load */
 
 /* ==========================================================================
    CSS Custom Properties

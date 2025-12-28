@@ -1,18 +1,27 @@
-<header class="site-header">
-  <nav class="nav-container">
-    <a href="/" class="logo">{{ metadata.title }}</a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
-      <span class="hamburger"></span>
+<header class="site-header" role="banner">
+  <nav class="nav-container" aria-label="Navigation principale">
+    <a href="/" class="logo" aria-label="{{ metadata.title }} - Accueil">{{ metadata.title }}</a>
+    <button
+      class="nav-toggle"
+      aria-label="Ouvrir le menu de navigation"
+      aria-expanded="false"
+      aria-controls="main-nav"
+    >
+      <span class="hamburger" aria-hidden="true"></span>
     </button>
-    <ul class="nav-menu">
+    <ul class="nav-menu" id="main-nav" role="menubar">
       {% for item in navigation %}
-      <li class="nav-item">
-        <a href="{{ item.url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>
+      <li class="nav-item" role="none">
+        <a
+          href="{{ item.url }}"
+          role="menuitem"
+          {% if page.url == item.url %} aria-current="page"{% endif %}
+        >
           {{ item.label }}
         </a>
       </li>
       {% endfor %}
-      <li class="nav-item nav-search">
+      <li class="nav-item nav-search" role="none">
         {% include "components/search.njk" %}
       </li>
     </ul>

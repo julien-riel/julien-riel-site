@@ -1,4 +1,4 @@
-<footer class="site-footer">
+<footer class="site-footer" role="contentinfo">
   <div class="footer-container">
     <div class="footer-content">
       <p class="footer-copyright">
@@ -9,11 +9,13 @@
       </p>
     </div>
     <div class="footer-links">
-      <ul class="footer-nav">
-        {% for item in navigation %}
-        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
-        {% endfor %}
-      </ul>
+      <nav aria-label="Navigation de pied de page">
+        <ul class="footer-nav">
+          {% for item in navigation %}
+          <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
       <div class="footer-social">
         <a href="https://github.com/julien-riel" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">

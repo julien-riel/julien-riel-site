@@ -1,0 +1,24 @@
+---
+permalink: /robots.txt
+eleventyExcludeFromCollections: true
+---
+# robots.txt for {{ metadata.url }}
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: {{ metadata.url }}/sitemap.xml
+
+# Disallow admin/private areas (if any)
+Disallow: /_data/
+Disallow: /_includes/
+
+# Allow all search engine crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /

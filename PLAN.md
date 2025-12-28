@@ -137,23 +137,23 @@ draft: false
 ## Phase 6 : Performance (Lighthouse)
 
 ### 6.1 Optimisations
-- [ ] Minification CSS/JS via Vite
-- [ ] Images optimisées (formats modernes, lazy loading)
-- [ ] Fonts optimisées (preload, font-display)
-- [ ] Critical CSS inline
-- [ ] Code splitting si nécessaire
+- [x] Minification CSS/JS via Vite
+- [x] Images optimisées (formats modernes, lazy loading)
+- [x] Fonts optimisées (preload, font-display)
+- [x] Critical CSS inline
+- [x] Code splitting si nécessaire
 
 ### 6.2 SEO
-- [ ] Meta tags (title, description, og:*)
-- [ ] Sitemap XML
-- [ ] robots.txt
-- [ ] Données structurées (JSON-LD pour articles)
+- [x] Meta tags (title, description, og:*)
+- [x] Sitemap XML
+- [x] robots.txt
+- [x] Données structurées (JSON-LD pour articles)
 
 ### 6.3 Accessibilité
-- [ ] Navigation au clavier
-- [ ] Contrastes suffisants
-- [ ] Labels ARIA
-- [ ] Skip links
+- [x] Navigation au clavier
+- [x] Contrastes suffisants
+- [x] Labels ARIA
+- [x] Skip links
 
 ---
 
@@ -163,7 +163,10 @@ draft: false
 - [ ] Script de build production
 - [ ] Vérification Lighthouse en CI
 
-### 7.2 Hébergement
+
+## Phase 8 : Hébergement
+
+### 8.1 OVH
 - [ ] Configuration pour hébergeur statique (Netlify, Vercel, Cloudflare Pages)
 - [ ] Redirections si nécessaire
 - [ ] Headers de cache

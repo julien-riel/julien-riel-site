@@ -13,12 +13,85 @@
   <meta property="og:type" content="{% if layout == 'post.njk' %}article{% else %}website{% endif %}">
   <meta property="og:url" content="{{ metadata.url }}{{ page.url }}">
   <meta property="og:locale" content="{{ metadata.language }}">
+  <meta property="og:site_name" content="{{ metadata.title }}">
+  {% if image %}
+  <meta property="og:image" content="{{ metadata.url }}{{ image }}">
+  {% endif %}
+
+  {# Twitter Card #}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title or metadata.title }}">
+  <meta name="twitter:description" content="{{ description or metadata.description }}">
+  {% if image %}
+  <meta name="twitter:image" content="{{ metadata.url }}{{ image }}">
+  {% endif %}
 
   {# Canonical URL #}
   <link rel="canonical" href="{{ metadata.url }}{{ page.url }}">
 
+  {# Preconnect to Google Fonts for faster loading #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  {# Preload critical fonts with font-display: swap #}
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap">
+  </noscript>
+
   {# Styles #}
   <link rel="stylesheet" href="/assets/css/main.css">
+
+  {# JSON-LD Structured Data #}
+  {% if layout == 'post.njk' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ title | dump | safe }},
+    "description": {{ (description or "") | dump | safe }},
+    "datePublished": "{{ date | dateFormat('iso') }}",
+    "dateModified": "{{ date | dateFormat('iso') }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ metadata.author.name }}",
+      "url": "{{ metadata.url }}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "{{ metadata.title }}",
+      "url": "{{ metadata.url }}"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ metadata.url }}{{ page.url }}"
+    }
+    {% if tags %},
+    "keywords": {{ tags | dump | safe }}
+    {% endif %}
+  }
+  </script>
+  {% else %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ metadata.title }}",
+    "description": "{{ metadata.description }}",
+    "url": "{{ metadata.url }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ metadata.author.name }}"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ metadata.url }}/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  {% endif %}
 </head>
 <body>
   <a href="#main-content" class="skip-link">Aller au contenu principal</a>

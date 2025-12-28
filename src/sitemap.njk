@@ -1,0 +1,50 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {# Homepage #}
+  <url>
+    <loc>{{ metadata.url }}/</loc>
+    <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  {# Blog posts #}
+  {%- for post in collections.posts %}
+  <url>
+    <loc>{{ metadata.url }}{{ post.url }}</loc>
+    <lastmod>{{ post.date | dateFormat('iso') }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  {%- endfor %}
+
+  {# Tags page #}
+  <url>
+    <loc>{{ metadata.url }}/tags/</loc>
+    <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  {# Individual tag pages #}
+  {%- for tag in collections.tagList %}
+  <url>
+    <loc>{{ metadata.url }}/tags/{{ tag | slugify }}/</loc>
+    <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  {%- endfor %}
+
+  {# Blog index #}
+  <url>
+    <loc>{{ metadata.url }}/posts/</loc>
+    <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

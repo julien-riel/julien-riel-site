@@ -238,6 +238,27 @@ export default function(eleventyConfig) {
     },
   });
 
+  // Transform: Add lazy loading and accessibility to images
+  eleventyConfig.addTransform("lazyImages", function(content) {
+    if (this.page.outputPath && this.page.outputPath.endsWith(".html")) {
+      // Add loading="lazy" and decoding="async" to images without these attributes
+      content = content.replace(
+        /<img(?![^>]*loading=)([^>]*)>/gi,
+        '<img loading="lazy"$1>'
+      );
+      content = content.replace(
+        /<img(?![^>]*decoding=)([^>]*)>/gi,
+        '<img decoding="async"$1>'
+      );
+      // Ensure images have alt text (add empty alt if missing for decorative images)
+      content = content.replace(
+        /<img(?![^>]*alt=)([^>]*)>/gi,
+        '<img alt=""$1>'
+      );
+    }
+    return content;
+  });
+
   // Copy static assets
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
