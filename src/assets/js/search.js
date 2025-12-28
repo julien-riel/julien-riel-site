@@ -3,6 +3,8 @@
  * Provides instant search results with keyboard navigation
  */
 
+import lunr from "lunr";
+
 let searchIndex = null;
 let searchData = null;
 let lunrIndex = null;
@@ -17,10 +19,7 @@ export async function initSearch() {
 
   if (!searchInput || !searchResults) return;
 
-  // Load Lunr.js from CDN
-  await loadLunr();
-
-  // Load the search index
+  // Load the search index (lunr is now bundled)
   await loadSearchIndex();
 
   if (!lunrIndex) {
@@ -67,21 +66,6 @@ export async function initSearch() {
 }
 
 /**
- * Load Lunr.js from CDN
- */
-async function loadLunr() {
-  if (window.lunr) return;
-
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js";
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
-
-/**
  * Load and build the search index
  */
 async function loadSearchIndex() {
@@ -104,7 +88,7 @@ async function loadSearchIndex() {
     }
 
     // Build the Lunr index
-    lunrIndex = window.lunr(function() {
+    lunrIndex = lunr(function() {
       this.ref("id");
       this.field("title", { boost: 10 });
       this.field("description", { boost: 5 });
@@ -112,8 +96,8 @@ async function loadSearchIndex() {
       this.field("content");
 
       // French language support (basic stemming)
-      this.pipeline.remove(window.lunr.stemmer);
-      this.pipeline.remove(window.lunr.stopWordFilter);
+      this.pipeline.remove(lunr.stemmer);
+      this.pipeline.remove(lunr.stopWordFilter);
 
       searchData.forEach((doc) => {
         this.add({

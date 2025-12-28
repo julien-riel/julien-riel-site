@@ -3,18 +3,44 @@
  * Copper Circuit Theme
  */
 
-import { initSearch } from "./search.js";
+/**
+ * Initialize search functionality lazily
+ * Only loads search.js if search input exists on the page
+ */
+async function initSearchLazy() {
+  const searchInput = document.getElementById("search-input");
+  if (!searchInput) return;
+
+  const { initSearch } = await import("./search.js");
+  initSearch();
+}
+
+/**
+ * Schedule a callback to run during idle time
+ * Falls back to setTimeout for browsers without requestIdleCallback
+ * @param {Function} callback - Function to execute
+ * @param {number} timeout - Fallback timeout in ms
+ */
+function scheduleIdle(callback, timeout = 2000) {
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(callback, { timeout });
+  } else {
+    setTimeout(callback, 100);
+  }
+}
 
 /**
  * Initialize Mermaid diagrams
  * Loads Mermaid from CDN and renders all .language-mermaid code blocks
+ * Deferred to run during browser idle time
  */
 async function initMermaid() {
   const mermaidBlocks = document.querySelectorAll("pre.language-mermaid");
   if (mermaidBlocks.length === 0) return;
 
   try {
-    const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    const mermaidImport = await import("mermaid");
+    const mermaid = mermaidImport.default || mermaidImport;
 
     mermaid.initialize({
       startOnLoad: false,
@@ -301,12 +327,19 @@ function initSmoothScroll() {
 
 // Initialize all features when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
+  // Critical path: initialize immediately
   initMobileMenu();
-  initMermaid();
-  initPlantUML();
   initTOCScrollTracking();
   initCodeCopyButtons();
-  initSearch();
   initFadeInAnimations();
   initSmoothScroll();
+
+  // Deferred: load search only if needed, during idle time
+  scheduleIdle(() => initSearchLazy(), 1000);
+
+  // Deferred: load diagram libraries during idle time (non-critical)
+  scheduleIdle(() => {
+    initMermaid();
+    initPlantUML();
+  }, 2000);
 });

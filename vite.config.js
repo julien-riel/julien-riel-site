@@ -54,6 +54,6 @@ export default defineConfig({
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ["lunr"],
+    include: ["lunr", "mermaid"],
   },
 });
