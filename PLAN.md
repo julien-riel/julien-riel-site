@@ -160,8 +160,8 @@ draft: false
 ## Phase 7 : Déploiement
 
 ### 7.1 Build
-- [ ] Script de build production
-- [ ] Vérification Lighthouse en CI
+- [x] Script de build production
+- [x] Vérification Lighthouse en CI
 
 
 ## Phase 8 : Hébergement

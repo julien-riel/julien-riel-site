@@ -51,7 +51,7 @@
   <circle cx="340" cy="100" r="20" fill="url(#nodeGradient)" stroke="#A04A2B" stroke-width="3"/>
 
   <!-- Labels -->
-  <text x="80" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#78716C">Entrée</text>
-  <text x="220" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#78716C">Couches cachées</text>
-  <text x="340" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#78716C">Sortie</text>
+  <text x="80" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#57534E">Entrée</text>
+  <text x="220" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#57534E">Couches cachées</text>
+  <text x="340" y="185" text-anchor="middle" font-family="Outfit, sans-serif" font-size="11" fill="#57534E">Sortie</text>
 </svg>

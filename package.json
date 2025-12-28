@@ -5,8 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "eleventy",
-    "clean": "rm -rf _site"
+    "build": "npm run clean && eleventy",
+    "build:prod": "NODE_ENV=production npm run build",
+    "clean": "rm -rf _site",
+    "preview": "npx serve _site -p 3000",
+    "lint": "echo 'No linter configured'",
+    "test": "npx playwright test",
+    "lighthouse": "npx lhci autorun",
+    "lighthouse:ci": "npm run build:prod && npm run lighthouse"
   },
   "repository": {
     "type": "git",
@@ -29,10 +35,12 @@
     "@11ty/eleventy": "^3.1.2",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@11ty/eleventy-plugin-vite": "^7.0.0",
+    "@lhci/cli": "^0.14.0",
     "@playwright/test": "^1.57.0",
     "lunr": "^2.3.9",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
+    "serve": "^14.2.4",
     "vite": "^7.3.0"
   }
 }

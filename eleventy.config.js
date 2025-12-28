@@ -73,10 +73,13 @@ export default function(eleventyConfig) {
   };
 
   const mdAnchorOptions = {
-    permalink: markdownItAnchor.permalink.ariaHidden({
+    permalink: markdownItAnchor.permalink.linkAfterHeader({
       placement: "after",
       class: "header-anchor",
       symbol: "#",
+      style: "visually-hidden",
+      assistiveText: (title) => `Lien vers la section ${title}`,
+      visuallyHiddenClass: "visually-hidden",
     }),
     level: [2, 3, 4],
     slugify: (s) => {

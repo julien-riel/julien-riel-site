@@ -89,10 +89,19 @@ async function loadSearchIndex() {
     // Get search data from inline script tag
     const searchDataElement = document.getElementById("search-data");
     if (!searchDataElement) {
-      throw new Error("Search data element not found");
+      return;
     }
 
-    searchData = JSON.parse(searchDataElement.textContent);
+    const textContent = searchDataElement.textContent.trim();
+    if (!textContent || textContent === "[]") {
+      return;
+    }
+
+    searchData = JSON.parse(textContent);
+
+    if (!searchData || searchData.length === 0) {
+      return;
+    }
 
     // Build the Lunr index
     lunrIndex = window.lunr(function() {

@@ -33,3 +33,12 @@ npm-debug.log*
 # Tests
 test-results/
 coverage/
+
+# Lighthouse CI
+.lighthouseci/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Windows paths (WSL artifact)
+C:*/
