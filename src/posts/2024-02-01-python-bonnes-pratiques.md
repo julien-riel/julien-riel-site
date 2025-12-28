@@ -5,16 +5,16 @@ tags:
   - python
   - developpement
   - bonnes-pratiques
-description: "Guide des meilleures pratiques pour ecrire du code Python propre, maintenable et performant."
+description: "Guide des meilleures pratiques pour écrire du code Python propre, maintenable et performant."
 ---
 
-Python est un langage versatile, mais ecrire du bon code Python demande de suivre certaines conventions.
+Python est un langage versatile, mais écrire du bon code Python demande de suivre certaines conventions.
 
 ## Structure du projet
 
 ### Organisation des fichiers
 
-Un projet Python bien structure facilite la maintenance :
+Un projet Python bien structuré facilite la maintenance :
 
 ```
 mon-projet/
@@ -53,7 +53,7 @@ dev = [
 
 ### Type hints
 
-Le typage ameliore la lisibilite et permet la detection d'erreurs :
+Le typage améliore la lisibilité et permet la détection d'erreurs :
 
 ```python
 from typing import Optional
@@ -83,11 +83,11 @@ class UserCreate(BaseModel):
     @classmethod
     def age_must_be_positive(cls, v: int) -> int:
         if v < 0:
-            raise ValueError("L'age doit etre positif")
+            raise ValueError("L'âge doit être positif")
         return v
 ```
 
-## Tests automatises
+## Tests automatisés
 
 ### Structure des tests
 
@@ -116,4 +116,4 @@ class TestUser:
 
 ## Conclusion
 
-Ces pratiques vous aideront a ecrire du code Python de qualite professionnelle.
+Ces pratiques vous aideront à écrire du code Python de qualité professionnelle.
