@@ -1,5 +1,6 @@
 /**
  * Main JavaScript for julien-riel.com
+ * Copper Circuit Theme
  */
 
 import { initSearch } from "./search.js";
@@ -17,8 +18,9 @@ async function initMermaid() {
 
     mermaid.initialize({
       startOnLoad: false,
-      theme: "default",
+      theme: "neutral",
       securityLevel: "loose",
+      fontFamily: "Outfit, system-ui, sans-serif",
     });
 
     const renderPromises = [];
@@ -142,11 +144,11 @@ function initTOCScrollTracking() {
 }
 
 /**
- * Initialize mobile menu toggle
+ * Initialize mobile menu toggle with animation
  */
 function initMobileMenu() {
-  const menuButton = document.querySelector(".menu-toggle");
-  const nav = document.querySelector(".site-nav");
+  const menuButton = document.querySelector(".nav-toggle");
+  const nav = document.querySelector(".nav-menu");
 
   if (!menuButton || !nav) return;
 
@@ -154,6 +156,29 @@ function initMobileMenu() {
     const isExpanded = menuButton.getAttribute("aria-expanded") === "true";
     menuButton.setAttribute("aria-expanded", !isExpanded);
     nav.classList.toggle("is-open");
+
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = !isExpanded ? "hidden" : "";
+  });
+
+  // Close menu on escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav.classList.contains("is-open")) {
+      menuButton.setAttribute("aria-expanded", "false");
+      nav.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (nav.classList.contains("is-open") &&
+        !nav.contains(e.target) &&
+        !menuButton.contains(e.target)) {
+      menuButton.setAttribute("aria-expanded", "false");
+      nav.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
   });
 }
 
@@ -172,6 +197,15 @@ function initCodeCopyButtons() {
     const code = pre.querySelector("code");
     if (!code) return;
 
+    // Extract language from class name
+    const languageClass = Array.from(pre.classList).find(c => c.startsWith("language-"));
+    const language = languageClass ? languageClass.replace("language-", "") : "";
+
+    // Set data attribute for language indicator
+    if (language) {
+      pre.setAttribute("data-language", language);
+    }
+
     const button = document.createElement("button");
     button.className = "copy-button";
     button.textContent = "Copier";
@@ -181,17 +215,87 @@ function initCodeCopyButtons() {
     button.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(code.textContent);
-        button.textContent = "Copie!";
+        button.textContent = "Copié !";
+        button.classList.add("copied");
         setTimeout(() => {
           button.textContent = "Copier";
+          button.classList.remove("copied");
         }, 2000);
       } catch (err) {
         console.error("Failed to copy:", err);
+        button.textContent = "Erreur";
+        setTimeout(() => {
+          button.textContent = "Copier";
+        }, 2000);
       }
     });
 
-    pre.style.position = "relative";
     pre.appendChild(button);
+  });
+}
+
+/**
+ * Initialize fade-in animations with Intersection Observer
+ */
+function initFadeInAnimations() {
+  const fadeElements = document.querySelectorAll(".fade-in");
+
+  if (fadeElements.length === 0) return;
+
+  // Check if user prefers reduced motion
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefersReducedMotion) {
+    // Show all elements immediately if reduced motion is preferred
+    fadeElements.forEach((el) => {
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0)";
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = "running";
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    }
+  );
+
+  fadeElements.forEach((el) => {
+    el.style.animationPlayState = "paused";
+    observer.observe(el);
+  });
+}
+
+/**
+ * Initialize smooth scroll for anchor links
+ */
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      if (href === "#") return;
+
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+
+        // Update URL without triggering scroll
+        history.pushState(null, null, href);
+      }
+    });
   });
 }
 
@@ -203,4 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initTOCScrollTracking();
   initCodeCopyButtons();
   initSearch();
+  initFadeInAnimations();
+  initSmoothScroll();
 });

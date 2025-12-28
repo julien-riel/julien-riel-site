@@ -114,23 +114,23 @@ draft: false
 
 ## Phase 5 : Design UI (skill frontend-design)
 
-### 5.1 Thème visuel
-- [ ] Palette de couleurs (tech/moderne)
-- [ ] Typographie (lisibilité code + prose)
-- [ ] Espacement et rythme vertical
+### 5.1 Thème visuel - "Copper Circuit"
+- [x] Palette de couleurs (cuivre/ambre + teal + crème chaud)
+- [x] Typographie (DM Serif Display + Outfit + JetBrains Mono)
+- [x] Espacement et rythme vertical (système de spacing CSS variables)
 
 ### 5.2 Pages à designer
-- [ ] Page d'accueil - Hero + liste des derniers articles
-- [ ] Page article - Layout avec sidebar (TOC + related)
-- [ ] Page tags - Grille de tags
-- [ ] Page résultats recherche
+- [x] Page d'accueil - Hero avec gradient animé + décorations géométriques
+- [x] Page article - Layout avec sidebar TOC sticky + related posts
+- [x] Page tags - Grille de tags avec compteurs
+- [x] Page résultats recherche - Dropdown avec highlighting
 
 ### 5.3 Composants UI
-- [ ] Cards d'articles
-- [ ] Blocs de code avec copie
-- [ ] Diagrammes PlantUML/Mermaid stylisés
-- [ ] Navigation responsive
-- [ ] Footer avec liens
+- [x] Cards d'articles avec hover effects
+- [x] Blocs de code avec copie + indicateur de langage
+- [x] Diagrammes PlantUML/Mermaid stylisés
+- [x] Navigation responsive avec menu hamburger animé
+- [x] Footer avec liens et icônes sociales
 
 ---
 

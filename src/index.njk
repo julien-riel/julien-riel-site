@@ -4,8 +4,12 @@ title: Accueil
 ---
 
 <section class="hero">
-  <h1>Bienvenue sur {{ metadata.title }}</h1>
-  <p>{{ metadata.description }}</p>
+  <div class="hero-decoration hero-decoration--1"></div>
+  <div class="hero-decoration hero-decoration--2"></div>
+  <div class="hero-content">
+    <h1>Bienvenue sur <span class="highlight">{{ metadata.title }}</span></h1>
+    <p>{{ metadata.description }}</p>
+  </div>
 </section>
 
 <section class="posts-section">
@@ -14,7 +18,7 @@ title: Accueil
   {% if postslist.length %}
   <ul class="post-list">
     {% for post in postslist | head(5) %}
-    <li>
+    <li class="fade-in">
       {% include "components/post-card.njk" %}
     </li>
     {% endfor %}
