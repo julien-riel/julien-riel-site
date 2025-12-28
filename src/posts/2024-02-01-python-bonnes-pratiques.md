@@ -10,6 +10,8 @@ description: "Guide des meilleures pratiques pour écrire du code Python propre,
 
 Python est un langage versatile, mais écrire du bon code Python demande de suivre certaines conventions.
 
+![Illustration de code](/assets/images/code-illustration.jpg)
+
 ## Structure du projet
 
 ### Organisation des fichiers

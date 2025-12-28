@@ -50,6 +50,8 @@ clusters = kmeans.fit_predict(data)
 
 Les réseaux de neurones s'inspirent du cerveau humain pour traiter l'information.
 
+![Schéma d'un réseau de neurones](/assets/images/neural-network.svg)
+
 ### Architecture d'un réseau
 
 Voici une représentation simplifiée d'un réseau de neurones :
