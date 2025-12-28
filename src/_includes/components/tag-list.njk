@@ -1,0 +1,16 @@
+{#
+  Tag list component
+  Usage: {% include "components/tag-list.njk" %}
+  Expects: tags array
+#}
+{% if tags %}
+<ul class="tag-list">
+  {% for tag in tags %}
+  {% if tag != "posts" %}
+  <li class="tag-item">
+    <a href="/tags/{{ tag | slugify }}/" class="tag">{{ tag }}</a>
+  </li>
+  {% endif %}
+  {% endfor %}
+</ul>
+{% endif %}

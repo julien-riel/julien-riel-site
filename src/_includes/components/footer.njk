@@ -1,0 +1,19 @@
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <p class="footer-copyright">
+        &copy; {{ "now" | dateFormat("year") }} {{ metadata.author.name }}
+      </p>
+      <p class="footer-description">
+        {{ metadata.description }}
+      </p>
+    </div>
+    <div class="footer-links">
+      <ul class="footer-nav">
+        {% for item in navigation %}
+        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</footer>

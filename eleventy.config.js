@@ -4,10 +4,13 @@ export default function(eleventyConfig) {
   // Filtre pour formater les dates
   eleventyConfig.addFilter("dateFormat", (date, format) => {
     const d = new Date(date);
-    const options = {};
 
     if (format === "iso") {
       return d.toISOString().split("T")[0];
+    }
+
+    if (format === "year") {
+      return d.getFullYear().toString();
     }
 
     if (format === "fr") {
@@ -25,6 +28,18 @@ export default function(eleventyConfig) {
   eleventyConfig.addFilter("head", (array, n) => {
     if (!Array.isArray(array)) return [];
     return array.slice(0, n);
+  });
+
+  // Filtre slugify pour les URLs
+  eleventyConfig.addFilter("slugify", (str) => {
+    if (!str) return "";
+    return str
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
   });
 
   // Plugin Vite pour le bundling des assets

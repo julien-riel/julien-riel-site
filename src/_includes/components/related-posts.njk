@@ -1,0 +1,22 @@
+{#
+  Related posts component
+  Usage: {% include "components/related-posts.njk" %}
+  Expects: relatedPosts array
+#}
+{% if relatedPosts and relatedPosts.length %}
+<aside class="related-posts">
+  <h2 class="related-posts-title">Articles connexes</h2>
+  <ul class="related-posts-list">
+    {% for post in relatedPosts %}
+    <li class="related-post-item">
+      <a href="{{ post.url }}">
+        <span class="related-post-title">{{ post.data.title }}</span>
+        <time class="related-post-date" datetime="{{ post.date | dateFormat('iso') }}">
+          {{ post.date | dateFormat('fr') }}
+        </time>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+{% endif %}

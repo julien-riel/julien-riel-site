@@ -1,0 +1,31 @@
+{#
+  Post card component
+  Usage: {% include "components/post-card.njk" %}
+  Expects: post object with data.title, data.description, data.tags, url, date
+#}
+<article class="post-card">
+  <header class="post-card-header">
+    <h3 class="post-card-title">
+      <a href="{{ post.url }}">{{ post.data.title }}</a>
+    </h3>
+    <time class="post-card-date" datetime="{{ post.date | dateFormat('iso') }}">
+      {{ post.date | dateFormat('fr') }}
+    </time>
+  </header>
+
+  {% if post.data.description %}
+  <p class="post-card-description">{{ post.data.description }}</p>
+  {% endif %}
+
+  {% if post.data.tags %}
+  <footer class="post-card-footer">
+    <ul class="post-card-tags">
+      {% for tag in post.data.tags %}
+      {% if tag != "posts" %}
+      <li><a href="/tags/{{ tag | slugify }}/" class="tag">{{ tag }}</a></li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </footer>
+  {% endif %}
+</article>

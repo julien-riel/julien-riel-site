@@ -6,27 +6,30 @@
   <title>{% if title %}{{ title }} | {% endif %}{{ metadata.title }}</title>
   <meta name="description" content="{{ description or metadata.description }}">
   <meta name="author" content="{{ metadata.author.name }}">
+
+  {# Open Graph #}
+  <meta property="og:title" content="{{ title or metadata.title }}">
+  <meta property="og:description" content="{{ description or metadata.description }}">
+  <meta property="og:type" content="{% if layout == 'post.njk' %}article{% else %}website{% endif %}">
+  <meta property="og:url" content="{{ metadata.url }}{{ page.url }}">
+  <meta property="og:locale" content="{{ metadata.language }}">
+
+  {# Canonical URL #}
+  <link rel="canonical" href="{{ metadata.url }}{{ page.url }}">
+
+  {# Styles #}
   <link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="/" class="logo">{{ metadata.title }}</a>
-      <ul>
-        {% for item in navigation %}
-        <li><a href="{{ item.url }}">{{ item.label }}</a></li>
-        {% endfor %}
-      </ul>
-    </nav>
-  </header>
+  <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-  <main>
+  {% include "components/header.njk" %}
+
+  <main id="main-content">
     {{ content | safe }}
   </main>
 
-  <footer>
-    <p>&copy; {{ metadata.author.name }}</p>
-  </footer>
+  {% include "components/footer.njk" %}
 
   <script type="module" src="/assets/js/main.js"></script>
 </body>

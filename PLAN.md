@@ -44,18 +44,18 @@ julien-riel-site/
 ## Phase 2 : Layouts et templates
 
 ### 2.1 Layout de base
-- [ ] `_includes/layouts/base.njk` - HTML shell, meta tags, liens CSS/JS
-- [ ] `_includes/layouts/post.njk` - Template article (hérite de base)
-- [ ] `_includes/layouts/page.njk` - Template page simple
+- [x] `_includes/layouts/base.njk` - HTML shell, meta tags, liens CSS/JS
+- [x] `_includes/layouts/post.njk` - Template article (hérite de base)
+- [x] `_includes/layouts/page.njk` - Template page simple
 
 ### 2.2 Composants
-- [ ] `_includes/components/header.njk` - Navigation principale
-- [ ] `_includes/components/footer.njk` - Pied de page
-- [ ] `_includes/components/post-card.njk` - Carte de prévisualisation article
-- [ ] `_includes/components/tag-list.njk` - Liste de tags cliquables
-- [ ] `_includes/components/toc.njk` - Table des matières
-- [ ] `_includes/components/related-posts.njk` - Articles connexes
-- [ ] `_includes/components/search.njk` - Barre de recherche
+- [x] `_includes/components/header.njk` - Navigation principale
+- [x] `_includes/components/footer.njk` - Pied de page
+- [x] `_includes/components/post-card.njk` - Carte de prévisualisation article
+- [x] `_includes/components/tag-list.njk` - Liste de tags cliquables
+- [x] `_includes/components/toc.njk` - Table des matières
+- [x] `_includes/components/related-posts.njk` - Articles connexes
+- [x] `_includes/components/search.njk` - Barre de recherche
 
 ---
 

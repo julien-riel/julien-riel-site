@@ -1,0 +1,36 @@
+---
+layout: base.njk
+---
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ title }}</h1>
+    <div class="post-meta">
+      <time class="post-date" datetime="{{ date | dateFormat('iso') }}">
+        {{ date | dateFormat('fr') }}
+      </time>
+      {% if tags %}
+      <div class="post-tags">
+        {% set tagsToShow = tags %}
+        {% include "components/tag-list.njk" %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="post-layout">
+    {# Sidebar with TOC #}
+    <aside class="post-sidebar">
+      {% include "components/toc.njk" %}
+    </aside>
+
+    {# Main content #}
+    <div class="post-content">
+      {{ content | safe }}
+    </div>
+  </div>
+
+  <footer class="post-footer">
+    {# Related posts #}
+    {% include "components/related-posts.njk" %}
+  </footer>
+</article>
