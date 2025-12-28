@@ -31,6 +31,22 @@
 
   {% include "components/footer.njk" %}
 
+  {# Inline search data for Lunr.js #}
+  <script id="search-data" type="application/json">
+  [
+  {%- for post in collections.posts %}
+    {
+      "id": "{{ post.url }}",
+      "url": "{{ post.url }}",
+      "title": {{ post.data.title | dump | safe }},
+      "description": {{ (post.data.description or "") | dump | safe }},
+      "date": "{{ post.date | dateFormat('iso') }}",
+      "tags": {{ (post.data.tags | default([])) | dump | safe }},
+      "content": {{ post.templateContent | striptags | dump | safe }}
+    }{% if not loop.last %},{% endif %}
+  {%- endfor %}
+  ]
+  </script>
   <script type="module" src="/assets/js/main.js"></script>
 </body>
 </html>

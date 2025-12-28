@@ -1,4 +1,7 @@
 # Site julien-riel.com
+```
+claude mcp add playwright npx '@playwright/mcp@latest'
+```
 
 Fait avec eleventy.dev 
 

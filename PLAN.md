@@ -62,9 +62,9 @@ julien-riel-site/
 ## Phase 3 : Système de contenu
 
 ### 3.1 Configuration des collections
-- [ ] Collection `posts` - Tous les articles triés par date
-- [ ] Collection `tagList` - Liste de tous les tags uniques
-- [ ] Pages générées par tag (`/tags/{tag}/`)
+- [x] Collection `posts` - Tous les articles triés par date
+- [x] Collection `tagList` - Liste de tous les tags uniques
+- [x] Pages générées par tag (`/tags/{tag}/`)
 
 ### 3.2 Frontmatter des articles
 ```yaml
@@ -80,35 +80,35 @@ draft: false
 ```
 
 ### 3.3 Markdown avancé
-- [ ] Syntax highlighting avec Prism.js ou Shiki
-- [ ] Support PlantUML (rendu côté client ou build)
-- [ ] Support Mermaid (rendu côté client)
-- [ ] Génération automatique de la table des matières
+- [x] Syntax highlighting avec Prism.js ou Shiki
+- [x] Support PlantUML (rendu côté client ou build)
+- [x] Support Mermaid (rendu côté client)
+- [x] Génération automatique de la table des matières
 
 ---
 
 ## Phase 4 : Fonctionnalités
 
 ### 4.1 Recherche (Lunr.js)
-- [ ] Générer un index JSON des articles au build
-- [ ] Intégrer Lunr.js côté client
-- [ ] Interface de recherche avec résultats instantanés
-- [ ] Indexer : titre, contenu, tags
+- [x] Générer un index JSON des articles au build
+- [x] Intégrer Lunr.js côté client
+- [x] Interface de recherche avec résultats instantanés
+- [x] Indexer : titre, contenu, tags
 
 ### 4.2 Table des matières
-- [ ] Parser automatiquement les headings (h2, h3)
-- [ ] Générer une navigation sticky sur la page article
-- [ ] Highlight de la section active au scroll
+- [x] Parser automatiquement les headings (h2, h3)
+- [x] Générer une navigation sticky sur la page article
+- [x] Highlight de la section active au scroll
 
 ### 4.3 Articles connexes
-- [ ] Algorithme basé sur les tags en commun
-- [ ] Afficher 3-5 articles similaires
-- [ ] Exclure l'article courant
+- [x] Algorithme basé sur les tags en commun
+- [x] Afficher 3-5 articles similaires
+- [x] Exclure l'article courant
 
 ### 4.4 Système de tags
-- [ ] Page `/tags/` listant tous les tags avec compteur
-- [ ] Pages individuelles `/tags/{tag}/` avec articles filtrés
-- [ ] Tags cliquables sur chaque article
+- [x] Page `/tags/` listant tous les tags avec compteur
+- [x] Pages individuelles `/tags/{tag}/` avec articles filtrés
+- [x] Tags cliquables sur chaque article
 
 ---
 

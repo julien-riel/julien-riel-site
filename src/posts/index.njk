@@ -1,0 +1,25 @@
+---
+layout: base.njk
+title: Tous les articles
+description: Liste de tous les articles du blog
+---
+
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  {% set postslist = collections.posts %}
+  {% if postslist.length %}
+  <ul class="post-list">
+    {% for post in postslist %}
+    <li>
+      {% include "components/post-card.njk" %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="no-posts">Aucun article pour le moment.</p>
+  {% endif %}
+</section>

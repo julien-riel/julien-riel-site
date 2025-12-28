@@ -1,12 +1,16 @@
 ---
 layout: base.njk
 ---
+{# Generate TOC and related posts #}
+{% set toc = content | toc %}
+{% set relatedPosts = page.url | relatedPosts(tags, collections) %}
+
 <article class="post">
   <header class="post-header">
     <h1 class="post-title">{{ title }}</h1>
     <div class="post-meta">
       <time class="post-date" datetime="{{ date | dateFormat('iso') }}">
-        {{ date | dateFormat('fr') }}
+        {{ date | dateFormat('long') }}
       </time>
       {% if tags %}
       <div class="post-tags">
@@ -19,9 +23,11 @@ layout: base.njk
 
   <div class="post-layout">
     {# Sidebar with TOC #}
+    {% if toc.length > 0 %}
     <aside class="post-sidebar">
       {% include "components/toc.njk" %}
     </aside>
+    {% endif %}
 
     {# Main content #}
     <div class="post-content">
@@ -29,8 +35,10 @@ layout: base.njk
     </div>
   </div>
 
+  {% if relatedPosts.length > 0 %}
   <footer class="post-footer">
     {# Related posts #}
     {% include "components/related-posts.njk" %}
   </footer>
+  {% endif %}
 </article>

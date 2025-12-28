@@ -1,0 +1,34 @@
+---
+pagination:
+  data: collections.tagList
+  size: 1
+  alias: tag
+  addAllPagesToCollections: true
+permalink: /tags/{{ tag | slugify }}/
+layout: page
+eleventyComputed:
+  title: "{{ tag }}"
+  description: "Articles sur le thème : {{ tag }}"
+---
+
+{% set taggedPosts = collections.posts | filterByTag(tag) %}
+
+<div class="tag-page">
+  <p class="tag-intro">
+    {{ taggedPosts.length }} article{% if taggedPosts.length > 1 %}s{% endif %} sur ce sujet
+  </p>
+
+  {% if taggedPosts.length > 0 %}
+    <ul class="post-list">
+      {% for post in taggedPosts %}
+        {% include "components/post-card.njk" %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="no-posts">Aucun article avec ce tag pour le moment.</p>
+  {% endif %}
+
+  <p class="back-link">
+    <a href="/tags/">Voir tous les tags</a>
+  </p>
+</div>

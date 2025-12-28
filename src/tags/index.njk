@@ -1,0 +1,23 @@
+---
+layout: page
+title: Tags
+description: Tous les sujets abordés sur le blog
+permalink: /tags/
+---
+
+<div class="tags-page">
+  {% if collections.tagList.length > 0 %}
+    <ul class="tags-grid">
+      {% for tag in collections.tagList %}
+        <li class="tag-item">
+          <a href="/tags/{{ tag | slugify }}/" class="tag-link">
+            <span class="tag-name">{{ tag }}</span>
+            <span class="tag-count">{{ collections.posts | postCountByTag(tag) }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="no-tags">Aucun tag disponible pour le moment.</p>
+  {% endif %}
+</div>
