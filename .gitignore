@@ -40,5 +40,5 @@ coverage/
 # Playwright MCP
 .playwright-mcp/
 
-# Windows paths (WSL artifact)
-C:*/
+# eleventy vite
+.11ty-vite/
