@@ -9,15 +9,18 @@ import markdownItAnchor from "markdown-it-anchor";
  * @returns {Array} - TOC array with nested structure
  */
 function generateTOC(content) {
-  const headingRegex = /<h([2-3])[^>]*id="([^"]*)"[^>]*>([^<]*)<\/h[2-3]>/gi;
+  const headingRegex = /<h([2-3])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h[2-3]>/gi;
   const toc = [];
   let match;
 
   while ((match = headingRegex.exec(content)) !== null) {
     const level = parseInt(match[1], 10);
     const id = match[2];
-    // Remove anchor link text if present
-    const text = match[3].replace(/#$/, "").trim();
+    // Strip HTML tags and anchor link text
+    const text = match[3]
+      .replace(/<[^>]*>/g, "")
+      .replace(/#$/, "")
+      .trim();
 
     if (level === 2) {
       toc.push({ level, id, text, children: [] });
@@ -127,7 +130,7 @@ export default function(eleventyConfig) {
 
   // Filter for formatting dates
   eleventyConfig.addFilter("dateFormat", (date, format) => {
-    const d = new Date(date);
+    const d = date === "now" ? new Date() : new Date(date);
 
     if (format === "iso") {
       return d.toISOString().split("T")[0];
