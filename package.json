@@ -33,6 +33,7 @@
   "homepage": "https://github.com/julien-riel/julien-riel-site#readme",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-img": "^6.0.4",
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "@11ty/eleventy-plugin-vite": "^7.0.0",
     "@lhci/cli": "^0.14.0",
