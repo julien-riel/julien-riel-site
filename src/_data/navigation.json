@@ -8,6 +8,10 @@
     "url": "/posts/"
   },
   {
+    "label": "Mes sites",
+    "url": "/sites/"
+  },
+  {
     "label": "Tags",
     "url": "/tags/"
   }

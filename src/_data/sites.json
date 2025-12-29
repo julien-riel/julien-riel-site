@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Maplibre Animated Shaders",
+    "url": "https://maplibre-animated-shaders.julien-riel.com",
+    "description": "Une collection de shaders animés pour MapLibre GL JS"
+  },
+  {
+    "name": "Zombie Hunter",
+    "url": "https://zombie-hunter.julien-riel.com",
+    "description": "Un jeu de chasse aux zombies top-down en JavaScript"
+  }
+]
