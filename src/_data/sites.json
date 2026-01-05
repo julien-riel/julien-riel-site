@@ -1,12 +1,17 @@
 [
   {
-    "name": "Maplibre Animated Shaders",
+    "name": "Maplibre Animated Shaders - Version Béta",
     "url": "https://maplibre-animated-shaders.julien-riel.com",
     "description": "Une collection de shaders animés pour MapLibre GL JS"
   },
   {
-    "name": "Zombie Hunter",
+    "name": "Zombie Hunter - En construction",
     "url": "https://zombie-hunter.julien-riel.com",
     "description": "Un jeu de chasse aux zombies top-down en JavaScript"
+  },
+  {
+    "name": "Recettes",
+    "url": "https://recettes.julien-riel.com",
+    "description": "Un planificateur de mes recettes de cuisine préférées"
   }
 ]
