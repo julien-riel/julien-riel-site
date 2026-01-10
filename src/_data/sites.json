@@ -13,5 +13,10 @@
     "name": "Recettes",
     "url": "https://recettes.julien-riel.com",
     "description": "Un planificateur de mes recettes de cuisine préférées"
+  },
+  {
+    "name": "Doucement",
+    "url": "https://doucement.julien-riel.com",
+    "description": "Une application qui vous aide à progresser doucement, sans culpabilité, un jour à la fois."
   }
 ]
