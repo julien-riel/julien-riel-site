@@ -4,8 +4,8 @@ date: 2026-03-05
 tags:
   - claude
   - ia
-  - développement
-  - productivité
+  - developpement
+  - productivite
 description: "Guide complet pour créer et coordonner plusieurs skills Claude Code afin d'optimiser votre workflow de développement avec l'IA."
 ---
 
