@@ -8,7 +8,7 @@ permalink: /cross-reference/
 <section class="crossref">
   <header class="crossref-header">
     <h1 class="crossref-title">Essays × Case Studies</h1>
-    <p class="crossref-intro">The essays aren't abstract principles — they're patterns visible in real products. This guide maps specific moments, decisions, and architectures from the <a href="/case-studies/whoop-coach/">WHOOP Coach</a> and <a href="/case-studies/cursor/">Cursor</a> case studies back to the essays they illustrate.</p>
+    <p class="crossref-intro">Every principle in the essays shows up in production. Below, each essay is paired with the specific architecture decisions, metrics, and failure modes from <a href="/case-studies/whoop-coach/">WHOOP Coach</a> and <a href="/case-studies/cursor/">Cursor</a> that illustrate it — with links to deeper technical coverage where available.</p>
   </header>
 
   <div class="crossref-legend">
@@ -31,6 +31,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--cursor">Cursor</span>
           <p>The three-layer architecture is three different answers to the context problem. The context engine indexes your codebase with Tree-sitter and embeddings. Priompt manages what fits in the token budget. Speculative edits use the file you're editing as implicit context.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/rag/">RAG: What It Is and How to Actually Use It</a></p>
       </div>
     </div>
 
@@ -65,6 +66,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--cursor">Cursor</span>
           <p>Bugbot's evolution: it started as a pipeline (eight parallel deterministic passes with majority voting) — essentially a function. Then it was replaced by a single agent with tool use. Resolution rate climbed from 52% to 70%+. Start with functions, graduate to agents when the model and evals justify it.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/multi-agent-architectures/">Multi-Agent Architectures: When One Agent Isn't Enough</a></p>
       </div>
     </div>
 
@@ -134,6 +136,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
           <p>Inline tools embed data retrieval directly in the system prompt via markup language. The prompt specifies <code>{% raw %}{{@tool1}}{% endraw %}</code> and the data is injected before generation begins. The system prompt is a contract that guarantees what data the model will have.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/advanced-prompt-engineering/">Advanced Prompt Engineering: Beyond the Basics</a></p>
       </div>
     </div>
 
@@ -181,12 +184,13 @@ permalink: /cross-reference/
       <div class="crossref-connections">
         <div class="crossref-connection crossref-connection--whoop">
           <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
-          <p>The strongest connection to any essay. WHOOP's blog post "The Crux of Every AI System: Evaluations" is essentially a 3,000-word elaboration of this thesis. They gate every production deployment on eval results. The Memory example — where the team thought they were improving but the data showed otherwise — is the canonical illustration.</p>
+          <p>The strongest connection. WHOOP's blog post "The Crux of Every AI System: Evaluations" is a 3,000-word elaboration of this thesis. They gate every production deployment on eval results. The Memory example — where the team thought they were improving but the data showed otherwise — is the canonical illustration.</p>
         </div>
         <div class="crossref-connection crossref-connection--cursor">
           <span class="crossref-badge crossref-badge--cursor">Cursor</span>
           <p>Tab RL <em>is</em> a continuous evaluation. Every accepted or rejected suggestion is an eval signal. The model retrains multiple times per day. Evals aren't a gate before deployment — they're the deployment mechanism itself.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/evals/">Evals: How to Test Systems That Don't Have Right Answers</a></p>
       </div>
     </div>
 
@@ -269,6 +273,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
           <p>Inline tools pre-populate the context window with relevant data before generation. Memory nuggets are filtered by date — only 90 days of context — to avoid wasting the budget on stale information.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/advanced-prompt-engineering/">Advanced Prompt Engineering</a> · <a href="/articles/rag/">RAG</a></p>
       </div>
     </div>
 
@@ -312,6 +317,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
           <p>500+ agents across the app. The evaluation framework exists precisely because failures multiply — a regression in the Memory agent could corrupt the context for every other agent that reads memory nuggets.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/multi-agent-architectures/">Multi-Agent Architectures: When One Agent Isn't Enough</a></p>
       </div>
     </div>
 
@@ -340,6 +346,7 @@ permalink: /cross-reference/
           <span class="crossref-badge crossref-badge--cursor">Cursor</span>
           <p>Different models for different tasks — a custom Tab model, Llama-70B for code application, frontier models for reasoning, Composer for agentic tasks. Each model is a different collaborator with different strengths.</p>
         </div>
+        <p class="crossref-deeper">Go deeper: <a href="/articles/fine-tuning-vs-rag/">Fine-Tuning vs. RAG: When to Teach the Model and When to Show It the Answer</a></p>
       </div>
     </div>
   </div>
