@@ -687,6 +687,40 @@ main {
 }
 
 /* ==========================================================================
+   Case Studies Section (Homepage)
+   ========================================================================== */
+
+.case-studies-section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+}
+
+.case-studies-section > h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.case-studies-section > h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-border), transparent);
+}
+
+.case-studies-intro {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+  font-size: 1.05rem;
+}
+
+/* ==========================================================================
    Post Card Component
    ========================================================================== */
 

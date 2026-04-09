@@ -1,0 +1,27 @@
+---
+layout: base.njk
+title: Case Studies
+description: Analyses détaillées de systèmes agentiques en production
+permalink: /case-studies/
+eleventyExcludeFromCollections: true
+---
+
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  {% set caselist = collections["case-studies"] %}
+  {% if caselist.length %}
+  <ul class="post-list">
+    {% for post in caselist | reverse %}
+    <li>
+      {% include "components/post-card.njk" %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="no-posts">Aucune case study pour le moment.</p>
+  {% endif %}
+</section>
