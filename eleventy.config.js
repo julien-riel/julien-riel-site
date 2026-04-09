@@ -159,14 +159,16 @@ export default function(eleventyConfig) {
       .sort((a, b) => b.date - a.date);
   });
 
-  // Collection: list of all unique tags
+  // Collection: list of all unique tags (excluding structural collection tags)
+  const collectionTags = new Set(["posts", "articles", "case-studies"]);
+
   eleventyConfig.addCollection("tagList", function(collectionApi) {
     const tagSet = new Set();
 
     collectionApi.getAll().forEach((item) => {
       if (item.data.tags) {
         item.data.tags.forEach((tag) => {
-          if (tag !== "posts") {
+          if (!collectionTags.has(tag)) {
             tagSet.add(tag);
           }
         });
