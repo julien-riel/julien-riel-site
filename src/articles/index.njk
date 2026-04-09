@@ -1,8 +1,9 @@
 ---
 layout: base.njk
-title: Essays
-description: 97 Things Every Agentic Programmer Should Know
-permalink: /posts/
+title: Technical Articles
+description: Deep dives into agentic system design, architecture patterns, and applied AI engineering.
+permalink: /articles/
+eleventyExcludeFromCollections: true
 ---
 
 <section class="page">
@@ -11,10 +12,10 @@ permalink: /posts/
     <p class="page-description">{{ description }}</p>
   </header>
 
-  {% set postslist = collections.posts %}
-  {% if postslist.length %}
+  {% set articlelist = collections["articles"] %}
+  {% if articlelist.length %}
   <ul class="post-list">
-    {% for post in postslist %}
+    {% for post in articlelist | reverse %}
     <li>
       {% include "components/post-card.njk" %}
     </li>

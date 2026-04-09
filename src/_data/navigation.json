@@ -4,8 +4,12 @@
     "url": "/"
   },
   {
-    "label": "Articles",
+    "label": "Essays",
     "url": "/posts/"
+  },
+  {
+    "label": "Articles",
+    "url": "/articles/"
   },
   {
     "label": "Case Studies",
