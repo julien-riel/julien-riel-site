@@ -7,23 +7,43 @@ title: Accueil
   <div class="hero-decoration hero-decoration--1"></div>
   <div class="hero-decoration hero-decoration--2"></div>
   <div class="hero-content">
-    <h1>Bienvenue sur <span class="highlight">{{ metadata.title }}</span></h1>
-    <p>{{ metadata.description }}</p>
+    <h1><span class="highlight">97 Things</span> Every Agentic Programmer Should Know</h1>
+    <p>Short essays on building, using, and thinking clearly about AI agents.</p>
   </div>
 </section>
 
-<section class="posts-section">
-  <h2>Derniers articles</h2>
-  {% set postslist = collections.posts | reverse %}
-  {% if postslist.length %}
-  <ul class="post-list">
-    {% for post in postslist | head(5) %}
-    <li class="fade-in">
-      {% include "components/post-card.njk" %}
-    </li>
+<section class="book-intro">
+  <div class="book-intro-content">
+    <p>Agents are everywhere now. They write code, answer customers, process documents, make decisions. The developers building these systems — and the developers using them every day — are figuring it out as they go. Some lessons come from experience. Others come from production failures that could have been avoided.</p>
+    <p>This collection is 97 of those lessons. Each essay stands alone. No dependencies between them, no required reading order. Pick the one that matches where you are right now and start there.</p>
+  </div>
+</section>
+
+<section class="parts-section">
+  <h2>The Essays</h2>
+
+  {% set partGroups = [
+    { tag: "working-with-agents", title: "Part 1 — Working with Agents", desc: "Mental models, probabilistic systems, context, debugging, and human oversight." },
+    { tag: "prompting-as-engineering", title: "Part 2 — Prompting as Engineering", desc: "Versioning, examples, negative constraints, system prompts as contracts." },
+    { tag: "building-agentic-systems", title: "Part 3 — Building Agentic Systems", desc: "Observability, evals, tool design, state, retries, cost, and kill switches." },
+    { tag: "agents-in-the-real-world", title: "Part 4 — Agents in the Real World", desc: "Users, latency, security, prompt injection, scope, and multi-agent systems." },
+    { tag: "mindset", title: "Part 5 — Mindset", desc: "Expertise, writing, uncertainty, responsibility, and thinking clearly." },
+    { tag: "developer-as-user", title: "Part 6 — The Developer as User", desc: "Using AI coding assistants: context, architecture, large projects, and control." }
+  ] %}
+
+  <div class="parts-grid">
+    {% for part in partGroups %}
+    <div class="part-card">
+      <h3 class="part-card-title">{{ part.title }}</h3>
+      <p class="part-card-desc">{{ part.desc }}</p>
+      <ul class="part-card-articles">
+        {% for post in collections.posts %}
+          {% if post.data.tags and (part.tag in post.data.tags) %}
+          <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
     {% endfor %}
-  </ul>
-  {% else %}
-  <p class="no-posts">Aucun article pour le moment.</p>
-  {% endif %}
+  </div>
 </section>

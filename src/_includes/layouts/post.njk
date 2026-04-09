@@ -21,7 +21,7 @@ layout: base.njk
     </div>
   </header>
 
-  <div class="post-layout">
+  <div class="post-layout{% if toc.length == 0 %} post-layout--no-sidebar{% endif %}">
     {# Sidebar with TOC #}
     {% if toc.length > 0 %}
     <aside class="post-sidebar">
