@@ -1,0 +1,457 @@
+---
+layout: base.njk
+title: "Essays × Case Studies"
+description: "How the essays connect to real-world systems — WHOOP Coach and Cursor mapped to the principles they illustrate."
+permalink: /cross-reference/
+---
+
+<section class="crossref">
+  <header class="crossref-header">
+    <h1 class="crossref-title">Essays × Case Studies</h1>
+    <p class="crossref-intro">The essays aren't abstract principles — they're patterns visible in real products. This guide maps specific moments, decisions, and architectures from the <a href="/case-studies/whoop-coach/">WHOOP Coach</a> and <a href="/case-studies/cursor/">Cursor</a> case studies back to the essays they illustrate.</p>
+  </header>
+
+  <div class="crossref-legend">
+    <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+    <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+  </div>
+
+  {# Part 1 #}
+  <div class="crossref-part">
+    <h2>Part 1 — Working with Agents</h2>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/03-your-agent-is-only-as-good-as-its-context/">#3. Your Agent Is Only as Good as Its Context</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The entire value proposition rests on context. Thousands of biometric data points — heart rate variability, sleep stages, strain scores — are injected before the LLM generates a single word. Without this context, it's a generic health chatbot. With it, it knows your body better than you do.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>The three-layer architecture is three different answers to the context problem. The context engine indexes your codebase with Tree-sitter and embeddings. Priompt manages what fits in the token budget. Speculative edits use the file you're editing as implicit context.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/05-trust-the-output-not-the-reasoning/">#5. Trust the Output, Not the Reasoning</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Tab RL is the purest implementation. Cursor doesn't evaluate whether the model's internal reasoning is correct — they measure whether users accept or reject suggestions. The reward is +0.75 for accepted, -0.25 for rejected, 0 for silence. The output is the signal. The reasoning is invisible and irrelevant.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/07-the-human-in-the-loop-is-a-feature-not-a-weakness/">#7. The Human in the Loop Is a Feature, Not a Weakness</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Coach never makes decisions for the user. It recommends, explains, contextualizes — but the user decides whether to train harder, sleep more, or adjust their routine. The human is the decision-maker; the agent is the advisor.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>The Tab model knows when to stay silent. The RL reward structure explicitly encodes that showing nothing is better than showing something wrong. The human decides when to accept. The agent decides when to offer.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/08-know-when-to-use-an-agent-and-when-to-use-a-function/">#8. Know When to Use an Agent and When to Use a Function</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Bugbot's evolution: it started as a pipeline (eight parallel deterministic passes with majority voting) — essentially a function. Then it was replaced by a single agent with tool use. Resolution rate climbed from 52% to 70%+. Start with functions, graduate to agents when the model and evals justify it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/10-your-agent-has-no-memory-unless-you-give-it-one/">#10. Your Agent Has No Memory Unless You Give It One</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>WHOOP built an explicit Memory feature — the agent decides on every interaction whether something is worth remembering and stores "nuggets" with start and end dates. Before launch, evals revealed the agent was saving memories on 99% of interactions with almost no expiration dates. Memory had to be engineered, tested, and constrained.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/11-give-your-agent-a-role-not-just-a-task/">#11. Give Your Agent a Role, Not Just a Task</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>WHOOP Coach has a narrow, well-defined role: health and performance coach grounded in biometric data. The 500+ agents deployed across the app each have their own defined role via AI Studio.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/14-review-agent-output-like-you-review-a-juniors-pull-request/">#14. Review Agent Output Like You Review a Junior's Pull Request</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Bugbot is literally an automated code reviewer — over 2 million PRs per month. But the design acknowledges that the agent's reviews need oversight — the system flags potential bugs for human review rather than auto-fixing them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Part 2 #}
+  <div class="crossref-part">
+    <h2>Part 2 — Prompting as Engineering</h2>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/16-prompts-drift-version-them-like-code/">#16. Prompts Drift — Version Them Like Code</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>AI Studio tracks every iteration of every agent. After six months, the team had created and tested over 2,500 iterations across 41 live agents. Each iteration is a prompt version with built-in diff, approval, and deployment flows.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/17-examples-outperform-instructions/">#17. Examples Outperform Instructions</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The evaluation framework uses synthetic "Personas" — reproducible member profiles with specific data characteristics. These are structured examples that test whether the agent responds correctly to concrete scenarios, not abstract instructions.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/19-system-prompts-are-contracts/">#19. System Prompts Are Contracts</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Priompt makes system prompts literally contractual. Each element has a priority score, and when the token budget is exceeded, lower-priority elements are dropped deterministically. The prompt is a structured allocation of context with enforced constraints.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Inline tools embed data retrieval directly in the system prompt via markup language. The prompt specifies <code>{% raw %}{{@tool1}}{% endraw %}</code> and the data is injected before generation begins. The system prompt is a contract that guarantees what data the model will have.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/22-chain-of-thought-is-a-debugging-tool-not-just-a-performance-trick/">#22. Chain of Thought Is a Debugging Tool, Not Just a Performance Trick</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>When Cursor evaluated GPT-5, the <code>minimal</code> reasoning mode actually underperformed GPT-4.1 for chat. Different reasoning depths suit different tasks — chain of thought helps complex reasoning but hurts low-latency chat.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/25-learn-to-recognize-hallucination-patterns-in-your-domain/">#25. Learn to Recognize Hallucination Patterns in Your Domain</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The "Data Driven" metric measures how often responses incorporate actual individualized data rather than generic advice. When they migrated to GPT-5.1, this metric jumped from 42.6% to 56.6% — the old model was hallucinating generic health advice over half the time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Part 3 #}
+  <div class="crossref-part">
+    <h2>Part 3 — Building Agentic Systems</h2>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/26-design-for-observability-before-you-design-for-capability/">#26. Design for Observability Before You Design for Capability</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The evaluation framework was built because manual dogfooding couldn't scale to 500+ agents. Every agent has measurable metrics, trace-level details, and real-time results. The Memory agent's regression — where a "better" version was measurably worse — was caught in minutes.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Tab RL's monitoring caught Composer learning to game the reward function by asking clarifying questions instead of writing risky code. Without observability into reward dynamics, this reward hacking would have degraded the product silently.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/27-evals-are-your-test-suite/">#27. Evals Are Your Test Suite</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The strongest connection to any essay. WHOOP's blog post "The Crux of Every AI System: Evaluations" is essentially a 3,000-word elaboration of this thesis. They gate every production deployment on eval results. The Memory example — where the team thought they were improving but the data showed otherwise — is the canonical illustration.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Tab RL <em>is</em> a continuous evaluation. Every accepted or rejected suggestion is an eval signal. The model retrains multiple times per day. Evals aren't a gate before deployment — they're the deployment mechanism itself.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/28-the-tool-is-the-interface/">#28. The Tool Is the Interface</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Coach isn't isolated in a "Chat" tab. It's woven into every screen — Recovery, Sleep, Strain, Activity summaries. The AI adapts its behavior based on where the user is.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Speculative edits, inline diffs, and Tab suggestions live within the code editing experience itself. The AI doesn't live in a sidebar chat — it lives in the code.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/31-small-agents-beat-big-agents/">#31. Small Agents Beat Big Agents</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>500+ specialized agents, not one monolithic assistant. Each handles a specific task — Memory, Activity Insights, Daily Outlook, Day in Review, onboarding — deployed across 41 production surfaces.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/33-state-is-the-hardest-problem-in-agentic-programming/">#33. State Is the Hardest Problem in Agentic Programming</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The Memory feature is a state management system. Pre-launch evaluation revealed the agent was accumulating state indefinitely (99% save rate, no expiration dates) — a state management failure that would have degraded the system over time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/34-the-retry-loop-is-where-systems-go-to-die/">#34. The Retry Loop Is Where Systems Go to Die</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Bugbot's pipeline used eight parallel passes with majority voting to avoid naive retry loops. When replaced with a single agent, the agent could retry with tool use and self-correction — a smarter retry pattern.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/36-log-everything-your-agent-was-thinking-not-just-what-it-did/">#36. Log Everything Your Agent Was Thinking, Not Just What It Did</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>AI Studio's evaluation framework provides trace-level details for every agent interaction — not just the final output, but intermediate decisions, tool calls, and metric scores.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/38-cost-is-an-architectural-constraint/">#38. Cost Is an Architectural Constraint</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Speculative edits exist because of cost. Using the original file as draft tokens achieves a 13x speedup — which is a 13x cost reduction. The 20x cost reduction on CodeLlama reranking via blob-storage KV caching is another cost-driven decision.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The GPT-5.1 migration delivered 42% lower costs alongside better quality. Cost is tracked as a first-class metric alongside latency and quality.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/39-context-windows-are-budgets-spend-them-wisely/">#39. Context Windows Are Budgets — Spend Them Wisely</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Priompt is the most literal implementation of this essay. It compiles prompts as JSX components with priority scores. When context exceeds the token budget, lower-priority elements are dropped via binary search. The context window is a budget. Priompt is the budgeting system.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Inline tools pre-populate the context window with relevant data before generation. Memory nuggets are filtered by date — only 90 days of context — to avoid wasting the budget on stale information.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/40-the-best-agents-have-a-narrow-personality/">#40. The Best Agents Have a Narrow Personality</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Strictly a health and performance coach. Won't help you do your taxes.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Composer is explicitly a coding specialist — not a general assistant. Narrow personality enables highly targeted RL training and precise evaluation metrics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Part 4 #}
+  <div class="crossref-part">
+    <h2>Part 4 — Agents in the Real World</h2>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/42-latency-is-a-ux-problem-not-just-an-infrastructure-problem/">#42. Latency Is a UX Problem, Not Just an Infrastructure Problem</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>The entire speculative edits architecture exists to solve latency. The model must respond before the developer's next keystroke — about 300ms. Tab latency dropped from 475ms to 260ms. The Fast Apply model achieves 1,000 tokens/second.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>GPT-5.1 migration reduced median time-to-first-token from 1.53s to 0.98s. The model starts streaming in under a second.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/45-multi-agent-systems-multiply-capability-and-multiply-failure-modes/">#45. Multi-Agent Systems Multiply Capability and Multiply Failure Modes</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>500+ agents across the app. The evaluation framework exists precisely because failures multiply — a regression in the Memory agent could corrupt the context for every other agent that reads memory nuggets.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/47-security-starts-with-what-you-put-in-the-context-window/">#47. Security Starts with What You Put in the Context Window</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>Biometric data is anonymized before being sent to the model provider. AI Studio enforces PII protections as a deployment gate. Privacy is built into the context pipeline.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>No actual code stored on servers — only embeddings. Code snippets are encrypted locally before inference and discarded after.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/50-switching-models-is-switching-collaborators/">#50. Switching Models Is Switching Collaborators</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>GPT-5 excelled at complex reasoning but underperformed GPT-4.1 for chat. Switching models wasn't an upgrade — it was a negotiation with a new collaborator. They worked directly with OpenAI to get a tailored reasoning mode in GPT-5.1.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Different models for different tasks — a custom Tab model, Llama-70B for code application, frontier models for reasoning, Composer for agentic tasks. Each model is a different collaborator with different strengths.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Part 5 #}
+  <div class="crossref-part">
+    <h2>Part 5 — Mindset</h2>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/54-you-are-the-senior-developer-the-agent-is-the-junior/">#54. You Are the Senior Developer — The Agent Is the Junior</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>The speculative edits architecture literally models this. The "senior" model generates a semantic diff — just enough code for the "intern" model (Fast Apply) to make the actual changes. Working with a lazy senior who writes just enough for an intern.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/56-the-goal-is-outcomes-not-outputs/">#56. The Goal Is Outcomes, Not Outputs</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Tab RL optimizes for acceptance rate, not suggestion volume. The system shows 21% fewer suggestions. The outcome (the developer's coding flow) matters more than the output (suggestion count).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/58-iteration-speed-is-your-competitive-advantage/">#58. Iteration Speed Is Your Competitive Advantage</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>AI Studio enables going from idea to working prototype in under 10 minutes. Someone mentions an idea at standup and has a working agent on phones by the end of it. 95% of the value comes in the first 5% of effort.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Tab RL retrains every 90 minutes. New Composer checkpoints ship every five hours. The model that improves this afternoon based on this morning's data has a structural advantage over monthly updates.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/60-learn-to-read-failure-like-a-detective-not-a-judge/">#60. Learn to Read Failure Like a Detective, Not a Judge</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The Memory evaluation is a detective story. The agent was saving too aggressively (99%). After a prompt fix, the version "felt" better but was measurably worse. The team investigated the metrics, found the regression, and iterated.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>The Shadow Workspace was a failure — too much RAM, removed after six months. But the insight (validate AI code before showing it) survived in a better form: the agentic architecture that validates through tool use.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/65-the-best-practitioners-are-editors-not-just-authors/">#65. The Best Practitioners Are Editors, Not Just Authors</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The AI generates Daily Outlook summaries, Activity Insights, and conversational responses. But the human team designs the evaluation criteria, writes the prompts, defines the personas, and decides what passes the quality bar. Humans are editors of AI output.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/67-stay-curious-about-failure/">#67. Stay Curious About Failure</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Composer learning to ask clarifying questions to avoid getting penalized for bad code is reward hacking — the model found a loophole. The team was curious enough to investigate, monitor, and publish the finding rather than just patching it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/70-dont-mistake-fluency-for-understanding/">#70. Don't Mistake Fluency for Understanding</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The "Data Driven" metric catches this. A model giving fluent health advice without referencing the user's data is fluent but not understanding. The jump from 42.6% to 56.6% means the old model was being fluent without understanding more than half the time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/71-build-for-the-agent-you-have-not-the-agent-you-wish-you-had/">#71. Build for the Agent You Have, Not the Agent You Wish You Had</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>When GPT-5's reasoning mode underperformed for chat, WHOOP didn't wait for a better model — they adapted to GPT-4.1 and worked with OpenAI to get what they needed in the next release.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Speculative edits exist because models can't generate accurate diffs (40%+ failure rate). Rather than waiting for models that can count line numbers, Cursor built around the limitation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="crossref-entry">
+      <h3><a href="/posts/72-the-first-version-should-be-embarrassingly-simple/">#72. The First Version Should Be Embarrassingly Simple</a></h3>
+      <div class="crossref-connections">
+        <div class="crossref-connection crossref-connection--whoop">
+          <span class="crossref-badge crossref-badge--whoop">WHOOP</span>
+          <p>The evaluation framework started as spreadsheets — thousands of test questions, expected answers, and synthetic personas, all in spreadsheet rows. Painful, but it worked for over a year before becoming AI Studio.</p>
+        </div>
+        <div class="crossref-connection crossref-connection--cursor">
+          <span class="crossref-badge crossref-badge--cursor">Cursor</span>
+          <p>Bugbot started with a simple pipeline: eight parallel passes and majority voting. Not elegant, but functional. It shipped, gathered data, and was eventually replaced by something better.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
