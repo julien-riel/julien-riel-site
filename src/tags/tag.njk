@@ -11,16 +11,25 @@ eleventyComputed:
   description: "Articles sur le thème : {{ tag }}"
 ---
 
-{% set taggedPosts = collections.posts | filterByTag(tag) %}
+{% set allContent = [] %}
+{% for post in collections.posts | filterByTag(tag) %}
+  {% set allContent = (allContent.push(post), allContent) %}
+{% endfor %}
+{% for post in collections["articles"] | filterByTag(tag) %}
+  {% set allContent = (allContent.push(post), allContent) %}
+{% endfor %}
+{% for post in collections["case-studies"] | filterByTag(tag) %}
+  {% set allContent = (allContent.push(post), allContent) %}
+{% endfor %}
 
 <div class="tag-page">
   <p class="tag-intro">
-    {{ taggedPosts.length }} article{% if taggedPosts.length > 1 %}s{% endif %} sur ce sujet
+    {{ allContent.length }} article{% if allContent.length > 1 %}s{% endif %} sur ce sujet
   </p>
 
-  {% if taggedPosts.length > 0 %}
+  {% if allContent.length > 0 %}
     <ul class="post-list">
-      {% for post in taggedPosts %}
+      {% for post in allContent %}
         {% include "components/post-card.njk" %}
       {% endfor %}
     </ul>

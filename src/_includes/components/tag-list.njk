@@ -6,7 +6,7 @@
 {% if tags %}
 <ul class="tag-list">
   {% for tag in tags %}
-  {% if tag != "posts" %}
+  {% if tag != "posts" and tag != "articles" and tag != "case-studies" %}
   <li class="tag-item">
     <a href="/tags/{{ tag | slugify }}/" class="tag">{{ tag }}</a>
   </li>

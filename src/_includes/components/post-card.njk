@@ -21,7 +21,7 @@
   <footer class="post-card-footer">
     <ul class="post-card-tags">
       {% for tag in post.data.tags %}
-      {% if tag != "posts" %}
+      {% if tag != "posts" and tag != "articles" and tag != "case-studies" %}
       <li><a href="/tags/{{ tag | slugify }}/" class="tag">{{ tag }}</a></li>
       {% endif %}
       {% endfor %}
