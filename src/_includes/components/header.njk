@@ -20,7 +20,11 @@
         <a href="{{ langPrefix }}/case-studies/" role="menuitem"{% if page.url.includes('/case-studies/') %} aria-current="page"{% endif %}>{{ t.nav.caseStudies }}</a>
       </li>
       <li class="nav-item" role="none">
-        <a href="{{ altPrefix }}{{ page.url | replace('/en/', '/') if currentLang == 'en' else '/en' + page.url }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">{{ t.post.langSwitch }}</a>
+        {% if currentLang == "fr" %}
+          <a href="/en{{ page.url }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
+        {% else %}
+          <a href="{{ page.url | replace('/en/', '/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>
+        {% endif %}
       </li>
       <li class="nav-item nav-search" role="none">
         {% include "components/search.njk" %}
