@@ -18,7 +18,7 @@ lang: en
   </div>
 
   {% set langPosts = collections.posts | filterByLang("en") %}
-  {% set partKeys = ["developer-as-user", "working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset"] %}
+  {% set partKeys = ["working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset", "developer-as-user"] %}
 
   {# Preface #}
   {% for post in langPosts %}
