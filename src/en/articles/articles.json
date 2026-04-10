@@ -1,0 +1,7 @@
+{
+  "layout": "post.njk",
+  "tags": ["articles"],
+  "draft": false,
+  "lang": "en",
+  "permalink": "/en/articles/{{ page.fileSlug }}/"
+}

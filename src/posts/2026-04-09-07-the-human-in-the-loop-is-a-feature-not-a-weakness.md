@@ -1,5 +1,5 @@
 ---
-title: "7. The Human in the Loop Is a Feature, Not a Weakness"
+title: "7. L'humain dans la boucle est une fonctionnalité, pas une faiblesse"
 date: 2026-04-09
 tags:
   - working-with-agents

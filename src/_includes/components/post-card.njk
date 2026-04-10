@@ -1,22 +1,22 @@
 {#
-  Post card component
-  Usage: {% include "components/post-card.njk" %}
-  Expects: post object with data.title, data.description, data.tags, url, date
+  Post card component - language-aware
+  Expects: post object, t (translations), currentLang
 #}
 <article class="post-card">
   <header class="post-card-header">
     <div class="post-card-meta">
-      {% if post.url.startsWith('/case-studies/') %}
-        <span class="post-card-badge post-card-badge--case-study">Case Study</span>
-      {% elif post.url.startsWith('/articles/') %}
+      {% if post.url.includes('/case-studies/') %}
+        <span class="post-card-badge post-card-badge--case-study">{{ t.nav.caseStudies if t else "Case Study" }}</span>
+      {% elif post.url.includes('/articles/') %}
         <span class="post-card-badge post-card-badge--article">Article</span>
-      {% elif post.url.startsWith('/posts/') %}
-        <span class="post-card-badge post-card-badge--essay">Essay</span>
+      {% elif post.url.includes('/posts/') %}
+        <span class="post-card-badge post-card-badge--essay">{{ t.nav.essays if t else "Essay" }}</span>
       {% endif %}
-      <span class="post-card-reading-time">{{ post.templateContent | readingTime }} read</span>
-      {% if not post.url.startsWith('/posts/') %}
+      <span class="post-card-reading-time">{{ post.templateContent | readingTime }} {{ (t.post.minRead if t else "min read") }}</span>
+      {% set isEssay = post.url.includes('/posts/') %}
+      {% if not isEssay %}
       <time class="post-card-date" datetime="{{ post.date | dateFormat('iso') }}">
-        {{ post.date | dateFormat('short') }}
+        {{ post.date | dateFormat('short', currentLang) }}
       </time>
       {% endif %}
     </div>

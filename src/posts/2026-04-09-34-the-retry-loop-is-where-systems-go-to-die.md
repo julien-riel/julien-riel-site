@@ -1,5 +1,5 @@
 ---
-title: "34. The Retry Loop Is Where Systems Go to Die"
+title: "34. La boucle de retry est là où les systèmes vont mourir"
 date: 2026-04-09
 tags:
   - building-agentic-systems

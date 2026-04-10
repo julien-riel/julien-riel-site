@@ -1,5 +1,5 @@
 ---
-title: "16. Prompts Drift — Version Them Like Code"
+title: "16. Les prompts dérivent — versionnez-les comme du code"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

@@ -154,9 +154,9 @@ export default function(eleventyConfig) {
   // Collection: all posts sorted by date (newest first), excluding drafts
   eleventyConfig.addCollection("posts", function(collectionApi) {
     return collectionApi
-      .getFilteredByGlob("src/posts/**/*.md")
+      .getFilteredByGlob(["src/posts/**/*.md", "src/en/posts/**/*.md"])
       .filter((post) => !post.data.draft)
-      .sort((a, b) => b.date - a.date);
+      .sort((a, b) => a.date - b.date);
   });
 
   // Collection: list of all unique tags (excluding structural collection tags)
@@ -178,9 +178,16 @@ export default function(eleventyConfig) {
     return [...tagSet].sort((a, b) => a.localeCompare(b, "fr"));
   });
 
-  // Filter for formatting dates
-  eleventyConfig.addFilter("dateFormat", (date, format) => {
+  // Filter: filter collection by language
+  eleventyConfig.addFilter("filterByLang", (collection, lang) => {
+    if (!collection || !lang) return collection || [];
+    return collection.filter((item) => item.data.lang === lang);
+  });
+
+  // Filter for formatting dates (language-aware)
+  eleventyConfig.addFilter("dateFormat", (date, format, lang) => {
     const d = date === "now" ? new Date() : new Date(date);
+    const locale = lang === "fr" ? "fr-FR" : "en-US";
 
     if (format === "iso") {
       return d.toISOString().split("T")[0];
@@ -190,8 +197,8 @@ export default function(eleventyConfig) {
       return d.getFullYear().toString();
     }
 
-    if (format === "fr" || format === "short") {
-      return d.toLocaleDateString("en-US", {
+    if (format === "short") {
+      return d.toLocaleDateString(locale, {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -199,14 +206,14 @@ export default function(eleventyConfig) {
     }
 
     if (format === "long") {
-      return d.toLocaleDateString("en-US", {
+      return d.toLocaleDateString(locale, {
         day: "numeric",
         month: "long",
         year: "numeric",
       });
     }
 
-    return d.toLocaleDateString("en-US");
+    return d.toLocaleDateString(locale);
   });
 
   // Filter: limit array length

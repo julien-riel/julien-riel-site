@@ -1,5 +1,5 @@
 ---
-title: "40. The Best Agents Have a Narrow Personality"
+title: "40. Les meilleurs agents ont une personnalité étroite"
 date: 2026-04-09
 tags:
   - building-agentic-systems

@@ -1,5 +1,5 @@
 ---
-title: "49. Your Agent Will Agree with You — That's the Problem"
+title: "49. Votre agent sera d'accord avec vous — c'est ça le problème"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

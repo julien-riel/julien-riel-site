@@ -1,5 +1,5 @@
 ---
-title: "27. Evals Are Your Test Suite"
+title: "27. Les évaluations sont votre suite de tests"
 date: 2026-04-09
 tags:
   - building-agentic-systems

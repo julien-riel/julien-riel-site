@@ -1,5 +1,5 @@
 ---
-title: "45. Multi-Agent Systems Multiply Capability and Multiply Failure Modes"
+title: "45. Les systèmes multi-agents multiplient les capacités et les modes de défaillance"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

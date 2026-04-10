@@ -1,5 +1,5 @@
 ---
-title: "69. The Field Rewards Generalists Who Go Deep on One Thing"
+title: "69. Le domaine récompense les généralistes qui approfondissent un sujet"
 date: 2026-04-09
 tags:
   - mindset

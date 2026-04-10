@@ -1,5 +1,5 @@
 ---
-title: "36. Log Everything Your Agent Was Thinking, Not Just What It Did"
+title: "36. Enregistrez tout ce que votre agent pensait, pas seulement ce qu'il a fait"
 date: 2026-04-09
 tags:
   - building-agentic-systems

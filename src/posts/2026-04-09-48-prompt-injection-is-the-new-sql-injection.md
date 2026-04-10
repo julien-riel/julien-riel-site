@@ -1,5 +1,5 @@
 ---
-title: "48. Prompt Injection Is the New SQL Injection"
+title: "48. L'injection de prompt est la nouvelle injection SQL"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

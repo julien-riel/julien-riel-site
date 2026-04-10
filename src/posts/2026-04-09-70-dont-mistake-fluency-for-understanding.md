@@ -1,5 +1,5 @@
 ---
-title: "70. Don't Mistake Fluency for Understanding"
+title: "70. Ne confondez pas la fluidité avec la compréhension"
 date: 2026-04-09
 tags:
   - mindset

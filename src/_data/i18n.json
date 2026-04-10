@@ -1,0 +1,90 @@
+{
+  "fr": {
+    "nav": {
+      "essays": "Essais",
+      "articles": "Articles",
+      "caseStudies": "Études de cas"
+    },
+    "home": {
+      "title": "Accueil",
+      "heroSubtitle": "Courts essais sur la construction, l'utilisation et la compréhension des agents IA.",
+      "introP1": "Les agents sont partout. Ils écrivent du code, répondent aux clients, traitent des documents, prennent des décisions. Les développeurs qui construisent ces systèmes — et ceux qui les utilisent au quotidien — apprennent en marchant. Certaines leçons viennent de l'expérience. D'autres viennent de pannes en production qui auraient pu être évitées.",
+      "introP2": "Cette collection contient 97 de ces leçons. Chaque essai est autonome. Pas de dépendances, pas d'ordre de lecture requis. Choisissez celui qui correspond à votre situation et commencez par là.",
+      "theEssays": "Les essais",
+      "articles": "Articles",
+      "articlesIntro": "Guides approfondis sur l'architecture des systèmes agentiques et l'ingénierie IA appliquée.",
+      "caseStudies": "Études de cas",
+      "caseStudiesIntro": "Systèmes agentiques réels analysés en profondeur — architecture, décisions et leçons apprises.",
+      "crossRefLink": "guide de références croisées"
+    },
+    "post": {
+      "contents": "Sommaire",
+      "related": "Articles connexes",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "minRead": "min de lecture",
+      "search": "Rechercher...",
+      "searchLabel": "Rechercher",
+      "skipLink": "Aller au contenu",
+      "openMenu": "Ouvrir le menu",
+      "allTags": "Tous les tags",
+      "items": "élément",
+      "itemsPlural": "éléments",
+      "noContent": "Aucun contenu avec ce tag.",
+      "langSwitch": "EN",
+      "langSwitchLabel": "English version"
+    },
+    "parts": {
+      "working-with-agents": { "title": "Partie 1 — Travailler avec les agents", "desc": "Modèles mentaux, systèmes probabilistes, contexte, débogage et supervision humaine." },
+      "prompting-as-engineering": { "title": "Partie 2 — Le prompting comme ingénierie", "desc": "Versionnage, exemples, contraintes négatives, system prompts comme contrats." },
+      "building-agentic-systems": { "title": "Partie 3 — Construire des systèmes agentiques", "desc": "Observabilité, évaluations, design d'outils, état, retries, coûts et kill switches." },
+      "agents-in-the-real-world": { "title": "Partie 4 — Les agents dans le monde réel", "desc": "Utilisateurs, latence, sécurité, injection de prompt, périmètre et systèmes multi-agents." },
+      "mindset": { "title": "Partie 5 — État d'esprit", "desc": "Expertise, écriture, incertitude, responsabilité et clarté de pensée." },
+      "developer-as-user": { "title": "Partie 6 — Le développeur comme utilisateur", "desc": "Utiliser les assistants de code IA : contexte, architecture, grands projets et contrôle." }
+    }
+  },
+  "en": {
+    "nav": {
+      "essays": "Essays",
+      "articles": "Articles",
+      "caseStudies": "Case Studies"
+    },
+    "home": {
+      "title": "Home",
+      "heroSubtitle": "Short essays on building, using, and thinking clearly about AI agents.",
+      "introP1": "Agents are everywhere now. They write code, answer customers, process documents, make decisions. The developers building these systems — and the developers using them every day — are figuring it out as they go. Some lessons come from experience. Others come from production failures that could have been avoided.",
+      "introP2": "This collection is 97 of those lessons. Each essay stands alone. No dependencies between them, no required reading order. Pick the one that matches where you are right now and start there.",
+      "theEssays": "The Essays",
+      "articles": "Articles",
+      "articlesIntro": "Deep dives into agentic system design, architecture patterns, and applied AI engineering.",
+      "caseStudies": "Case Studies",
+      "caseStudiesIntro": "Real-world agentic systems analyzed in depth — architecture, decisions, and lessons learned.",
+      "crossRefLink": "cross-reference guide"
+    },
+    "post": {
+      "contents": "Contents",
+      "related": "Related",
+      "previous": "Previous",
+      "next": "Next",
+      "minRead": "min read",
+      "search": "Search...",
+      "searchLabel": "Search",
+      "skipLink": "Skip to content",
+      "openMenu": "Open menu",
+      "allTags": "All tags",
+      "items": "item",
+      "itemsPlural": "items",
+      "noContent": "No content with this tag yet.",
+      "langSwitch": "FR",
+      "langSwitchLabel": "Version française"
+    },
+    "parts": {
+      "working-with-agents": { "title": "Part 1 — Working with Agents", "desc": "Mental models, probabilistic systems, context, debugging, and human oversight." },
+      "prompting-as-engineering": { "title": "Part 2 — Prompting as Engineering", "desc": "Versioning, examples, negative constraints, system prompts as contracts." },
+      "building-agentic-systems": { "title": "Part 3 — Building Agentic Systems", "desc": "Observability, evals, tool design, state, retries, cost, and kill switches." },
+      "agents-in-the-real-world": { "title": "Part 4 — Agents in the Real World", "desc": "Users, latency, security, prompt injection, scope, and multi-agent systems." },
+      "mindset": { "title": "Part 5 — Mindset", "desc": "Expertise, writing, uncertainty, responsibility, and thinking clearly." },
+      "developer-as-user": { "title": "Part 6 — The Developer as User", "desc": "Using AI coding assistants: context, architecture, large projects, and control." }
+    }
+  }
+}

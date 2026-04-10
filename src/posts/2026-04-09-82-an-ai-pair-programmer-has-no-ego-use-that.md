@@ -1,5 +1,5 @@
 ---
-title: "82. An AI Pair Programmer Has No Ego — Use That"
+title: "82. Un pair programmeur IA n'a pas d'ego — utilisez ça"
 date: 2026-04-09
 tags:
   - developer-as-user

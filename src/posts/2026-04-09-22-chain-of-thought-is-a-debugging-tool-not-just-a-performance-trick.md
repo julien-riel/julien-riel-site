@@ -1,5 +1,5 @@
 ---
-title: "22. Chain of Thought Is a Debugging Tool, Not Just a Performance Trick"
+title: "22. La chaîne de pensée est un outil de débogage, pas juste une astuce de performance"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

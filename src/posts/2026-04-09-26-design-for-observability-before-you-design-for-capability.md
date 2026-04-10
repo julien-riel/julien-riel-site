@@ -1,5 +1,5 @@
 ---
-title: "26. Design for Observability Before You Design for Capability"
+title: "26. Concevez pour l'observabilité avant de concevoir pour la capacité"
 date: 2026-04-09
 tags:
   - building-agentic-systems

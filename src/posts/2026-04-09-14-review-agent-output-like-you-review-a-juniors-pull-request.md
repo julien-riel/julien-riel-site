@@ -1,5 +1,5 @@
 ---
-title: "14. Review Agent Output Like You Review a Junior's Pull Request"
+title: "14. Révisez la sortie de l'agent comme vous révisez la PR d'un junior"
 date: 2026-04-09
 tags:
   - working-with-agents

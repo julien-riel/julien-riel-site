@@ -1,5 +1,5 @@
 ---
-title: "33. State Is the Hardest Problem in Agentic Programming"
+title: "33. L'état est le problème le plus difficile en programmation agentique"
 date: 2026-04-09
 tags:
   - building-agentic-systems

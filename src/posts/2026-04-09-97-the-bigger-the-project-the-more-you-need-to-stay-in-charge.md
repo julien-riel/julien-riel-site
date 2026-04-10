@@ -1,5 +1,5 @@
 ---
-title: "97. The Bigger the Project, the More You Need to Stay in Charge"
+title: "97. Plus le projet est gros, plus vous devez rester aux commandes"
 date: 2026-04-09
 tags:
   - developer-as-user

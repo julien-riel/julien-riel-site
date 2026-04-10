@@ -1,5 +1,5 @@
 ---
-title: "64. Expertise Still Matters — It Just Shows Up Differently Now"
+title: "64. L'expertise compte encore — elle se manifeste juste différemment maintenant"
 date: 2026-04-09
 tags:
   - mindset

@@ -1,5 +1,5 @@
 ---
-title: "13. The Specification Is the Skill"
+title: "13. La spécification est la compétence"
 date: 2026-04-09
 tags:
   - working-with-agents

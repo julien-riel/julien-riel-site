@@ -1,5 +1,5 @@
 ---
-title: "56. The Goal Is Outcomes, Not Outputs"
+title: "56. L'objectif est les résultats, pas les sorties"
 date: 2026-04-09
 tags:
   - mindset

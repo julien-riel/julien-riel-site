@@ -1,5 +1,5 @@
 ---
-title: "71. Build for the Agent You Have, Not the Agent You Wish You Had"
+title: "71. Construisez pour l'agent que vous avez, pas celui que vous aimeriez avoir"
 date: 2026-04-09
 tags:
   - mindset

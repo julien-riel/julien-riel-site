@@ -1,5 +1,5 @@
 ---
-title: "19. System Prompts Are Contracts"
+title: "19. Les system prompts sont des contrats"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

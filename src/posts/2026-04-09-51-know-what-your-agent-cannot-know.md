@@ -1,5 +1,5 @@
 ---
-title: "51. Know What Your Agent Cannot Know"
+title: "51. Sachez ce que votre agent ne peut pas savoir"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

@@ -1,5 +1,5 @@
 ---
-title: "88. Use the Assistant to Pressure-Test Your Own Ideas"
+title: "88. Utilisez l'assistant pour mettre vos idées à l'épreuve"
 date: 2026-04-09
 tags:
   - developer-as-user

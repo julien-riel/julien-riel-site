@@ -1,5 +1,5 @@
 ---
-title: "63. Discomfort with Uncertainty Is a Liability in This Field"
+title: "63. L'inconfort face à l'incertitude est un handicap dans ce domaine"
 date: 2026-04-09
 tags:
   - mindset

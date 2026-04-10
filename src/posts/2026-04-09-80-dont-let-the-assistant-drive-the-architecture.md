@@ -1,5 +1,5 @@
 ---
-title: "80. Don't Let the Assistant Drive the Architecture"
+title: "80. Ne laissez pas l'assistant piloter l'architecture"
 date: 2026-04-09
 tags:
   - developer-as-user

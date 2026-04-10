@@ -1,5 +1,5 @@
 ---
-title: "73. Your IDE Is Now a Conversation"
+title: "73. Votre IDE est maintenant une conversation"
 date: 2026-04-09
 tags:
   - developer-as-user

@@ -1,5 +1,5 @@
 ---
-title: "18. Negative Space Matters — Tell Your Agent What Not to Do"
+title: "18. L'espace négatif compte — dites à votre agent ce qu'il ne doit pas faire"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

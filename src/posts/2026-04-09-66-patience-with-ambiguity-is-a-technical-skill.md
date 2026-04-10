@@ -1,5 +1,5 @@
 ---
-title: "66. Patience with Ambiguity Is a Technical Skill"
+title: "66. La patience face à l'ambiguïté est une compétence technique"
 date: 2026-04-09
 tags:
   - mindset

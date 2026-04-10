@@ -1,5 +1,5 @@
 ---
-title: "23. Prompting Is Thinking Out Loud — So Think Carefully"
+title: "23. Prompter c'est penser à voix haute — alors pensez soigneusement"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

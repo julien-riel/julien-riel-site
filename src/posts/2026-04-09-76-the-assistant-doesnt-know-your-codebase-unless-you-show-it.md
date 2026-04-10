@@ -1,5 +1,5 @@
 ---
-title: "76. The Assistant Doesn't Know Your Codebase Unless You Show It"
+title: "76. L'assistant ne connaît pas votre codebase sauf si vous la lui montrez"
 date: 2026-04-09
 tags:
   - developer-as-user

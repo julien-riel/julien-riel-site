@@ -1,5 +1,5 @@
 ---
-title: "Fine-Tuning vs. RAG: When to Teach the Model and When to Show It the Answer"
+title: "Fine-tuning vs RAG : quand enseigner au modèle et quand lui montrer la réponse"
 date: 2026-04-09
 tags:
   - fine-tuning

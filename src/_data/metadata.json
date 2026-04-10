@@ -1,10 +1,13 @@
 {
   "title": "Julien Riel",
-  "description": "Essays, case studies, and technical guides on agentic programming",
+  "description": {
+    "fr": "Essais, études de cas et guides techniques sur la programmation agentique",
+    "en": "Essays, case studies, and technical guides on agentic programming"
+  },
   "url": "https://julien-riel.com",
   "author": {
     "name": "Julien Riel",
     "email": "contact@julien-riel.com"
   },
-  "language": "en"
+  "language": "fr"
 }

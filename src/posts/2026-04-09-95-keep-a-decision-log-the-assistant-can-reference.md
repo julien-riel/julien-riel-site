@@ -1,5 +1,5 @@
 ---
-title: "95. Keep a Decision Log the Assistant Can Reference"
+title: "95. Gardez un journal de décisions que l'assistant peut consulter"
 date: 2026-04-09
 tags:
   - developer-as-user

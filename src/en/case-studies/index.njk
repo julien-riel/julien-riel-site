@@ -1,0 +1,28 @@
+---
+layout: base.njk
+title: Case Studies
+description: Real-world agentic systems analyzed in depth
+permalink: /en/case-studies/
+lang: en
+eleventyExcludeFromCollections: true
+---
+
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  {% set caselist = collections["case-studies"] | filterByLang("en") %}
+  {% if caselist.length %}
+  <ul class="post-list">
+    {% for post in caselist | reverse %}
+    <li>
+      {% include "components/post-card.njk" %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="no-posts">No case studies yet.</p>
+  {% endif %}
+</section>

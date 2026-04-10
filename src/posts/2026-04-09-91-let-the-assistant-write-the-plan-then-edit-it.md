@@ -1,5 +1,5 @@
 ---
-title: "91. Let the Assistant Write the Plan, Then Edit It"
+title: "91. Laissez l'assistant écrire le plan, puis éditez-le"
 date: 2026-04-09
 tags:
   - developer-as-user

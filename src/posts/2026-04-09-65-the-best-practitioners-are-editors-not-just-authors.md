@@ -1,5 +1,5 @@
 ---
-title: "65. The Best Practitioners Are Editors, Not Just Authors"
+title: "65. Les meilleurs praticiens sont des éditeurs, pas juste des auteurs"
 date: 2026-04-09
 tags:
   - mindset

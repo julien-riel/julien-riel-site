@@ -1,5 +1,5 @@
 ---
-title: "39. Context Windows Are Budgets — Spend Them Wisely"
+title: "39. Les fenêtres de contexte sont des budgets — dépensez-les judicieusement"
 date: 2026-04-09
 tags:
   - building-agentic-systems

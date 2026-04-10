@@ -1,5 +1,5 @@
 ---
-title: "47. Security Starts with What You Put in the Context Window"
+title: "47. La sécurité commence par ce que vous mettez dans la fenêtre de contexte"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

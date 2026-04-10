@@ -1,5 +1,5 @@
 ---
-title: "35. Your Agent Needs a Kill Switch"
+title: "35. Votre agent a besoin d'un bouton d'arrêt d'urgence"
 date: 2026-04-09
 tags:
   - building-agentic-systems

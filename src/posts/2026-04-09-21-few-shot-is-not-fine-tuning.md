@@ -1,5 +1,5 @@
 ---
-title: "21. Few-Shot Is Not Fine-Tuning"
+title: "21. Le few-shot n'est pas du fine-tuning"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

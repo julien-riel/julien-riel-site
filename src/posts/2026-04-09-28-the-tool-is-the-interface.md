@@ -1,5 +1,5 @@
 ---
-title: "28. The Tool Is the Interface"
+title: "28. L'outil est l'interface"
 date: 2026-04-09
 tags:
   - building-agentic-systems

@@ -1,5 +1,5 @@
 ---
-title: "93. Treat Your CLAUDE.md Like a Hiring Document"
+title: "93. Traitez votre CLAUDE.md comme un document d'embauche"
 date: 2026-04-09
 tags:
   - developer-as-user

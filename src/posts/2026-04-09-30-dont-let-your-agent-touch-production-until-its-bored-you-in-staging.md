@@ -1,5 +1,5 @@
 ---
-title: "30. Don't Let Your Agent Touch Production Until It's Bored You in Staging"
+title: "30. Ne laissez pas votre agent toucher la production avant qu'il ne vous ait ennuyé en staging"
 date: 2026-04-09
 tags:
   - building-agentic-systems

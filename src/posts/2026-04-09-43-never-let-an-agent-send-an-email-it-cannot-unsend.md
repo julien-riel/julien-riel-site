@@ -1,5 +1,5 @@
 ---
-title: "43. Never Let an Agent Send an Email It Cannot Unsend"
+title: "43. Ne laissez jamais un agent envoyer un email qu'il ne peut pas annuler"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

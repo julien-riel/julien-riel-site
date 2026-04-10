@@ -1,5 +1,5 @@
 ---
-title: "81. Context Is a Skill You Can Improve"
+title: "81. Le contexte est une compétence que vous pouvez améliorer"
 date: 2026-04-09
 tags:
   - developer-as-user

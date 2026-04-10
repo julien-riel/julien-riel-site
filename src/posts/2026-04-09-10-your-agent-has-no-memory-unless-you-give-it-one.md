@@ -1,5 +1,5 @@
 ---
-title: "10. Your Agent Has No Memory Unless You Give It One"
+title: "10. Votre agent n'a pas de mémoire sauf si vous lui en donnez une"
 date: 2026-04-09
 tags:
   - working-with-agents

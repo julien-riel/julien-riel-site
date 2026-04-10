@@ -1,5 +1,5 @@
 ---
-title: "29. Idempotency Matters More in Agentic Systems Than Anywhere Else"
+title: "29. L'idempotence compte plus dans les systèmes agentiques que partout ailleurs"
 date: 2026-04-09
 tags:
   - building-agentic-systems

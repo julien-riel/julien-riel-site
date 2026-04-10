@@ -1,5 +1,5 @@
 ---
-title: "72. The First Version Should Be Embarrassingly Simple"
+title: "72. La première version devrait être embarrassamment simple"
 date: 2026-04-09
 tags:
   - mindset

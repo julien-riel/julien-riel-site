@@ -1,5 +1,5 @@
 ---
-title: "84. Show the Assistant What Good Looks Like in Your Codebase"
+title: "84. Montrez à l'assistant à quoi ressemble du bon code dans votre codebase"
 date: 2026-04-09
 tags:
   - developer-as-user

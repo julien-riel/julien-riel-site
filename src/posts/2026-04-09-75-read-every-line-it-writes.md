@@ -1,5 +1,5 @@
 ---
-title: "75. Read Every Line It Writes"
+title: "75. Lisez chaque ligne qu'il écrit"
 date: 2026-04-09
 tags:
   - developer-as-user

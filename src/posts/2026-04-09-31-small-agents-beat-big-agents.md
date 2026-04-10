@@ -1,5 +1,5 @@
 ---
-title: "31. Small Agents Beat Big Agents"
+title: "31. Les petits agents battent les gros agents"
 date: 2026-04-09
 tags:
   - building-agentic-systems

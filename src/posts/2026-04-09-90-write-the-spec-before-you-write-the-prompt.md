@@ -1,5 +1,5 @@
 ---
-title: "90. Write the Spec Before You Write the Prompt"
+title: "90. Écrivez la spec avant d'écrire le prompt"
 date: 2026-04-09
 tags:
   - developer-as-user

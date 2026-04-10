@@ -1,5 +1,5 @@
 ---
-title: "44. Scope Creep Kills Agents — Define the Mission Narrowly"
+title: "44. La dérive du périmètre tue les agents — définissez la mission étroitement"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

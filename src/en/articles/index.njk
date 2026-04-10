@@ -1,0 +1,28 @@
+---
+layout: base.njk
+title: Technical Articles
+description: Deep dives into agentic system design, architecture patterns, and applied AI engineering.
+permalink: /en/articles/
+lang: en
+eleventyExcludeFromCollections: true
+---
+
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  {% set articlelist = collections["articles"] | filterByLang("en") %}
+  {% if articlelist.length %}
+  <ul class="post-list">
+    {% for post in articlelist | reverse %}
+    <li>
+      {% include "components/post-card.njk" %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="no-posts">No articles yet.</p>
+  {% endif %}
+</section>

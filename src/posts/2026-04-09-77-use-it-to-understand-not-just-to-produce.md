@@ -1,5 +1,5 @@
 ---
-title: "77. Use It to Understand, Not Just to Produce"
+title: "77. Utilisez-le pour comprendre, pas juste pour produire"
 date: 2026-04-09
 tags:
   - developer-as-user

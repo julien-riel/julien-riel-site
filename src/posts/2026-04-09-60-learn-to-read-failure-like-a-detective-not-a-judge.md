@@ -1,5 +1,5 @@
 ---
-title: "60. Learn to Read Failure Like a Detective, Not a Judge"
+title: "60. Apprenez à lire l'échec comme un détective, pas comme un juge"
 date: 2026-04-09
 tags:
   - mindset

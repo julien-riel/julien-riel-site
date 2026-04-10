@@ -1,5 +1,5 @@
 ---
-title: "15. Conversation Is a Development Environment"
+title: "15. La conversation est un environnement de développement"
 date: 2026-04-09
 tags:
   - working-with-agents

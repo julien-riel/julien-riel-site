@@ -1,5 +1,5 @@
 ---
-title: "55. Agentic Programming Rewards the Lazy Thinker"
+title: "55. La programmation agentique récompense le penseur paresseux"
 date: 2026-04-09
 tags:
   - mindset

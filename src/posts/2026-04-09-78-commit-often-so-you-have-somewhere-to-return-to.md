@@ -1,5 +1,5 @@
 ---
-title: "78. Commit Often, So You Have Somewhere to Return To"
+title: "78. Committez souvent, pour avoir un endroit où revenir"
 date: 2026-04-09
 tags:
   - developer-as-user

@@ -1,5 +1,5 @@
 ---
-title: "96. Let the Tests Define the Contract, Then Let the Assistant Fill It"
+title: "96. Laissez les tests définir le contrat, puis laissez l'assistant le remplir"
 date: 2026-04-09
 tags:
   - developer-as-user

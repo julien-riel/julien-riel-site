@@ -1,5 +1,5 @@
 ---
-title: "2. The Prompt Is the Architecture"
+title: "2. Le prompt est l'architecture"
 date: 2026-04-09
 tags:
   - working-with-agents

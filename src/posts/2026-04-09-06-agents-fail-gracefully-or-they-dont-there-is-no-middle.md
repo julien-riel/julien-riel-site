@@ -1,5 +1,5 @@
 ---
-title: "6. Agents Fail Gracefully or They Don't — There Is No Middle"
+title: "6. Les agents échouent gracieusement ou pas — il n'y a pas de milieu"
 date: 2026-04-09
 tags:
   - working-with-agents

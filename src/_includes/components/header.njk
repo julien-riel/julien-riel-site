@@ -1,26 +1,27 @@
 <header class="site-header" role="banner">
-  <nav class="nav-container" aria-label="Main navigation">
-    <a href="/" class="logo" aria-label="{{ metadata.title }} - Accueil">{{ metadata.title }}</a>
+  <nav class="nav-container" aria-label="{{ 'Navigation principale' if currentLang == 'fr' else 'Main navigation' }}">
+    <a href="{{ '/' if currentLang == 'fr' else '/en/' }}" class="logo" aria-label="{{ metadata.title }}">{{ metadata.title }}</a>
     <button
       class="nav-toggle"
-      aria-label="Open menu"
+      aria-label="{{ t.post.openMenu }}"
       aria-expanded="false"
       aria-controls="main-nav"
     >
       <span class="hamburger" aria-hidden="true"></span>
     </button>
     <ul class="nav-menu" id="main-nav" role="menubar">
-      {% for item in navigation %}
       <li class="nav-item" role="none">
-        <a
-          href="{{ item.url }}"
-          role="menuitem"
-          {% if page.url == item.url %} aria-current="page"{% endif %}
-        >
-          {{ item.label }}
-        </a>
+        <a href="{{ langPrefix }}/posts/" role="menuitem"{% if page.url.includes('/posts/') %} aria-current="page"{% endif %}>{{ t.nav.essays }}</a>
       </li>
-      {% endfor %}
+      <li class="nav-item" role="none">
+        <a href="{{ langPrefix }}/articles/" role="menuitem"{% if page.url.includes('/articles/') %} aria-current="page"{% endif %}>{{ t.nav.articles }}</a>
+      </li>
+      <li class="nav-item" role="none">
+        <a href="{{ langPrefix }}/case-studies/" role="menuitem"{% if page.url.includes('/case-studies/') %} aria-current="page"{% endif %}>{{ t.nav.caseStudies }}</a>
+      </li>
+      <li class="nav-item" role="none">
+        <a href="{{ altPrefix }}{{ page.url | replace('/en/', '/') if currentLang == 'en' else '/en' + page.url }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">{{ t.post.langSwitch }}</a>
+      </li>
       <li class="nav-item nav-search" role="none">
         {% include "components/search.njk" %}
       </li>

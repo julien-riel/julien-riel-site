@@ -1,5 +1,5 @@
 ---
-title: "57. Automate the Boring Parts, Stay Close to the Interesting Parts"
+title: "57. Automatisez les parties ennuyeuses, restez proche des parties intéressantes"
 date: 2026-04-09
 tags:
   - mindset

@@ -1,5 +1,5 @@
 ---
-title: "24. The Agent That Sounds Confident Is Not Necessarily Correct"
+title: "24. L'agent qui semble confiant n'est pas nécessairement correct"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

@@ -1,5 +1,5 @@
 ---
-title: "32. Orchestration Is Just Plumbing — Treat It That Way"
+title: "32. L'orchestration n'est que de la plomberie — traitez-la ainsi"
 date: 2026-04-09
 tags:
   - building-agentic-systems

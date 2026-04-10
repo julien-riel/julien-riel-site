@@ -1,5 +1,5 @@
 ---
-title: "62. The Hardest Skill Is Knowing When to Take Back the Wheel"
+title: "62. La compétence la plus difficile est de savoir quand reprendre le volant"
 date: 2026-04-09
 tags:
   - mindset

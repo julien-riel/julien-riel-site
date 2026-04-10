@@ -1,18 +1,24 @@
+{% set currentLang = lang or "fr" %}
+{% set t = i18n[currentLang] %}
+{% set siteDesc = metadata.description[currentLang] or metadata.description %}
+{% set altLang = "en" if currentLang == "fr" else "fr" %}
+{% set langPrefix = "/en" if currentLang == "en" else "" %}
+{% set altPrefix = "/en" if currentLang == "fr" else "" %}
 <!DOCTYPE html>
-<html lang="{{ metadata.language }}">
+<html lang="{{ currentLang }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if title %}{{ title }} | {% endif %}{{ metadata.title }}</title>
-  <meta name="description" content="{{ description or metadata.description }}">
+  <meta name="description" content="{{ description or siteDesc }}">
   <meta name="author" content="{{ metadata.author.name }}">
 
   {# Open Graph #}
   <meta property="og:title" content="{{ title or metadata.title }}">
-  <meta property="og:description" content="{{ description or metadata.description }}">
+  <meta property="og:description" content="{{ description or siteDesc }}">
   <meta property="og:type" content="{% if layout == 'post.njk' %}article{% else %}website{% endif %}">
   <meta property="og:url" content="{{ metadata.url }}{{ page.url }}">
-  <meta property="og:locale" content="{{ metadata.language }}">
+  <meta property="og:locale" content="{{ currentLang }}">
   <meta property="og:site_name" content="{{ metadata.title }}">
   {% if image %}
   <meta property="og:image" content="{{ metadata.url }}{{ image }}">
@@ -21,7 +27,7 @@
   {# Twitter Card #}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ title or metadata.title }}">
-  <meta name="twitter:description" content="{{ description or metadata.description }}">
+  <meta name="twitter:description" content="{{ description or siteDesc }}">
   {% if image %}
   <meta name="twitter:image" content="{{ metadata.url }}{{ image }}">
   {% endif %}
@@ -78,23 +84,18 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "{{ metadata.title }}",
-    "description": "{{ metadata.description }}",
+    "description": "{{ siteDesc }}",
     "url": "{{ metadata.url }}",
     "author": {
       "@type": "Person",
       "name": "{{ metadata.author.name }}"
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "{{ metadata.url }}/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
     }
   }
   </script>
   {% endif %}
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to content</a>
+  <a href="#main-content" class="skip-link">{{ t.post.skipLink }}</a>
 
   {% include "components/header.njk" %}
 
@@ -104,22 +105,6 @@
 
   {% include "components/footer.njk" %}
 
-  {# Inline search data for Lunr.js #}
-  <script id="search-data" type="application/json">
-  [
-  {%- for post in collections.posts %}
-    {
-      "id": "{{ post.url }}",
-      "url": "{{ post.url }}",
-      "title": {{ post.data.title | dump | safe }},
-      "description": {{ (post.data.description or "") | dump | safe }},
-      "date": "{{ post.date | dateFormat('iso') }}",
-      "tags": {{ (post.data.tags | default([])) | dump | safe }},
-      "content": {{ post.templateContent | striptags | dump | safe }}
-    }{% if not loop.last %},{% endif %}
-  {%- endfor %}
-  ]
-  </script>
   <script type="module" src="/assets/js/main.js"></script>
 </body>
 </html>

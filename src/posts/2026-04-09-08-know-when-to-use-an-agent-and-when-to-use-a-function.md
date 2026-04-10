@@ -1,5 +1,5 @@
 ---
-title: "8. Know When to Use an Agent and When to Use a Function"
+title: "8. Savoir quand utiliser un agent et quand utiliser une fonction"
 date: 2026-04-09
 tags:
   - working-with-agents

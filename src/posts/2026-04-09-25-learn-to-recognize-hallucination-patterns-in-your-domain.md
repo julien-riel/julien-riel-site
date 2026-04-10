@@ -1,5 +1,5 @@
 ---
-title: "25. Learn to Recognize Hallucination Patterns in Your Domain"
+title: "25. Apprenez à reconnaître les patterns d'hallucination dans votre domaine"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

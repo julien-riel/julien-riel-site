@@ -1,5 +1,5 @@
 ---
-title: "79. The Best Use of an AI Assistant Is the Task You Were About to Skip"
+title: "79. Le meilleur usage d'un assistant IA est la tâche que vous alliez sauter"
 date: 2026-04-09
 tags:
   - developer-as-user

@@ -1,5 +1,5 @@
 ---
-title: "74. Give the Assistant Your Constraints, Not Just Your Requirements"
+title: "74. Donnez à l'assistant vos contraintes, pas juste vos exigences"
 date: 2026-04-09
 tags:
   - developer-as-user

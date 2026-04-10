@@ -1,5 +1,5 @@
 ---
-title: "59. The Field Is Moving — Your Mental Models Must Too"
+title: "59. Le domaine évolue — vos modèles mentaux doivent suivre"
 date: 2026-04-09
 tags:
   - mindset

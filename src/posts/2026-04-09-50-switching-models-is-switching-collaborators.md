@@ -1,5 +1,5 @@
 ---
-title: "50. Switching Models Is Switching Collaborators"
+title: "50. Changer de modèle c'est changer de collaborateur"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

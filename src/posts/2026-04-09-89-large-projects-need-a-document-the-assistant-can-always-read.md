@@ -1,5 +1,5 @@
 ---
-title: "89. Large Projects Need a Document the Assistant Can Always Read"
+title: "89. Les grands projets ont besoin d'un document que l'assistant peut toujours lire"
 date: 2026-04-09
 tags:
   - developer-as-user

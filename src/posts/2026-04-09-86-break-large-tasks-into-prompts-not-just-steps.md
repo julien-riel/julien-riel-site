@@ -1,5 +1,5 @@
 ---
-title: "86. Break Large Tasks into Prompts, Not Just Steps"
+title: "86. Découpez les grandes tâches en prompts, pas juste en étapes"
 date: 2026-04-09
 tags:
   - developer-as-user

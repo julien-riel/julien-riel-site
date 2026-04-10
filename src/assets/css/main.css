@@ -277,6 +277,18 @@ a:hover {
   color: var(--color-text);
 }
 
+.lang-switch {
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 2px var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.lang-switch::after {
+  display: none !important;
+}
+
 .nav-item a:hover::after,
 .nav-item a[aria-current="page"]::after {
   width: 100%;
@@ -394,6 +406,14 @@ a:hover {
 
   .nav-item a::after {
     display: none;
+  }
+
+  .lang-switch {
+    font-weight: 600 !important;
+    font-size: 0.85rem;
+    padding: 2px var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
   }
 
   .nav-search {

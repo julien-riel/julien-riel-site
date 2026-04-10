@@ -1,0 +1,7 @@
+{
+  "layout": "post.njk",
+  "tags": ["case-studies"],
+  "draft": false,
+  "lang": "en",
+  "permalink": "/en/case-studies/{{ page.fileSlug }}/"
+}

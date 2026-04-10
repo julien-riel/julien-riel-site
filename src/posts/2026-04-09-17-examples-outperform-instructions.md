@@ -1,5 +1,5 @@
 ---
-title: "17. Examples Outperform Instructions"
+title: "17. Les exemples surpassent les instructions"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

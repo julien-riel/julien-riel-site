@@ -2,5 +2,6 @@
   "layout": "post.njk",
   "tags": ["articles"],
   "draft": false,
+  "lang": "fr",
   "permalink": "/articles/{{ page.fileSlug }}/"
 }

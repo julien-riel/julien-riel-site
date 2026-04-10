@@ -1,5 +1,5 @@
 ---
-title: "4. Stop Anthropomorphizing, Start Debugging"
+title: "4. Arrêtez d'anthropomorphiser, commencez à déboguer"
 date: 2026-04-09
 tags:
   - working-with-agents

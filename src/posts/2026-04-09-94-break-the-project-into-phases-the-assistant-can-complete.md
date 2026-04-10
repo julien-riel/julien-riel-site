@@ -1,5 +1,5 @@
 ---
-title: "94. Break the Project into Phases the Assistant Can Complete"
+title: "94. Découpez le projet en phases que l'assistant peut compléter"
 date: 2026-04-09
 tags:
   - developer-as-user

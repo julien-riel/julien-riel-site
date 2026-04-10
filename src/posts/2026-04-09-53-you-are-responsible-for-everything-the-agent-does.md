@@ -1,5 +1,5 @@
 ---
-title: "53. You Are Responsible for Everything the Agent Does"
+title: "53. Vous êtes responsable de tout ce que fait l'agent"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

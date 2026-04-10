@@ -1,5 +1,5 @@
 ---
-title: "68. Agentic Systems Expose Gaps in Your Own Thinking"
+title: "68. Les systèmes agentiques exposent les lacunes de votre propre réflexion"
 date: 2026-04-09
 tags:
   - mindset

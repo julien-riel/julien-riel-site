@@ -1,8 +1,9 @@
 ---
 layout: base.njk
-title: Essays
-description: 97 Things Every Agentic Programmer Should Know
+title: Essais
+description: 97 choses que tout programmeur agentique devrait savoir
 permalink: /posts/
+lang: fr
 ---
 
 <section class="page">
@@ -11,8 +12,10 @@ permalink: /posts/
     <p class="page-description">{{ description }}</p>
   </header>
 
+  {% set langPosts = collections.posts | filterByLang("fr") %}
+
   {# Preface #}
-  {% for post in collections.posts %}
+  {% for post in langPosts %}
     {% if "book" in post.data.tags %}
     <div class="essay-preface">
       <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
@@ -21,21 +24,14 @@ permalink: /posts/
     {% endif %}
   {% endfor %}
 
-  {% set partGroups = [
-    { tag: "working-with-agents", title: "Part 1 — Working with Agents" },
-    { tag: "prompting-as-engineering", title: "Part 2 — Prompting as Engineering" },
-    { tag: "building-agentic-systems", title: "Part 3 — Building Agentic Systems" },
-    { tag: "agents-in-the-real-world", title: "Part 4 — Agents in the Real World" },
-    { tag: "mindset", title: "Part 5 — Mindset" },
-    { tag: "developer-as-user", title: "Part 6 — The Developer as User" }
-  ] %}
+  {% set partKeys = ["working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset", "developer-as-user"] %}
 
-  {% for part in partGroups %}
+  {% for key in partKeys %}
   <div class="essay-part">
-    <h2 class="essay-part-title">{{ part.title }}</h2>
+    <h2 class="essay-part-title">{{ t.parts[key].title }}</h2>
     <ol class="essay-list">
-      {% for post in collections.posts %}
-        {% if post.data.tags and (part.tag in post.data.tags) %}
+      {% for post in langPosts %}
+        {% if post.data.tags and (key in post.data.tags) %}
         <li>
           <a href="{{ post.url }}" class="essay-link">
             <span class="essay-link-title">{{ post.data.title }}</span>

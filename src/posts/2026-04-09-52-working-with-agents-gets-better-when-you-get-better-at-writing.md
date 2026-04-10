@@ -1,5 +1,5 @@
 ---
-title: "52. Working with Agents Gets Better When You Get Better at Writing"
+title: "52. Travailler avec les agents s'améliore quand vous améliorez votre écriture"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

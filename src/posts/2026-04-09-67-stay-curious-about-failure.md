@@ -1,5 +1,5 @@
 ---
-title: "67. Stay Curious About Failure"
+title: "67. Restez curieux face à l'échec"
 date: 2026-04-09
 tags:
   - mindset

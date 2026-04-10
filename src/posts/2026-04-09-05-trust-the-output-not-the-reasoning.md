@@ -1,5 +1,5 @@
 ---
-title: "5. Trust the Output, Not the Reasoning"
+title: "5. Faites confiance au résultat, pas au raisonnement"
 date: 2026-04-09
 tags:
   - working-with-agents

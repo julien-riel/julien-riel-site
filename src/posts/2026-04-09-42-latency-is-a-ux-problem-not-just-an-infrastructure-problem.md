@@ -1,5 +1,5 @@
 ---
-title: "42. Latency Is a UX Problem, Not Just an Infrastructure Problem"
+title: "42. La latence est un problème d'UX, pas juste d'infrastructure"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

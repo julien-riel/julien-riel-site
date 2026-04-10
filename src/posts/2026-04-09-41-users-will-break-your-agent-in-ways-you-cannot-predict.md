@@ -1,5 +1,5 @@
 ---
-title: "41. Users Will Break Your Agent in Ways You Cannot Predict"
+title: "41. Les utilisateurs casseront votre agent de manières imprévisibles"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

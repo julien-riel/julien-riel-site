@@ -1,5 +1,5 @@
 ---
-title: "83. Start Your Prompt with the Outcome, Not the Method"
+title: "83. Commencez votre prompt par le résultat, pas la méthode"
 date: 2026-04-09
 tags:
   - developer-as-user

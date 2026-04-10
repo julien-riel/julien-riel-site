@@ -5,15 +5,15 @@
         &copy; {{ "now" | dateFormat("year") }} {{ metadata.author.name }}
       </p>
       <p class="footer-description">
-        {{ metadata.description }}
+        {{ metadata.description[currentLang] or metadata.description }}
       </p>
     </div>
     <div class="footer-links">
-      <nav aria-label="Footer navigation">
+      <nav aria-label="{{ 'Navigation' }}">
         <ul class="footer-nav">
-          {% for item in navigation %}
-          <li><a href="{{ item.url }}">{{ item.label }}</a></li>
-          {% endfor %}
+          <li><a href="{{ langPrefix }}/posts/">{{ t.nav.essays }}</a></li>
+          <li><a href="{{ langPrefix }}/articles/">{{ t.nav.articles }}</a></li>
+          <li><a href="{{ langPrefix }}/case-studies/">{{ t.nav.caseStudies }}</a></li>
         </ul>
       </nav>
       <div class="footer-social">

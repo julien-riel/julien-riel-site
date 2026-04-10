@@ -1,0 +1,48 @@
+---
+layout: base.njk
+title: Essays
+description: 97 Things Every Agentic Programmer Should Know
+permalink: /en/posts/
+lang: en
+---
+
+<section class="page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  {% set langPosts = collections.posts | filterByLang("en") %}
+
+  {# Preface #}
+  {% for post in langPosts %}
+    {% if "book" in post.data.tags %}
+    <div class="essay-preface">
+      <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+      <p>{{ post.data.description }}</p>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+  {% set partKeys = ["working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset", "developer-as-user"] %}
+
+  {% for key in partKeys %}
+  <div class="essay-part">
+    <h2 class="essay-part-title">{{ t.parts[key].title }}</h2>
+    <ol class="essay-list">
+      {% for post in langPosts %}
+        {% if post.data.tags and (key in post.data.tags) %}
+        <li>
+          <a href="{{ post.url }}" class="essay-link">
+            <span class="essay-link-title">{{ post.data.title }}</span>
+            {% if post.data.description %}
+            <span class="essay-link-desc">{{ post.data.description }}</span>
+            {% endif %}
+          </a>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+  </div>
+  {% endfor %}
+</section>

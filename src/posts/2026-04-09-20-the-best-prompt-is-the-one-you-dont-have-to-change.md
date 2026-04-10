@@ -1,5 +1,5 @@
 ---
-title: "20. The Best Prompt Is the One You Don't Have to Change"
+title: "20. Le meilleur prompt est celui que vous n'avez pas à changer"
 date: 2026-04-09
 tags:
   - prompting-as-engineering

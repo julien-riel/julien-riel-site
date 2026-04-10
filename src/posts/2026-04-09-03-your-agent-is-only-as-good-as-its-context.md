@@ -1,5 +1,5 @@
 ---
-title: "3. Your Agent Is Only as Good as Its Context"
+title: "3. Votre agent n'est aussi bon que son contexte"
 date: 2026-04-09
 tags:
   - working-with-agents

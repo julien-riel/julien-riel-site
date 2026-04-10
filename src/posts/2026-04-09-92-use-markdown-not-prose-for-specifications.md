@@ -1,5 +1,5 @@
 ---
-title: "92. Use Markdown, Not Prose, for Specifications"
+title: "92. Utilisez le Markdown, pas la prose, pour les spécifications"
 date: 2026-04-09
 tags:
   - developer-as-user

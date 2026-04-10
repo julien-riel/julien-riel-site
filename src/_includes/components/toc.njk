@@ -1,11 +1,6 @@
-{#
-  Table of contents component
-  Usage: {% include "components/toc.njk" %}
-  Expects: toc array (generated from headings)
-#}
 {% if toc and toc.length %}
-<nav class="toc" aria-label="Table of contents">
-  <h2 class="toc-title">Contents</h2>
+<nav class="toc" aria-label="{{ t.post.contents }}">
+  <h2 class="toc-title">{{ t.post.contents }}</h2>
   <ol class="toc-list">
     {% for item in toc %}
     <li class="toc-item toc-level-{{ item.level }}">

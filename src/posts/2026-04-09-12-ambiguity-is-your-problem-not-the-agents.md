@@ -1,5 +1,5 @@
 ---
-title: "12. Ambiguity Is Your Problem, Not the Agent's"
+title: "12. L'ambiguïté est votre problème, pas celui de l'agent"
 date: 2026-04-09
 tags:
   - working-with-agents

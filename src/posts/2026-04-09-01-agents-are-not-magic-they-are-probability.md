@@ -1,5 +1,5 @@
 ---
-title: "1. Agents Are Not Magic, They Are Probability"
+title: "1. Les agents ne sont pas de la magie, ils sont de la probabilité"
 date: 2026-04-09
 tags:
   - working-with-agents

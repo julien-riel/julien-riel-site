@@ -1,5 +1,5 @@
 ---
-title: "87. Tell the Assistant What to Preserve, Not Just What to Change"
+title: "87. Dites à l'assistant ce qu'il faut préserver, pas juste ce qu'il faut changer"
 date: 2026-04-09
 tags:
   - developer-as-user

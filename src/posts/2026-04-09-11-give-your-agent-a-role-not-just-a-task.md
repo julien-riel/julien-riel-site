@@ -1,5 +1,5 @@
 ---
-title: "11. Give Your Agent a Role, Not Just a Task"
+title: "11. Donnez à votre agent un rôle, pas juste une tâche"
 date: 2026-04-09
 tags:
   - working-with-agents

@@ -1,5 +1,5 @@
 ---
-title: "58. Iteration Speed Is Your Competitive Advantage"
+title: "58. La vitesse d'itération est votre avantage compétitif"
 date: 2026-04-09
 tags:
   - mindset

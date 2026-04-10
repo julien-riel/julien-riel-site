@@ -1,5 +1,5 @@
 ---
-title: "61. Agentic Programming Is a Discipline, Not a Shortcut"
+title: "61. La programmation agentique est une discipline, pas un raccourci"
 date: 2026-04-09
 tags:
   - mindset

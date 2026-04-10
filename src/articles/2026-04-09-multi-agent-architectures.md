@@ -1,5 +1,5 @@
 ---
-title: "Multi-Agent Architectures: When One Agent Isn't Enough"
+title: "Architectures multi-agents : quand un seul agent ne suffit pas"
 date: 2026-04-09
 tags:
   - architecture

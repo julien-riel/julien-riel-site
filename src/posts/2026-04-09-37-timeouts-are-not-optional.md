@@ -1,5 +1,5 @@
 ---
-title: "37. Timeouts Are Not Optional"
+title: "37. Les timeouts ne sont pas optionnels"
 date: 2026-04-09
 tags:
   - building-agentic-systems

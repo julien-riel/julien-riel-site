@@ -1,5 +1,5 @@
 ---
-title: "38. Cost Is an Architectural Constraint"
+title: "38. Le coût est une contrainte architecturale"
 date: 2026-04-09
 tags:
   - building-agentic-systems

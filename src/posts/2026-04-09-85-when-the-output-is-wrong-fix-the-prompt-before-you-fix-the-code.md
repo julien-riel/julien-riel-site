@@ -1,5 +1,5 @@
 ---
-title: "85. When the Output Is Wrong, Fix the Prompt Before You Fix the Code"
+title: "85. Quand la sortie est mauvaise, corrigez le prompt avant de corriger le code"
 date: 2026-04-09
 tags:
   - developer-as-user

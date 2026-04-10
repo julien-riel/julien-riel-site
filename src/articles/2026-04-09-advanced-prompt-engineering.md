@@ -1,5 +1,5 @@
 ---
-title: "Advanced Prompt Engineering: Beyond the Basics"
+title: "Ingénierie de prompts avancée : au-delà des bases"
 date: 2026-04-09
 tags:
   - prompting

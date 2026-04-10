@@ -1,5 +1,5 @@
 ---
-title: "9. Determinism Is a Choice You Have to Make on Purpose"
+title: "9. Le déterminisme est un choix que vous devez faire délibérément"
 date: 2026-04-09
 tags:
   - working-with-agents

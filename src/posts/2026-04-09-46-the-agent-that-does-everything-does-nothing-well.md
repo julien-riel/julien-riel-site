@@ -1,5 +1,5 @@
 ---
-title: "46. The Agent That Does Everything Does Nothing Well"
+title: "46. L'agent qui fait tout ne fait rien de bien"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world

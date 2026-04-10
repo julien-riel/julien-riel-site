@@ -1,5 +1,5 @@
 ---
-title: "54. You Are the Senior Developer — The Agent Is the Junior"
+title: "54. Vous êtes le développeur senior — l'agent est le junior"
 date: 2026-04-09
 tags:
   - mindset
