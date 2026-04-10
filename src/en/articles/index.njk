@@ -1,7 +1,6 @@
 ---
 layout: base.njk
 title: Technical Articles
-description: Deep dives into agentic system design, architecture patterns, and applied AI engineering.
 permalink: /en/articles/
 lang: en
 eleventyExcludeFromCollections: true
@@ -10,8 +9,12 @@ eleventyExcludeFromCollections: true
 <section class="page">
   <header class="page-header">
     <h1 class="page-title">{{ title }}</h1>
-    <p class="page-description">{{ description }}</p>
   </header>
+
+  <div class="section-intro">
+    <p>{{ t.sections.articlesIntroP1 }}</p>
+    <p>{{ t.sections.articlesIntroP2 }}</p>
+  </div>
 
   {% set articlelist = collections["articles"] | filterByLang("en") %}
   {% if articlelist.length %}

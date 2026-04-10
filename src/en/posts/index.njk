@@ -9,10 +9,16 @@ lang: en
 <section class="page">
   <header class="page-header">
     <h1 class="page-title">{{ title }}</h1>
-    <p class="page-description">{{ description }}</p>
   </header>
 
+  <div class="section-intro">
+    <p>{{ t.sections.essaysIntroP1 }}</p>
+    <p>{{ t.sections.essaysIntroP2 | safe }}</p>
+    <p><em>{{ t.sections.essaysIntroP3 }}</em></p>
+  </div>
+
   {% set langPosts = collections.posts | filterByLang("en") %}
+  {% set partKeys = ["developer-as-user", "working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset"] %}
 
   {# Preface #}
   {% for post in langPosts %}
@@ -24,11 +30,10 @@ lang: en
     {% endif %}
   {% endfor %}
 
-  {% set partKeys = ["working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset", "developer-as-user"] %}
-
   {% for key in partKeys %}
   <div class="essay-part">
     <h2 class="essay-part-title">{{ t.parts[key].title }}</h2>
+    <p class="essay-part-desc">{{ t.parts[key].desc }}</p>
     <ol class="essay-list">
       {% for post in langPosts %}
         {% if post.data.tags and (key in post.data.tags) %}

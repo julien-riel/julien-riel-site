@@ -605,16 +605,16 @@ main {
 }
 
 /* ==========================================================================
-   Parts Section (Homepage)
+   Explore Section (Homepage)
    ========================================================================== */
 
-.parts-section {
+.explore-section {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg) var(--space-3xl);
 }
 
-.parts-section > h2 {
+.explore-section > h2 {
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 400;
@@ -625,12 +625,81 @@ main {
   gap: var(--space-md);
 }
 
-.parts-section > h2::after {
+.explore-section > h2::after {
   content: '';
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, var(--color-border), transparent);
 }
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .explore-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.explore-card {
+  display: block;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-decoration: none;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.explore-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-light);
+}
+
+.explore-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--color-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.explore-card p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Section Intro (Listing Pages)
+   ========================================================================== */
+
+.section-intro {
+  max-width: var(--content-width);
+  margin: 0 auto var(--space-2xl);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.section-intro p {
+  margin-bottom: var(--space-lg);
+}
+
+.section-intro em {
+  color: var(--color-primary);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Parts Grid (kept for Essays listing page)
+   ========================================================================== */
 
 .parts-grid {
   display: grid;
@@ -1979,6 +2048,13 @@ main {
   padding-bottom: var(--space-sm);
   border-bottom: 2px solid var(--color-primary);
   display: inline-block;
+}
+
+.essay-part-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
 }
 
 .essay-list {

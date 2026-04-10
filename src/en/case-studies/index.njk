@@ -1,7 +1,6 @@
 ---
 layout: base.njk
 title: Case Studies
-description: Real-world agentic systems analyzed in depth
 permalink: /en/case-studies/
 lang: en
 eleventyExcludeFromCollections: true
@@ -10,8 +9,12 @@ eleventyExcludeFromCollections: true
 <section class="page">
   <header class="page-header">
     <h1 class="page-title">{{ title }}</h1>
-    <p class="page-description">{{ description }}</p>
   </header>
+
+  <div class="section-intro">
+    <p>{{ t.sections.caseStudiesIntroP1 }}</p>
+    <p>{{ t.sections.caseStudiesIntroP2 }}</p>
+  </div>
 
   {% set caselist = collections["case-studies"] | filterByLang("en") %}
   {% if caselist.length %}

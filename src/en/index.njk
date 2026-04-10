@@ -21,55 +21,20 @@ permalink: /en/
   </div>
 </section>
 
-<section class="parts-section">
-  <h2>{{ t.home.theEssays }}</h2>
-
-  {% set partKeys = ["working-with-agents", "prompting-as-engineering", "building-agentic-systems", "agents-in-the-real-world", "mindset", "developer-as-user"] %}
-  {% set langPosts = collections.posts | filterByLang("en") %}
-
-  <div class="parts-grid">
-    {% for key in partKeys %}
-    <div class="part-card">
-      <h3 class="part-card-title">{{ t.parts[key].title }}</h3>
-      <p class="part-card-desc">{{ t.parts[key].desc }}</p>
-      <ul class="part-card-articles">
-        {% for post in langPosts %}
-          {% if post.data.tags and (key in post.data.tags) %}
-          <li><a href="{{ post.url }}">{{ post.data.title }}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-    {% endfor %}
+<section class="explore-section">
+  <h2>{{ t.home.explore }}</h2>
+  <div class="explore-grid">
+    <a href="/en/posts/" class="explore-card">
+      <h3>{{ t.nav.essays }}</h3>
+      <p>{{ t.home.exploreEssays }}</p>
+    </a>
+    <a href="/en/articles/" class="explore-card">
+      <h3>{{ t.nav.articles }}</h3>
+      <p>{{ t.home.exploreArticles }}</p>
+    </a>
+    <a href="/en/case-studies/" class="explore-card">
+      <h3>{{ t.nav.caseStudies }}</h3>
+      <p>{{ t.home.exploreCaseStudies }}</p>
+    </a>
   </div>
 </section>
-
-{% set techArticles = collections["articles"] | filterByLang("en") %}
-{% if techArticles.length %}
-<section class="case-studies-section">
-  <h2>{{ t.home.articles }}</h2>
-  <p class="case-studies-intro">{{ t.home.articlesIntro }}</p>
-  <ul class="post-list">
-    {% for post in techArticles | reverse %}
-    <li class="fade-in">
-      {% include "components/post-card.njk" %}
-    </li>
-    {% endfor %}
-  </ul>
-</section>
-{% endif %}
-
-{% set caseStudies = collections["case-studies"] | filterByLang("en") %}
-{% if caseStudies.length %}
-<section class="case-studies-section">
-  <h2>{{ t.home.caseStudies }}</h2>
-  <p class="case-studies-intro">{{ t.home.caseStudiesIntro }}</p>
-  <ul class="post-list">
-    {% for post in caseStudies | reverse %}
-    <li class="fade-in">
-      {% include "components/post-card.njk" %}
-    </li>
-    {% endfor %}
-  </ul>
-</section>
-{% endif %}
