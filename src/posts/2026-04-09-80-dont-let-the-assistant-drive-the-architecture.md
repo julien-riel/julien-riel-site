@@ -2,7 +2,6 @@
 title: "80. Don't Let the Assistant Drive the Architecture"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "The assistant is excellent at implementing decisions."
 ---

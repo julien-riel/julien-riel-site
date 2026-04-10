@@ -2,7 +2,6 @@
 title: "86. Break Large Tasks into Prompts, Not Just Steps"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "A prompt asking for five hundred lines of code is asking the assistant to make dozens of design decisions without knowing which ones you've already made, which ones are constrained by the rest of t..."
 ---

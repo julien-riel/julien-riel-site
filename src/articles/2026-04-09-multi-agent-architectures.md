@@ -2,7 +2,6 @@
 title: "Multi-Agent Architectures: When One Agent Isn't Enough"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - architecture
   - multi-agent
 description: "A practical guide to multi-agent patterns — orchestrator-workers, pipelines, ensembles, and swarms — and where they break."

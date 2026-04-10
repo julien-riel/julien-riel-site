@@ -2,7 +2,6 @@
 title: "58. Iteration Speed Is Your Competitive Advantage"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "The developers who improve fastest in agentic programming are not the ones who think most carefully before they act — they're the ones who act, observe, and adjust in the shortest cycles."
 ---

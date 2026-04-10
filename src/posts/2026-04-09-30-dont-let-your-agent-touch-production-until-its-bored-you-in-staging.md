@@ -2,7 +2,6 @@
 title: "30. Don't Let Your Agent Touch Production Until It's Bored You in Staging"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "There's a moment in every agentic project where the system is working well enough in testing that the temptation to deploy becomes almost irresistible."
 ---

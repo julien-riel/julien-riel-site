@@ -2,7 +2,6 @@
 title: "11. Give Your Agent a Role, Not Just a Task"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "There's a difference between telling an agent what to do and telling an agent what it is."
 ---

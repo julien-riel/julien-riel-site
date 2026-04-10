@@ -2,7 +2,6 @@
 title: "42. Latency Is a UX Problem, Not Just an Infrastructure Problem"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "A model call takes time."
 ---

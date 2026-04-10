@@ -2,7 +2,6 @@
 title: "5. Trust the Output, Not the Reasoning"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Chain-of-thought reasoning is genuinely useful — it improves output quality, makes the agent's process more legible, and gives you something to debug when things go wrong."
 ---

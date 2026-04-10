@@ -2,7 +2,6 @@
 title: "62. The Hardest Skill Is Knowing When to Take Back the Wheel"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Delegation to an agent is easy."
 ---

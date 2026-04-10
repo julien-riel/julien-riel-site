@@ -2,7 +2,6 @@
 title: "66. Patience with Ambiguity Is a Technical Skill"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Ambiguity is uncomfortable."
 ---

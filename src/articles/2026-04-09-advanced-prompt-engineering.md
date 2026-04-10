@@ -2,7 +2,6 @@
 title: "Advanced Prompt Engineering: Beyond the Basics"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting
   - architecture
 description: "Patterns that separate prompts that work in demos from prompts that work in production — context management, structured outputs, few-shot engineering, and version control."

@@ -2,7 +2,6 @@
 title: "51. Know What Your Agent Cannot Know"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "Every agent has an epistemic boundary — a line between what it can know and what it cannot."
 ---

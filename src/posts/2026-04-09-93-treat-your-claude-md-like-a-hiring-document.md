@@ -2,7 +2,6 @@
 title: "93. Treat Your CLAUDE.md Like a Hiring Document"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Claude Code reads a `CLAUDE.md` file at the start of every session."
 ---

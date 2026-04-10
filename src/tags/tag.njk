@@ -8,7 +8,7 @@ permalink: /tags/{{ tag | slugify }}/
 layout: page
 eleventyComputed:
   title: "{{ tag }}"
-  description: "Articles sur le thème : {{ tag }}"
+  description: "Content tagged: {{ tag }}"
 ---
 
 {% set allContent = [] %}
@@ -24,7 +24,7 @@ eleventyComputed:
 
 <div class="tag-page">
   <p class="tag-intro">
-    {{ allContent.length }} article{% if allContent.length > 1 %}s{% endif %} sur ce sujet
+    {{ allContent.length }} item{% if allContent.length > 1 %}s{% endif %}
   </p>
 
   {% if allContent.length > 0 %}
@@ -34,10 +34,10 @@ eleventyComputed:
       {% endfor %}
     </ul>
   {% else %}
-    <p class="no-posts">Aucun article avec ce tag pour le moment.</p>
+    <p class="no-posts">No content with this tag yet.</p>
   {% endif %}
 
   <p class="back-link">
-    <a href="/tags/">Voir tous les tags</a>
+    <a href="/tags/">All tags</a>
   </p>
 </div>

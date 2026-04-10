@@ -2,7 +2,6 @@
 title: "9. Determinism Is a Choice You Have to Make on Purpose"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "By default, language models are non-deterministic."
 ---

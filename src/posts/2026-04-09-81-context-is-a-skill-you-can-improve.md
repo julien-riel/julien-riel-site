@@ -2,7 +2,6 @@
 title: "81. Context Is a Skill You Can Improve"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Knowing what context to provide — and how to provide it — is the most leveraged skill in working with an AI coding assistant."
 ---

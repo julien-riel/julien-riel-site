@@ -2,7 +2,6 @@
 title: "24. The Agent That Sounds Confident Is Not Necessarily Correct"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Language models are fluent by default."
 ---

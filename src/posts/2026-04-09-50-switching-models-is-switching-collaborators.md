@@ -2,7 +2,6 @@
 title: "50. Switching Models Is Switching Collaborators"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "When a new model releases with better benchmark scores, the temptation is to swap it in and claim the improvement."
 ---

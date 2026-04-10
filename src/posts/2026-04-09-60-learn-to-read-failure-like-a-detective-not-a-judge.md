@@ -2,7 +2,6 @@
 title: "60. Learn to Read Failure Like a Detective, Not a Judge"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "When an agent fails, the instinct is to assign blame."
 ---

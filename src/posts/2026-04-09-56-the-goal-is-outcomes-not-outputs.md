@@ -2,7 +2,6 @@
 title: "56. The Goal Is Outcomes, Not Outputs"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "An agent that produces a beautiful summary of a document hasn't succeeded."
 ---

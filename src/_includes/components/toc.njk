@@ -4,8 +4,8 @@
   Expects: toc array (generated from headings)
 #}
 {% if toc and toc.length %}
-<nav class="toc" aria-label="Table des matieres">
-  <h2 class="toc-title">Sommaire</h2>
+<nav class="toc" aria-label="Table of contents">
+  <h2 class="toc-title">Contents</h2>
   <ol class="toc-list">
     {% for item in toc %}
     <li class="toc-item toc-level-{{ item.level }}">

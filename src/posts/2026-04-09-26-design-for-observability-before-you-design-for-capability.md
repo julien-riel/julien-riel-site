@@ -2,7 +2,6 @@
 title: "26. Design for Observability Before You Design for Capability"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "The most capable agentic system you can't observe is worth less than a less capable one you can see inside."
 ---

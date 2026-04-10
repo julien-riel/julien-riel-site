@@ -2,7 +2,6 @@
 title: "28. The Tool Is the Interface"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "When you give an agent a tool, you're not just extending its capabilities — you're defining the boundary between what the agent decides and what the world does."
 ---

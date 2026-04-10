@@ -2,7 +2,6 @@
 title: "90. Write the Spec Before You Write the Prompt"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "For a small task — fix this bug, add this field — the prompt can be the spec."
 ---

@@ -2,7 +2,6 @@
 title: "49. Your Agent Will Agree with You — That's the Problem"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "Language models are trained to be helpful, and helpfulness has a bias toward agreement."
 ---

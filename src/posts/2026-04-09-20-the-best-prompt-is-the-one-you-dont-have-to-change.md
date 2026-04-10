@@ -2,7 +2,6 @@
 title: "20. The Best Prompt Is the One You Don't Have to Change"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Prompt engineering has a reputation for being iterative — you write something, see what breaks, fix it, repeat."
 ---

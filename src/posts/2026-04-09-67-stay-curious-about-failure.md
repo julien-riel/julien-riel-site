@@ -2,7 +2,6 @@
 title: "67. Stay Curious About Failure"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Failure in agentic systems is information."
 ---

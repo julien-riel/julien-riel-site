@@ -1,10 +1,10 @@
 {
   "title": "Julien Riel",
-  "description": "Blog sur l'informatique et l'intelligence artificielle",
+  "description": "Essays, case studies, and technical guides on agentic programming",
   "url": "https://julien-riel.com",
   "author": {
     "name": "Julien Riel",
     "email": "contact@julien-riel.com"
   },
-  "language": "fr"
+  "language": "en"
 }

@@ -2,7 +2,6 @@
 title: "18. Negative Space Matters — Tell Your Agent What Not to Do"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Most prompts describe what the agent should do."
 ---

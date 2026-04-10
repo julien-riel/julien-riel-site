@@ -2,7 +2,6 @@
 title: "1. Agents Are Not Magic, They Are Probability"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "An agent does not know things."
 ---

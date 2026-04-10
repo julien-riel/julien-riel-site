@@ -2,7 +2,6 @@
 title: "15. Conversation Is a Development Environment"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "The conversational interface to a language model isn't just a way to get answers — it's a place to think."
 ---

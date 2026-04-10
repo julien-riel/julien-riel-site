@@ -2,7 +2,6 @@
 title: "29. Idempotency Matters More in Agentic Systems Than Anywhere Else"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Idempotency — the property that calling something multiple times produces the same result as calling it once — is a good practice in any distributed system."
 ---

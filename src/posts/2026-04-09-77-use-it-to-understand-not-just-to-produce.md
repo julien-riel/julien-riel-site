@@ -2,7 +2,6 @@
 title: "77. Use It to Understand, Not Just to Produce"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "The most underused capability of an AI coding assistant isn't code generation — it's explanation."
 ---

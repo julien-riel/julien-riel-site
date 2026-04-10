@@ -2,7 +2,6 @@
 title: "39. Context Windows Are Budgets — Spend Them Wisely"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "A context window isn't infinite space — it's a budget."
 ---

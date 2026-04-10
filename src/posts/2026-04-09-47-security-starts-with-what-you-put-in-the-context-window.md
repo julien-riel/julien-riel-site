@@ -2,7 +2,6 @@
 title: "47. Security Starts with What You Put in the Context Window"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "The context window is the most sensitive surface in an agentic system."
 ---

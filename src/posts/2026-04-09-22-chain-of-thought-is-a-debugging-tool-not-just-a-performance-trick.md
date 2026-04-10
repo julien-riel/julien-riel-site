@@ -2,7 +2,6 @@
 title: "22. Chain of Thought Is a Debugging Tool, Not Just a Performance Trick"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Chain-of-thought prompting — asking the model to reason through a problem step by step before producing an answer — reliably improves performance on complex tasks."
 ---

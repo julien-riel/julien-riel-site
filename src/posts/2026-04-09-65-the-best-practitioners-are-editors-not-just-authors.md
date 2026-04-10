@@ -2,7 +2,6 @@
 title: "65. The Best Practitioners Are Editors, Not Just Authors"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Writing and editing are different skills, and most developers are much better at one than the other."
 ---

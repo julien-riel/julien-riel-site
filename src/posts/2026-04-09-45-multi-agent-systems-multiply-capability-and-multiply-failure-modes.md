@@ -2,7 +2,6 @@
 title: "45. Multi-Agent Systems Multiply Capability and Multiply Failure Modes"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "The case for multi-agent systems is compelling."
 ---

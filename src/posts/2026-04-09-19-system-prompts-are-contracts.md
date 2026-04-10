@@ -2,7 +2,6 @@
 title: "19. System Prompts Are Contracts"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "A system prompt isn't instructions — it's a contract."
 ---

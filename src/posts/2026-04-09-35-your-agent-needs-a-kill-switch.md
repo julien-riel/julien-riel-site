@@ -2,7 +2,6 @@
 title: "35. Your Agent Needs a Kill Switch"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Every agentic system that operates with any degree of autonomy needs a way to stop it immediately — not gracefully, not after the current task completes, but now."
 ---

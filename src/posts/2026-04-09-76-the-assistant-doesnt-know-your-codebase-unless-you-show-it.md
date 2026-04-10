@@ -2,7 +2,6 @@
 title: "76. The Assistant Doesn't Know Your Codebase Unless You Show It"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Every session starts fresh."
 ---

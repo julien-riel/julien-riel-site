@@ -2,7 +2,6 @@
 title: "61. Agentic Programming Is a Discipline, Not a Shortcut"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "The pitch for agentic programming often sounds like a promise of less work."
 ---

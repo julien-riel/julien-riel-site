@@ -1,9 +1,5 @@
 [
   {
-    "label": "Accueil",
-    "url": "/"
-  },
-  {
     "label": "Essays",
     "url": "/posts/"
   },
@@ -14,17 +10,5 @@
   {
     "label": "Case Studies",
     "url": "/case-studies/"
-  },
-  {
-    "label": "Cross-Reference",
-    "url": "/cross-reference/"
-  },
-  {
-    "label": "Mes sites",
-    "url": "/sites/"
-  },
-  {
-    "label": "Tags",
-    "url": "/tags/"
   }
 ]

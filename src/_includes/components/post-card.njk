@@ -5,12 +5,24 @@
 #}
 <article class="post-card">
   <header class="post-card-header">
+    <div class="post-card-meta">
+      {% if post.url.startsWith('/case-studies/') %}
+        <span class="post-card-badge post-card-badge--case-study">Case Study</span>
+      {% elif post.url.startsWith('/articles/') %}
+        <span class="post-card-badge post-card-badge--article">Article</span>
+      {% elif post.url.startsWith('/posts/') %}
+        <span class="post-card-badge post-card-badge--essay">Essay</span>
+      {% endif %}
+      <span class="post-card-reading-time">{{ post.templateContent | readingTime }} read</span>
+      {% if not post.url.startsWith('/posts/') %}
+      <time class="post-card-date" datetime="{{ post.date | dateFormat('iso') }}">
+        {{ post.date | dateFormat('short') }}
+      </time>
+      {% endif %}
+    </div>
     <h2 class="post-card-title">
       <a href="{{ post.url }}">{{ post.data.title }}</a>
     </h2>
-    <time class="post-card-date" datetime="{{ post.date | dateFormat('iso') }}">
-      {{ post.date | dateFormat('fr') }}
-    </time>
   </header>
 
   {% if post.data.description %}
@@ -21,7 +33,7 @@
   <footer class="post-card-footer">
     <ul class="post-card-tags">
       {% for tag in post.data.tags %}
-      {% if tag != "posts" and tag != "articles" and tag != "case-studies" %}
+      {% if tag != "posts" and tag != "articles" and tag != "case-studies" and tag != "agentic-programming" %}
       <li><a href="/tags/{{ tag | slugify }}/" class="tag">{{ tag }}</a></li>
       {% endif %}
       {% endfor %}

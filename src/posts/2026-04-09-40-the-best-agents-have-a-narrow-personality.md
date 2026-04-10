@@ -2,7 +2,6 @@
 title: "40. The Best Agents Have a Narrow Personality"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "A general-purpose agent sounds like the goal."
 ---

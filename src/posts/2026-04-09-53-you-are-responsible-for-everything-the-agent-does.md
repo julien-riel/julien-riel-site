@@ -2,7 +2,6 @@
 title: "53. You Are Responsible for Everything the Agent Does"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "When an agent makes a mistake — gives wrong information, takes a harmful action, produces output that damages a user's interests — the question of responsibility has a clear answer."
 ---

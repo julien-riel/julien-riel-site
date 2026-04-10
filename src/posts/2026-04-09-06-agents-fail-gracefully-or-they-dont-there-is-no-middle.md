@@ -2,7 +2,6 @@
 title: "6. Agents Fail Gracefully or They Don't — There Is No Middle"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Most systems fail on a spectrum."
 ---

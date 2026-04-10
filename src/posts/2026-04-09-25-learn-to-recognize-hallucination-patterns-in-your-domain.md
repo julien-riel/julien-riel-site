@@ -2,7 +2,6 @@
 title: "25. Learn to Recognize Hallucination Patterns in Your Domain"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Hallucination — the model generating plausible-sounding content that isn't grounded in fact — is not random."
 ---

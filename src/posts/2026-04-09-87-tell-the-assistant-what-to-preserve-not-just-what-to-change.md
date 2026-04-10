@@ -2,7 +2,6 @@
 title: "87. Tell the Assistant What to Preserve, Not Just What to Change"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Every prompt implicitly asks the assistant to optimize for the goal you stated."
 ---

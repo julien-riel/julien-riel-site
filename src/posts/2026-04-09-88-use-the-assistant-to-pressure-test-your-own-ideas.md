@@ -2,7 +2,6 @@
 title: "88. Use the Assistant to Pressure-Test Your Own Ideas"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Before you commit to an implementation approach, describe it to the assistant and ask what could go wrong."
 ---

@@ -2,7 +2,6 @@
 title: "16. Prompts Drift — Version Them Like Code"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "A prompt that works today will not necessarily work tomorrow."
 ---

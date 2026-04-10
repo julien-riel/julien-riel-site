@@ -2,7 +2,6 @@
 title: "96. Let the Tests Define the Contract, Then Let the Assistant Fill It"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Writing tests before implementation isn't just a quality practice in an AI-assisted workflow — it's a communication protocol."
 ---

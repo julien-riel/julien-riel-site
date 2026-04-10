@@ -2,7 +2,6 @@
 title: "37. Timeouts Are Not Optional"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Every external call your agent makes — to a model API, to a tool, to a database, to a third-party service — needs a timeout."
 ---

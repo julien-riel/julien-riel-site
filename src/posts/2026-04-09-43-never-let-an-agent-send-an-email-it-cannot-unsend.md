@@ -2,7 +2,6 @@
 title: "43. Never Let an Agent Send an Email It Cannot Unsend"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "The irreversibility of actions is the most important dimension of agentic system design, and it's the one that gets the least attention before something goes wrong."
 ---

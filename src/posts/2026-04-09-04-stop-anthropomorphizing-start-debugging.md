@@ -2,7 +2,6 @@
 title: "4. Stop Anthropomorphizing, Start Debugging"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "When an agent does something unexpected, developers reach for human explanations."
 ---

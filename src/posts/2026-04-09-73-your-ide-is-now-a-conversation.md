@@ -2,7 +2,6 @@
 title: "73. Your IDE Is Now a Conversation"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "The developers who get the least out of AI coding assistants are the ones who use them like autocomplete — they wait for a suggestion, accept it or reject it, and move on."
 ---

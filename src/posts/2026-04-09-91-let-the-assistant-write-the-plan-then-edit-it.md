@@ -2,7 +2,6 @@
 title: "91. Let the Assistant Write the Plan, Then Edit It"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "When you're starting a substantial piece of work, ask the assistant to write an implementation plan before writing any code."
 ---

@@ -2,7 +2,6 @@
 title: "85. When the Output Is Wrong, Fix the Prompt Before You Fix the Code"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "When the assistant produces code that isn't quite right, the instinct is to edit the code directly — it's faster, it's familiar, it produces the result you need immediately."
 ---

@@ -2,7 +2,6 @@
 title: "75. Read Every Line It Writes"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "The speed of generation is the trap."
 ---

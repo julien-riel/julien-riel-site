@@ -2,7 +2,6 @@
 title: "97. The Bigger the Project, the More You Need to Stay in Charge"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "The temptation scales with the capability."
 ---

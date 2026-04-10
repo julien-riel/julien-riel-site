@@ -2,7 +2,6 @@
 title: "WHOOP Coach"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - ai-integration
 description: "How WHOOP wove artificial intelligence into every screen of its app — architecture, evaluations, and lessons for agentic system design."
 ---

@@ -2,7 +2,6 @@
 title: "38. Cost Is an Architectural Constraint"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Token costs have a way of surprising teams that didn't plan for them."
 ---

@@ -2,7 +2,6 @@
 title: "2. The Prompt Is the Architecture"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Most developers treat the prompt as an afterthought — a thing you write once, probably badly, then tweak when something breaks."
 ---

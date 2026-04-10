@@ -9,9 +9,12 @@ layout: base.njk
   <header class="post-header">
     <h1 class="post-title">{{ title }}</h1>
     <div class="post-meta">
+      <span class="post-reading-time">{{ content | readingTime }} read</span>
+      {% if not page.url.startsWith('/posts/') %}
       <time class="post-date" datetime="{{ date | dateFormat('iso') }}">
         {{ date | dateFormat('long') }}
       </time>
+      {% endif %}
       {% if tags %}
       <div class="post-tags">
         {% set tagsToShow = tags %}
@@ -34,6 +37,37 @@ layout: base.njk
       {{ content | safe }}
     </div>
   </div>
+
+  {# Prev/Next navigation for essays #}
+  {% if page.url.startsWith('/posts/') and page.url != '/posts/' %}
+    {% set essays = collections.posts %}
+    {% set currentIndex = -1 %}
+    {% for essay in essays %}
+      {% if essay.url == page.url %}
+        {% set currentIndex = loop.index0 %}
+      {% endif %}
+    {% endfor %}
+    {% if currentIndex >= 0 %}
+    <nav class="essay-nav" aria-label="Essay navigation">
+      {% if currentIndex > 0 %}
+        {% set prevEssay = essays[currentIndex - 1] %}
+        <a href="{{ prevEssay.url }}" class="essay-nav-link essay-nav-prev">
+          <span class="essay-nav-label">Previous</span>
+          <span class="essay-nav-title">{{ prevEssay.data.title }}</span>
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+      {% if currentIndex < essays.length - 1 %}
+        {% set nextEssay = essays[currentIndex + 1] %}
+        <a href="{{ nextEssay.url }}" class="essay-nav-link essay-nav-next">
+          <span class="essay-nav-label">Next</span>
+          <span class="essay-nav-title">{{ nextEssay.data.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+    {% endif %}
+  {% endif %}
 
   {% if relatedPosts.length > 0 %}
   <footer class="post-footer">

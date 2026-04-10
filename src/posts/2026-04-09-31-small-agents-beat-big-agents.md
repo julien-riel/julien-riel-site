@@ -2,7 +2,6 @@
 title: "31. Small Agents Beat Big Agents"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "The instinct when building agentic systems is to make the agent capable of everything."
 ---

@@ -2,7 +2,6 @@
 title: "59. The Field Is Moving — Your Mental Models Must Too"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "The mental models you built six months ago are already partially wrong."
 ---

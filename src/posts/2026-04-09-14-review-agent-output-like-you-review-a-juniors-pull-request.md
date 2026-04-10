@@ -2,7 +2,6 @@
 title: "14. Review Agent Output Like You Review a Junior's Pull Request"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "The right mental model for reviewing agent output isn't proofreading — it's code review."
 ---

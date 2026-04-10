@@ -2,7 +2,6 @@
 title: "36. Log Everything Your Agent Was Thinking, Not Just What It Did"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Action logs are necessary but not sufficient."
 ---

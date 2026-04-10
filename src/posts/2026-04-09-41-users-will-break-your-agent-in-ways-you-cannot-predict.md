@@ -2,7 +2,6 @@
 title: "41. Users Will Break Your Agent in Ways You Cannot Predict"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "You can spend weeks testing an agent against every scenario you can imagine, and a user will break it on day one with an input you never considered."
 ---

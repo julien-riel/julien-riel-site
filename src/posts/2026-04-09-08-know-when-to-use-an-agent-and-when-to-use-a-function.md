@@ -2,7 +2,6 @@
 title: "8. Know When to Use an Agent and When to Use a Function"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Agents are impressive enough that it's tempting to use them for everything."
 ---

@@ -2,7 +2,6 @@
 title: "7. The Human in the Loop Is a Feature, Not a Weakness"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "There's a version of the agentic future where automation is the goal and human intervention is the failure mode — every step that requires a person to review, approve, or correct is friction to be ..."
 ---

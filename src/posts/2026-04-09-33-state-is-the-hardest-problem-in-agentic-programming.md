@@ -2,7 +2,6 @@
 title: "33. State Is the Hardest Problem in Agentic Programming"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Every hard problem in distributed systems eventually reduces to state."
 ---

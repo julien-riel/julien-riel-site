@@ -2,7 +2,6 @@
 title: "12. Ambiguity Is Your Problem, Not the Agent's"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "When an agent produces an output that isn't what you wanted, the temptation is to say the prompt was ambiguous."
 ---

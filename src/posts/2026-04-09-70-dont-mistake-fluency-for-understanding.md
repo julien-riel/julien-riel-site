@@ -2,7 +2,6 @@
 title: "70. Don't Mistake Fluency for Understanding"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "You can become fluent with agentic systems without understanding them."
 ---

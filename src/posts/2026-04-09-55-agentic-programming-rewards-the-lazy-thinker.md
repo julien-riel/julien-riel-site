@@ -2,7 +2,6 @@
 title: "55. Agentic Programming Rewards the Lazy Thinker"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Lazy, here, is a technical term."
 ---

@@ -2,7 +2,6 @@
 title: "95. Keep a Decision Log the Assistant Can Reference"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Why did you choose this database over the alternatives? Why is the authentication layer structured this way? Why does this module have this interface rather than the more obvious one? If these deci..."
 ---

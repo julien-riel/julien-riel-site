@@ -2,7 +2,6 @@
 title: "57. Automate the Boring Parts, Stay Close to the Interesting Parts"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "The highest-value use of an agent is freeing up human attention for the work that actually requires it."
 ---

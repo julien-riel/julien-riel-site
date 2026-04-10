@@ -2,7 +2,6 @@
 title: "68. Agentic Systems Expose Gaps in Your Own Thinking"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "One of the less-discussed effects of working with agents is how clearly they reveal the places where your own thinking is incomplete."
 ---

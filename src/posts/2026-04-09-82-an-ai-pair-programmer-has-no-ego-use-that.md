@@ -2,7 +2,6 @@
 title: "82. An AI Pair Programmer Has No Ego — Use That"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Human pair programming is valuable and comes with friction."
 ---

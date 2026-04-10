@@ -2,7 +2,6 @@
 title: "27. Evals Are Your Test Suite"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Every serious software project has tests."
 ---

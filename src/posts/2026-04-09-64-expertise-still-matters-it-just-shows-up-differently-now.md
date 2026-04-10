@@ -2,7 +2,6 @@
 title: "64. Expertise Still Matters — It Just Shows Up Differently Now"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "There's a version of the agentic future where expertise is devalued — where the gap between the expert and the novice closes because both can prompt an agent to do the work."
 ---

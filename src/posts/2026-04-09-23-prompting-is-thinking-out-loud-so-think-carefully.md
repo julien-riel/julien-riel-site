@@ -2,7 +2,6 @@
 title: "23. Prompting Is Thinking Out Loud — So Think Carefully"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "There's a reason bad prompts produce bad outputs: they're usually the product of fuzzy thinking."
 ---

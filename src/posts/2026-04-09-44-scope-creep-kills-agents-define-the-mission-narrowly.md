@@ -2,7 +2,6 @@
 title: "44. Scope Creep Kills Agents — Define the Mission Narrowly"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "Every successful agent faces the same pressure: it works, so people want it to do more."
 ---

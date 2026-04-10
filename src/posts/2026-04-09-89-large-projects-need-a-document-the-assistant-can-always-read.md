@@ -2,7 +2,6 @@
 title: "89. Large Projects Need a Document the Assistant Can Always Read"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "On a small task, the context you need fits in a prompt."
 ---

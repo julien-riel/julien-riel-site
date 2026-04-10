@@ -2,7 +2,6 @@
 title: "72. The First Version Should Be Embarrassingly Simple"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Every lasting principle in software has a version of this at its core."
 ---

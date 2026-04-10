@@ -2,7 +2,6 @@
 title: "92. Use Markdown, Not Prose, for Specifications"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "A specification written as flowing prose is hard to reference, hard to update, and hard to provide as context."
 ---

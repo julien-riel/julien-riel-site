@@ -2,7 +2,6 @@
 title: "54. You Are the Senior Developer — The Agent Is the Junior"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "The most useful mental model for working with agents isn't \"tool\" and it isn't \"collaborator\" — it's \"junior developer.\" Capable, fast, knowledgeable across a broad surface area, genuinely helpful ..."
 ---

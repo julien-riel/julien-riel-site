@@ -2,7 +2,6 @@
 title: "21. Few-Shot Is Not Fine-Tuning"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "Few-shot prompting — providing examples in the context window to shape model behavior — is powerful and widely used."
 ---

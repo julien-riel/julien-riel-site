@@ -2,7 +2,6 @@
 title: "Fine-Tuning vs. RAG: When to Teach the Model and When to Show It the Answer"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - fine-tuning
   - rag
 description: "Fine-tuning changes how the model thinks. RAG changes what it sees. A practical decision framework for when to use each — and when to use both."

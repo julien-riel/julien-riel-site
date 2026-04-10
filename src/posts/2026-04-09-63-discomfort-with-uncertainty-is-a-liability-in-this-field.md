@@ -2,7 +2,6 @@
 title: "63. Discomfort with Uncertainty Is a Liability in This Field"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Agentic systems are probabilistic, the field is young, and the right answer to many important questions is genuinely unknown."
 ---

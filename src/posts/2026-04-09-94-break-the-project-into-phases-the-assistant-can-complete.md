@@ -2,7 +2,6 @@
 title: "94. Break the Project into Phases the Assistant Can Complete"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "A project described as a single continuous flow is hard to work on with an AI assistant."
 ---

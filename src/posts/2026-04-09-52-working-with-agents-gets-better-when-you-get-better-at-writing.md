@@ -2,7 +2,6 @@
 title: "52. Working with Agents Gets Better When You Get Better at Writing"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "The developers who get the most out of agents tend to be unusually good writers."
 ---

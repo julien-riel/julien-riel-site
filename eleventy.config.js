@@ -190,23 +190,23 @@ export default function(eleventyConfig) {
       return d.getFullYear().toString();
     }
 
-    if (format === "fr") {
-      return d.toLocaleDateString("fr-FR", {
-        day: "2-digit",
-        month: "2-digit",
+    if (format === "fr" || format === "short") {
+      return d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
         year: "numeric",
       });
     }
 
     if (format === "long") {
-      return d.toLocaleDateString("fr-FR", {
+      return d.toLocaleDateString("en-US", {
         day: "numeric",
         month: "long",
         year: "numeric",
       });
     }
 
-    return d.toLocaleDateString("fr-FR");
+    return d.toLocaleDateString("en-US");
   });
 
   // Filter: limit array length
@@ -254,6 +254,14 @@ export default function(eleventyConfig) {
       const tags = post.data.tags || [];
       return tags.includes(tag);
     }).length;
+  });
+
+  // Filter: estimate reading time in minutes
+  eleventyConfig.addFilter("readingTime", (content) => {
+    if (!content) return "1 min";
+    const words = content.replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean).length;
+    const minutes = Math.max(1, Math.round(words / 200));
+    return `${minutes} min`;
   });
 
   // Filter: strip HTML tags from content

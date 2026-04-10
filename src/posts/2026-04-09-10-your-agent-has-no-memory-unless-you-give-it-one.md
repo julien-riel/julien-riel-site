@@ -2,7 +2,6 @@
 title: "10. Your Agent Has No Memory Unless You Give It One"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Every time you call a language model, it starts fresh."
 ---

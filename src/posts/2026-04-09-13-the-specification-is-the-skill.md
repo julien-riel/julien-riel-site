@@ -2,7 +2,6 @@
 title: "13. The Specification Is the Skill"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "The developers who get the most out of agents aren't the ones who know the most about models."
 ---

@@ -2,7 +2,6 @@
 title: "74. Give the Assistant Your Constraints, Not Just Your Requirements"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "\"Write a function that parses this config file\" produces something."
 ---

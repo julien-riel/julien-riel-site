@@ -2,7 +2,6 @@
 title: "17. Examples Outperform Instructions"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - prompting-as-engineering
 description: "If you want an agent to produce output in a particular format, style, or structure, showing it an example is almost always more effective than describing what you want."
 ---

@@ -2,7 +2,6 @@
 title: "34. The Retry Loop Is Where Systems Go to Die"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Retry logic is necessary."
 ---

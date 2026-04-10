@@ -2,7 +2,6 @@
 title: "84. Show the Assistant What Good Looks Like in Your Codebase"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Abstract instructions produce generic code."
 ---

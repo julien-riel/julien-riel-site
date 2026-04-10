@@ -2,7 +2,6 @@
 title: "48. Prompt Injection Is the New SQL Injection"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "In the early days of web development, SQL injection was the vulnerability everyone knew about and half the teams ignored."
 ---

@@ -2,7 +2,6 @@
 title: "71. Build for the Agent You Have, Not the Agent You Wish You Had"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Every developer working with agents has a gap between the current capabilities of the tools they're using and the capabilities they wish those tools had."
 ---

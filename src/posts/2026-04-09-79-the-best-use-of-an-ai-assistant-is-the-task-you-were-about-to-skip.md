@@ -2,7 +2,6 @@
 title: "79. The Best Use of an AI Assistant Is the Task You Were About to Skip"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Every codebase has work that everyone knows should be done and nobody does."
 ---

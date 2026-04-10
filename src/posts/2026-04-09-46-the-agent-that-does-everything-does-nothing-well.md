@@ -2,7 +2,6 @@
 title: "46. The Agent That Does Everything Does Nothing Well"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - agents-in-the-real-world
 description: "There's a fantasy version of an agentic system where one agent handles everything — any question, any task, any domain, with equal competence across all of them."
 ---

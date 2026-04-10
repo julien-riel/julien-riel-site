@@ -2,7 +2,6 @@
 title: "32. Orchestration Is Just Plumbing — Treat It That Way"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - building-agentic-systems
 description: "Orchestration frameworks have a way of becoming the center of attention in agentic systems."
 ---

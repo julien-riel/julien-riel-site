@@ -2,7 +2,6 @@
 title: "69. The Field Rewards Generalists Who Go Deep on One Thing"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - mindset
 description: "Agentic programming sits at the intersection of software engineering, system design, language and communication, domain expertise, and product thinking."
 ---

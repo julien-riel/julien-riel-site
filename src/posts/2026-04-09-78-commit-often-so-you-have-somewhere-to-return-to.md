@@ -2,7 +2,6 @@
 title: "78. Commit Often, So You Have Somewhere to Return To"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "Working with an AI coding assistant changes the rhythm of development."
 ---

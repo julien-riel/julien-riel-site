@@ -2,7 +2,6 @@
 title: "3. Your Agent Is Only as Good as Its Context"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - working-with-agents
 description: "Garbage in, garbage out is one of the oldest principles in computing."
 ---

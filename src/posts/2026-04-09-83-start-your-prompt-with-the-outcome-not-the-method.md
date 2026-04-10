@@ -2,7 +2,6 @@
 title: "83. Start Your Prompt with the Outcome, Not the Method"
 date: 2026-04-09
 tags:
-  - agentic-programming
   - developer-as-user
 description: "\"Refactor this function\" is a method instruction."
 ---
