@@ -1,9 +1,4 @@
-{% set currentLang = lang or "fr" %}
-{% set t = i18n[currentLang] %}
 {% set siteDesc = metadata.description[currentLang] or metadata.description %}
-{% set altLang = "en" if currentLang == "fr" else "fr" %}
-{% set langPrefix = "/en" if currentLang == "en" else "" %}
-{% set altPrefix = "/en" if currentLang == "fr" else "" %}
 <!DOCTYPE html>
 <html lang="{{ currentLang }}">
 <head>

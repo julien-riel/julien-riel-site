@@ -151,6 +151,16 @@ export default function(eleventyConfig) {
     return Image.generateHTML(metadata, imageAttributes);
   });
 
+  // Computed data: make translation strings available everywhere
+  eleventyConfig.addGlobalData("eleventyComputed", {
+    currentLang: (data) => data.lang || "fr",
+    t: (data) => {
+      const lang = data.lang || "fr";
+      return data.i18n ? data.i18n[lang] : {};
+    },
+    langPrefix: (data) => (data.lang || "fr") === "en" ? "/en" : "",
+  });
+
   // Collection: all posts sorted by date (newest first), excluding drafts
   eleventyConfig.addCollection("posts", function(collectionApi) {
     return collectionApi
