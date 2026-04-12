@@ -3,19 +3,19 @@ title: "9. Le déterminisme est un choix que vous devez faire délibérément"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "By default, language models are non-deterministic."
+description: "Par défaut, les LLM sont non déterministes."
 ---
 
-By default, language models are non-deterministic. Run the same prompt twice and you'll get similar outputs, not identical ones. For some tasks that's fine — even desirable. For others, it's a hidden bug waiting to surface in production.
+Par défaut, les LLM sont non déterministes. Lance le même prompt deux fois et tu obtiendras des outputs similaires, pas identiques. Pour certaines tâches, c'est correct — même souhaitable. Pour d'autres, c'est un bug caché qui attend de faire surface en production.
 
-The problem isn't non-determinism itself. The problem is non-determinism you didn't choose. When you build a system without thinking about whether it needs to be deterministic, you get a system whose behavior you can't fully reason about, can't fully test, and can't fully explain to users when they ask why they got a different result today than they did yesterday.
+Le problème, ce n'est pas le non-déterminisme lui-même. Le problème, c'est le non-déterminisme que tu n'as pas choisi. Quand tu construis un système sans réfléchir à savoir s'il doit être déterministe, tu obtiens un système dont tu ne peux pas pleinement raisonner le comportement, que tu ne peux pas pleinement tester, et que tu ne peux pas pleinement expliquer à tes utilisateurs quand ils demandent pourquoi ils ont eu un résultat différent aujourd'hui que hier.
 
-Most APIs expose a temperature parameter for exactly this reason. Temperature zero — or close to it — makes the model pick the most likely token at each step, which produces near-deterministic outputs for most inputs. Higher temperatures introduce more randomness, which produces more varied outputs. This is a dial you can turn. Turning it intentionally is part of the architecture; leaving it at the default is a decision by omission.
+La plupart des APIs exposent un paramètre de temperature pour exactement cette raison. Temperature zéro — ou proche — fait que le modèle choisit le token le plus probable à chaque étape, ce qui produit des outputs quasi déterministes pour la plupart des inputs. Des températures plus élevées introduisent plus d'aléatoire, ce qui produit des outputs plus variés. C'est une molette que tu peux tourner. La tourner intentionnellement fait partie de l'architecture ; la laisser à la valeur par défaut est une décision par omission.
 
-The cases where determinism matters most are the ones where your system's output feeds into something else. If the agent's output is parsed by downstream code, variability in format breaks the parser. If the agent makes a decision that's logged and audited, you need to be able to reproduce it. If the agent's output is shown to a user and they come back the next day expecting consistency, non-determinism is a UX problem.
+Les cas où le déterminisme compte le plus sont ceux où l'output de ton système alimente quelque chose d'autre. Si l'output de l'agent est parsé par du code en aval, la variabilité de format casse le parser. Si l'agent prend une décision qui est loggée et auditée, tu dois pouvoir la reproduire. Si l'output de l'agent est montré à un utilisateur et qu'il revient le lendemain en s'attendant à de la cohérence, le non-déterminisme est un problème d'UX.
 
-The cases where non-determinism is an asset are creative tasks, brainstorming, and any situation where you want variety across multiple runs. Generating five alternative headlines benefits from variability. Extracting a structured address from a form submission does not.
+Les cas où le non-déterminisme est un atout sont les tâches créatives, le brainstorming, et toute situation où tu veux de la variété à travers plusieurs runs. Générer cinq titres alternatifs bénéficie de la variabilité. Extraire une adresse structurée d'un formulaire soumis, non.
 
-This is a decision worth making explicitly, per task, per system. Not once at the top level — different agents in the same pipeline might have different determinism requirements. The classifier that routes tasks probably wants temperature near zero. The agent that drafts responses might want a little more range.
+C'est une décision qui mérite d'être prise explicitement, par tâche, par système. Pas une seule fois au niveau supérieur — différents agents dans le même pipeline peuvent avoir des exigences de déterminisme différentes. Le classificateur qui route les tâches veut probablement une temperature proche de zéro. L'agent qui rédige des réponses veut peut-être un peu plus de marge.
 
-Know what you need. Set it on purpose. The default is not a design decision — it's a deferred one.
+Sache ce dont tu as besoin. Règle-le exprès. Le défaut n'est pas une décision de design — c'est une décision reportée.

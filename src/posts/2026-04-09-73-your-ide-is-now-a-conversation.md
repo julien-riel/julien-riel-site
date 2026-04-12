@@ -3,15 +3,15 @@ title: "73. Votre IDE est maintenant une conversation"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "The developers who get the least out of AI coding assistants are the ones who use them like autocomplete — they wait for a suggestion, accept it or reject it, and move on."
+description: "Les développeurs qui tirent le moins des AI coding assistants sont ceux qui les utilisent comme de l'autocomplétion — ils attendent une suggestion, l'acceptent ou la rejettent, et passent à autre chose."
 ---
 
-The developers who get the least out of AI coding assistants are the ones who use them like autocomplete — they wait for a suggestion, accept it or reject it, and move on. The developers who get the most treat the assistant as a thinking partner across the entire duration of a problem. The difference in outcome isn't marginal. It's the difference between a faster typist and a fundamentally different way of working.
+Les développeurs qui tirent le moins des AI coding assistants sont ceux qui les utilisent comme de l'autocomplétion — ils attendent une suggestion, l'acceptent ou la rejettent, et passent à autre chose. Les développeurs qui en tirent le plus traitent l'assistant comme un partenaire de réflexion pendant toute la durée d'un problème. La différence de résultat n'est pas marginale. C'est la différence entre un dactylographe plus rapide et une façon de travailler fondamentalement différente.
 
-The conversational frame changes what you ask for. Autocomplete users ask for the next line. Conversational users ask for an approach, evaluate it, push back, ask for an alternative, then ask for the implementation of the one they chose. They describe the problem before they describe the solution. They ask what could go wrong. They use the assistant to explore a decision space before committing to a direction.
+Le cadre conversationnel change ce que tu demandes. Les utilisateurs d'autocomplétion demandent la prochaine ligne. Les utilisateurs conversationnels demandent une approche, l'évaluent, poussent en retour, demandent une alternative, puis demandent l'implémentation de celle qu'ils ont choisie. Ils décrivent le problème avant de décrire la solution. Ils demandent ce qui pourrait mal tourner. Ils utilisent l'assistant pour explorer un espace de décision avant de s'engager dans une direction.
 
-This requires a shift in how you think about the interaction. Autocomplete is fast but shallow — it gives you the most likely continuation, which is often the most obvious one. Conversation is slower but deeper — it gives you something shaped by the specific constraints and tradeoffs of your situation, because you've had the chance to articulate them.
+Cela exige un changement dans ta façon de penser l'interaction. L'autocomplétion est rapide mais superficielle — elle te donne la continuation la plus probable, qui est souvent la plus évidente. La conversation est plus lente mais plus profonde — elle te donne quelque chose de façonné par les contraintes et les arbitrages spécifiques de ta situation, parce que tu as eu la chance de les articuler.
 
-The practical change is small: before asking the assistant to write code, spend two sentences describing the problem. Not the solution — the problem. What you're trying to accomplish, what constraints matter, what you've already ruled out. That context changes the output significantly, and the habit of providing it forces a clarity of thinking that improves the work regardless of what the assistant produces.
+Le changement pratique est petit : avant de demander à l'assistant d'écrire du code, passe deux phrases à décrire le problème. Pas la solution — le problème. Ce que tu essaies d'accomplir, quelles contraintes comptent, ce que tu as déjà exclu. Ce contexte change significativement la sortie, et l'habitude de le fournir force une clarté de pensée qui améliore le travail, peu importe ce que l'assistant produit.
 
-The blank prompt box isn't a place to receive code. It's where the thinking starts.
+La boîte de prompt vide n'est pas un endroit pour recevoir du code. C'est là où commence la réflexion.

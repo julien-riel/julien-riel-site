@@ -1,19 +1,19 @@
 ---
-title: "33. L'état est le problème le plus difficile en programmation agentique"
+title: "33. Le state est le problème le plus difficile en programmation agentic"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "Every hard problem in distributed systems eventually reduces to state."
+description: "Tout problème difficile dans les systèmes distribués se réduit finalement au state."
 ---
 
-Every hard problem in distributed systems eventually reduces to state. Who owns it, where it lives, how it stays consistent, what happens when it diverges. Agentic systems inherit all of these problems and add new ones, because the agent itself is stateless — it has no memory between calls — while the tasks it performs are often deeply stateful. Bridging that gap is where most of the real complexity lives.
+Tout problème difficile dans les systèmes distribués se réduit finalement au state. Qui le possède, où il vit, comment il reste cohérent, ce qui se passe quand il diverge. Les systèmes agentic héritent de tous ces problèmes et en ajoutent de nouveaux, parce que l'agent lui-même est sans state — il n'a pas de mémoire entre les appels — tandis que les tâches qu'il effectue sont souvent profondément stateful. Combler cet écart est là où vit la plupart de la vraie complexité.
 
-Consider a multi-step task: the agent retrieves information, makes a decision, calls a tool, waits for a result, makes another decision. Each step depends on the results of previous ones. If the task fails halfway through — the tool times out, the context window fills, the user interrupts — you need to know what was completed, what wasn't, and whether it's safe to resume or necessary to restart. The agent can't tell you, because the agent doesn't remember. Your system has to.
+Prends une tâche multi-étapes : l'agent récupère de l'information, prend une décision, appelle un tool, attend un résultat, prend une autre décision. Chaque étape dépend des résultats des précédentes. Si la tâche échoue à mi-chemin — le tool fait timeout, la context window se remplit, l'utilisateur interrompt — tu dois savoir ce qui a été complété, ce qui ne l'a pas été, et s'il est sûr de reprendre ou s'il faut redémarrer. L'agent ne peut pas te le dire, parce que l'agent ne se souvient pas. Ton système doit le faire.
 
-The approaches are well-known from distributed systems: checkpointing state at each step, using event logs to reconstruct what happened, designing tasks to be resumable from any checkpoint. They're well-known because they're necessary — the same fundamental problem has been solved in different forms many times. The mistake is thinking that agentic systems are somehow different, that the conversational interface or the AI backbone changes the underlying state management challenge. It doesn't. The agent is just another stateless service that needs external state management to participate in stateful workflows.
+Les approches sont bien connues des systèmes distribués : faire du checkpointing du state à chaque étape, utiliser des event logs pour reconstruire ce qui s'est passé, concevoir les tâches pour être reprenables depuis n'importe quel checkpoint. Elles sont bien connues parce qu'elles sont nécessaires — le même problème fondamental a été résolu sous différentes formes de nombreuses fois. L'erreur, c'est de penser que les systèmes agentic sont en quelque sorte différents, que l'interface conversationnelle ou la colonne vertébrale IA change le défi sous-jacent de gestion du state. Non. L'agent n'est qu'un autre service sans state qui a besoin d'une gestion de state externe pour participer à des workflows stateful.
 
-What is different is that the state in agentic systems often includes things that are harder to serialize than database records. The agent's current understanding of a problem. The context it's been given. The implicit decisions it's made in the course of a long conversation. Capturing all of this in a way that lets you resume meaningfully — not just technically — requires thought about what actually needs to persist and what can be reconstructed.
+Ce qui est différent, c'est que le state dans les systèmes agentic inclut souvent des choses qui sont plus difficiles à sérialiser que des enregistrements de base de données. La compréhension actuelle qu'a l'agent d'un problème. Le contexte qu'on lui a donné. Les décisions implicites qu'il a prises au cours d'une longue conversation. Capturer tout ça d'une façon qui te permette de reprendre de manière significative — pas juste techniquement — demande de réfléchir à ce qui doit réellement persister et ce qui peut être reconstruit.
 
-The teams that handle this well design their state management before they design their agent logic. They ask: if this task is interrupted at any point, what do we need to resume it? They answer that question concretely and build the infrastructure to maintain it.
+Les équipes qui gèrent bien ça conçoivent leur gestion de state avant de concevoir leur logique d'agent. Elles demandent : si cette tâche est interrompue à n'importe quel moment, de quoi avons-nous besoin pour la reprendre ? Elles répondent à cette question concrètement et construisent l'infrastructure pour la maintenir.
 
-The agent forgets everything. Design as if that's a constraint, not an oversight.
+L'agent oublie tout. Conçois comme si c'était une contrainte, pas un oubli.

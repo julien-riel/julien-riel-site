@@ -3,17 +3,17 @@ title: "6. Les agents échouent gracieusement ou pas — il n'y a pas de milieu"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "Most systems fail on a spectrum."
+description: "La plupart des systèmes échouent sur un spectre."
 ---
 
-Most systems fail on a spectrum. A web server under load starts dropping requests slowly, giving you time to notice and respond. A database running low on disk space degrades gracefully, warning you before it stops. The failure is visible, incremental, and recoverable. You build monitoring for exactly this kind of decay.
+La plupart des systèmes échouent sur un spectre. Un serveur web sous charge commence à laisser tomber des requêtes lentement, te donnant le temps de remarquer et de réagir. Une base de données à court d'espace disque se dégrade gracieusement, t'avertissant avant de s'arrêter. L'échec est visible, incrémental, et récupérable. Tu construis du monitoring pour exactement ce genre de décrépitude.
 
-Agents fail differently. They don't degrade — they drift. The outputs get subtly worse over time, in ways that are hard to detect unless you're looking specifically for them. The agent starts making slightly different assumptions. Its tone shifts. It begins handling edge cases in new ways. Nothing breaks loudly. The system is still running. The outputs are still coming. They're just not right anymore.
+Les agents échouent différemment. Ils ne se dégradent pas — ils dérivent. Les outputs deviennent subtilement pires avec le temps, de façons difficiles à détecter à moins que tu les cherches spécifiquement. L'agent commence à faire des hypothèses légèrement différentes. Son ton change. Il commence à gérer les cas limites de nouvelles façons. Rien ne casse bruyamment. Le système tourne toujours. Les outputs arrivent toujours. Ils ne sont juste plus justes.
 
-This makes graceful degradation in agentic systems a design problem you have to solve on purpose, not a property you get for free. You have to decide, in advance, what failure looks like and how you want the system to behave when it gets there. An agent that hits a tool failure — does it retry silently, surface the error to the user, or attempt a workaround? An agent that receives contradictory information — does it flag the contradiction, pick the most recent source, or ask for clarification? Each of these is a design decision. Leave them unspecified and the agent will make them for you, inconsistently.
+Ça fait de la dégradation gracieuse dans les systèmes agentiques un problème de design que tu dois résoudre exprès, pas une propriété que tu reçois gratuitement. Tu dois décider, à l'avance, à quoi ressemble l'échec et comment tu veux que le système se comporte quand il y arrive. Un agent qui se heurte à un tool failure — est-ce qu'il retente silencieusement, remonte l'erreur à l'utilisateur, ou tente un contournement ? Un agent qui reçoit des informations contradictoires — est-ce qu'il signale la contradiction, choisit la source la plus récente, ou demande des clarifications ? Chacune de ces choses est une décision de design. Laisse-les non spécifiées et l'agent les prendra pour toi, de façon incohérente.
 
-The ungraceful failure is easier to design for, perversely. If your agent is going to fail badly, fail loudly. Surface the error. Stop the process. Make noise. A loud failure is debuggable. A silent drift that corrupts your data or misleads your users for three weeks before someone notices — that's the failure mode you actually can't afford.
+L'échec ingracieux est plus facile à designer, paradoxalement. Si ton agent va échouer salement, qu'il échoue bruyamment. Remonte l'erreur. Arrête le processus. Fais du bruit. Un échec bruyant est déboguable. Une dérive silencieuse qui corrompt tes données ou induit tes utilisateurs en erreur pendant trois semaines avant que quelqu'un remarque — c'est le mode d'échec que tu ne peux vraiment pas te permettre.
 
-The practical question to ask for every tool your agent uses, every external dependency it touches, every edge case in its task: what do I want to happen when this goes wrong? Write that down. Build it. Test it. Don't leave it to chance and don't assume the model will handle it sensibly, because sensible and consistent are not the same thing.
+La question pratique à te poser pour chaque tool que ton agent utilise, chaque dépendance externe qu'il touche, chaque cas limite dans sa tâche : qu'est-ce que je veux qu'il se passe quand ça tourne mal ? Écris-le. Construis-le. Teste-le. Ne le laisse pas au hasard et ne suppose pas que le modèle le gérera sensément, parce que sensé et cohérent ne sont pas la même chose.
 
-Failure will come. The only variable is whether you designed for it.
+L'échec viendra. La seule variable, c'est si tu l'as designé.

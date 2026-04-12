@@ -1,19 +1,19 @@
 ---
-title: "68. Les systèmes agentiques exposent les lacunes de votre propre réflexion"
+title: "68. Les systèmes agentic exposent les lacunes de ta propre réflexion"
 date: 2026-04-09
 tags:
   - mindset
-description: "One of the less-discussed effects of working with agents is how clearly they reveal the places where your own thinking is incomplete."
+description: "Un des effets moins discutés du travail avec des agents, c'est à quel point ils révèlent clairement les endroits où ta propre réflexion est incomplète."
 ---
 
-One of the less-discussed effects of working with agents is how clearly they reveal the places where your own thinking is incomplete. You think you understand a task — you've done it yourself, you know what good looks like — and then you try to specify it for an agent and discover you can't. The parts that felt obvious turn out to be implicit. The judgment calls you made automatically turn out to be unjustifiable on inspection. The process you thought was clear turns out to have gaps you were filling with knowledge you didn't know you had.
+Un des effets moins discutés du travail avec des agents, c'est à quel point ils révèlent clairement les endroits où ta propre réflexion est incomplète. Tu crois comprendre une tâche — tu l'as faite toi-même, tu sais à quoi ressemble le bon résultat — et puis tu essaies de la spécifier pour un agent et tu découvres que tu n'y arrives pas. Les parties qui semblaient évidentes se révèlent implicites. Les jugements que tu faisais automatiquement se révèlent injustifiables à l'inspection. Le processus que tu croyais clair se révèle avoir des trous que tu comblais avec une connaissance dont tu ignorais la présence.
 
-This is uncomfortable and useful in roughly equal measure. Uncomfortable because it surfaces the limits of your own understanding in a way that's hard to ignore. Useful because those limits were always there — working with agents just makes them visible, which is the first step toward addressing them.
+C'est inconfortable et utile à peu près à parts égales. Inconfortable parce que ça fait surface les limites de ta propre compréhension d'une façon difficile à ignorer. Utile parce que ces limites étaient toujours là — travailler avec des agents les rend simplement visibles, ce qui est la première étape pour les traiter.
 
-The specification problem is where this shows up most acutely. Writing a precise prompt for a task you know well requires translating tacit knowledge into explicit instructions. Tacit knowledge is the kind you can't fully articulate — the sense of when something is good enough, the feel for which edge cases matter, the judgment that makes a senior developer's work different from a junior's even when neither can fully explain why. Agents can't use tacit knowledge. They need explicit instructions. The attempt to make the tacit explicit reveals how much of your expertise lives in that inarticulate space.
+Le problème de la spécification est l'endroit où ça se manifeste le plus vivement. Écrire un prompt précis pour une tâche que tu connais bien exige de traduire le savoir tacite en instructions explicites. Le savoir tacite est celui que tu ne peux pas pleinement articuler — le sens de quand quelque chose est assez bon, le flair pour savoir quels cas limites comptent, le jugement qui fait que le travail d'un développeur senior diffère de celui d'un junior même quand ni l'un ni l'autre ne peut pleinement l'expliquer. Les agents ne peuvent pas utiliser le savoir tacite. Ils ont besoin d'instructions explicites. La tentative de rendre le tacite explicite révèle à quel point ton expertise vit dans cet espace inarticulé.
 
-The productive response is to treat agent failures as prompts for self-examination. When the agent does something wrong that you could have done right, ask: what did I know that the agent didn't? Then ask: could I have written that down? If yes, write it down — it belongs in the prompt. If no, you've found a piece of expertise that you hold intuitively but haven't yet made explicit. That's worth understanding for its own sake, separate from whether you can encode it for the agent.
+La réponse productive, c'est de traiter les échecs d'agents comme des invitations à l'auto-examen. Quand l'agent fait quelque chose de mal que tu aurais pu faire correctement, demande-toi : qu'est-ce que je savais que l'agent ne savait pas? Puis demande-toi : aurais-je pu l'écrire? Si oui, écris-le — ça appartient au prompt. Sinon, tu as trouvé un morceau d'expertise que tu détiens intuitivement mais que tu n'as pas encore rendu explicite. Ça vaut la peine d'être compris pour lui-même, indépendamment de savoir si tu peux l'encoder pour l'agent.
 
-Over time, working with agents makes you a more explicit thinker. The discipline of specification builds the habit of clarity. The habit of clarity makes you better at the parts of the work that don't involve agents at all.
+Avec le temps, travailler avec des agents fait de toi un penseur plus explicite. La discipline de la spécification construit l'habitude de la clarté. L'habitude de la clarté te rend meilleur dans les parties du travail qui n'impliquent pas d'agents du tout.
 
-The agent doesn't just do your thinking. It shows you where your thinking was.
+L'agent ne fait pas juste ta réflexion à ta place. Il te montre où ta réflexion se trouvait.

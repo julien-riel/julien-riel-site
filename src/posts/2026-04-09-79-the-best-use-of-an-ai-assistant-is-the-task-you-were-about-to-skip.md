@@ -3,15 +3,15 @@ title: "79. Le meilleur usage d'un assistant IA est la tâche que vous alliez sa
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Every codebase has work that everyone knows should be done and nobody does."
+description: "Chaque codebase a du travail que tout le monde sait qu'il faudrait faire et que personne ne fait."
 ---
 
-Every codebase has work that everyone knows should be done and nobody does. The tests that would catch that edge case but take an hour to write. The documentation that's six months out of date. The error messages that still say "something went wrong." The refactoring that would make the module cleaner but isn't blocking anything. This is the work that accumulates quietly and makes a codebase harder to work with over time.
+Chaque codebase a du travail que tout le monde sait qu'il faudrait faire et que personne ne fait. Les tests qui attraperaient ce cas limite mais qui prennent une heure à écrire. La documentation qui date de six mois. Les messages d'erreur qui disent encore "something went wrong." Le refactoring qui rendrait le module plus propre mais qui ne bloque rien. C'est ce travail qui s'accumule en silence et rend un codebase plus difficile à utiliser avec le temps.
 
-AI assistants change the economics of this work dramatically. The hour it takes to write a good test suite for a module drops to fifteen minutes when you can describe what needs to be tested and have the scaffolding generated. Documentation that nobody writes because it's tedious to maintain can be generated from the code and reviewed rather than authored from scratch. The refactoring that felt like a weekend project becomes an afternoon when the mechanical parts are handled by the assistant.
+Les AI assistants changent l'économie de ce travail de façon spectaculaire. L'heure nécessaire pour écrire une bonne suite de tests pour un module tombe à quinze minutes quand tu peux décrire ce qui doit être testé et faire générer l'échafaudage. La documentation que personne n'écrit parce qu'elle est fastidieuse à maintenir peut être générée à partir du code et revue plutôt qu'écrite de zéro. Le refactoring qui semblait être un projet de fin de semaine devient un après-midi quand les parties mécaniques sont prises en charge par l'assistant.
 
-The leverage is highest precisely where human resistance is highest — repetitive, tedious, important-but-not-urgent work. The assistant doesn't find it tedious. It doesn't have a backlog of more interesting work competing for its attention. It will write the fifteenth test case with the same care as the first.
+Le levier est le plus haut précisément là où la résistance humaine est la plus haute — le travail répétitif, fastidieux, important-mais-pas-urgent. L'assistant ne le trouve pas fastidieux. Il n'a pas un backlog de travail plus intéressant qui se dispute son attention. Il écrira le quinzième cas de test avec le même soin que le premier.
 
-The discipline is redirecting some of the velocity the assistant provides back into the work you've been deferring, rather than using all of it to go faster on the work that was already getting done. A team that ships features faster is good. A team that ships features faster and reduces its technical debt simultaneously is better — and that's achievable when the tedious work stops being the bottleneck.
+La discipline consiste à rediriger une partie de la vélocité que l'assistant fournit vers le travail que tu as reporté, plutôt qu'à utiliser toute cette vélocité pour aller plus vite sur le travail qui se faisait déjà. Une équipe qui livre des features plus vite, c'est bien. Une équipe qui livre des features plus vite et réduit sa dette technique simultanément, c'est mieux — et c'est atteignable quand le travail fastidieux cesse d'être le goulot d'étranglement.
 
-Use the time the assistant saves on the work you never had time for. That's where the compounding value is.
+Utilise le temps que l'assistant économise sur le travail pour lequel tu n'as jamais eu le temps. C'est là que réside la valeur cumulative.

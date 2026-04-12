@@ -1,19 +1,19 @@
 ---
-title: "47. La sécurité commence par ce que vous mettez dans la fenêtre de contexte"
+title: "47. La sécurité commence par ce que tu mets dans le context window"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world
-description: "The context window is the most sensitive surface in an agentic system."
+description: "Le context window est la surface la plus sensible d'un système d'agents."
 ---
 
-The context window is the most sensitive surface in an agentic system. Everything the agent knows, everything it can act on, everything that shapes its behavior — it all passes through the context. That makes it the primary attack surface, the primary data leakage risk, and the primary place where security decisions either get made correctly or get deferred until something goes wrong.
+Le context window est la surface la plus sensible d'un système d'agents. Tout ce que l'agent sait, tout ce sur quoi il peut agir, tout ce qui façonne son comportement — tout passe par le context. Ça en fait la surface d'attaque principale, le risque principal de fuite de données, et l'endroit principal où les décisions de sécurité sont soit prises correctement, soit reportées jusqu'à ce que quelque chose tourne mal.
 
-The data leakage risk is the most immediate. Developers building retrieval systems pull documents into the context to give the agent relevant information. If those documents contain sensitive data — personal information, credentials, internal business data — and the agent's output surfaces that data to users who shouldn't see it, the retrieval system has become a data exposure mechanism. The agent doesn't know what's sensitive. It knows what it was given and what it was asked. If it was given sensitive data and asked a question whose answer involves that data, it will use it.
+Le risque de fuite de données est le plus immédiat. Les développeurs qui construisent des systèmes de récupération tirent des documents dans le context pour donner à l'agent des informations pertinentes. Si ces documents contiennent des données sensibles — informations personnelles, identifiants, données internes — et que la sortie de l'agent expose ces données à des utilisateurs qui ne devraient pas les voir, le système de récupération est devenu un mécanisme d'exposition de données. L'agent ne sait pas ce qui est sensible. Il sait ce qu'on lui a donné et ce qu'on lui a demandé. Si on lui a donné des données sensibles et posé une question dont la réponse implique ces données, il les utilisera.
 
-The fix requires thinking carefully about what goes into retrieval. Not just what's relevant, but what's appropriate for the agent to see given the identity and permissions of the user making the request. Access control at the retrieval layer — ensuring the agent only sees documents the user is authorized to see — is not optional in any system that handles data with meaningful sensitivity differences between users.
+La solution exige de réfléchir soigneusement à ce qui entre dans la récupération. Pas seulement ce qui est pertinent, mais ce qui est approprié pour que l'agent le voie compte tenu de l'identité et des permissions de l'utilisateur qui fait la requête. Le contrôle d'accès à la couche de récupération — s'assurer que l'agent ne voit que les documents que l'utilisateur est autorisé à voir — n'est pas optionnel dans un système qui gère des données avec des différences de sensibilité significatives entre utilisateurs.
 
-Credentials deserve special attention. System prompts that contain API keys, database passwords, or authentication tokens are common in early-stage development and catastrophically wrong in production. The context window is logged. It's passed through APIs. It ends up in places you didn't intend. Credentials belong in environment variables and secrets managers, accessed at runtime, never embedded in prompts.
+Les identifiants méritent une attention particulière. Les system prompts qui contiennent des clés d'API, des mots de passe de base de données ou des tokens d'authentification sont courants en développement précoce et catastrophiquement faux en production. Le context window est logué. Il passe par des APIs. Il finit à des endroits que tu n'avais pas prévus. Les identifiants appartiennent aux variables d'environnement et aux gestionnaires de secrets, accédés à l'exécution, jamais intégrés dans les prompts.
 
-There's a broader principle here about least exposure. The agent should see the minimum information necessary to do its job. Not everything that might be useful — the minimum that's actually necessary. Every additional piece of context is an additional piece of information that can be misused, leaked, or manipulated.
+Il y a un principe plus large ici sur l'exposition minimale. L'agent devrait voir le minimum d'informations nécessaire pour faire son travail. Pas tout ce qui pourrait être utile — le minimum réellement nécessaire. Chaque morceau de context supplémentaire est un morceau d'information supplémentaire qui peut être détourné, divulgué ou manipulé.
 
-What you put in the context is what you're trusting the agent with. Choose carefully.
+Ce que tu mets dans le context, c'est ce que tu confies à l'agent. Choisis soigneusement.

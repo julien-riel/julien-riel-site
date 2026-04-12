@@ -1,19 +1,19 @@
 ---
-title: "20. Le meilleur prompt est celui que vous n'avez pas à changer"
+title: "20. Le meilleur prompt est celui que tu n'as pas à changer"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "Prompt engineering has a reputation for being iterative — you write something, see what breaks, fix it, repeat."
+description: "Le prompt engineering a la réputation d'être itératif — tu écris quelque chose, tu vois ce qui casse, tu corriges, tu recommences."
 ---
 
-Prompt engineering has a reputation for being iterative — you write something, see what breaks, fix it, repeat. That loop is real and necessary early on. But the goal of the loop is to exit it. A prompt you're still tuning after three months in production isn't a refined prompt. It's an unstable one.
+Le prompt engineering a la réputation d'être itératif — tu écris quelque chose, tu vois ce qui casse, tu corriges, tu recommences. Cette boucle est réelle et nécessaire au début. Mais le but de la boucle, c'est d'en sortir. Un prompt que tu es encore en train d'ajuster après trois mois en production n'est pas un prompt raffiné. C'est un prompt instable.
 
-Stability is underrated as a prompt quality. A prompt that produces slightly worse outputs but does so consistently is often more valuable than one that produces great outputs most of the time and mysterious failures the rest. Consistency is what makes a system predictable. Predictability is what makes it maintainable. Maintainability is what makes it survivable past the original author.
+La stabilité est une qualité sous-estimée d'un prompt. Un prompt qui produit des outputs légèrement moins bons mais de façon constante a souvent plus de valeur qu'un prompt qui produit d'excellents outputs la plupart du temps et des échecs mystérieux le reste. La cohérence, c'est ce qui rend un système prévisible. La prévisibilité, c'est ce qui le rend maintenable. La maintenabilité, c'est ce qui le fait survivre à son auteur original.
 
-The path to a stable prompt runs through understanding why it works, not just that it works. Teams that tune prompts empirically — change a word, see if it gets better, keep the change if it does — often end up with prompts that are fragile in ways they can't explain. The prompt works, but nobody knows which parts are load-bearing. When something changes — a new model version, a shift in the distribution of inputs, a new edge case — they can't reason about what to adjust.
+Le chemin vers un prompt stable passe par la compréhension de pourquoi il fonctionne, pas seulement du fait qu'il fonctionne. Les équipes qui ajustent leurs prompts de façon empirique — changer un mot, voir si c'est mieux, garder le changement si oui — finissent souvent avec des prompts fragiles d'une façon qu'elles ne peuvent pas expliquer. Le prompt marche, mais personne ne sait quelles parties sont porteuses. Quand quelque chose change — une nouvelle version du modèle, un changement dans la distribution des inputs, un nouveau cas limite — elles ne peuvent pas raisonner sur ce qu'il faut ajuster.
 
-Understanding why a prompt works requires the same analytical discipline as understanding why code works. What is each section doing? What behavior would change if this constraint were removed? What does this example teach the model that the instructions don't? When you can answer these questions, you can maintain the prompt. When you can't, you're cargo-culting.
+Comprendre pourquoi un prompt fonctionne exige la même discipline analytique que comprendre pourquoi du code fonctionne. Que fait chaque section ? Quel comportement changerait si cette contrainte était supprimée ? Qu'est-ce que cet exemple enseigne au modèle que les instructions n'enseignent pas ? Quand tu peux répondre à ces questions, tu peux maintenir le prompt. Quand tu ne peux pas, tu fais du cargo cult.
 
-There's a practical test for prompt stability: run it against a diverse set of inputs and look at the variance in output quality. High variance is a signal that the prompt is doing something inconsistent — that its behavior depends on input characteristics in ways you haven't fully mapped. Low variance means the prompt is doing something coherent that generalizes reliably.
+Il existe un test pratique de la stabilité d'un prompt : exécute-le contre un ensemble diversifié d'inputs et regarde la variance dans la qualité des outputs. Une variance élevée est le signal que le prompt fait quelque chose d'incohérent — que son comportement dépend de caractéristiques des inputs que tu n'as pas complètement cartographiées. Une variance faible signifie que le prompt fait quelque chose de cohérent qui généralise de façon fiable.
 
-The prompt you understand completely is the prompt you own. Everything else owns you.
+Le prompt que tu comprends complètement est le prompt qui t'appartient. Tout le reste te possède.

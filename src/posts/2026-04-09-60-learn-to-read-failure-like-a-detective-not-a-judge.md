@@ -3,21 +3,21 @@ title: "60. Apprenez à lire l'échec comme un détective, pas comme un juge"
 date: 2026-04-09
 tags:
   - mindset
-description: "When an agent fails, the instinct is to assign blame."
+description: "Quand un agent échoue, l'instinct est de désigner un coupable."
 ---
 
-When an agent fails, the instinct is to assign blame. The model hallucinated. The prompt was bad. The retrieval missed. You pick the culprit, fix it, and move on. This feels like debugging. It's actually just pattern matching with a verdict attached.
+Quand un agent échoue, l'instinct est de désigner un coupable. Le modèle a halluciné. Le prompt était mauvais. La récupération a raté. Tu choisis le coupable, tu corriges, tu passes à autre chose. Ça ressemble à du débogage. C'est en fait juste de la reconnaissance de patrons avec un verdict attaché.
 
-A detective doesn't start with a verdict. A detective starts with evidence and works backward. What actually happened? What does the log show? What was in the context window when things went wrong? What did the agent do just before it failed? The questions are specific and the answers are descriptive before they're evaluative.
+Un détective ne commence pas par un verdict. Un détective commence par les preuves et remonte à rebours. Qu'est-ce qui s'est réellement passé? Que montre le log? Qu'y avait-il dans la fenêtre de contexte quand les choses ont mal tourné? Qu'a fait l'agent juste avant d'échouer? Les questions sont précises et les réponses sont descriptives avant d'être évaluatives.
 
-This distinction matters because agent failures are usually overdetermined. The model did hallucinate, and the retrieval did miss, and the prompt was ambiguous, and the user's input was unusual, and all four of those things together produced the failure. If you pick one culprit and fix it, you may not have actually fixed anything — you've just changed which combination of factors will cause the next failure.
+Cette distinction compte parce que les échecs d'agents sont habituellement surdéterminés. Le modèle a halluciné, ET la récupération a raté, ET le prompt était ambigu, ET l'entrée de l'utilisateur était inhabituelle, et ces quatre choses ensemble ont produit l'échec. Si tu choisis un coupable et corriges, tu n'as peut-être rien corrigé du tout — tu as simplement changé quelle combinaison de facteurs causera le prochain échec.
 
-The judge mindset also creates a subtle organizational problem. If blame lands on the model, the response is to switch models. If blame lands on the prompt, the response is to rewrite it. These interventions are sometimes right, but they're often premature, made before you actually understand what happened. A team that regularly misdiagnoses failures builds a codebase full of fixes to problems they didn't have.
+Le mode de pensée du juge crée aussi un problème organisationnel subtil. Si le blâme tombe sur le modèle, la réponse est de changer de modèle. Si le blâme tombe sur le prompt, la réponse est de le réécrire. Ces interventions sont parfois justes, mais elles sont souvent prématurées, faites avant que tu comprennes vraiment ce qui s'est passé. Une équipe qui diagnostique régulièrement mal les échecs construit une base de code pleine de correctifs à des problèmes qu'elle n'avait pas.
 
-Diagnosis before intervention. Evidence before conclusion. The discipline is to stay curious for longer than feels comfortable — to resist the pull toward the fix until you're confident you understand what you're fixing.
+Diagnostic avant intervention. Preuve avant conclusion. La discipline, c'est de rester curieux plus longtemps que ce qui est confortable — de résister à l'attraction vers le correctif jusqu'à ce que tu sois certain de comprendre ce que tu corriges.
 
-Practically, this means logging more than you think you need to. It means building tools that let you replay agent runs with different inputs. It means writing up failure post-mortems that describe what happened, not just what was changed. The goal is a team that accumulates real understanding of how their systems fail, not just a growing list of patches.
+Concrètement, ça veut dire logger plus que tu ne crois avoir besoin. Ça veut dire construire des outils qui te permettent de rejouer les exécutions d'agents avec différentes entrées. Ça veut dire rédiger des post-mortems d'échecs qui décrivent ce qui s'est passé, pas juste ce qui a été changé. Le but est une équipe qui accumule une vraie compréhension de comment ses systèmes échouent, pas juste une liste croissante de rustines.
 
-Agent systems fail in combinations. The developers who get better at them are the ones who develop a taste for the whole picture — who can look at a failure and see not one broken thing, but a set of conditions that aligned badly, and then design against the conditions rather than just the symptom.
+Les systèmes d'agents échouent en combinaisons. Les développeurs qui s'améliorent sont ceux qui développent un goût pour la vue d'ensemble — qui peuvent regarder un échec et voir non pas une chose brisée, mais un ensemble de conditions mal alignées, et qui conçoivent ensuite contre les conditions plutôt que contre le symptôme.
 
-The culprit is rarely who you thought. The case is always more interesting than it first appears.
+Le coupable est rarement celui que tu pensais. L'enquête est toujours plus intéressante qu'elle n'en a l'air au départ.

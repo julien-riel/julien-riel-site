@@ -3,20 +3,20 @@ title: "40. Les meilleurs agents ont une personnalité étroite"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "A general-purpose agent sounds like the goal."
+description: "Un agent généraliste, ça sonne comme l'objectif."
 ---
 
-A general-purpose agent sounds like the goal. One agent, any task, maximum flexibility. In practice, general-purpose agents are mediocre at everything and excellent at nothing. The agents that work best in production have a sharply defined personality — a coherent sense of what they are, what they do, and how they do it — and that specificity is a feature, not a limitation.
+Un agent généraliste, ça sonne comme l'objectif. Un seul agent, n'importe quelle tâche, flexibilité maximale. En pratique, les agents généralistes sont médiocres en tout et excellents en rien. Les agents qui fonctionnent le mieux en production ont une personnalité nettement définie — un sens cohérent de ce qu'ils sont, de ce qu'ils font et de la manière dont ils le font — et cette spécificité est une qualité, pas une limite.
 
-Personality here means more than tone. It means a consistent set of values that govern how the agent makes tradeoffs. A code review agent that prioritizes correctness over readability will behave differently than one that prioritizes readability over correctness — not just in what it says, but in which issues it flags, which it lets pass, and how it explains its reasoning. Those are different agents, appropriate for different contexts. An agent that tries to balance both without a clear priority will be inconsistent in ways that frustrate the people relying on it.
+La personnalité, ici, c'est plus que le ton. C'est un ensemble cohérent de valeurs qui gouvernent la façon dont l'agent fait ses arbitrages. Un agent de revue de code qui priorise l'exactitude sur la lisibilité se comportera différemment d'un agent qui priorise la lisibilité sur l'exactitude — pas juste dans ce qu'il dit, mais dans les problèmes qu'il signale, ceux qu'il laisse passer et la façon dont il explique son raisonnement. Ce sont des agents différents, adaptés à des contextes différents. Un agent qui essaie de concilier les deux sans priorité claire sera incohérent d'une manière qui frustre les gens qui comptent sur lui.
 
-Narrow personality also makes agents more predictable, which makes them more trustworthy. Users who interact with an agent repeatedly develop a mental model of how it behaves. When the behavior is consistent — when the agent reliably does the same kind of thing in the same kind of way — that mental model is accurate and useful. When the behavior is variable — when the same question gets different treatment depending on subtle context differences — the mental model breaks down and users stop trusting their intuitions about the system.
+Une personnalité étroite rend aussi les agents plus prévisibles, ce qui les rend plus dignes de confiance. Les utilisateurs qui interagissent avec un agent de façon répétée développent un modèle mental de son comportement. Quand le comportement est cohérent — quand l'agent fait de manière fiable le même genre de choses de la même façon — ce modèle mental est juste et utile. Quand le comportement varie — quand la même question reçoit un traitement différent selon de subtiles différences de contexte — le modèle mental s'effondre et les utilisateurs cessent de faire confiance à leur intuition sur le système.
 
-The design process for a narrow personality is the same as the design process for a good system prompt: figure out what this agent is for, who it's for, what it values, and what it won't do — and then encode all of that explicitly. The agent's personality is a design artifact, not an emergent property. Left unspecified, it will be inconsistent. Specified precisely, it becomes a reliable characteristic of the system.
+Le processus de conception d'une personnalité étroite est le même que celui d'un bon system prompt : détermine à quoi sert cet agent, à qui il s'adresse, ce qu'il valorise et ce qu'il refuse de faire — puis encode tout cela explicitement. La personnalité de l'agent est un artefact de conception, pas une propriété émergente. Non spécifiée, elle sera incohérente. Spécifiée précisément, elle devient une caractéristique fiable du système.
 
-The temptation to make agents broader comes from wanting to avoid building multiple agents. That's the wrong optimization. Three narrow agents that each do their job well are better than one wide agent that does everything passably.
+La tentation d'élargir les agents vient du désir d'éviter de construire plusieurs agents. C'est la mauvaise optimisation. Trois agents étroits qui font chacun bien leur travail valent mieux qu'un agent large qui fait tout passablement.
 
-Know what the agent is. Make it that, completely.
+Sache ce qu'est l'agent. Fais-en exactement cela, complètement.
 
 ---
 

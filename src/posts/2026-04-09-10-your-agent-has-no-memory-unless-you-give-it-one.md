@@ -3,17 +3,17 @@ title: "10. Votre agent n'a pas de mémoire sauf si vous lui en donnez une"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "Every time you call a language model, it starts fresh."
+description: "Chaque fois que tu appelles un LLM, il repart de zéro."
 ---
 
-Every time you call a language model, it starts fresh. It has no recollection of the last conversation, the last task, the last mistake it made or the correction you gave it. The context window is the entirety of what it knows. When the window closes, everything in it is gone.
+Chaque fois que tu appelles un LLM, il repart de zéro. Il n'a aucun souvenir de la conversation précédente, de la dernière tâche, de la dernière erreur qu'il a faite ou de la correction que tu lui as donnée. Le context window est l'intégralité de ce qu'il sait. Quand la fenêtre se referme, tout ce qu'elle contenait disparaît.
 
-This is the part of agent architecture that surprises people the most, and keeps surprising them even after they know it intellectually. The agent seemed to understand the project. It seemed to have a feel for the codebase. Then you start a new session and it's a stranger again, asking questions you already answered last week.
+C'est la partie de l'architecture des agents qui surprend le plus les gens, et qui continue de les surprendre même après qu'ils l'ont comprise intellectuellement. L'agent semblait comprendre le projet. Il semblait avoir une intuition du codebase. Puis tu démarres une nouvelle session et c'est un inconnu, qui te pose des questions auxquelles tu as déjà répondu la semaine dernière.
 
-Memory in agentic systems is an engineering problem you have to solve explicitly. There are a few approaches, each with tradeoffs. You can extend the context window — keep adding conversation history until it fits. This works until it doesn't: context windows have limits, long contexts slow inference down, and models tend to lose track of information from the early parts of a long context. You can use retrieval — store past interactions in a vector database and pull in the relevant pieces at the start of each new session. This scales better but requires you to get retrieval right, which is its own problem. You can maintain structured state — a document or database that captures the key facts you want the agent to carry forward, updated explicitly after each session.
+La memory dans les systèmes agentiques est un problème d'ingénierie que tu dois résoudre explicitement. Il y a quelques approches, chacune avec ses compromis. Tu peux étendre le context window — continuer à ajouter l'historique de conversation jusqu'à ce que ça rentre. Ça marche jusqu'à ce que ça ne marche plus : les context windows ont des limites, les longs contextes ralentissent le reasoning, et les modèles ont tendance à perdre de vue les informations des premières parties d'un long contexte. Tu peux utiliser le retrieval — stocker les interactions passées dans une base vectorielle et ramener les morceaux pertinents au début de chaque nouvelle session. Ça passe mieux à l'échelle mais ça exige que tu fasses bien le retrieval, ce qui est un problème en soi. Tu peux maintenir un state structuré — un document ou une base de données qui capture les faits clés que tu veux que l'agent conserve, mis à jour explicitement après chaque session.
 
-The right approach depends on what kind of memory you need. There's a difference between episodic memory — what happened in past sessions — and semantic memory — what facts the agent should know about the domain. There's a difference between memory that needs to be exact and memory that just needs to be approximately right. Designing for memory means being specific about what needs to persist, why, and at what fidelity.
+La bonne approche dépend du type de memory dont tu as besoin. Il y a une différence entre la memory épisodique — ce qui s'est passé dans les sessions précédentes — et la memory sémantique — les faits que l'agent devrait connaître sur le domaine. Il y a une différence entre une memory qui doit être exacte et une memory qui doit juste être approximativement correcte. Concevoir pour la memory, c'est être précis sur ce qui doit persister, pourquoi, et à quelle fidélité.
 
-The mistake teams make is assuming memory will emerge from the model. It won't. The model is stateless by design. If your agent needs continuity across sessions, you have to build it, maintain it, and pass it in explicitly every time.
+L'erreur des équipes, c'est de supposer que la memory va émerger du modèle. Non. Le modèle est stateless par conception. Si ton agent a besoin de continuité entre les sessions, tu dois la construire, la maintenir, et la passer explicitement à chaque fois.
 
-The agent remembers nothing. You decide what it gets to keep.
+L'agent ne se souvient de rien. C'est toi qui décides ce qu'il garde.

@@ -3,20 +3,20 @@ title: "53. Vous êtes responsable de tout ce que fait l'agent"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world
-description: "When an agent makes a mistake — gives wrong information, takes a harmful action, produces output that damages a user's interests — the question of responsibility has a clear answer."
+description: "Quand un agent fait une erreur — donne une mauvaise information, prend une action nuisible, produit un output qui porte atteinte aux intérêts d'un utilisateur — la question de la responsabilité a une réponse claire."
 ---
 
-When an agent makes a mistake — gives wrong information, takes a harmful action, produces output that damages a user's interests — the question of responsibility has a clear answer. It's you. Not the model provider, not the framework you used, not the agent itself. You built the system, you deployed it, you put it in front of users. The outputs are yours.
+Quand un agent fait une erreur — donne une mauvaise information, prend une action nuisible, produit un output qui porte atteinte aux intérêts d'un utilisateur — la question de la responsabilité a une réponse claire. C'est toi. Pas le fournisseur du modèle, pas le framework que tu as utilisé, pas l'agent lui-même. Tu as construit le système, tu l'as déployé, tu l'as mis devant des utilisateurs. Les outputs sont les tiens.
 
-This isn't a legal argument, though it may become one. It's a design argument. Developers who internalize responsibility for agent behavior make different decisions than developers who feel insulated from it. They build more validation. They design more conservative defaults. They invest in observability so they can see what the system is doing. They think carefully about what happens when things go wrong, because they know that when things go wrong, it's their problem.
+Ce n'est pas un argument juridique, même si ça pourrait le devenir. C'est un argument de design. Les développeurs qui intériorisent la responsabilité du comportement de l'agent prennent des décisions différentes de ceux qui se sentent isolés de celle-ci. Ils bâtissent plus de validation. Ils conçoivent des défauts plus conservateurs. Ils investissent en observabilité pour pouvoir voir ce que le système fait. Ils réfléchissent soigneusement à ce qui arrive quand ça tourne mal, parce qu'ils savent que quand ça tourne mal, c'est leur problème.
 
-The temptation to diffuse responsibility is strong, especially when agents are marketed as autonomous systems that make their own decisions. The autonomy is real — agents do make decisions you didn't explicitly program. But autonomy in execution doesn't transfer responsibility for outcomes. You chose the model, wrote the prompts, defined the tools, set the scope, and decided when the system was ready to deploy. Every one of those decisions is yours.
+La tentation de diluer la responsabilité est forte, surtout quand les agents sont vendus comme des systèmes autonomes qui prennent leurs propres décisions. L'autonomie est réelle — les agents prennent bien des décisions que tu n'as pas explicitement programmées. Mais l'autonomie dans l'exécution ne transfère pas la responsabilité pour les résultats. Tu as choisi le modèle, écrit les prompts, défini les tools, fixé le scope et décidé quand le système était prêt à être déployé. Chacune de ces décisions est la tienne.
 
-This becomes most concrete in high-stakes domains. An agent giving medical information to someone who acts on it. An agent making financial decisions on a user's behalf. An agent communicating with customers in ways that create legal obligations. In each case, the question isn't whether the agent had good intentions — it's whether the outputs were appropriate and whether the system was designed with sufficient care for the stakes involved.
+Ça devient le plus concret dans les domaines à enjeux élevés. Un agent qui donne de l'information médicale à quelqu'un qui agit dessus. Un agent qui prend des décisions financières pour le compte d'un utilisateur. Un agent qui communique avec des clients d'une façon qui crée des obligations juridiques. Dans chaque cas, la question n'est pas de savoir si l'agent avait de bonnes intentions — c'est de savoir si les outputs étaient appropriés et si le système a été conçu avec assez de soin pour les enjeux en cause.
 
-The responsible posture is to treat the agent's outputs as your outputs. Read them with the same critical eye you'd apply to anything you were putting your name on. Build review into the workflow for anything consequential. Be honest with users about what the system is and what it can and can't be trusted to do.
+La posture responsable, c'est de traiter les outputs de l'agent comme tes outputs. Lis-les avec le même œil critique que tu appliquerais à n'importe quoi que tu signerais. Intègre de la revue dans le workflow pour tout ce qui a des conséquences. Sois honnête avec les utilisateurs sur ce qu'est le système et sur ce à quoi on peut ou non lui faire confiance.
 
-The agent acts. You're accountable. Design accordingly.
+L'agent agit. Tu es imputable. Conçois en conséquence.
 
 ---
 

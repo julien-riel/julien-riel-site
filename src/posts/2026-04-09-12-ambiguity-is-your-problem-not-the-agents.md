@@ -3,17 +3,17 @@ title: "12. L'ambiguïté est votre problème, pas celui de l'agent"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "When an agent produces an output that isn't what you wanted, the temptation is to say the prompt was ambiguous."
+description: "Quand un agent produit un output qui n'est pas ce que tu voulais, la tentation est de dire que le prompt était ambigu."
 ---
 
-When an agent produces an output that isn't what you wanted, the temptation is to say the prompt was ambiguous. This is usually true. It's also deflection. The ambiguity was there before the agent saw it. You put it there, or you failed to remove it. The agent didn't create the problem — it just made it visible.
+Quand un agent produit un output qui n'est pas ce que tu voulais, la tentation est de dire que le prompt était ambigu. C'est généralement vrai. C'est aussi une manière de détourner la responsabilité. L'ambiguïté était là avant que l'agent la voie. Tu l'as mise là, ou tu n'as pas réussi à l'enlever. L'agent n'a pas créé le problème — il l'a juste rendu visible.
 
-Ambiguity in instructions is normal. Natural language is imprecise by design; it relies on shared context, common sense, and conversational repair to fill gaps. When you talk to a colleague, they can ask what you meant. They can infer from your tone. They can draw on weeks of shared project history to interpret an underspecified request. Agents have none of that unless you explicitly provide it. What reads as clear to you — because you're filling in all the gaps from your own knowledge — reads as genuinely ambiguous to the model, which has only the context window.
+L'ambiguïté dans les instructions est normale. Le langage naturel est imprécis par conception ; il repose sur un contexte partagé, le bon sens et la réparation conversationnelle pour combler les trous. Quand tu parles à un collègue, il peut demander ce que tu voulais dire. Il peut inférer à partir de ton ton. Il peut puiser dans des semaines d'historique de projet partagé pour interpréter une demande sous-spécifiée. Les agents n'ont rien de tout ça à moins que tu le fournisses explicitement. Ce qui te semble clair — parce que tu combles tous les trous avec tes propres connaissances — est réellement ambigu pour le modèle, qui n'a que le context window.
 
-The discipline is to read your prompts as if you know nothing beyond what's written. Not as the author who knows what they meant, but as a reader encountering the text cold. Better still: give the prompt to a colleague and ask them what they think it's asking for. If they hesitate, or give a different answer than you expected, you've found your ambiguity before the agent does.
+La discipline, c'est de lire tes prompts comme si tu ne savais rien de plus que ce qui est écrit. Pas en tant qu'auteur qui sait ce qu'il a voulu dire, mais en tant que lecteur qui rencontre le texte à froid. Mieux encore : donne le prompt à un collègue et demande-lui ce qu'il pense que ça demande. S'il hésite, ou donne une réponse différente de celle que tu attendais, tu as trouvé ton ambiguïté avant l'agent.
 
-There's a specific kind of ambiguity that's especially costly: conflicting constraints. "Be concise but thorough." "Be direct but diplomatic." "Summarize for a general audience but preserve technical accuracy." Each of these pairs contains real tension, and the agent will resolve it somehow — just not necessarily the way you'd want it to. When you have conflicting constraints, prioritize them explicitly. Tell the agent which one wins when they can't both be satisfied.
+Il y a un type spécifique d'ambiguïté qui coûte particulièrement cher : les contraintes contradictoires. « Sois concis mais exhaustif. » « Sois direct mais diplomate. » « Résume pour un public général mais préserve la précision technique. » Chacune de ces paires contient une vraie tension, et l'agent va la résoudre d'une manière ou d'une autre — mais pas nécessairement comme tu le voudrais. Quand tu as des contraintes contradictoires, priorise-les explicitement. Dis à l'agent laquelle gagne quand les deux ne peuvent pas être satisfaites.
 
-Removing ambiguity is harder than it sounds because it requires you to know what you actually want — specifically, at the level of detail the agent needs to act on. That's often where the real work is. Vague instructions are frequently a sign of vague thinking.
+Lever l'ambiguïté est plus difficile qu'il n'y paraît parce que ça exige que tu saches ce que tu veux vraiment — précisément, au niveau de détail sur lequel l'agent doit agir. C'est souvent là qu'est le vrai travail. Des instructions vagues sont fréquemment le signe d'une pensée vague.
 
-Clarify your thinking first. The prompt is just the transcript.
+Clarifie ta pensée d'abord. Le prompt n'est que la transcription.

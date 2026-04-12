@@ -1,19 +1,19 @@
 ---
-title: "26. Concevez pour l'observabilité avant de concevoir pour la capacité"
+title: "26. Conçois pour l'observability avant de concevoir pour la capacité"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "The most capable agentic system you can't observe is worth less than a less capable one you can see inside."
+description: "Le système agentique le plus capable que tu ne peux pas observer vaut moins qu'un système moins capable dans lequel tu peux voir."
 ---
 
-The most capable agentic system you can't observe is worth less than a less capable one you can see inside. This isn't a philosophical position — it's a practical one. Systems you can't observe are systems you can't debug, can't improve, and can't trust in production.
+Le système agentique le plus capable que tu ne peux pas observer vaut moins qu'un système moins capable dans lequel tu peux voir. Ce n'est pas une position philosophique — c'est une position pratique. Les systèmes que tu ne peux pas observer sont des systèmes que tu ne peux pas déboguer, que tu ne peux pas améliorer, et à qui tu ne peux pas faire confiance en production.
 
-The temptation when building agentic systems is to focus on capability first. What can this agent do? How far can it reach? How much can it automate? These are exciting questions and they drive the demos that get stakeholder buy-in. Observability is less exciting. It doesn't make the agent smarter. It doesn't add new features. It's the infrastructure that makes everything else sustainable.
+La tentation, quand on construit des systèmes agentiques, c'est de se concentrer sur la capacité en premier. Qu'est-ce que cet agent peut faire ? Jusqu'où peut-il aller ? Combien peut-il automatiser ? Ce sont des questions excitantes et elles alimentent les démos qui obtiennent l'adhésion des parties prenantes. L'observability est moins excitante. Elle ne rend pas l'agent plus intelligent. Elle n'ajoute pas de nouvelles fonctionnalités. C'est l'infrastructure qui rend tout le reste soutenable.
 
-Observability in agentic systems means being able to answer, at any point: what did the agent see, what did it decide, what did it do, and why? The why is the hard part. Traditional software observability — logs, metrics, traces — captures what happened. Agentic observability needs to capture the reasoning behind what happened, because the same input can produce different outputs depending on reasoning that isn't visible in the action log.
+L'observability dans les systèmes agentiques, c'est être capable de répondre, à tout moment : qu'est-ce que l'agent a vu, qu'a-t-il décidé, qu'a-t-il fait, et pourquoi ? Le pourquoi est la partie difficile. L'observability logicielle traditionnelle — logs, métriques, traces — capture ce qui s'est passé. L'observability agentique doit capturer le reasoning derrière ce qui s'est passé, parce que le même input peut produire des outputs différents selon un reasoning qui n'est pas visible dans le log d'actions.
 
-The practical minimum is logging the full context window for every agent invocation, alongside the outputs and any tool calls made. This sounds expensive — and at scale, it is — but the alternative is flying blind. You cannot debug a system you cannot inspect. You cannot improve what you cannot measure. The storage cost of comprehensive logging is almost always cheaper than the engineering cost of diagnosing production failures without it.
+Le minimum pratique, c'est de logger le context window complet pour chaque invocation de l'agent, aux côtés des outputs et de tout tool call effectué. Ça a l'air cher — et à grande échelle, ça l'est — mais l'alternative, c'est de voler à l'aveugle. Tu ne peux pas déboguer un système que tu ne peux pas inspecter. Tu ne peux pas améliorer ce que tu ne peux pas mesurer. Le coût de stockage d'un logging exhaustif est presque toujours moins cher que le coût d'ingénierie pour diagnostiquer des échecs de production sans lui.
 
-Beyond logging, observability means building tools that let you replay agent runs. Given a logged context, can you re-run the agent with a modified prompt and compare the outputs? Can you trace a production failure back to the specific inputs that caused it? Can you sample recent agent outputs and review them against your quality bar? These capabilities don't happen by accident — they require investment before you need them, not after.
+Au-delà du logging, l'observability veut dire construire des tools qui te permettent de rejouer les exécutions d'un agent. Étant donné un context loggé, peux-tu réexécuter l'agent avec un prompt modifié et comparer les outputs ? Peux-tu remonter un échec de production jusqu'aux inputs spécifiques qui l'ont causé ? Peux-tu échantillonner les outputs récents de l'agent et les réviser par rapport à ton seuil de qualité ? Ces capacités n'arrivent pas par accident — elles exigent un investissement avant que tu en aies besoin, pas après.
 
-Build the windows before you move into the house. You'll need to see outside eventually.
+Construis les fenêtres avant d'emménager dans la maison. Tu vas avoir besoin de voir dehors éventuellement.

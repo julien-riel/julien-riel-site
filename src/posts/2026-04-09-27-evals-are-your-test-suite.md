@@ -1,21 +1,21 @@
 ---
-title: "27. Les évaluations sont votre suite de tests"
+title: "27. Les evals sont ta suite de tests"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "Every serious software project has tests."
+description: "Tout projet logiciel sérieux a des tests."
 ---
 
-Every serious software project has tests. Agentic systems need tests too — they're just harder to write, which is exactly why most teams skip them and then wonder why they can't tell if a change made things better or worse.
+Tout projet logiciel sérieux a des tests. Les systèmes agentiques ont besoin de tests aussi — ils sont juste plus durs à écrire, ce qui est exactement pourquoi la plupart des équipes les sautent et se demandent ensuite pourquoi elles ne peuvent pas dire si un changement a rendu les choses meilleures ou pires.
 
-The difficulty is that agent outputs aren't always right or wrong in a binary sense. A code function either passes its tests or it doesn't. A generated summary either captures the key points or it doesn't — but "captures the key points" isn't a predicate you can evaluate automatically. This ambiguity is real, and it causes teams to throw up their hands and rely on vibes. Vibes don't scale.
+La difficulté, c'est que les outputs d'agent ne sont pas toujours justes ou faux dans un sens binaire. Une fonction de code passe ses tests ou ne les passe pas. Un résumé généré capture les points clés ou ne les capture pas — mais « capture les points clés » n'est pas un prédicat que tu peux évaluer automatiquement. Cette ambiguïté est réelle, et elle pousse les équipes à lever les bras et à se fier au feeling. Le feeling ne passe pas à l'échelle.
 
-Evaluations — evals — are the testing infrastructure for probabilistic systems. They consist of a set of inputs with known-good outputs or quality criteria, a method for scoring agent outputs against those criteria, and a process for running the eval whenever something changes. The scoring doesn't have to be fully automated; human evaluation is legitimate and often necessary. What matters is that the process is systematic, repeatable, and runs before you ship.
+Les évaluations — les evals — sont l'infrastructure de test pour les systèmes probabilistes. Elles consistent en un ensemble d'inputs avec des outputs connus comme bons ou des critères de qualité, une méthode pour noter les outputs de l'agent contre ces critères, et un processus pour exécuter l'eval chaque fois que quelque chose change. La notation n'a pas besoin d'être entièrement automatisée ; l'évaluation humaine est légitime et souvent nécessaire. Ce qui compte, c'est que le processus soit systématique, répétable, et qu'il s'exécute avant que tu livres.
 
-Building a good eval suite starts with collecting failures. Every time the agent produces a bad output in production or testing, that input goes into the eval set. Over time you accumulate a collection of hard cases — the inputs that break things, the edge cases that weren't anticipated, the scenarios where the agent does something plausible but wrong. That collection is more valuable than any synthetic test suite, because it represents the actual distribution of ways your system fails.
+Construire une bonne suite d'evals commence par collecter les échecs. Chaque fois que l'agent produit un mauvais output en production ou en test, cet input va dans le jeu d'eval. Au fil du temps, tu accumules une collection de cas difficiles — les inputs qui cassent les choses, les cas limites qui n'étaient pas anticipés, les scénarios où l'agent fait quelque chose de plausible mais faux. Cette collection a plus de valeur que n'importe quelle suite de tests synthétique, parce qu'elle représente la distribution réelle des façons dont ton système échoue.
 
-The second component is golden outputs — examples of what good looks like for a representative range of inputs. These define your quality bar concretely. When you change a prompt or upgrade a model, you run the eval and check how many golden outputs you still match. Regressions are visible. Improvements are measurable.
+Le deuxième composant, ce sont les golden outputs — des exemples de ce à quoi ressemble le bon pour une gamme représentative d'inputs. Ils définissent ton seuil de qualité de façon concrète. Quand tu changes un prompt ou fais évoluer un modèle, tu exécutes l'eval et tu vérifies combien de golden outputs tu correspondances encore. Les régressions sont visibles. Les améliorations sont mesurables.
 
-Teams that build evals early ship with more confidence and improve faster. Teams that don't build evals are always guessing — about whether the new model is better, about whether the prompt change helped, about whether the system is degrading in production.
+Les équipes qui construisent des evals tôt livrent avec plus de confiance et s'améliorent plus vite. Les équipes qui ne construisent pas d'evals devinent toujours — si le nouveau modèle est meilleur, si le changement de prompt a aidé, si le système se dégrade en production.
 
-You wouldn't ship code without tests. Don't ship agents without evals.
+Tu ne livrerais pas de code sans tests. Ne livre pas d'agents sans evals.

@@ -1,19 +1,19 @@
 ---
-title: "42. La latence est un problème d'UX, pas juste d'infrastructure"
+title: "42. La latency est un problème d'UX, pas juste d'infrastructure"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world
-description: "A model call takes time."
+description: "Un appel de modèle prend du temps."
 ---
 
-A model call takes time. Usually seconds. Sometimes more. For a developer running a batch job, that's fine — you kick it off and come back. For a user waiting for a response in an interactive interface, three seconds feels long and ten seconds feels broken. The latency characteristics that are acceptable in one context are dealbreakers in another, and conflating the two is how you ship a technically functional system that users abandon.
+Un appel de modèle prend du temps. Habituellement des secondes. Parfois plus. Pour un développeur qui lance un batch, ça va — tu le démarres et tu reviens plus tard. Pour un utilisateur qui attend une réponse dans une interface interactive, trois secondes, c'est long, et dix secondes, c'est cassé. Les caractéristiques de latency acceptables dans un contexte sont des deal-breakers dans un autre, et confondre les deux, c'est comme ça que tu livres un système techniquement fonctionnel que les utilisateurs abandonnent.
 
-The infrastructure response to latency is optimization: smaller models, caching, streaming, parallel calls. These matter and you should pursue them. But they have limits, and the more important response is often design — shaping the user experience so that the wait feels shorter, or so that the user is doing something useful while the agent works.
+La réponse infrastructure à la latency, c'est l'optimisation : modèles plus petits, caching, streaming, appels parallèles. Ça compte, et tu devrais poursuivre ces pistes. Mais elles ont des limites, et la réponse la plus importante est souvent le design — façonner l'UX pour que l'attente semble plus courte, ou pour que l'utilisateur fasse quelque chose d'utile pendant que l'agent travaille.
 
-Streaming is the most impactful design intervention available. Showing the agent's response as it generates, rather than waiting for the complete output, fundamentally changes how latency feels. A ten-second response that streams progressively feels faster than a three-second response that appears all at once, because the user has something to read almost immediately. The cognitive experience of waiting is much worse than the cognitive experience of reading something that's still arriving.
+Le streaming est l'intervention de design la plus percutante disponible. Afficher la réponse de l'agent à mesure qu'elle se génère, plutôt que d'attendre la sortie complète, change fondamentalement la perception de la latency. Une réponse de dix secondes qui stream progressivement paraît plus rapide qu'une réponse de trois secondes qui apparaît d'un coup, parce que l'utilisateur a quelque chose à lire presque immédiatement. L'expérience cognitive de l'attente est bien pire que celle de lire quelque chose qui arrive encore.
 
-Progress indicators help for longer operations — not generic spinners, but specific signals about what's happening. "Searching your documents" is better than a rotating circle. "Drafting a response based on three sources" is better than "thinking." These signals give users a mental model of what the agent is doing, which makes the wait feel purposeful rather than opaque.
+Les indicateurs de progression aident pour les opérations plus longues — pas des spinners génériques, mais des signaux spécifiques sur ce qui se passe. « Recherche dans tes documents » vaut mieux qu'un cercle qui tourne. « Rédaction d'une réponse à partir de trois sources » vaut mieux que « je réfléchis ». Ces signaux donnent aux utilisateurs un modèle mental de ce que l'agent fait, ce qui rend l'attente intentionnelle plutôt qu'opaque.
 
-There's also a product question underneath the infrastructure question: should this be an interactive experience at all? Some agent tasks are too long to make users wait for synchronously. A task that takes thirty seconds probably belongs in an async workflow — start it, do something else, get notified when it's done — rather than a chat interface where the user stares at a spinner. Choosing the wrong interaction model creates a latency problem that no amount of optimization will fully solve.
+Il y a aussi une question produit sous la question infrastructure : est-ce que ça devrait être une expérience interactive tout court ? Certaines tâches d'agent sont trop longues pour faire attendre les utilisateurs de façon synchrone. Une tâche qui prend trente secondes a probablement sa place dans un workflow async — lance-la, fais autre chose, sois notifié quand c'est fini — plutôt que dans une interface de chat où l'utilisateur fixe un spinner. Choisir le mauvais modèle d'interaction crée un problème de latency qu'aucune optimisation ne résoudra complètement.
 
-Fast enough for the task. Designed for the wait. Both matter.
+Assez rapide pour la tâche. Conçu pour l'attente. Les deux comptent.

@@ -1,19 +1,19 @@
 ---
-title: "56. L'objectif est les résultats, pas les sorties"
+title: "56. L'objectif est les résultats, pas les outputs"
 date: 2026-04-09
 tags:
   - mindset
-description: "An agent that produces a beautiful summary of a document hasn't succeeded."
+description: "Un agent qui produit un beau résumé d'un document n'a pas réussi."
 ---
 
-An agent that produces a beautiful summary of a document hasn't succeeded. It's succeeded if the person who reads the summary understands something they needed to understand, makes a better decision, saves time they would have spent reading the full document. The output is the means. The outcome is the point. Conflating them is how you build technically impressive systems that don't actually help anyone.
+Un agent qui produit un beau résumé d'un document n'a pas réussi. Il a réussi si la personne qui lit le résumé comprend quelque chose qu'elle avait besoin de comprendre, prend une meilleure décision, sauve du temps qu'elle aurait passé à lire le document complet. L'output est le moyen. Le résultat est le but. Les confondre, c'est comme ça qu'on construit des systèmes techniquement impressionnants qui n'aident personne en pratique.
 
-This distinction matters most in evaluation. Teams that evaluate agent quality by output quality — is the summary well-written, is the code syntactically correct, is the response grammatically fluent — are measuring the wrong thing. These properties correlate with quality but don't define it. A well-written summary of the wrong content fails the user. Syntactically correct code that doesn't solve the actual problem fails the developer. Fluent responses to the wrong question fail everyone.
+Cette distinction compte surtout en évaluation. Les équipes qui évaluent la qualité d'un agent par la qualité de l'output — le résumé est-il bien écrit, le code est-il syntaxiquement correct, la réponse est-elle grammaticalement fluide — mesurent la mauvaise chose. Ces propriétés sont corrélées à la qualité mais ne la définissent pas. Un résumé bien écrit du mauvais contenu rate l'utilisateur. Du code syntaxiquement correct qui ne résout pas le vrai problème rate le développeur. Des réponses fluides à la mauvaise question ratent tout le monde.
 
-Outcome-focused evaluation requires knowing what the user was actually trying to accomplish and whether the agent helped them accomplish it. That's harder to measure than output quality, which is probably why teams measure output quality instead. But hard to measure doesn't mean optional. You can measure outcomes through user behavior — did they take the action the information was meant to enable? Through follow-up rates — did they come back with clarifying questions that suggest the first response missed the mark? Through direct feedback — did the output help?
+L'évaluation orientée résultats demande de savoir ce que l'utilisateur essayait réellement d'accomplir et si l'agent l'a aidé à l'accomplir. C'est plus difficile à mesurer que la qualité d'output, ce qui est probablement pourquoi les équipes mesurent la qualité d'output à la place. Mais difficile à mesurer ne veut pas dire optionnel. Tu peux mesurer les résultats via le comportement utilisateur — a-t-il pris l'action que l'information devait permettre ? Via les taux de suivi — est-il revenu avec des questions de clarification qui suggèrent que la première réponse a manqué sa cible ? Via le feedback direct — l'output a-t-il aidé ?
 
-The output focus also distorts what gets built. Teams optimizing for output quality invest in making outputs look better — more polished prose, better formatting, more comprehensive coverage. Teams optimizing for outcomes invest in understanding the user's actual goal, which sometimes means shorter outputs, less comprehensive coverage, and more direct answers that don't showcase the agent's capability but actually address the need.
+Le focus output distord aussi ce qui se construit. Les équipes qui optimisent la qualité d'output investissent à rendre les outputs plus beaux — prose plus polie, meilleur formatage, couverture plus exhaustive. Les équipes qui optimisent les résultats investissent à comprendre le but réel de l'utilisateur, ce qui veut parfois dire des outputs plus courts, une couverture moins exhaustive et des réponses plus directes qui ne mettent pas en valeur la capacité de l'agent mais qui répondent au besoin.
 
-There's a design question underneath this: do you know what your users are trying to accomplish? Not what they're asking for — what they're trying to accomplish. These are often different. The user who asks for a summary of a legal document is trying to make a decision, not collect information. The agent that helps them make the decision has succeeded. The agent that summarizes the document beautifully while leaving the decision as hard as before has produced a good output and a bad outcome.
+Il y a une question de design sous-jacente : sais-tu ce que tes utilisateurs essaient d'accomplir ? Pas ce qu'ils demandent — ce qu'ils essaient d'accomplir. Ce sont souvent des choses différentes. L'utilisateur qui demande un résumé d'un document juridique essaie de prendre une décision, pas de collecter de l'information. L'agent qui l'aide à prendre la décision a réussi. L'agent qui résume le document magnifiquement tout en laissant la décision aussi dure qu'avant a produit un bon output et un mauvais résultat.
 
-Measure what matters. The output is evidence. The outcome is the verdict.
+Mesure ce qui compte. L'output est une preuve. Le résultat est le verdict.

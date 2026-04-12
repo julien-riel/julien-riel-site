@@ -1,20 +1,20 @@
 ---
-title: "82. Un pair programmeur IA n'a pas d'ego — utilisez ça"
+title: "82. Un AI pair programmer n'a pas d'ego — sers-toi de ça"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Human pair programming is valuable and comes with friction."
+description: "Le pair programming humain a de la valeur et vient avec des frictions."
 ---
 
-Human pair programming is valuable and comes with friction. Your pair has opinions about the right approach and won't always let them go gracefully. They get tired. They have a backlog of their own work pulling at their attention. They might feel awkward if you reject their third suggestion in a row. They might not say what they really think if they think it will cause conflict.
+Le pair programming humain a de la valeur et vient avec des frictions. Ton pair a des opinions sur la bonne approche et ne les lâchera pas toujours gracieusement. Il se fatigue. Il a son propre backlog de travail qui tire son attention. Il pourrait se sentir mal à l'aise si tu rejettes sa troisième suggestion d'affilée. Il pourrait ne pas dire ce qu'il pense vraiment s'il pense que ça va causer un conflit.
 
-The AI assistant has none of these constraints. Reject its suggestion and ask for another — it has no investment in the first one. Ask it to argue against the approach it just proposed — it will, without defensiveness. Ask the question you'd feel embarrassed to ask a colleague — it won't remember it tomorrow. Push for a fourth alternative when the first three weren't right — it won't get frustrated.
+L'AI assistant n'a aucune de ces contraintes. Rejette sa suggestion et demande-en une autre — il n'est pas investi dans la première. Demande-lui d'argumenter contre l'approche qu'il vient de proposer — il le fera, sans se mettre sur la défensive. Pose la question que tu aurais honte de poser à un collègue — il ne s'en souviendra pas demain. Pousse pour une quatrième alternative quand les trois premières n'étaient pas bonnes — il ne se frustrera pas.
 
-This changes what you should ask for. Ask for the critique you've been avoiding. Ask for the alternative you haven't considered because the first approach seemed fine. Ask for an honest assessment of the code you've been maintaining for two years and quietly know isn't great. Ask for the explanation of the concept you should have learned long ago but have been faking your way through.
+Ça change ce que tu devrais demander. Demande la critique que tu as évitée. Demande l'alternative que tu n'as pas considérée parce que la première approche semblait correcte. Demande une évaluation honnête du code que tu maintiens depuis deux ans et dont tu sais en silence qu'il n'est pas super. Demande l'explication du concept que tu aurais dû apprendre il y a longtemps mais que tu as bluffé jusqu'ici.
 
-The ego-free dynamic also means the assistant is unusually good at adversarial tasks — finding the holes in your plan, listing the ways the implementation could fail, identifying the assumptions in your design that haven't been tested. These are tasks humans are reluctant to do for each other because they feel like attacks. The assistant does them as a natural response to being asked.
+La dynamique sans ego signifie aussi que l'assistant est particulièrement bon sur les tâches adversariales — trouver les trous dans ton plan, lister les façons dont l'implémentation pourrait échouer, identifier les hypothèses dans ton design qui n'ont pas été testées. Ce sont des tâches que les humains sont réticents à faire les uns pour les autres parce qu'elles ressemblent à des attaques. L'assistant les fait comme réponse naturelle à une demande.
 
-The absence of ego is a feature. Use it for the conversations you haven't been having.
+L'absence d'ego est une feature. Utilise-la pour les conversations que tu n'as pas eues.
 
 ---
 

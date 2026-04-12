@@ -1,93 +1,93 @@
 ---
-title: "Architectures multi-agents : quand un seul agent ne suffit pas"
+title: "Architectures multi-agent : quand un seul agent ne suffit pas"
 date: 2026-04-09
 tags:
   - architecture
   - multi-agent
-description: "A practical guide to multi-agent patterns — orchestrator-workers, pipelines, ensembles, and swarms — and where they break."
+description: "Un guide pratique des patterns multi-agent — orchestrator-workers, pipelines, ensembles et swarms — et là où ils cassent."
 ---
 
-## A Practical Guide for Agentic Programmers
+## Un guide pratique pour programmeurs agentiques
 
-A single agent with the right tools can do a lot. But at some point, you'll hit a wall: the task is too complex for one context window, requires different expertise at different stages, or needs parallel execution paths. That's when you need multiple agents working together.
+Un seul agent avec les bons tools peut accomplir beaucoup. Mais à un moment, tu frappes un mur : la tâche est trop complexe pour un seul context window, elle exige différentes expertises à différentes étapes, ou elle a besoin de chemins d'exécution parallèles. C'est là qu'il te faut plusieurs agents qui travaillent ensemble.
 
-Multi-agent systems are powerful. They're also where complexity multiplies fastest. This guide covers when to use them, how to architect them, and where they break.
+Les systèmes multi-agent sont puissants. C'est aussi là que la complexité se multiplie le plus vite. Ce guide couvre quand les utiliser, comment les architecturer, et là où ils cassent.
 
-## Why Multiple Agents?
+## Pourquoi plusieurs agents ?
 
-The case for multi-agent architectures comes from three constraints:
+L'argument pour les architectures multi-agent repose sur trois contraintes :
 
-**Context window limits.** A single agent handling a complex workflow needs to hold instructions, tool definitions, conversation history, intermediate results, and retrieved documents — all in one context window. As tasks grow, the context budget runs out. Splitting responsibilities across agents means each one operates with a focused, manageable context.
+**Les limites du context window.** Un seul agent qui gère un workflow complexe doit tenir les instructions, les définitions de tools, l'historique de conversation, les résultats intermédiaires et les documents récupérés — le tout dans un seul context window. À mesure que les tâches grossissent, le budget de contexte s'épuise. Répartir les responsabilités entre plusieurs agents fait que chacun opère avec un contexte ciblé et gérable.
 
-**Specialization.** Different subtasks benefit from different models, prompts, and tools. A coding agent needs code execution tools and a model optimized for code. A research agent needs web search and a model good at synthesis. A planning agent needs reasoning depth but doesn't need tools at all. Trying to make one agent do everything means every subtask gets a mediocre configuration.
+**La spécialisation.** Différents sous-problèmes bénéficient de différents modèles, prompts et tools. Un agent de code a besoin de tools d'exécution et d'un modèle optimisé pour le code. Un agent de recherche a besoin de recherche web et d'un modèle fort en synthèse. Un agent de planning a besoin de profondeur de reasoning mais pas de tools du tout. Vouloir qu'un seul agent fasse tout, c'est donner une configuration médiocre à chaque sous-problème.
 
-**Parallelism.** Some subtasks are independent and can run simultaneously. A single agent executes sequentially by nature — it generates one token at a time. Multiple agents can work in parallel, dramatically reducing latency for tasks with independent sub-problems.
+**Le parallélisme.** Certains sous-problèmes sont indépendants et peuvent rouler en même temps. Un seul agent exécute de manière séquentielle par nature — il génère un token à la fois. Plusieurs agents peuvent travailler en parallèle, ce qui réduit drastiquement la latence pour les tâches avec des sous-problèmes indépendants.
 
-WHOOP operates over 500 specialized agents across their app — Memory, Daily Outlook, Day in Review, Activity Insights, onboarding, and dozens more. Each has a defined role, its own prompt, and its own set of tools. This isn't accidental complexity. It's a deliberate architecture that lets each agent be excellent at one thing.
+WHOOP opère plus de 500 agents spécialisés à travers son app — Memory, Daily Outlook, Day in Review, Activity Insights, onboarding, et des dizaines d'autres. Chacun a un rôle défini, son propre prompt et son propre ensemble de tools. Ce n'est pas de la complexité accidentelle. C'est une architecture délibérée qui permet à chaque agent d'être excellent dans une seule chose.
 
-## The Core Patterns
+## Les patterns de base
 
-### Pattern 1: Orchestrator-Workers
+### Pattern 1 : Orchestrator-Workers
 
-One agent (the orchestrator) receives the user's request, decomposes it into subtasks, and delegates each subtask to a specialized worker agent. The orchestrator collects the results and synthesizes the final response.
+Un agent (l'orchestrator) reçoit la requête de l'utilisateur, la décompose en sous-problèmes, et délègue chaque sous-problème à un worker agent spécialisé. L'orchestrator collecte les résultats et synthétise la réponse finale.
 
 ```
 User request → Orchestrator → [Worker A, Worker B, Worker C] → Orchestrator → Final response
 ```
 
-This is the most common pattern. Notion rebuilt their AI architecture around it — replacing task-specific prompt chains with a central reasoning model that coordinates modular sub-agents. The orchestrator handles planning and synthesis. The workers handle execution.
+C'est le pattern le plus courant. Notion a reconstruit son architecture IA autour de ça — en remplaçant des chaînes de prompts spécifiques à chaque tâche par un modèle de reasoning central qui coordonne des sub-agents modulaires. L'orchestrator gère le planning et la synthèse. Les workers gèrent l'exécution.
 
-**When to use it:** Complex tasks that naturally decompose into subtasks (research + analysis + formatting, or data retrieval + computation + explanation).
+**Quand l'utiliser :** des tâches complexes qui se décomposent naturellement en sous-problèmes (recherche + analyse + mise en forme, ou récupération de données + calcul + explication).
 
-**The hard part:** The orchestrator needs to be smart enough to decompose the task well and to know when a worker's result is good enough. A bad decomposition leads to wasted work or missing context between subtasks.
+**Ce qui est dur :** l'orchestrator doit être assez intelligent pour bien décomposer la tâche et pour savoir quand le résultat d'un worker est assez bon. Une mauvaise décomposition mène à du travail gaspillé ou à du contexte manquant entre les sous-problèmes.
 
-### Pattern 2: Pipeline (Sequential Handoff)
+### Pattern 2 : Pipeline (handoff séquentiel)
 
-Agents process information in sequence, each one refining or transforming the output of the previous stage. Like an assembly line.
+Les agents traitent l'information en séquence, chacun raffinant ou transformant la sortie de l'étape précédente. Comme une chaîne de montage.
 
 ```
 User request → Agent A (extract) → Agent B (analyze) → Agent C (format) → Final response
 ```
 
-Cursor's original Bugbot used a variation: eight parallel instances of the same agent, each processing the code diff in a different order, with a voting step at the end. That's a hybrid between pipeline and ensemble.
+Le Bugbot original de Cursor utilisait une variation : huit instances parallèles du même agent, chacune traitant le diff de code dans un ordre différent, avec une étape de vote à la fin. C'est un hybride entre pipeline et ensemble.
 
-**When to use it:** Tasks with clear sequential stages where each stage has different requirements — extraction → validation → transformation → generation.
+**Quand l'utiliser :** des tâches avec des étapes séquentielles claires où chaque étape a des exigences différentes — extraction → validation → transformation → génération.
 
-**The hard part:** Information loss between stages. Each handoff is a potential point where critical context gets dropped. Design your inter-agent communication format carefully — structured data with explicit fields, not freeform text.
+**Ce qui est dur :** la perte d'information entre les étapes. Chaque handoff est un point potentiel où du contexte critique se perd. Conçois ton format de communication entre agents avec soin — des données structurées avec des champs explicites, pas du texte libre.
 
-### Pattern 3: Debate / Ensemble
+### Pattern 3 : Débat / Ensemble
 
-Multiple agents independently tackle the same problem, then their outputs are compared, combined, or voted on. This increases reliability at the cost of latency and compute.
+Plusieurs agents s'attaquent indépendamment au même problème, puis leurs sorties sont comparées, combinées ou soumises à un vote. Ça augmente la fiabilité au prix de la latence et du compute.
 
 ```
 User request → [Agent A, Agent B, Agent C] → Aggregator → Final response
 ```
 
-**When to use it:** High-stakes decisions where accuracy matters more than speed — medical diagnosis, legal analysis, code review. Bugbot's eight-pass majority voting was exactly this pattern.
+**Quand l'utiliser :** des décisions à haut enjeu où la précision compte plus que la vitesse — diagnostic médical, analyse légale, revue de code. Le vote majoritaire à huit passes de Bugbot était exactement ce pattern.
 
-**The hard part:** Defining how to aggregate disagreements. Majority voting is simple but loses nuance. A separate judge agent can resolve conflicts but adds another failure point. And cost scales linearly with the number of agents.
+**Ce qui est dur :** définir comment agréger les désaccords. Le vote majoritaire est simple mais perd la nuance. Un judge agent séparé peut résoudre les conflits, mais ajoute un autre point de défaillance. Et le coût croît linéairement avec le nombre d'agents.
 
-### Pattern 4: Autonomous Swarm
+### Pattern 4 : Swarm autonome
 
-Agents dynamically spawn sub-agents based on what they discover during execution. The orchestrator doesn't pre-plan all subtasks — it adapts as new information emerges. Cursor's Composer model (Kimi K2.5-based) uses Agent Swarm, where the model learns through RL to dynamically decompose tasks and dispatch parallel sub-agents.
+Les agents spawnent dynamiquement des sub-agents selon ce qu'ils découvrent pendant l'exécution. L'orchestrator ne planifie pas tous les sous-problèmes d'avance — il s'adapte à mesure que de nouvelles informations émergent. Le modèle Composer de Cursor (basé sur Kimi K2.5) utilise Agent Swarm, où le modèle apprend par RL à décomposer dynamiquement les tâches et à dispatcher des sub-agents en parallèle.
 
-**When to use it:** Exploratory tasks where the full scope isn't known upfront — research, debugging, data investigation.
+**Quand l'utiliser :** des tâches exploratoires où la portée complète n'est pas connue d'avance — recherche, debug, investigation de données.
 
-**The hard part:** Everything. Control, observability, cost management, and preventing runaway execution are all significantly harder when agent creation is dynamic. This pattern requires mature tooling and strong kill switches.
+**Ce qui est dur :** tout. Le contrôle, l'observabilité, la gestion des coûts et la prévention des exécutions qui partent en vrille sont tous nettement plus difficiles quand la création d'agents est dynamique. Ce pattern exige un outillage mature et de solides coupe-circuits.
 
-## Communication Between Agents
+## La communication entre agents
 
-How agents pass information to each other is as important as what each agent does. Three approaches, in order of increasing structure:
+La façon dont les agents se passent l'information les uns aux autres est aussi importante que ce que chaque agent fait. Trois approches, par ordre de structure croissante :
 
-### Natural Language Messages
+### Messages en langue naturelle
 
-Agents communicate via freeform text. Simple to implement, but lossy. The receiving agent has to parse unstructured text, which can miss critical details or misinterpret ambiguous phrasing.
+Les agents communiquent via du texte libre. Simple à implémenter, mais avec de la perte. L'agent qui reçoit doit parser du texte non structuré, ce qui peut faire manquer des détails critiques ou mal interpréter des formulations ambiguës.
 
-Use this when: agents are handling inherently unstructured tasks (creative writing, open-ended research).
+Utilise ça quand : les agents gèrent des tâches intrinsèquement non structurées (écriture créative, recherche ouverte).
 
-### Structured Data
+### Données structurées
 
-Agents exchange JSON, XML, or typed objects with defined schemas. The sending agent outputs structured data; the receiving agent knows exactly what fields to expect.
+Les agents s'échangent du JSON, du XML ou des objets typés avec des schémas définis. L'agent qui envoie produit des données structurées ; l'agent qui reçoit sait exactement quels champs attendre.
 
 ```json
 {
@@ -103,83 +103,83 @@ Agents exchange JSON, XML, or typed objects with defined schemas. The sending ag
 }
 ```
 
-Use this whenever agents feed into programmatic downstream steps. The structure acts as a contract between agents, making failures explicit rather than silent.
+Utilise ça chaque fois que des agents alimentent des étapes programmatiques en aval. La structure agit comme un contrat entre agents, rendant les défaillances explicites plutôt que silencieuses.
 
-### Shared State / Blackboard
+### State partagé / Blackboard
 
-All agents read from and write to a shared state object (sometimes called a blackboard). Each agent can see the full context of what other agents have done and add its own contributions.
+Tous les agents lisent et écrivent dans un objet de state partagé (parfois appelé blackboard). Chaque agent peut voir le contexte complet de ce que les autres agents ont fait et ajouter ses propres contributions.
 
-WHOOP's Memory nuggets function as a shared state: any agent can write a memory, and all agents can read relevant memories. Notion's block-based architecture serves a similar purpose — agents operate on a shared graph of structured data.
+Les Memory nuggets de WHOOP fonctionnent comme un state partagé : n'importe quel agent peut écrire une memory, et tous les agents peuvent lire les memories pertinentes. L'architecture par blocs de Notion sert un but similaire — les agents opèrent sur un graphe partagé de données structurées.
 
-Use this when: agents need to be aware of each other's work without explicit point-to-point communication. The shared state provides coordination without coupling.
+Utilise ça quand : les agents doivent être au courant du travail des autres sans communication point-à-point explicite. Le state partagé fournit la coordination sans le couplage.
 
-## Where Multi-Agent Systems Break
+## Là où les systèmes multi-agent cassent
 
-### Failure Cascades
+### Les cascades de défaillances
 
-When Agent A's bad output feeds into Agent B, the error compounds. Agent B doesn't know Agent A made a mistake — it treats the input as authoritative. By Agent C, the error has been amplified and embedded in a confident-sounding response.
+Quand la mauvaise sortie de l'Agent A alimente l'Agent B, l'erreur s'amplifie. L'Agent B ne sait pas que l'Agent A s'est trompé — il traite l'entrée comme faisant autorité. Rendu à l'Agent C, l'erreur a été amplifiée et intégrée dans une réponse qui sonne confiante.
 
-**Mitigation:** Validate at every handoff. Add lightweight checks between agents — type validation, assertion checks, or a quick LLM-as-a-judge pass that flags obviously wrong intermediate results. Don't assume upstream agents are reliable.
+**Mitigation :** valide à chaque handoff. Ajoute des vérifications légères entre agents — validation de types, assertions, ou une passe rapide de LLM-as-a-judge qui flagge les résultats intermédiaires manifestement faux. Ne pars pas du principe que les agents en amont sont fiables.
 
-### Context Loss
+### La perte de contexte
 
-Each agent handoff is a potential context bottleneck. The orchestrator summarizes, and the summary misses a critical detail. The worker completes its subtask perfectly — except it didn't have the one piece of information that changes everything.
+Chaque handoff entre agents est un goulot d'étranglement potentiel du contexte. L'orchestrator résume, et le résumé rate un détail critique. Le worker complète son sous-problème à la perfection — sauf qu'il n'avait pas la seule pièce d'information qui change tout.
 
-**Mitigation:** Be explicit about what context each agent needs. Don't rely on implicit understanding. Include relevant metadata in inter-agent messages. When in doubt, pass more context than seems necessary.
+**Mitigation :** sois explicite sur le contexte dont chaque agent a besoin. Ne compte pas sur la compréhension implicite. Inclus les métadonnées pertinentes dans les messages entre agents. Dans le doute, passe plus de contexte que ce qui semble nécessaire.
 
-### Cost Explosion
+### L'explosion des coûts
 
-Multiple agents mean multiple LLM calls. An orchestrator-workers pattern with 5 workers and a synthesis step means at least 7 LLM calls per request. If each worker does retrieval and multi-step reasoning, you might be at 20+ calls. At production scale, this gets expensive fast.
+Plusieurs agents, ça veut dire plusieurs appels LLM. Un pattern orchestrator-workers avec 5 workers et une étape de synthèse, ça fait au moins 7 appels LLM par requête. Si chaque worker fait du RAG et du reasoning multi-étapes, tu peux être à 20+ appels. À l'échelle de la production, ça devient cher vite.
 
-**Mitigation:** Use smaller, cheaper models for simple subtasks. Not every agent needs a frontier model. Route based on task complexity — the same way Cursor uses a custom model for Tab, a 70B for code application, and frontier models for reasoning.
+**Mitigation :** utilise des modèles plus petits et moins chers pour les sous-problèmes simples. Tous les agents n'ont pas besoin d'un modèle frontier. Route selon la complexité de la tâche — de la même manière que Cursor utilise un modèle custom pour Tab, un 70B pour l'application de code, et des modèles frontier pour le reasoning.
 
-### Observability Collapse
+### L'effondrement de l'observabilité
 
-When a multi-agent system produces a bad result, you need to know which agent failed, what it saw, and what it produced. Without structured logging of every inter-agent message and every agent's reasoning, debugging is impossible.
+Quand un système multi-agent produit un mauvais résultat, tu dois savoir quel agent a échoué, ce qu'il a vu, et ce qu'il a produit. Sans logging structuré de chaque message entre agents et du reasoning de chaque agent, le debug est impossible.
 
-**Mitigation:** Log everything. Every agent call, every input, every output, every tool invocation. WHOOP's eval framework provides trace-level details for every agent interaction — not just the final output, but the intermediate chain. This is non-negotiable for production multi-agent systems.
+**Mitigation :** logge tout. Chaque appel d'agent, chaque entrée, chaque sortie, chaque tool call. Le framework d'éval de WHOOP fournit des détails au niveau du trace pour chaque interaction d'agent — pas juste la sortie finale, mais la chaîne intermédiaire. C'est non négociable pour des systèmes multi-agent en production.
 
-### Coordination Overhead
+### Le surcoût de coordination
 
-As you add agents, the coordination cost grows. The orchestrator spends more tokens managing the workflow than the workers spend on actual work. At some point, the overhead exceeds the benefit of specialization.
+À mesure que tu ajoutes des agents, le coût de coordination grimpe. L'orchestrator dépense plus de tokens à gérer le workflow que les workers n'en dépensent sur le vrai travail. À un certain point, le surcoût dépasse le bénéfice de la spécialisation.
 
-**Mitigation:** Keep the number of agents as small as possible. Don't split into agents for architectural elegance — split only when a single agent genuinely can't handle the task due to context limits, specialization needs, or parallelism requirements. Three well-designed agents usually outperform ten poorly-designed ones.
+**Mitigation :** garde le nombre d'agents aussi petit que possible. Ne split pas en agents pour l'élégance architecturale — split seulement quand un seul agent ne peut vraiment pas gérer la tâche à cause des limites de contexte, des besoins de spécialisation ou des exigences de parallélisme. Trois agents bien conçus battent généralement dix mal conçus.
 
-## When to Use Multi-Agent (And When Not To)
+## Quand utiliser le multi-agent (et quand s'en abstenir)
 
-**Use multi-agent when:**
+**Utilise le multi-agent quand :**
 
-- The task genuinely requires different tools, models, or expertise at different stages
-- The context for the full task exceeds what one agent can hold
-- Independent subtasks can be parallelized for latency gains
-- You need reliability through redundancy (ensemble patterns)
+- La tâche exige vraiment différents tools, modèles ou expertises à différentes étapes
+- Le contexte pour la tâche complète dépasse ce qu'un seul agent peut tenir
+- Des sous-problèmes indépendants peuvent être parallélisés pour gagner en latence
+- Tu as besoin de fiabilité par redondance (patterns d'ensemble)
 
-**Don't use multi-agent when:**
+**N'utilise pas le multi-agent quand :**
 
-- A single agent with good tools can handle the task (most tasks)
-- You're splitting agents for organizational rather than technical reasons
-- You don't have the observability infrastructure to debug multi-agent failures
-- The coordination overhead exceeds the benefit of specialization
+- Un seul agent avec de bons tools peut gérer la tâche (la plupart des tâches)
+- Tu splittes les agents pour des raisons organisationnelles plutôt que techniques
+- Tu n'as pas l'infrastructure d'observabilité pour débugger les échecs multi-agent
+- Le surcoût de coordination dépasse le bénéfice de la spécialisation
 
-The essay in this book is right: small agents beat big agents. But the corollary is equally true — one good agent beats three unnecessary ones. Add agents when you have a concrete reason. Remove them when you can.
+L'essai dans ce livre a raison : les petits agents battent les gros agents. Mais le corollaire est tout aussi vrai — un bon agent en bat trois inutiles. Ajoute des agents quand tu as une raison concrète. Retire-les quand tu peux.
 
-## A Starting Architecture
+## Une architecture de départ
 
-If you're building your first multi-agent system, start here:
+Si tu construis ton premier système multi-agent, commence ici :
 
-1. **Build a single agent that handles the full task.** Push it until it fails — context overflow, tool confusion, quality degradation.
-2. **Identify the failure mode.** Is the context too large? Does the agent struggle with one specific subtask? Is latency unacceptable?
-3. **Split only at the failure point.** Extract the problematic subtask into a specialized worker agent. Keep everything else in the main agent.
-4. **Add structured communication.** Define the contract between agents with schemas, not freeform text.
-5. **Add evaluation at each boundary.** Test the orchestrator's decomposition. Test each worker's output independently. Test the final synthesis.
-6. **Add observability from day one.** If you can't trace a failure through the agent chain, you can't fix it.
+1. **Construis un seul agent qui gère la tâche complète.** Pousse-le jusqu'à ce qu'il casse — débordement de contexte, confusion sur les tools, dégradation de la qualité.
+2. **Identifie le mode de défaillance.** Le contexte est-il trop gros ? L'agent peine-t-il sur un sous-problème spécifique ? La latence est-elle inacceptable ?
+3. **Split seulement au point de défaillance.** Extrais le sous-problème problématique dans un worker agent spécialisé. Garde tout le reste dans l'agent principal.
+4. **Ajoute une communication structurée.** Définis le contrat entre agents avec des schémas, pas du texte libre.
+5. **Ajoute de l'évaluation à chaque frontière.** Teste la décomposition de l'orchestrator. Teste la sortie de chaque worker indépendamment. Teste la synthèse finale.
+6. **Ajoute de l'observabilité dès le jour un.** Si tu ne peux pas tracer une défaillance à travers la chaîne d'agents, tu ne peux pas la corriger.
 
-This approach gives you the simplicity of a single agent where it works and the power of multi-agent where it's needed. Don't design a multi-agent architecture. Grow into one.
+Cette approche te donne la simplicité d'un seul agent là où ça marche et la puissance du multi-agent là où c'est nécessaire. Ne conçois pas une architecture multi-agent. Grandis jusqu'à en avoir une.
 
-## Further Reading
+## Pour aller plus loin
 
-- [From Idea To Agent In Less Than Ten Minutes](https://engineering.prod.whoop.com/ai-studio) — How WHOOP manages 500+ specialized agents with AI Studio
-- [Notion's GPT-5 Rebuild](https://openai.com/index/notion/) — Notion's shift from prompt chains to orchestrator-workers architecture
-- [How Kimi, Cursor, and Chroma Train Agentic Models with RL](https://www.philschmid.de/kimi-composer-context) — Agent Swarm pattern and dynamic sub-agent dispatch
-- [Cursor's Bugbot Evolution](https://medium.com/data-science-collective/how-cursor-actually-works-c0702d5d91a9) — Pipeline to agent transition in production code review
-- [Anthropic: Building Effective Agents](https://docs.anthropic.com/en/docs/build-with-claude/agent-patterns) — Patterns and anti-patterns for agent architectures
+- [From Idea To Agent In Less Than Ten Minutes](https://engineering.prod.whoop.com/ai-studio) — Comment WHOOP gère plus de 500 agents spécialisés avec AI Studio
+- [Notion's GPT-5 Rebuild](https://openai.com/index/notion/) — Le passage de Notion des chaînes de prompts à une architecture orchestrator-workers
+- [How Kimi, Cursor, and Chroma Train Agentic Models with RL](https://www.philschmid.de/kimi-composer-context) — Le pattern Agent Swarm et le dispatch dynamique de sub-agents
+- [Cursor's Bugbot Evolution](https://medium.com/data-science-collective/how-cursor-actually-works-c0702d5d91a9) — Transition de pipeline à agent pour de la revue de code en production
+- [Anthropic: Building Effective Agents](https://docs.anthropic.com/en/docs/build-with-claude/agent-patterns) — Patterns et anti-patterns pour les architectures d'agents

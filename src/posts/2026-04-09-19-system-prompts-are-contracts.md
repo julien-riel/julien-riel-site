@@ -3,21 +3,21 @@ title: "19. Les system prompts sont des contrats"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "A system prompt isn't instructions — it's a contract."
+description: "Un system prompt n'est pas une instruction — c'est un contrat."
 ---
 
-A system prompt isn't instructions — it's a contract. It defines what the agent is, what it does, and what it refuses to do. The moment you treat it as a suggestion, you've lost control of the system.
+Un system prompt n'est pas une instruction — c'est un contrat. Il définit ce qu'est l'agent, ce qu'il fait, et ce qu'il refuse de faire. À l'instant où tu le traites comme une suggestion, tu as perdu le contrôle du système.
 
-Contracts have specific properties. They're explicit, not implied. They're stable — you don't change a contract mid-transaction without both parties agreeing. They have edge cases spelled out, not left to interpretation. And crucially, they create expectations: downstream systems, users, and other agents all behave based on what the contract promises. Break the contract silently and everything downstream breaks in ways that are hard to trace.
+Les contrats ont des propriétés spécifiques. Ils sont explicites, pas implicites. Ils sont stables — on ne change pas un contrat en pleine transaction sans l'accord des deux parties. Les cas limites y sont énoncés, pas laissés à l'interprétation. Et surtout, ils créent des attentes : les systèmes en aval, les utilisateurs, et les autres agents se comportent tous en fonction de ce que le contrat promet. Casse le contrat silencieusement et tout ce qui est en aval casse d'une façon difficile à tracer.
 
-Most system prompts are written like rough drafts. Vague on scope, silent on failure modes, inconsistent about format. They work fine in the happy path and fall apart the moment something unexpected happens. That's not a prompt problem — it's a contract problem. The contract didn't cover the case.
+La plupart des system prompts sont écrits comme des brouillons. Vagues sur le périmètre, silencieux sur les modes d'échec, inconsistants sur le format. Ils fonctionnent bien dans le chemin heureux et s'effondrent au moment où quelque chose d'inattendu arrive. Ce n'est pas un problème de prompt — c'est un problème de contrat. Le contrat ne couvrait pas le cas.
 
-Writing a system prompt as a contract means being explicit about the things you'd rather not think about. What does the agent do when the user asks something outside its scope? What does it do when tool calls fail? When the context is ambiguous, does it ask for clarification or make its best guess? These aren't edge cases you can defer — they're the cases that define the system's actual behavior in production.
+Écrire un system prompt comme un contrat veut dire être explicite sur les choses auxquelles tu préférerais ne pas penser. Que fait l'agent quand l'utilisateur demande quelque chose en dehors de son périmètre ? Que fait-il quand les tool calls échouent ? Quand le contexte est ambigu, est-ce qu'il demande des clarifications ou fait sa meilleure supposition ? Ce ne sont pas des cas limites que tu peux différer — ce sont les cas qui définissent le comportement réel du système en production.
 
-There's also the stability requirement. Teams that iterate quickly on system prompts often create a subtler problem: the contract changes, but nothing downstream is notified. An agent that used to return structured JSON now returns prose because someone improved the system prompt. The pipeline that was parsing that JSON breaks. This is why prompt versioning isn't just good hygiene — it's contract management.
+Il y a aussi l'exigence de stabilité. Les équipes qui itèrent rapidement sur les system prompts créent souvent un problème plus subtil : le contrat change, mais rien en aval n'est notifié. Un agent qui renvoyait du JSON structuré renvoie maintenant du texte parce que quelqu'un a « amélioré » le system prompt. La pipeline qui parsait ce JSON casse. C'est pourquoi le versioning des prompts n'est pas juste une bonne hygiène — c'est de la gestion de contrat.
 
-The hardest part of writing a good system prompt is the negative space: what the agent won't do. It's tempting to only specify the positive behavior. But an agent without explicit constraints will fill ambiguity with something, and that something might not be what you wanted. Negative constraints are often where the real contract lives.
+La partie la plus difficile d'écrire un bon system prompt, c'est l'espace négatif : ce que l'agent ne fera pas. C'est tentant de ne spécifier que le comportement positif. Mais un agent sans contraintes explicites comblera l'ambiguïté avec quelque chose, et ce quelque chose pourrait ne pas être ce que tu voulais. C'est souvent dans les contraintes négatives que vit le vrai contrat.
 
-Treat a changed system prompt the way you'd treat a changed API contract — with tests, with versioning, and with the assumption that something downstream is depending on the old behavior.
+Traite un system prompt modifié comme tu traiterais un contrat d'API modifié — avec des tests, avec du versioning, et avec l'hypothèse que quelque chose en aval dépend de l'ancien comportement.
 
-The agent will honor the contract you gave it. Write one worth honoring.
+L'agent honorera le contrat que tu lui as donné. Écris-en un qui mérite d'être honoré.

@@ -1,21 +1,21 @@
 ---
-title: "62. La compétence la plus difficile est de savoir quand reprendre le volant"
+title: "62. La compétence la plus difficile, c'est de savoir quand reprendre le volant"
 date: 2026-04-09
 tags:
   - mindset
-description: "Delegation to an agent is easy."
+description: "Déléguer à un agent est facile."
 ---
 
-Delegation to an agent is easy. The harder skill is recognizing the moment when the agent has reached the limit of what it can handle reliably and you need to step back in — not because the agent failed obviously, but because something subtle has gone wrong that only you can see.
+Déléguer à un agent est facile. La compétence plus difficile, c'est de reconnaître le moment où l'agent a atteint la limite de ce qu'il peut gérer de façon fiable et où tu dois reprendre la main — pas parce que l'agent a échoué de façon évidente, mais parce que quelque chose de subtil a mal tourné et que toi seul peux le voir.
 
-The obvious cases are easy. The agent produces nonsense, calls the wrong tool, loops indefinitely. You intervene. These failures announce themselves. The hard cases are the ones where the agent is producing something plausible — coherent, well-structured, internally consistent — that is subtly wrong in a way that requires domain knowledge or contextual understanding you have and the agent doesn't. The output looks fine. Your instinct says something is off. Trusting that instinct is the skill.
+Les cas évidents sont faciles. L'agent produit du charabia, appelle le mauvais outil, boucle indéfiniment. Tu interviens. Ces échecs s'annoncent d'eux-mêmes. Les cas difficiles sont ceux où l'agent produit quelque chose de plausible — cohérent, bien structuré, intrinsèquement consistant — qui est subtilement erroné d'une façon qui exige une connaissance de domaine ou une compréhension contextuelle que tu as et que l'agent n'a pas. La sortie a l'air correcte. Ton instinct dit que quelque chose cloche. Faire confiance à cet instinct, c'est la compétence.
 
-Instinct here isn't mysticism. It's pattern recognition built from knowing the domain, knowing the codebase, knowing the users, knowing the history of decisions that led to the current system. When agent output triggers that recognition — when something feels wrong even though you can't immediately articulate why — that feeling is usually a signal worth following. The articulation comes later, when you slow down and examine the output carefully. The instinct comes first.
+L'instinct ici n'est pas du mysticisme. C'est une reconnaissance de patrons construite à partir de la connaissance du domaine, de la base de code, des utilisateurs, de l'historique des décisions qui ont mené au système actuel. Quand la sortie d'un agent déclenche cette reconnaissance — quand quelque chose semble mauvais même si tu ne peux pas immédiatement articuler pourquoi — ce sentiment est habituellement un signal à suivre. L'articulation vient plus tard, quand tu ralentis et examines la sortie attentivement. L'instinct vient en premier.
 
-The failure mode in the other direction is taking back the wheel too readily — intervening whenever the agent's approach differs from what you would have done, micromanaging rather than delegating, never giving the agent room to handle things you've already verified it handles well. This wastes the value of delegation and keeps you in execution work when you could be doing thinking work.
+Le mode d'échec dans l'autre direction, c'est reprendre le volant trop vite — intervenir chaque fois que l'approche de l'agent diffère de ce que tu aurais fait, micro-gérer plutôt que déléguer, ne jamais laisser à l'agent la place de gérer des choses dont tu as déjà vérifié qu'il les gère bien. Ça gaspille la valeur de la délégation et te maintient dans le travail d'exécution alors que tu pourrais faire du travail de réflexion.
 
-The calibration develops with experience. You learn which domains and task types your agent handles reliably and which ones it handles poorly. You learn the specific failure signatures — the particular ways this agent, on this task, goes subtly wrong. You build a mental model of the agent's judgment that tells you when to trust it and when to watch more carefully.
+Le calibrage se développe avec l'expérience. Tu apprends quels domaines et types de tâches ton agent gère de manière fiable et lesquels il gère mal. Tu apprends les signatures d'échec spécifiques — les façons particulières dont cet agent, sur cette tâche, déraille subtilement. Tu construis un modèle mental du jugement de l'agent qui te dit quand lui faire confiance et quand surveiller plus attentivement.
 
-Knowing when to let go and when to hold on is the same skill in agentic programming as in management. It takes time to develop and it's worth developing deliberately.
+Savoir quand lâcher prise et quand tenir bon, c'est la même compétence en programmation agentic qu'en gestion. Ça prend du temps à développer et ça vaut la peine de le développer délibérément.
 
-The agent drives well on the straight roads. Know where the curves are.
+L'agent conduit bien sur les routes droites. Sache où sont les courbes.

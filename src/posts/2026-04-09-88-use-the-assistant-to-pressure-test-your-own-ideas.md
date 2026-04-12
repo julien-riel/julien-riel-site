@@ -1,20 +1,20 @@
 ---
-title: "88. Utilisez l'assistant pour mettre vos idées à l'épreuve"
+title: "88. Utilise l'assistant pour mettre tes propres idées à l'épreuve"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Before you commit to an implementation approach, describe it to the assistant and ask what could go wrong."
+description: "Avant de t'engager dans une approche d'implémentation, décris-la à l'assistant et demande ce qui pourrait mal tourner."
 ---
 
-Before you commit to an implementation approach, describe it to the assistant and ask what could go wrong. Not "implement this" — "here's what I'm thinking, what are the failure modes?" The assistant has no attachment to your idea, no social incentive to protect your feelings, and a broad knowledge of how similar approaches have failed in similar contexts. It will find things you missed.
+Avant de t'engager dans une approche d'implémentation, décris-la à l'assistant et demande ce qui pourrait mal tourner. Pas « implement this » — « here's what I'm thinking, what are the failure modes? ». L'assistant n'a aucun attachement à ton idée, aucune incitation sociale à protéger tes sentiments, et une large connaissance de comment des approches similaires ont échoué dans des contexts similaires. Il trouvera des choses que tu as manquées.
 
-This is adversarial prompting applied to your own work, and it's one of the highest-value uses of a coding assistant. The ego-free dynamic that makes the assistant reluctant to criticize — if you don't ask for criticism — becomes a powerful asset when you explicitly invite it. Ask it to steelman the alternative you rejected. Ask it for the three most likely ways this design fails under load. Ask it what a skeptical code reviewer would say about the approach.
+C'est du prompting adversarial appliqué à ton propre travail, et c'est l'une des utilisations à plus haute valeur d'un coding assistant. La dynamique sans ego qui rend l'assistant réticent à critiquer — si tu ne demandes pas de critique — devient un atout puissant quand tu l'invites explicitement. Demande-lui de défendre la meilleure version de l'alternative que tu as rejetée. Demande-lui les trois façons les plus probables dont ce design échoue sous charge. Demande-lui ce qu'un reviewer de code sceptique dirait de l'approche.
 
-The feedback is most useful before the code exists. Once you've written the implementation, sunk-cost dynamics kick in and critical feedback becomes harder to act on even when it's right. Before the code exists, the feedback is pure information — it costs nothing to update your design in response to a critique you can't immediately dismiss.
+Le feedback est plus utile avant que le code n'existe. Une fois que tu as écrit l'implémentation, la dynamique du coût irrécupérable entre en jeu et le feedback critique devient plus difficile à mettre en action même quand il est juste. Avant que le code n'existe, le feedback est de l'information pure — ça ne coûte rien de mettre à jour ton design en réponse à une critique que tu ne peux pas immédiatement écarter.
 
-There's a specific version of this that's especially valuable: ask the assistant to propose an alternative approach and explain the tradeoffs. Not because the alternative is necessarily better, but because understanding why you're not taking it sharpens your understanding of why you are. The best justification for an architectural choice is one you've articulated explicitly, not one that lives in your head as "this seemed right."
+Il y a une version spécifique de ça qui est particulièrement précieuse : demande à l'assistant de proposer une approche alternative et d'expliquer les compromis. Pas parce que l'alternative est nécessairement meilleure, mais parce que comprendre pourquoi tu ne la prends pas affine ta compréhension de pourquoi tu prends l'autre. La meilleure justification pour un choix architectural est celle que tu as articulée explicitement, pas celle qui vit dans ta tête comme « ça semblait juste ».
 
-Your attachment to your own ideas is the biggest obstacle to improving them. The assistant has none.
+Ton attachement à tes propres idées est le plus grand obstacle à leur amélioration. L'assistant n'en a aucun.
 
 ---
 

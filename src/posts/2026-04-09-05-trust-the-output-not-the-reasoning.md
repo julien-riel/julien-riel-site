@@ -3,19 +3,19 @@ title: "5. Faites confiance au résultat, pas au raisonnement"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "Chain-of-thought reasoning is genuinely useful — it improves output quality, makes the agent's process more legible, and gives you something to debug when things go wrong."
+description: "Le chain-of-thought reasoning est vraiment utile — il améliore la qualité de l'output, rend le processus de l'agent plus lisible, et te donne quelque chose à déboguer quand ça tourne mal."
 ---
 
-Chain-of-thought reasoning is genuinely useful — it improves output quality, makes the agent's process more legible, and gives you something to debug when things go wrong. But it creates a trap: the reasoning looks so coherent that you start trusting it. You read through the agent's step-by-step logic, it makes sense, and you conclude the output must be correct. This is backwards.
+Le chain-of-thought reasoning est vraiment utile — il améliore la qualité de l'output, rend le processus de l'agent plus lisible, et te donne quelque chose à déboguer quand ça tourne mal. Mais ça crée un piège : le reasoning a l'air si cohérent que tu commences à lui faire confiance. Tu lis la logique étape par étape de l'agent, ça fait sens, et tu conclus que l'output doit être correct. C'est à l'envers.
 
-The reasoning is not a window into what the model is doing. It's another output. The model generates the reasoning the same way it generates everything else — by predicting likely tokens given the context. That reasoning can be internally consistent, logically structured, and completely disconnected from the actual computation that produced the final answer. Models have been shown to produce confident, coherent justifications for answers that are flat wrong. The explanation sounds good. The answer is still wrong.
+Le reasoning n'est pas une fenêtre sur ce que le modèle fait. C'est un autre output. Le modèle génère le reasoning de la même manière qu'il génère tout le reste — en prédisant les tokens probables étant donné le context. Ce reasoning peut être cohérent en interne, logiquement structuré, et complètement déconnecté du calcul réel qui a produit la réponse finale. On a montré que des modèles produisent des justifications assurées et cohérentes pour des réponses carrément fausses. L'explication sonne bien. La réponse est quand même fausse.
 
-This matters because the reasoning creates false confidence in a specific way. When an agent produces a bare answer and it's wrong, you see a wrong answer. When it produces a beautifully reasoned wrong answer, you see a convincing argument. The second is harder to catch and easier to defer to. Especially when you're moving fast, when the domain is unfamiliar, when the reasoning covers ground you'd have to think hard to verify independently.
+Ça compte parce que le reasoning crée une fausse confiance d'une manière spécifique. Quand un agent produit une réponse nue et qu'elle est fausse, tu vois une réponse fausse. Quand il produit une réponse fausse magnifiquement raisonnée, tu vois un argument convaincant. Le second est plus difficile à attraper et plus facile à suivre. Surtout quand tu bouges vite, quand le domaine est inconnu, quand le reasoning couvre un terrain que tu devrais réfléchir dur pour vérifier indépendamment.
 
-The discipline is to evaluate outputs on their own terms — does the output match reality, meet the spec, pass the tests — not on the quality of the reasoning that preceded them. Treat the reasoning as a useful debugging artifact, not as evidence of correctness. If the output is wrong, the reasoning tells you where to look. If the output is right, the reasoning is interesting but not the point.
+La discipline, c'est d'évaluer les outputs selon leurs propres termes — est-ce que l'output correspond à la réalité, respecte la spec, passe les tests — pas selon la qualité du reasoning qui les a précédés. Traite le reasoning comme un artefact de debugging utile, pas comme une preuve de justesse. Si l'output est faux, le reasoning te dit où regarder. Si l'output est juste, le reasoning est intéressant mais n'est pas le point.
 
-There's a related mistake in the other direction: distrusting an output because the reasoning seems wrong. Sometimes models arrive at correct answers through reasoning chains that look odd or take unnecessary detours. The reasoning is a sketch, not a proof. What matters is whether the answer holds up when you check it against ground truth.
+Il y a une erreur liée dans l'autre sens : ne pas faire confiance à un output parce que le reasoning a l'air faux. Parfois les modèles arrivent à des réponses correctes via des chaînes de reasoning qui paraissent bizarres ou prennent des détours inutiles. Le reasoning est un croquis, pas une preuve. Ce qui compte, c'est si la réponse tient quand tu la vérifies contre la ground truth.
 
-Verify outputs. Use reasoning to understand failures. Don't let a good argument substitute for a correct answer.
+Vérifie les outputs. Utilise le reasoning pour comprendre les échecs. Ne laisse pas un bon argument remplacer une bonne réponse.
 
-The model is not showing its work. It's generating the appearance of showing its work. Keep that distinction close.
+Le modèle ne montre pas son travail. Il génère l'apparence de montrer son travail. Garde cette distinction proche.

@@ -1,19 +1,19 @@
 ---
-title: "36. Enregistrez tout ce que votre agent pensait, pas seulement ce qu'il a fait"
+title: "36. Enregistre tout ce que ton agent pensait, pas seulement ce qu'il a fait"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "Action logs are necessary but not sufficient."
+description: "Les action logs sont nécessaires mais pas suffisants."
 ---
 
-Action logs are necessary but not sufficient. Knowing that the agent called a tool, sent a message, or returned an output tells you what happened. It doesn't tell you why, and in agentic systems, why is often where the failure lives.
+Les action logs sont nécessaires mais pas suffisants. Savoir que l'agent a appelé un tool, envoyé un message ou retourné une sortie te dit ce qui s'est passé. Ça ne te dit pas pourquoi, et dans les systèmes agentic, le pourquoi est souvent là où vit la défaillance.
 
-The difference matters most during debugging. An agent produces a wrong output. The action log shows: retrieved document A, called tool B, returned output C. Nothing in that sequence looks wrong — each step was a reasonable action. But the reasoning trace, if you'd captured it, would have shown the agent misinterpreting a sentence in document A in a way that made tool B the logical choice, which made output C the inevitable result. Without the reasoning, you have a mystery. With it, you have a diagnosis.
+La différence compte surtout pendant le debug. Un agent produit une mauvaise sortie. L'action log montre : document A récupéré, tool B appelé, sortie C retournée. Rien dans cette séquence n'a l'air mauvais — chaque étape était une action raisonnable. Mais le reasoning trace, si tu l'avais capturé, aurait montré l'agent mal interpréter une phrase du document A d'une façon qui faisait du tool B le choix logique, ce qui faisait de la sortie C le résultat inévitable. Sans le raisonnement, tu as un mystère. Avec, tu as un diagnostic.
 
-Reasoning traces also reveal a class of failure that action logs completely miss: the agent that did the right thing for the wrong reason. It retrieved the correct document, but not because it understood the query — because the document happened to contain keywords that matched. It called the right tool, but with parameters that worked by coincidence. These failures are invisible in action logs and visible in reasoning traces, and they matter because the next slightly different input will break the lucky pattern and you won't know why.
+Les reasoning traces révèlent aussi une classe de défaillances que les action logs ratent complètement : l'agent qui a fait la bonne chose pour la mauvaise raison. Il a récupéré le bon document, mais pas parce qu'il a compris la requête — parce que le document contenait par hasard des mots-clés qui correspondaient. Il a appelé le bon tool, mais avec des paramètres qui fonctionnaient par coïncidence. Ces défaillances sont invisibles dans les action logs et visibles dans les reasoning traces, et elles comptent parce que le prochain input légèrement différent va casser le pattern chanceux et tu ne sauras pas pourquoi.
 
-The practical objection is cost. Reasoning traces are verbose. Storing them at scale is expensive. This is a real constraint and worth managing — you can sample traces rather than capturing all of them, you can set retention policies that keep recent traces and archive older ones, you can capture full traces only for failed or flagged tasks. These are reasonable tradeoffs. What's not reasonable is capturing nothing and hoping the action log is enough.
+L'objection pratique, c'est le coût. Les reasoning traces sont verbeuses. Les stocker à grande échelle coûte cher. C'est une vraie contrainte qui vaut la peine d'être gérée — tu peux échantillonner les traces plutôt que les capturer toutes, tu peux mettre en place des politiques de rétention qui gardent les traces récentes et archivent les plus anciennes, tu peux capturer des traces complètes seulement pour les tâches échouées ou signalées. Ce sont des tradeoffs raisonnables. Ce qui n'est pas raisonnable, c'est de ne rien capturer et d'espérer que l'action log suffit.
 
-There's also a compounding benefit over time. A repository of reasoning traces from real tasks is training material, evaluation data, and institutional knowledge. It's how you understand what your agent actually does versus what you think it does. That understanding is the foundation of every improvement you'll make to the system.
+Il y a aussi un bénéfice cumulatif dans le temps. Un dépôt de reasoning traces de vraies tâches, c'est du matériel d'entraînement, des données d'évaluation et de la connaissance institutionnelle. C'est comme ça que tu comprends ce que ton agent fait réellement par rapport à ce que tu penses qu'il fait. Cette compréhension est le fondement de toute amélioration que tu feras au système.
 
-Log the thinking. The actions are just the visible surface of it.
+Log la pensée. Les actions n'en sont que la surface visible.

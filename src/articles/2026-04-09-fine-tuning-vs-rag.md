@@ -4,130 +4,130 @@ date: 2026-04-09
 tags:
   - fine-tuning
   - rag
-description: "Fine-tuning changes how the model thinks. RAG changes what it sees. A practical decision framework for when to use each — and when to use both."
+description: "Le fine-tuning change la façon dont le modèle pense. Le RAG change ce qu'il voit. Un cadre de décision pratique pour savoir quand utiliser l'un, l'autre — ou les deux."
 ---
 
-## A Practical Guide for Agentic Programmers
+## Un guide pratique pour programmeurs agentiques
 
-You have domain-specific data and you want your LLM to use it. Two paths diverge. You can **fine-tune** the model — train it on your data so the knowledge becomes part of its parameters. Or you can use **RAG** — retrieve relevant data at query time and inject it into the prompt. Most teams frame this as a binary choice. It isn't. They solve different problems, and the best systems use both.
+Tu as des données spécifiques à ton domaine et tu veux que ton LLM les utilise. Deux chemins s'offrent à toi. Tu peux **fine-tuner** le modèle — l'entraîner sur tes données pour que la connaissance devienne partie intégrante de ses paramètres. Ou tu peux utiliser le **RAG** — récupérer les données pertinentes au moment de la requête et les injecter dans le prompt. La plupart des équipes voient ça comme un choix binaire. Ça n'en est pas un. Ces deux approches résolvent des problèmes différents, et les meilleurs systèmes utilisent les deux.
 
-## What Each Actually Does
+## Ce que chacun fait vraiment
 
-### Fine-Tuning: Changing How the Model Thinks
+### Fine-tuning : changer la façon dont le modèle pense
 
-Fine-tuning takes a pre-trained model and continues training it on your dataset. The model's weights change. Your data becomes part of the model's "memory" — encoded in its parameters, not passed in the prompt.
+Le fine-tuning prend un modèle pré-entraîné et poursuit son training sur ton dataset. Les poids du modèle changent. Tes données deviennent partie de la « mémoire » du modèle — encodées dans ses paramètres, pas passées dans le prompt.
 
-What fine-tuning gives you:
+Ce que le fine-tuning t'apporte :
 
-- **Behavioral patterns.** The model learns *how* to respond, not just *what* to respond with. Tone, format, reasoning style, domain-specific conventions.
-- **Implicit knowledge.** The model internalizes patterns it can apply to new inputs it hasn't seen — generalization, not just recall.
-- **Latency reduction.** No retrieval step needed. The knowledge is in the model.
-- **Smaller prompts.** You don't need to stuff the context window with examples and instructions — the model already knows.
+- **Des patterns comportementaux.** Le modèle apprend *comment* répondre, pas seulement *quoi* répondre. Ton, format, style de raisonnement, conventions spécifiques au domaine.
+- **Des connaissances implicites.** Le modèle intériorise des patterns qu'il peut appliquer à de nouvelles entrées jamais vues — de la généralisation, pas juste de la récitation.
+- **Réduction de la latence.** Pas besoin d'étape de retrieval. La connaissance est dans le modèle.
+- **Des prompts plus courts.** Tu n'as pas besoin de bourrer la fenêtre de contexte avec des exemples et des instructions — le modèle sait déjà.
 
-What fine-tuning costs you:
+Ce que le fine-tuning te coûte :
 
-- **Training compute and data.** You need curated, high-quality training examples — typically hundreds to thousands. Garbage in, garbage out.
-- **Staleness.** The model's knowledge is frozen at training time. When your data changes, you retrain. That's expensive and slow.
-- **Opacity.** You can't cite sources. The model "just knows" but can't point to where it learned it.
-- **Catastrophic forgetting.** If done poorly, fine-tuning can degrade the model's general capabilities while improving narrow task performance.
+- **Du compute et des données d'entraînement.** Il te faut des exemples de training soignés et de haute qualité — typiquement des centaines ou des milliers. Garbage in, garbage out.
+- **De l'obsolescence.** La connaissance du modèle est figée au moment du training. Quand tes données changent, tu ré-entraînes. C'est cher et lent.
+- **De l'opacité.** Tu ne peux pas citer de sources. Le modèle « sait » mais ne peut pas pointer où il l'a appris.
+- **L'oubli catastrophique.** Mal fait, le fine-tuning peut dégrader les capacités générales du modèle tout en améliorant sa performance sur une tâche étroite.
 
-### RAG: Changing What the Model Sees
+### RAG : changer ce que le modèle voit
 
-RAG leaves the model untouched. At query time, you retrieve relevant documents from your data and inject them into the prompt as context. The model reads and responds based on this external evidence.
+Le RAG laisse le modèle intact. Au moment de la requête, tu récupères les documents pertinents dans tes données et tu les injectes dans le prompt comme contexte. Le modèle lit et répond en s'appuyant sur cette preuve externe.
 
-What RAG gives you:
+Ce que le RAG t'apporte :
 
-- **Dynamic knowledge.** Update the data, update the answers. No retraining needed.
-- **Citations.** The model can point to the specific document or passage it used. Auditable, verifiable.
-- **Data freshness.** New documents are available as soon as they're indexed.
-- **No model modification.** Works with any model — proprietary, open-source, swappable.
+- **Des connaissances dynamiques.** Mets à jour les données, les réponses se mettent à jour. Aucun ré-entraînement nécessaire.
+- **Des citations.** Le modèle peut pointer le document ou le passage précis qu'il a utilisé. Auditable, vérifiable.
+- **Fraîcheur des données.** Les nouveaux documents sont disponibles dès qu'ils sont indexés.
+- **Aucune modification du modèle.** Fonctionne avec n'importe quel modèle — propriétaire, open-source, interchangeable.
 
-What RAG costs you:
+Ce que le RAG te coûte :
 
-- **Retrieval latency.** The search step adds time to every query.
-- **Context window budget.** Retrieved documents compete for tokens with instructions, conversation history, and other context.
-- **Retrieval failures.** If the search returns irrelevant documents, the model generates answers from bad context — potentially worse than no context at all.
-- **No behavioral change.** RAG doesn't change how the model reasons or what style it uses. It only changes what information is available.
+- **Latence du retrieval.** L'étape de recherche ajoute du temps à chaque requête.
+- **Budget de fenêtre de contexte.** Les documents récupérés se disputent les tokens avec les instructions, l'historique de conversation et le reste du contexte.
+- **Les échecs de retrieval.** Si la recherche retourne des documents non pertinents, le modèle génère des réponses à partir d'un mauvais contexte — potentiellement pire qu'aucun contexte.
+- **Aucun changement de comportement.** Le RAG ne change pas la façon dont le modèle raisonne ni le style qu'il utilise. Il change seulement l'information disponible.
 
-## The Decision Framework
+## Le cadre de décision
 
-The question isn't "fine-tuning or RAG?" It's "what problem am I actually solving?"
+La question n'est pas « fine-tuning ou RAG ? ». C'est « quel problème suis-je réellement en train de résoudre ? ».
 
-### Use RAG When the Problem Is Knowledge
+### Utilise le RAG quand le problème c'est la connaissance
 
-If the model needs access to specific, citable facts that change over time — product catalogs, policy documents, customer data, regulatory text, knowledge bases — RAG is the right tool. The model doesn't need to internalize this knowledge. It needs to read it and reason about it.
+Si le modèle a besoin d'accéder à des faits spécifiques, citables, qui changent dans le temps — catalogues de produits, documents de politique, données clients, textes réglementaires, bases de connaissances — le RAG est le bon outil. Le modèle n'a pas besoin d'intérioriser cette connaissance. Il doit la lire et raisonner à partir d'elle.
 
-WHOOP Coach is a RAG system. The LLM doesn't "know" your heart rate variability from training. It retrieves your biometric data at query time, reads it, and generates personalized coaching. When your data changes (every night, after every workout), the answers update automatically. Fine-tuning a model on one person's health data would be absurd.
+WHOOP Coach est un système RAG. Le LLM ne « connaît » pas ta variabilité cardiaque grâce au training. Il récupère tes données biométriques au moment de la requête, les lit et génère un coaching personnalisé. Quand tes données changent (chaque nuit, après chaque entraînement), les réponses se mettent à jour automatiquement. Fine-tuner un modèle sur les données de santé d'une seule personne serait absurde.
 
-**RAG is the right choice when:**
-- Your data changes frequently (daily, weekly, monthly)
-- You need to cite specific sources
-- The data is per-user or per-tenant (can't be baked into one model)
-- Compliance requires auditability of where answers came from
-- You want model-agnostic architecture (swap models without retraining)
+**Le RAG est le bon choix quand :**
+- Tes données changent fréquemment (quotidien, hebdomadaire, mensuel)
+- Tu dois citer des sources précises
+- Les données sont par utilisateur ou par tenant (impossible de les cuire dans un seul modèle)
+- La conformité exige l'auditabilité de la provenance des réponses
+- Tu veux une architecture agnostique au modèle (changer de modèle sans ré-entraîner)
 
-### Use Fine-Tuning When the Problem Is Behavior
+### Utilise le fine-tuning quand le problème c'est le comportement
 
-If the model needs to reason differently, write in a specific style, follow domain-specific conventions, or handle specialized formats — fine-tuning changes the model's "instincts." RAG can't do this. You can paste a style guide into every prompt, but the model will always be fighting its default tendencies.
+Si le modèle doit raisonner différemment, écrire dans un style précis, suivre des conventions propres au domaine ou gérer des formats spécialisés — le fine-tuning change les « instincts » du modèle. Le RAG ne peut pas faire ça. Tu peux coller un guide de style dans chaque prompt, mais le modèle se battra toujours contre ses tendances par défaut.
 
-Cursor fine-tuned Llama-3-70B specifically for code application (the Fast Apply model). The task — taking a semantic diff and producing the correct full file — requires a specific behavioral pattern that's hard to prompt into a general model. The fine-tuned model achieves 1,000 tokens/second because it's optimized for this one task. RAG would add latency and wouldn't help — the model needs to know *how* to apply code changes, not *what* changes to apply.
+Cursor a fine-tuné Llama-3-70B spécifiquement pour l'application de code (le modèle Fast Apply). La tâche — prendre un diff sémantique et produire le fichier complet correct — exige un pattern comportemental spécifique qui est difficile à obtenir par prompt sur un modèle généraliste. Le modèle fine-tuné atteint 1 000 tokens/seconde parce qu'il est optimisé pour cette unique tâche. Le RAG ajouterait de la latence et n'aiderait pas — le modèle doit savoir *comment* appliquer les changements de code, pas *quels* changements appliquer.
 
-**Fine-tuning is the right choice when:**
-- You need consistent style, tone, or format that prompting can't reliably achieve
-- The model needs domain-specific reasoning patterns (medical diagnosis logic, legal analysis conventions, code transformation rules)
-- You want to reduce prompt size (and therefore cost and latency) by internalizing repeated instructions
-- You have a well-defined, stable task that doesn't change frequently
+**Le fine-tuning est le bon choix quand :**
+- Tu as besoin d'un style, d'un ton ou d'un format cohérent que le prompting n'arrive pas à garantir
+- Le modèle a besoin de patterns de raisonnement propres au domaine (logique de diagnostic médical, conventions d'analyse juridique, règles de transformation de code)
+- Tu veux réduire la taille du prompt (et donc le coût et la latence) en intériorisant des instructions répétées
+- Tu as une tâche bien définie et stable qui ne change pas souvent
 
-### Use Both When the Problem Is Complex
+### Utilise les deux quand le problème est complexe
 
-Most real-world systems need both. Fine-tuning handles behavior; RAG handles knowledge.
+La plupart des systèmes du monde réel ont besoin des deux. Le fine-tuning gère le comportement ; le RAG gère la connaissance.
 
-Duolingo fine-tuned GPT-4 for its specific interaction patterns (gamified feedback, pedagogical scaffolding, Duolingo's voice) while using retrieval to access lesson content, grammar rules, and learner-specific data. The fine-tuning ensures the model acts like a Duolingo tutor. The retrieval ensures it teaches the right content for the right learner.
+Duolingo a fine-tuné GPT-4 pour ses patterns d'interaction spécifiques (feedback gamifié, échafaudage pédagogique, la voix de Duolingo) tout en utilisant le retrieval pour accéder au contenu des leçons, aux règles de grammaire et aux données propres à l'apprenant. Le fine-tuning garantit que le modèle agit comme un tuteur Duolingo. Le retrieval garantit qu'il enseigne le bon contenu au bon apprenant.
 
-Cursor uses a fine-tuned model (Composer) for agentic coding behavior and RAG (the context engine with embeddings and reranking) for codebase knowledge. The fine-tuning teaches the model how to write code, use tools, and apply edits. The RAG gives it access to the specific codebase it's working on.
+Cursor utilise un modèle fine-tuné (Composer) pour le comportement de coding agentique et le RAG (le moteur de contexte avec embeddings et reranking) pour la connaissance de la codebase. Le fine-tuning apprend au modèle comment écrire du code, utiliser des outils et appliquer des éditions. Le RAG lui donne accès à la codebase spécifique sur laquelle il travaille.
 
-**Use both when:**
-- The model needs specialized behavior (fine-tune) AND access to dynamic data (RAG)
-- You're building a domain-specific assistant that should both sound right and know the right things
-- You want the efficiency of internalized patterns with the freshness of retrieved knowledge
+**Utilise les deux quand :**
+- Le modèle a besoin d'un comportement spécialisé (fine-tune) ET d'un accès à des données dynamiques (RAG)
+- Tu construis un assistant spécifique à un domaine qui doit à la fois sonner juste et connaître les bonnes choses
+- Tu veux l'efficacité des patterns intériorisés avec la fraîcheur de la connaissance récupérée
 
-## Practical Comparison
+## Comparaison pratique
 
-| Dimension | Fine-Tuning | RAG |
+| Dimension | Fine-tuning | RAG |
 |-----------|-------------|-----|
-| **What changes** | Model weights | Prompt content |
-| **Knowledge freshness** | Frozen at training time | As fresh as the index |
-| **Setup cost** | High (data curation, training) | Medium (chunking, embedding, indexing) |
-| **Per-query cost** | Lower (no retrieval step) | Higher (retrieval + larger prompts) |
-| **Latency** | Lower | Higher (retrieval round-trip) |
-| **Citability** | No — the model "just knows" | Yes — can cite source documents |
-| **Data changes** | Requires retraining | Re-index and serve |
-| **Model portability** | Locked to one model | Works with any model |
-| **Best for** | Behavior, style, reasoning patterns | Facts, data, domain knowledge |
+| **Ce qui change** | Les poids du modèle | Le contenu du prompt |
+| **Fraîcheur de la connaissance** | Figée au moment du training | Aussi fraîche que l'index |
+| **Coût de mise en place** | Élevé (curation de données, training) | Moyen (chunking, embedding, indexation) |
+| **Coût par requête** | Plus bas (pas d'étape de retrieval) | Plus élevé (retrieval + prompts plus gros) |
+| **Latence** | Plus basse | Plus élevée (aller-retour de retrieval) |
+| **Citabilité** | Non — le modèle « sait » | Oui — peut citer les documents sources |
+| **Changements de données** | Nécessite un ré-entraînement | Ré-indexer et servir |
+| **Portabilité du modèle** | Verrouillé à un modèle | Fonctionne avec n'importe quel modèle |
+| **Idéal pour** | Comportement, style, patterns de raisonnement | Faits, données, connaissance de domaine |
 
-## Common Mistakes
+## Les erreurs fréquentes
 
-### Fine-Tuning on Facts
+### Fine-tuner sur des faits
 
-Teams fine-tune models to "know" their product documentation, FAQ, or policy data. This works — until the documentation changes. Then you retrain, which takes time and money, and the old answers linger in production until the new model is deployed. RAG handles dynamic factual knowledge more gracefully.
+Des équipes fine-tunent des modèles pour qu'ils « connaissent » leur documentation produit, leur FAQ ou leurs données de politique. Ça marche — jusqu'à ce que la documentation change. Alors tu ré-entraînes, ce qui prend du temps et de l'argent, et les vieilles réponses traînent en production jusqu'au déploiement du nouveau modèle. Le RAG gère les connaissances factuelles dynamiques avec bien plus d'élégance.
 
-Fine-tune for behavior. RAG for facts. This is the simplest heuristic and it's right most of the time.
+Fine-tune pour le comportement. RAG pour les faits. C'est l'heuristique la plus simple et elle est juste la plupart du temps.
 
-### RAG Without Evaluation
+### Du RAG sans évaluation
 
-Teams build a RAG pipeline, test it on a handful of questions, and ship it. Without systematic evaluation of retrieval quality (are you getting the right chunks?) and generation quality (is the model using them correctly?), you're flying blind. WHOOP built an evaluation framework that tests retrieval, generation, and end-to-end quality separately. Your RAG system needs the same.
+Des équipes montent un pipeline RAG, le testent sur une poignée de questions et l'expédient. Sans évaluation systématique de la qualité du retrieval (est-ce que tu récupères les bons chunks ?) et de la qualité de la génération (est-ce que le modèle les utilise correctement ?), tu voles à l'aveugle. WHOOP a construit un framework d'évaluation qui teste séparément le retrieval, la génération et la qualité bout en bout. Ton système RAG a besoin de la même chose.
 
-### Fine-Tuning as a Substitute for Good Prompting
+### Le fine-tuning comme substitut à un bon prompting
 
-Before you fine-tune, make sure you've exhausted what prompting can do. Fine-tuning is expensive and irreversible (in the sense that you're now maintaining a custom model). Many "fine-tuning" use cases can be solved with better system prompts, few-shot examples, or structured output formats.
+Avant de fine-tuner, assure-toi d'avoir épuisé ce que le prompting peut faire. Le fine-tuning coûte cher et est irréversible (dans le sens où tu maintiens maintenant un modèle custom). Beaucoup de cas d'usage « fine-tuning » peuvent être résolus avec de meilleurs system prompts, des exemples few-shot ou des formats de sortie structurés.
 
-The rule of thumb: if you can describe the behavior you want in natural language and the model can follow it with good prompting, you don't need fine-tuning. If the behavior requires hundreds of examples to demonstrate because it's too subtle or complex for instructions, that's when fine-tuning earns its keep.
+La règle d'or : si tu peux décrire le comportement souhaité en langage naturel et que le modèle peut le suivre avec un bon prompting, tu n'as pas besoin de fine-tuning. Si le comportement exige des centaines d'exemples pour être démontré parce qu'il est trop subtil ou complexe à instruire, c'est là que le fine-tuning vaut son prix.
 
-### Ignoring the Middle Ground: Prompt Caching
+### Ignorer le terrain d'entente : le prompt caching
 
-Many API providers now offer prompt caching — reusing the processed context from previous requests when the prompt prefix is identical. This gives you some of fine-tuning's latency benefits (the model has already "read" your context) with RAG's flexibility (the context can be updated). If your system prompt and retrieved context are relatively stable across requests, prompt caching can significantly reduce latency and cost without any training.
+Beaucoup de fournisseurs d'API offrent maintenant du prompt caching — réutiliser le contexte déjà traité des requêtes précédentes quand le préfixe du prompt est identique. Ça te donne une partie des bénéfices de latence du fine-tuning (le modèle a déjà « lu » ton contexte) avec la flexibilité du RAG (le contexte peut être mis à jour). Si ton system prompt et ton contexte récupéré sont relativement stables d'une requête à l'autre, le prompt caching peut réduire significativement la latence et le coût sans aucun training.
 
-## A Decision Tree
+## Un arbre de décision
 
 ```
 Q: Does the model need to access specific, changing data?
@@ -141,15 +141,15 @@ Q: Does the model need to access specific, changing data?
     └── No → You might not need either — just prompt well
 ```
 
-## The Takeaway
+## À retenir
 
-Fine-tuning and RAG are complementary, not competing. Fine-tuning changes the model's instincts — how it reasons, writes, and behaves. RAG changes the model's knowledge — what it can reference when answering. Most real-world agentic systems need both: a model that thinks the right way about the specific information it retrieves at query time.
+Le fine-tuning et le RAG sont complémentaires, pas concurrents. Le fine-tuning change les instincts du modèle — sa façon de raisonner, d'écrire et de se comporter. Le RAG change la connaissance du modèle — ce qu'il peut référencer en répondant. La plupart des systèmes agentiques du monde réel ont besoin des deux : un modèle qui pense de la bonne façon à propos de l'information spécifique qu'il récupère au moment de la requête.
 
-Start with RAG. It's cheaper, faster to iterate, and doesn't lock you into a specific model. Add fine-tuning when you've identified a behavioral gap that prompting can't close. And always — always — build your evaluation framework before you invest in either.
+Commence par le RAG. C'est moins cher, plus rapide à itérer et ça ne te verrouille pas dans un modèle précis. Ajoute le fine-tuning quand tu as identifié un écart comportemental que le prompting n'arrive pas à combler. Et toujours — toujours — construis ton framework d'évaluation avant d'investir dans l'un ou l'autre.
 
-## Further Reading
+## Pour aller plus loin
 
-- [OpenAI Fine-Tuning Guide](https://platform.openai.com/docs/guides/fine-tuning) — Official documentation on when and how to fine-tune
-- [WHOOP — Delivering LLM-powered Health Solutions](https://openai.com/index/whoop/) — RAG in production for personalized health coaching
-- [Cursor Composer 2](https://anthemcreation.com/en/artificial-intelligence/cursor-composer-2-proprietary-coding-ai-model/) — Fine-tuning + RL for specialized coding behavior
-- [Duolingo's AI Evolution](https://openai.com/index/duolingo/) — Fine-tuning GPT-4 for pedagogical interaction patterns combined with content retrieval
+- [Guide du fine-tuning OpenAI](https://platform.openai.com/docs/guides/fine-tuning) — Documentation officielle sur quand et comment fine-tuner
+- [WHOOP — Delivering LLM-powered Health Solutions](https://openai.com/index/whoop/) — Le RAG en production pour un coaching santé personnalisé
+- [Cursor Composer 2](https://anthemcreation.com/en/artificial-intelligence/cursor-composer-2-proprietary-coding-ai-model/) — Fine-tuning + RL pour un comportement de coding spécialisé
+- [L'évolution IA de Duolingo](https://openai.com/index/duolingo/) — Fine-tuning de GPT-4 pour des patterns d'interaction pédagogique combiné à du retrieval de contenu

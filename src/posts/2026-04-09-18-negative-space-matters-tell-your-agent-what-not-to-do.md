@@ -3,19 +3,19 @@ title: "18. L'espace négatif compte — dites à votre agent ce qu'il ne doit p
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "Most prompts describe what the agent should do."
+description: "La plupart des prompts décrivent ce que l'agent doit faire."
 ---
 
-Most prompts describe what the agent should do. Few describe what it shouldn't. That asymmetry is where a surprising number of production failures live.
+La plupart des prompts décrivent ce que l'agent doit faire. Peu décrivent ce qu'il ne doit pas faire. Cette asymétrie est là où vit un nombre surprenant d'échecs en production.
 
-The reason is simple: a language model fills gaps with probability. When you don't specify a behavior, the model defaults to whatever response is most likely given its training. Usually that's fine. Sometimes it's exactly what you didn't want — the agent that adds unsolicited caveats to every answer, the one that reformats output in a way that breaks downstream parsing, the one that apologizes extensively before delivering bad news when you needed it to just deliver the news. None of these are unreasonable behaviors in the abstract. They're just wrong for your system, and you never told the agent that.
+La raison est simple : un LLM comble les trous avec de la probabilité. Quand tu ne spécifies pas un comportement, le modèle se replie sur la réponse la plus probable étant donné son entraînement. D'habitude, c'est correct. Parfois, c'est exactement ce que tu ne voulais pas — l'agent qui ajoute des précautions non sollicitées à chaque réponse, celui qui reformate l'output d'une façon qui casse le parsing en aval, celui qui s'excuse longuement avant d'annoncer de mauvaises nouvelles alors que tu voulais qu'il annonce juste la nouvelle. Aucun de ces comportements n'est déraisonnable dans l'abstrait. Ils sont juste mauvais pour ton système, et tu ne l'as jamais dit à l'agent.
 
-Negative constraints are harder to write than positive ones because they require you to anticipate failure modes before they occur. You have to ask: what would a reasonable agent do here that I wouldn't want? That question is uncomfortable because it forces you to imagine the system going wrong, which feels pessimistic when you're in the optimistic phase of building something new. Do it anyway.
+Les contraintes négatives sont plus difficiles à écrire que les positives parce qu'elles t'obligent à anticiper les modes d'échec avant qu'ils n'arrivent. Tu dois demander : qu'est-ce qu'un agent raisonnable ferait ici que je ne voudrais pas ? Cette question est inconfortable parce qu'elle te force à imaginer le système qui part en vrille, ce qui semble pessimiste quand tu es dans la phase optimiste de construire quelque chose de nouveau. Fais-le quand même.
 
-Some negative constraints are universal enough to belong in every system prompt. Don't fabricate citations. Don't assume information that wasn't provided. Don't continue past the scope of the task. Others are specific to your use case and your users. A customer service agent probably shouldn't speculate about competitor products. A code review agent probably shouldn't rewrite code it wasn't asked to rewrite. A summarization agent probably shouldn't editorialize.
+Certaines contraintes négatives sont assez universelles pour appartenir à chaque system prompt. Ne fabrique pas de citations. Ne suppose pas d'information qui n'a pas été fournie. Ne continue pas au-delà du périmètre de la tâche. D'autres sont spécifiques à ton cas d'usage et tes utilisateurs. Un agent de service client ne devrait probablement pas spéculer sur les produits des concurrents. Un agent de code review ne devrait probablement pas réécrire du code qu'on ne lui a pas demandé de réécrire. Un agent de résumé ne devrait probablement pas éditorialiser.
 
-The discipline of writing negative constraints forces a useful clarity about what the agent is actually for. When you sit down to enumerate what the agent shouldn't do, you often discover that you hadn't fully articulated what it should do either. The negative space illuminates the positive.
+La discipline d'écrire des contraintes négatives force une clarté utile sur ce à quoi sert réellement l'agent. Quand tu t'assois pour énumérer ce que l'agent ne devrait pas faire, tu découvres souvent que tu n'avais pas pleinement articulé ce qu'il devrait faire non plus. L'espace négatif éclaire le positif.
 
-There's a balance. A prompt that's mostly prohibitions is brittle and confusing — the agent spends its cognitive budget navigating restrictions rather than doing the work. Negative constraints should be targeted: the specific behaviors that would be plausible without them and problematic if they occurred.
+Il y a un équilibre. Un prompt qui est principalement des interdictions est fragile et déroutant — l'agent dépense son budget cognitif à naviguer des restrictions plutôt qu'à faire le travail. Les contraintes négatives devraient être ciblées : les comportements spécifiques qui seraient plausibles sans elles et problématiques s'ils survenaient.
 
-Define the shape by describing the edges. The middle takes care of itself.
+Définis la forme en décrivant les bords. Le milieu se gère tout seul.

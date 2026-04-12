@@ -1,19 +1,19 @@
 ---
-title: "24. L'agent qui semble confiant n'est pas nécessairement correct"
+title: "24. L'agent qui a l'air confiant n'est pas nécessairement correct"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "Language models are fluent by default."
+description: "Les LLM sont fluides par défaut."
 ---
 
-Language models are fluent by default. They produce text that reads as assured, coherent, and authoritative regardless of whether the underlying content is accurate. This is not a bug the developers forgot to fix — it's a consequence of how these models are trained. Fluency and correctness are different properties, and the training process optimizes heavily for the former.
+Les LLM sont fluides par défaut. Ils produisent du texte qui se lit comme assuré, cohérent et autoritaire, peu importe si le contenu sous-jacent est exact. Ce n'est pas un bug que les développeurs ont oublié de corriger — c'est une conséquence de la façon dont ces modèles sont entraînés. La fluidité et la justesse sont des propriétés différentes, et le processus d'entraînement optimise fortement la première.
 
-The problem is that humans read confidence as a signal of reliability. We've evolved to do this — in most human communication, someone who speaks with conviction has usually checked their facts, or at least believes they have. That heuristic breaks badly with language models, which produce confident prose about things they have no reliable basis for asserting.
+Le problème, c'est que les humains lisent la confiance comme un signal de fiabilité. On a évolué pour faire ça — dans la plupart des communications humaines, quelqu'un qui parle avec conviction a généralement vérifié ses faits, ou du moins croit l'avoir fait. Cette heuristique casse violemment avec les LLM, qui produisent de la prose confiante sur des choses qu'ils n'ont aucune base fiable pour affirmer.
 
-The practical effect is that agent outputs require skepticism proportional to the stakes, not proportional to how the output reads. An agent that summarizes a document with calm authority might have missed a key nuance. An agent that provides a step-by-step technical procedure might have fabricated a step that sounds plausible. The text gives you no reliable signal about which is happening.
+L'effet pratique, c'est que les outputs d'un agent exigent un scepticisme proportionnel aux enjeux, pas proportionnel à la façon dont l'output se lit. Un agent qui résume un document avec une autorité tranquille pourrait avoir manqué une nuance clé. Un agent qui fournit une procédure technique étape par étape pourrait avoir fabriqué une étape qui sonne plausible. Le texte ne te donne aucun signal fiable sur lequel des deux est en train de se produire.
 
-Calibration is the skill you're developing here — the ability to assess how likely an agent output is to be correct given the type of task, the quality of the context, and your knowledge of where this model tends to fail. In domains you know well, calibration comes naturally: you can spot the wrong answer because you know what right looks like. In domains where you're relying on the agent precisely because you don't know the domain — which is common, and legitimate — calibration requires external verification. Check the claims. Follow the citations. Test the code.
+La calibration, c'est la compétence que tu développes ici — la capacité d'évaluer la probabilité qu'un output d'agent soit correct étant donné le type de tâche, la qualité du context, et ta connaissance des endroits où ce modèle a tendance à échouer. Dans les domaines que tu connais bien, la calibration vient naturellement : tu peux repérer la mauvaise réponse parce que tu sais à quoi ressemble la bonne. Dans les domaines où tu t'appuies sur l'agent précisément parce que tu ne connais pas le domaine — ce qui est courant, et légitime — la calibration exige une vérification externe. Vérifie les affirmations. Suis les citations. Teste le code.
 
-Some prompting techniques can reduce unwarranted confidence — asking the agent to express uncertainty explicitly, asking it to identify the parts of its response it's least sure about, asking it to distinguish between what it knows and what it's inferring. These help. They don't solve the problem.
+Certaines techniques de prompting peuvent réduire la confiance injustifiée — demander à l'agent d'exprimer son incertitude explicitement, lui demander d'identifier les parties de sa réponse dont il est le moins sûr, lui demander de distinguer entre ce qu'il sait et ce qu'il infère. Ça aide. Ça ne règle pas le problème.
 
-Read agent output like you'd read a smart intern's first draft: with appreciation for the effort and independent judgment about the content.
+Lis l'output de l'agent comme tu lirais le premier brouillon d'un stagiaire brillant : avec de l'appréciation pour l'effort et un jugement indépendant sur le contenu.

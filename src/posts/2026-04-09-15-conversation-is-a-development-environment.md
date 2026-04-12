@@ -3,21 +3,21 @@ title: "15. La conversation est un environnement de développement"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "The conversational interface to a language model isn't just a way to get answers — it's a place to think."
+description: "L'interface conversationnelle d'un LLM n'est pas juste un moyen d'obtenir des réponses — c'est un endroit où penser."
 ---
 
-The conversational interface to a language model isn't just a way to get answers — it's a place to think. Developers who treat it as a search engine ask one question and evaluate the response. Developers who treat it as a development environment iterate, push back, explore alternatives, and use the agent as a thinking partner across a whole problem.
+L'interface conversationnelle d'un LLM n'est pas juste un moyen d'obtenir des réponses — c'est un endroit où penser. Les développeurs qui la traitent comme un moteur de recherche posent une question et évaluent la réponse. Les développeurs qui la traitent comme un environnement de développement itèrent, poussent en retour, explorent des alternatives, et utilisent l'agent comme partenaire de pensée sur tout un problème.
 
-The difference in output quality is significant. A single-turn interaction with an agent produces whatever the model thinks is the most likely good response given the initial prompt. A multi-turn conversation produces something shaped by your feedback, your corrections, your domain knowledge injected at the right moments. The first is the agent's best guess. The second is a collaboration.
+La différence en qualité d'output est significative. Une interaction à un seul tour avec un agent produit ce que le modèle estime être la meilleure réponse probable étant donné le prompt initial. Une conversation multi-tours produit quelque chose façonné par ton feedback, tes corrections, ta connaissance du domaine injectée aux bons moments. Le premier, c'est la meilleure supposition de l'agent. Le second, c'est une collaboration.
 
-This reframes what skill means in working with agents. It's not just about writing better initial prompts — it's about knowing how to steer a conversation productively. That means recognizing when the agent has gone in the wrong direction early, before you've built on top of a flawed foundation. It means knowing when to ask for alternatives rather than accepting the first response. It means understanding when to inject context mid-conversation — "actually, there's a constraint I didn't mention" — rather than starting over.
+Ça recadre ce que signifie être compétent dans le travail avec les agents. Ce n'est pas juste une question d'écrire de meilleurs prompts initiaux — c'est savoir comment piloter une conversation de manière productive. Ça veut dire reconnaître quand l'agent est parti dans la mauvaise direction tôt, avant que tu aies construit par-dessus une fondation défectueuse. Ça veut dire savoir quand demander des alternatives plutôt que d'accepter la première réponse. Ça veut dire comprendre quand injecter du contexte en cours de conversation — « en fait, il y a une contrainte que je n'ai pas mentionnée » — plutôt que de recommencer.
 
-The conversation also serves as a record of your thinking. The questions you asked, the directions you explored, the dead ends you identified — that's a log of a design process. Teams that treat conversational development as throwaway work lose that record. Teams that preserve it, even informally, build up a picture of how decisions got made.
+La conversation sert aussi de trace de ta pensée. Les questions que tu as posées, les directions explorées, les impasses identifiées — c'est un log d'un processus de conception. Les équipes qui traitent le développement conversationnel comme du travail jetable perdent cette trace. Les équipes qui la préservent, même de façon informelle, se construisent une image de la façon dont les décisions ont été prises.
 
-There's a practical limit: long conversations accumulate context that can drift. The agent's early understanding of the problem shapes everything that follows, and if that early understanding was wrong, correction gets harder as the conversation grows. The skill is knowing when to start fresh with better inputs versus when to keep building on what's there.
+Il y a une limite pratique : les longues conversations accumulent du contexte qui peut dériver. La compréhension précoce du problème par l'agent façonne tout ce qui suit, et si cette compréhension précoce était fausse, la correction devient plus difficile à mesure que la conversation grandit. La compétence, c'est de savoir quand repartir à neuf avec de meilleurs inputs plutôt que de continuer à construire sur ce qui est là.
 
-The blank prompt box isn't a query field. It's where the work starts.
+La boîte de prompt vide n'est pas un champ de requête. C'est là que le travail commence.
 
 ---
 
-## Part 2 — Prompting as Engineering
+## Partie 2 — Le prompting comme ingénierie

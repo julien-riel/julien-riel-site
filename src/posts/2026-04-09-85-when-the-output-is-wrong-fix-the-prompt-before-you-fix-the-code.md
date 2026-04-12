@@ -1,17 +1,17 @@
 ---
-title: "85. Quand la sortie est mauvaise, corrigez le prompt avant de corriger le code"
+title: "85. Quand l'output est mauvais, corrige le prompt avant de corriger le code"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "When the assistant produces code that isn't quite right, the instinct is to edit the code directly — it's faster, it's familiar, it produces the result you need immediately."
+description: "Quand l'assistant produit du code qui n'est pas tout à fait correct, l'instinct est d'éditer le code directement — c'est plus rapide, c'est familier, ça produit le résultat dont tu as besoin immédiatement."
 ---
 
-When the assistant produces code that isn't quite right, the instinct is to edit the code directly — it's faster, it's familiar, it produces the result you need immediately. But editing the code manually is a solution to one instance. Fixing the prompt is a solution to the class of cases the prompt represents, and the assistant will encounter that class again.
+Quand l'assistant produit du code qui n'est pas tout à fait correct, l'instinct est d'éditer le code directement — c'est plus rapide, c'est familier, ça produit le résultat dont tu as besoin immédiatement. Mais éditer le code manuellement est une solution à une instance. Corriger le prompt est une solution à la classe de cas que le prompt représente, et l'assistant rencontrera cette classe à nouveau.
 
-The habit of prompt-first debugging pays off more as the codebase grows and the same tasks recur. If the assistant consistently produces functions with insufficient error handling, and you consistently fix them by hand, you've established a workflow where the assistant does the easy parts and you clean up the hard ones on every pass. If instead you identify the pattern, add a clear constraint to your prompt — "always handle the case where the input is null and return a typed error" — you change the output going forward.
+L'habitude du debugging orienté prompt paie plus à mesure que le codebase grandit et que les mêmes tâches reviennent. Si l'assistant produit systématiquement des fonctions avec une gestion d'erreurs insuffisante, et que tu les corriges systématiquement à la main, tu as établi un workflow où l'assistant fait les parties faciles et tu nettoies les parties difficiles à chaque passe. Si au lieu de ça tu identifies le pattern, ajoutes une contrainte claire à ton prompt — « always handle the case where the input is null and return a typed error » — tu changes l'output pour la suite.
 
-This requires pausing before editing, which is the hard part. When you're tired and the code needs to be right, reaching for the keyboard is faster than thinking about why the prompt failed. But the accumulation of manual fixes without prompt improvement is technical debt of a different kind — you're compensating for a known gap in your workflow without addressing it.
+Ça demande de faire une pause avant d'éditer, ce qui est la partie difficile. Quand tu es fatigué et que le code doit être correct, saisir le clavier est plus rapide que de penser à pourquoi le prompt a échoué. Mais l'accumulation de corrections manuelles sans amélioration du prompt est une dette technique d'un autre genre — tu compenses un écart connu dans ton workflow sans t'y attaquer.
 
-The question to ask before editing: why did the prompt produce this? Usually the answer is one of a small set: the constraint was unstated, the example showed something different from what you wanted, the outcome wasn't specified clearly enough. Identifying which one takes thirty seconds and produces a better prompt for next time.
+La question à se poser avant d'éditer : pourquoi le prompt a-t-il produit ça ? Habituellement la réponse est l'une d'un petit ensemble : la contrainte n'a pas été énoncée, l'exemple montrait quelque chose de différent de ce que tu voulais, le résultat n'a pas été spécifié assez clairement. Identifier laquelle prend trente secondes et produit un meilleur prompt pour la prochaine fois.
 
-Edit the code when you need to ship now. Fix the prompt so you don't have to edit next time.
+Édite le code quand tu dois livrer maintenant. Corrige le prompt pour ne pas avoir à éditer la prochaine fois.

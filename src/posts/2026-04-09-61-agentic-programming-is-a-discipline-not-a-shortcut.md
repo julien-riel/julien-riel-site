@@ -1,19 +1,19 @@
 ---
-title: "61. La programmation agentique est une discipline, pas un raccourci"
+title: "61. La programmation agentic est une discipline, pas un raccourci"
 date: 2026-04-09
 tags:
   - mindset
-description: "The pitch for agentic programming often sounds like a promise of less work."
+description: "Le pitch de la programmation agentic sonne souvent comme une promesse de moins de travail."
 ---
 
-The pitch for agentic programming often sounds like a promise of less work. You describe what you want, the agent does it, you review and ship. Less code, less debugging, less of the tedious work that slows everything down. There's truth in this — agents do reduce certain kinds of work significantly. The mistake is concluding that less of one kind of work means less work overall.
+Le pitch de la programmation agentic sonne souvent comme une promesse de moins de travail. Tu décris ce que tu veux, l'agent le fait, tu révises et tu livres. Moins de code, moins de débogage, moins de tâches fastidieuses qui ralentissent tout. Il y a du vrai là-dedans — les agents réduisent certains types de travail de façon significative. L'erreur est de conclure que moins d'un type de travail signifie moins de travail au total.
 
-The work that agents reduce is largely execution work — the translation of a well-understood specification into working code or content. This is real labor and agents handle it well. The work that agents don't reduce — and in some ways increase — is the thinking work: understanding the problem clearly enough to specify it, designing the system thoughtfully enough to be maintainable, reviewing outputs carefully enough to catch what went wrong, building the evaluation infrastructure to know if things are improving or degrading.
+Le travail que les agents réduisent est en grande partie du travail d'exécution — la traduction d'une spécification bien comprise en code ou contenu fonctionnel. C'est du vrai labeur et les agents le gèrent bien. Le travail que les agents ne réduisent pas — et qu'ils augmentent à certains égards — c'est le travail de réflexion : comprendre le problème assez clairement pour le spécifier, concevoir le système de manière assez réfléchie pour qu'il soit maintenable, réviser les sorties assez soigneusement pour détecter ce qui a mal tourné, construire l'infrastructure d'évaluation pour savoir si les choses s'améliorent ou se dégradent.
 
-In fact, agentic programming raises the bar on thinking work. When execution is cheap, the bottleneck moves to specification. The developer who could get away with a fuzzy mental model of the problem — because the implementation would reveal the gaps quickly and cheaply — now needs a sharper model upfront, because the agent will faithfully execute the fuzzy specification and produce something that looks complete but isn't right. The tax on unclear thinking is higher, not lower.
+En fait, la programmation agentic relève la barre du travail de réflexion. Quand l'exécution est bon marché, le goulot d'étranglement se déplace vers la spécification. Le développeur qui pouvait s'en tirer avec un modèle mental flou du problème — parce que l'implémentation révélerait les lacunes rapidement et à bas coût — a maintenant besoin d'un modèle plus net en amont, parce que l'agent exécutera fidèlement la spécification floue et produira quelque chose qui a l'air complet mais qui n'est pas juste. La taxe sur la pensée imprécise est plus élevée, pas plus basse.
 
-The discipline shows up in the practices that distinguish teams that ship reliable agentic systems from teams that ship impressive demos. Evals. Versioned prompts. Observability infrastructure. Careful scope definition. Human checkpoints for consequential actions. None of these are shortcuts — they're the engineering rigor that makes the system trustworthy rather than just functional.
+La discipline se manifeste dans les pratiques qui distinguent les équipes qui livrent des systèmes agentic fiables de celles qui livrent des démos impressionnantes. Des evals. Des prompts versionnés. De l'infrastructure d'observabilité. Une définition soignée du scope. Des points de contrôle humains pour les actions conséquentes. Aucun de ces éléments n'est un raccourci — c'est la rigueur d'ingénierie qui rend le système digne de confiance plutôt que simplement fonctionnel.
 
-Developers who approach agentic programming as a shortcut tend to accumulate technical debt in exactly the places where agent systems are most fragile: prompt management, output validation, failure handling. The demo worked. The production system doesn't, not reliably, and now they're doing the engineering work they deferred, under pressure, with a live system that's already behaving badly.
+Les développeurs qui abordent la programmation agentic comme un raccourci tendent à accumuler de la dette technique précisément aux endroits où les systèmes d'agents sont le plus fragiles : gestion des prompts, validation des sorties, gestion des échecs. La démo a fonctionné. Le système en production ne fonctionne pas, pas de façon fiable, et maintenant ils font le travail d'ingénierie qu'ils avaient reporté, sous pression, avec un système vivant qui se comporte déjà mal.
 
-The shortcut is a loan. The discipline is what makes it worth taking.
+Le raccourci est un prêt. La discipline est ce qui le rend valable.

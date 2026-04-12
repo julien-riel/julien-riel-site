@@ -3,15 +3,15 @@ title: "89. Les grands projets ont besoin d'un document que l'assistant peut tou
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "On a small task, the context you need fits in a prompt."
+description: "Sur une petite tâche, le context dont tu as besoin tient dans un prompt."
 ---
 
-On a small task, the context you need fits in a prompt. On a large project, it doesn't — and every new session starts without the accumulated understanding that makes the assistant useful. The conventions you've established, the architectural decisions you've made, the constraints that apply across the codebase — all of it is gone when the window closes. Without a solution, you spend the first ten minutes of every session re-establishing context you already established yesterday.
+Sur une petite tâche, le context dont tu as besoin tient dans un prompt. Sur un grand projet, non — et chaque nouvelle session commence sans la compréhension accumulée qui rend l'assistant utile. Les conventions que tu as établies, les décisions architecturales que tu as prises, les contraintes qui s'appliquent à travers le codebase — tout ça disparaît quand la fenêtre se ferme. Sans solution, tu passes les dix premières minutes de chaque session à ré-établir le context que tu avais déjà établi hier.
 
-The solution is a persistent document — a `ARCHITECTURE.md`, an `AGENT.md`, a `CONTEXT.md` — that you include at the start of every session with the assistant. Not a full specification, but the condensed version of what the assistant needs to know to work effectively in this project: the architectural patterns you're using, the conventions for error handling and naming, the decisions that have been made and shouldn't be revisited, the parts of the codebase that are stable and the parts that are actively changing.
+La solution est un document persistant — un `ARCHITECTURE.md`, un `AGENT.md`, un `CONTEXT.md` — que tu inclus au début de chaque session avec l'assistant. Pas une spécification complète, mais la version condensée de ce que l'assistant a besoin de savoir pour travailler efficacement dans ce projet : les patterns architecturaux que tu utilises, les conventions pour la gestion d'erreurs et le nommage, les décisions qui ont été prises et ne devraient pas être revisitées, les parties du codebase qui sont stables et les parties qui changent activement.
 
-This document is worth maintaining carefully because it pays dividends on every session. Each time you establish a new convention or make a significant architectural decision, add it. Each time the assistant produces something that violates a project constraint you forgot to mention, add that constraint. The document grows as the project grows, and the quality of assistance improves as the document improves.
+Ce document vaut la peine d'être maintenu soigneusement parce qu'il paie des dividendes à chaque session. Chaque fois que tu établis une nouvelle convention ou prends une décision architecturale significative, ajoute-la. Chaque fois que l'assistant produit quelque chose qui viole une contrainte de projet que tu as oublié de mentionner, ajoute cette contrainte. Le document grandit à mesure que le projet grandit, et la qualité de l'assistance s'améliore à mesure que le document s'améliore.
 
-There's a secondary benefit: the process of writing the document forces clarity about what you actually know about your own project. Constraints that live implicitly in your head are easy to violate. Constraints written down in a document become legible — to the assistant, to new team members, and to yourself when you come back to the project after a month away.
+Il y a un bénéfice secondaire : le processus d'écrire le document force de la clarté sur ce que tu sais réellement de ton propre projet. Les contraintes qui vivent implicitement dans ta tête sont faciles à violer. Les contraintes écrites dans un document deviennent lisibles — pour l'assistant, pour les nouveaux membres de l'équipe, et pour toi-même quand tu reviens au projet après un mois d'absence.
 
-The persistent context document is the memory your assistant doesn't have. Build it early and maintain it.
+Le document de context persistant est la mémoire que ton assistant n'a pas. Construis-le tôt et maintiens-le.

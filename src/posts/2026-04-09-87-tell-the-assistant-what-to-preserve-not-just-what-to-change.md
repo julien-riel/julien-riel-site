@@ -1,17 +1,17 @@
 ---
-title: "87. Dites à l'assistant ce qu'il faut préserver, pas juste ce qu'il faut changer"
+title: "87. Dis à l'assistant ce qu'il faut préserver, pas juste ce qu'il faut changer"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Every prompt implicitly asks the assistant to optimize for the goal you stated."
+description: "Chaque prompt demande implicitement à l'assistant d'optimiser pour l'objectif que tu as énoncé."
 ---
 
-Every prompt implicitly asks the assistant to optimize for the goal you stated. If you ask it to improve performance, it will improve performance — and it might change the function signature, remove a validation step, or restructure the error handling to do so, because none of those were mentioned as constraints. The assistant doesn't know what matters to you beyond what you said. It fills the rest with reasonable judgment that may not match yours.
+Chaque prompt demande implicitement à l'assistant d'optimiser pour l'objectif que tu as énoncé. Si tu lui demandes d'améliorer la performance, il améliorera la performance — et il pourrait changer la signature de la fonction, retirer une étape de validation, ou restructurer la gestion d'erreurs pour le faire, parce qu'aucune de ces choses n'a été mentionnée comme contrainte. L'assistant ne sait pas ce qui t'importe au-delà de ce que tu as dit. Il remplit le reste avec un jugement raisonnable qui peut ne pas correspondre au tien.
 
-The missing half of most prompts is the preservation constraint: what must stay the same. The public interface. The existing tests. The error handling contract. The behavior for edge cases that are already handled correctly. These are the load-bearing parts of the existing code that a new optimization might inadvertently break. Stating them explicitly makes the assistant treat them as fixed points rather than variables.
+La moitié manquante de la plupart des prompts est la contrainte de préservation : ce qui doit rester pareil. L'interface publique. Les tests existants. Le contrat de gestion d'erreurs. Le comportement pour les cas limites qui sont déjà gérés correctement. Ce sont les parties porteuses du code existant qu'une nouvelle optimisation pourrait casser par inadvertance. Les énoncer explicitement fait que l'assistant les traite comme des points fixes plutôt que comme des variables.
 
-This is especially important for refactoring tasks, where the whole point is to change the implementation while preserving the behavior. "Refactor this function to reduce cyclomatic complexity" without specifying that all existing tests must continue to pass is an open invitation to change what the function does. The assistant might produce something simpler and wrong.
+C'est particulièrement important pour les tâches de refactoring, où tout l'intérêt est de changer l'implémentation tout en préservant le comportement. « Refactor this function to reduce cyclomatic complexity » sans spécifier que tous les tests existants doivent continuer à passer est une invitation ouverte à changer ce que la fonction fait. L'assistant pourrait produire quelque chose de plus simple et de faux.
 
-The discipline is to think about what you're not trying to change before you describe what you are. Make a list, even a mental one: the interface is fixed, the test coverage must not regress, the logging behavior must stay the same. Then include those constraints in the prompt. The output will be better and the review will be faster, because you'll know exactly what to check.
+La discipline est de penser à ce que tu n'essaies pas de changer avant de décrire ce que tu essaies de changer. Fais une liste, même mentale : l'interface est fixe, la couverture de tests ne doit pas régresser, le comportement de logging doit rester pareil. Puis inclus ces contraintes dans le prompt. L'output sera meilleur et la review sera plus rapide, parce que tu sauras exactement quoi vérifier.
 
-State what can't move. The assistant will work around it.
+Énonce ce qui ne peut pas bouger. L'assistant travaillera autour.

@@ -3,15 +3,15 @@ title: "76. L'assistant ne connaît pas votre codebase sauf si vous la lui montr
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Every session starts fresh."
+description: "Chaque session repart à zéro."
 ---
 
-Every session starts fresh. The assistant has no memory of the refactoring you did last week, the convention you established last month, the architectural decision you made last year and the reasons behind it. It knows what you put in the context window, and nothing else. This is the same constraint that applies to any agent — but it surprises developers who have been working productively with an assistant for months and start to feel like it knows the project.
+Chaque session repart à zéro. L'assistant n'a aucun souvenir du refactoring que tu as fait la semaine dernière, de la convention que tu as établie le mois dernier, de la décision architecturale que tu as prise l'année dernière et des raisons derrière. Il sait ce que tu as mis dans la fenêtre de contexte, et rien d'autre. C'est la même contrainte qui s'applique à tout agent — mais elle surprend les développeurs qui travaillent productivement avec un assistant depuis des mois et commencent à sentir qu'il connaît le projet.
 
-The feeling is understandable. When you've had hundreds of good interactions, when the assistant consistently produces code that fits your patterns, it starts to feel like shared context has accumulated. It hasn't. What's happened is that you've gotten better at providing context implicitly — you've learned to phrase requests in ways that encode your conventions, to paste the right reference code, to describe constraints you used to leave unstated. The assistant hasn't learned your codebase. You've learned to carry it with you.
+Ce sentiment est compréhensible. Quand tu as eu des centaines de bonnes interactions, quand l'assistant produit constamment du code qui s'intègre à tes patterns, on commence à avoir l'impression qu'un contexte partagé s'est accumulé. Ce n'est pas le cas. Ce qui s'est passé, c'est que tu es devenu meilleur à fournir le contexte implicitement — tu as appris à formuler les demandes de façons qui encodent tes conventions, à coller le bon code de référence, à décrire des contraintes que tu laissais autrefois non dites. L'assistant n'a pas appris ton codebase. Tu as appris à le porter avec toi.
 
-This distinction matters when something goes wrong. If the assistant produces code that violates a project convention, the failure isn't the assistant forgetting — it's you not providing. The mental model of a forgetful colleague leads you to feel frustrated at the assistant. The correct mental model of a stateless system leads you to fix the context.
+Cette distinction importe quand quelque chose tourne mal. Si l'assistant produit du code qui viole une convention du projet, l'échec n'est pas l'assistant qui oublie — c'est toi qui ne fournis pas. Le modèle mental d'un collègue oublieux te mène à te sentir frustré contre l'assistant. Le bon modèle mental d'un système sans état te mène à corriger le contexte.
 
-The practical response is to develop habits of context provision: paste a representative example of the pattern you want to follow, include the interface the new code must conform to, add a comment about the constraint that isn't obvious. These habits don't just help the assistant — they document the things that are currently implicit in your head, which makes the codebase easier to maintain regardless of who's writing it.
+La réponse pratique est de développer des habitudes de fourniture de contexte : coller un exemple représentatif du pattern à suivre, inclure l'interface à laquelle le nouveau code doit se conformer, ajouter un commentaire sur la contrainte qui n'est pas évidente. Ces habitudes ne font pas qu'aider l'assistant — elles documentent les choses qui sont actuellement implicites dans ta tête, ce qui rend le codebase plus facile à maintenir peu importe qui l'écrit.
 
-The assistant is as good as the context you provide. That's entirely within your control.
+L'assistant est aussi bon que le contexte que tu fournis. C'est entièrement sous ton contrôle.

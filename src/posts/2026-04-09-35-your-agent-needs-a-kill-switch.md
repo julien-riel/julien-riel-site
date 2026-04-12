@@ -1,19 +1,19 @@
 ---
-title: "35. Votre agent a besoin d'un bouton d'arrêt d'urgence"
+title: "35. Votre agent a besoin d'un kill switch"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "Every agentic system that operates with any degree of autonomy needs a way to stop it immediately — not gracefully, not after the current task completes, but now."
+description: "Tout système agentic qui opère avec un quelconque degré d'autonomie a besoin d'un moyen de l'arrêter immédiatement — pas gracieusement, pas après la tâche courante, mais maintenant."
 ---
 
-Every agentic system that operates with any degree of autonomy needs a way to stop it immediately — not gracefully, not after the current task completes, but now. This is not a feature you add after something goes wrong. It's infrastructure you build before deployment, because the scenarios that require it don't announce themselves in advance.
+Tout système agentic qui opère avec un quelconque degré d'autonomie a besoin d'un moyen de l'arrêter immédiatement — pas gracieusement, pas après que la tâche courante soit complétée, mais maintenant. Ce n'est pas une fonctionnalité que tu ajoutes après que quelque chose a mal tourné. C'est de l'infrastructure que tu construis avant le déploiement, parce que les scénarios qui l'exigent ne s'annoncent pas à l'avance.
 
-The kill switch is the physical embodiment of the principle that humans stay in control. An agent doing something wrong — sending bad outputs, making incorrect decisions, behaving unexpectedly at scale — needs to be stoppable by a person who isn't a developer, at any hour, without requiring a deployment or a database change. If stopping your agent requires a pull request, you've built something that's harder to control than it should be.
+Le kill switch est l'incarnation physique du principe que les humains restent aux commandes. Un agent qui fait quelque chose de mal — qui envoie de mauvaises sorties, qui prend de mauvaises décisions, qui se comporte de manière inattendue à grande échelle — doit pouvoir être arrêté par une personne qui n'est pas développeuse, à n'importe quelle heure, sans nécessiter un déploiement ou un changement en base de données. Si arrêter ton agent exige une pull request, tu as construit quelque chose qui est plus difficile à contrôler que ça ne devrait l'être.
 
-What the kill switch looks like depends on the system. At minimum, it's a feature flag that halts agent execution at the task level — checked at the start of each task, or at each step of a multi-step task, so that setting it takes effect within one cycle rather than after the current task completes. For higher-autonomy systems, it means the ability to pause mid-task, drain in-flight work cleanly, and prevent new work from starting — all from a single operation that non-technical stakeholders can perform.
+À quoi ressemble le kill switch dépend du système. Au minimum, c'est un feature flag qui arrête l'exécution de l'agent au niveau de la tâche — vérifié au début de chaque tâche, ou à chaque étape d'une tâche multi-étapes, pour que l'activation prenne effet en un cycle plutôt qu'après la fin de la tâche courante. Pour les systèmes à plus haute autonomie, ça veut dire la capacité de mettre en pause en cours de tâche, de drainer proprement le travail en cours et d'empêcher un nouveau travail de démarrer — le tout depuis une seule opération que des parties prenantes non techniques peuvent effectuer.
 
-Beyond the immediate stop, you want the ability to understand what was happening when you stopped. What tasks were in flight? What had the agent already done? What state was left behind that needs to be cleaned up? A kill switch without observability leaves you stopped but not informed — you know something was wrong, but not what or how bad.
+Au-delà de l'arrêt immédiat, tu veux la capacité de comprendre ce qui se passait quand tu as arrêté. Quelles tâches étaient en cours ? Qu'avait déjà fait l'agent ? Quel state a été laissé derrière et a besoin d'être nettoyé ? Un kill switch sans observabilité te laisse arrêté mais pas informé — tu sais que quelque chose n'allait pas, mais pas quoi ni à quel point.
 
-There's a broader principle here that applies beyond the literal kill switch: design for reversibility wherever possible. Prefer operations the agent can undo over ones it can't. Prefer human confirmation for irreversible actions. Build in the assumption that you will sometimes need to stop, inspect, and reverse — and make sure the system supports it.
+Il y a un principe plus large ici qui s'applique au-delà du kill switch littéral : conçois pour la réversibilité partout où c'est possible. Préfère les opérations que l'agent peut annuler à celles qu'il ne peut pas. Préfère la confirmation humaine pour les actions irréversibles. Construis sur l'hypothèse que tu auras parfois besoin d'arrêter, d'inspecter et d'inverser — et assure-toi que le système le supporte.
 
-The agent that can't be stopped isn't trustworthy. Build the switch first.
+L'agent qu'on ne peut pas arrêter n'est pas digne de confiance. Construis le switch en premier.

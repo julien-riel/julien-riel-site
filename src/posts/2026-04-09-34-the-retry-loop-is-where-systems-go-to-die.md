@@ -3,17 +3,17 @@ title: "34. La boucle de retry est là où les systèmes vont mourir"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "Retry logic is necessary."
+description: "La logique de retry est nécessaire."
 ---
 
-Retry logic is necessary. Every system that calls external services needs it — networks fail, services time out, transient errors happen. But in agentic systems, retry logic has a particular failure mode that's worth understanding before you build it: the agent that retries indefinitely, convinced it's making progress, consuming tokens and time and money while producing nothing useful.
+La logique de retry est nécessaire. Tout système qui appelle des services externes en a besoin — les réseaux tombent, les services font timeout, des erreurs transitoires arrivent. Mais dans les systèmes agentic, la logique de retry a un mode de défaillance particulier qui vaut la peine d'être compris avant que tu ne la construises : l'agent qui fait du retry indéfiniment, convaincu qu'il progresse, consommant des tokens, du temps et de l'argent tout en ne produisant rien d'utile.
 
-The problem is that agents generate their own reasons to retry. A conventional retry loop has a fixed condition: the operation failed, wait and try again. An agent can construct reasons to keep going from the content of the conversation — the tool returned an ambiguous result, so try again with a different approach; the output didn't match expectations, so try a different formulation; the last attempt was almost right, so iterate once more. Each of these is individually reasonable. Together they produce a loop that can run for a very long time before anyone notices.
+Le problème, c'est que les agents génèrent leurs propres raisons de faire un retry. Une boucle de retry conventionnelle a une condition fixe : l'opération a échoué, attends et réessaie. Un agent peut construire des raisons de continuer à partir du contenu de la conversation — le tool a retourné un résultat ambigu, donc réessaie avec une approche différente ; la sortie ne correspondait pas aux attentes, donc essaie une formulation différente ; la dernière tentative était presque bonne, donc itère encore une fois. Chacune de ces raisons est individuellement raisonnable. Ensemble, elles produisent une boucle qui peut tourner très longtemps avant que quelqu'un ne s'en aperçoive.
 
-This is especially dangerous when the retries have side effects. An agent retrying a database write, a message send, or an API call that charges per request can cause real damage before the loop terminates. The retry logic that seemed like a safety feature becomes the failure mode itself.
+C'est particulièrement dangereux quand les retries ont des effets de bord. Un agent qui fait du retry sur une écriture en base de données, un envoi de message ou un appel d'API qui facture par requête peut causer de vrais dégâts avant que la boucle ne se termine. La logique de retry qui semblait être une fonctionnalité de sécurité devient elle-même le mode de défaillance.
 
-The fix requires explicit limits at multiple levels. A maximum number of attempts per operation. A maximum number of steps per task. A maximum wall-clock time before the task is abandoned and flagged for human review. These limits should be set conservatively and adjusted based on observed behavior — not left open-ended because the task might genuinely need more attempts.
+Le correctif demande des limites explicites à plusieurs niveaux. Un nombre maximum de tentatives par opération. Un nombre maximum d'étapes par tâche. Un temps wall-clock maximum avant que la tâche ne soit abandonnée et signalée pour revue humaine. Ces limites devraient être réglées de manière conservatrice et ajustées en fonction du comportement observé — pas laissées ouvertes parce que la tâche pourrait vraiment avoir besoin de plus de tentatives.
 
-There's also a design question about what the agent does when it hits a limit. Failing silently is the worst outcome — the task appears to complete while having done nothing. Failing loudly, with a clear error state and enough context to understand what was attempted, is the foundation of any meaningful retry strategy at the human level.
+Il y a aussi une question de design sur ce que l'agent fait quand il atteint une limite. Échouer silencieusement est le pire résultat — la tâche semble complétée alors qu'elle n'a rien fait. Échouer bruyamment, avec un état d'erreur clair et assez de contexte pour comprendre ce qui a été tenté, est le fondement de toute stratégie de retry significative au niveau humain.
 
-Retry logic without exit conditions isn't reliability. It's optimism without a plan.
+Une logique de retry sans conditions de sortie, ce n'est pas de la fiabilité. C'est de l'optimisme sans plan.

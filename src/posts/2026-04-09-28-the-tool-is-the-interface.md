@@ -1,19 +1,19 @@
 ---
-title: "28. L'outil est l'interface"
+title: "28. Le tool est l'interface"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "When you give an agent a tool, you're not just extending its capabilities — you're defining the boundary between what the agent decides and what the world does."
+description: "Quand tu donnes un tool à un agent, tu ne fais pas qu'étendre ses capacités — tu définis la frontière entre ce que l'agent décide et ce que le monde fait."
 ---
 
-When you give an agent a tool, you're not just extending its capabilities — you're defining the boundary between what the agent decides and what the world does. That boundary is the most consequential design decision in an agentic system, and most teams make it without realizing they're making it at all.
+Quand tu donnes un tool à un agent, tu ne fais pas qu'étendre ses capacités — tu définis la frontière entre ce que l'agent décide et ce que le monde fait. Cette frontière est la décision de conception la plus lourde de conséquences dans un système agentique, et la plupart des équipes la prennent sans réaliser qu'elles sont en train de la prendre.
 
-A tool is an interface in the fullest sense. It has a contract: inputs it accepts, outputs it returns, errors it can produce. It has semantics: what it means to call it, what state it changes, what it assumes about the world before the call and guarantees about the world after. A well-designed tool makes the agent's job clearer. A poorly designed one introduces ambiguity that the agent will resolve unpredictably.
+Un tool est une interface au sens plein. Il a un contrat : des inputs qu'il accepte, des outputs qu'il retourne, des erreurs qu'il peut produire. Il a une sémantique : ce que ça veut dire de l'appeler, quel état il change, ce qu'il suppose sur le monde avant l'appel et ce qu'il garantit sur le monde après. Un tool bien conçu rend le travail de l'agent plus clair. Un tool mal conçu introduit une ambiguïté que l'agent résoudra de façon imprévisible.
 
-The most common tool design mistake is making tools too broad. A tool called `execute_action` that takes a free-form string and does whatever it parses out of that string is not a tool — it's a delegation of interface design to the model. The model will use it inconsistently because there's no contract to be consistent with. A tool called `send_email` with explicit parameters for recipient, subject, and body is a real interface. The model knows what to provide and what to expect back.
+L'erreur de conception de tool la plus courante, c'est de rendre les tools trop larges. Un tool appelé `execute_action` qui prend une chaîne libre et fait ce qu'il en extrait n'est pas un tool — c'est une délégation de la conception d'interface au modèle. Le modèle l'utilisera de façon incohérente parce qu'il n'y a pas de contrat avec lequel être cohérent. Un tool appelé `send_email` avec des paramètres explicites pour destinataire, sujet et corps est une vraie interface. Le modèle sait quoi fournir et quoi attendre en retour.
 
-Narrow tools compose better than broad ones. An agent with ten specific tools — each doing one thing well — is more reliable and more debuggable than an agent with two omnibus tools. When something goes wrong, you can ask which tool was called and with what parameters. The failure is localized. With broad tools, the failure is somewhere inside the tool's interpretation of a free-form input, which is much harder to find.
+Les tools étroits se composent mieux que les larges. Un agent avec dix tools spécifiques — chacun faisant une chose bien — est plus fiable et plus débogable qu'un agent avec deux tools omnibus. Quand quelque chose tourne mal, tu peux demander quel tool a été appelé et avec quels paramètres. L'échec est localisé. Avec des tools larges, l'échec est quelque part à l'intérieur de l'interprétation par le tool d'un input en forme libre, ce qui est beaucoup plus dur à trouver.
 
-Tool design also determines blast radius. A read-only tool that fetches data can be called freely — if it fails or returns wrong data, the damage is limited to the current task. A tool that modifies state — writes to a database, sends a message, executes a payment — carries real-world consequences that can't be undone. These tools deserve extra care in their design: explicit confirmation parameters, idempotency guarantees, clear error states that the agent can reason about.
+La conception du tool détermine aussi le rayon d'impact. Un tool en lecture seule qui récupère des données peut être appelé librement — s'il échoue ou retourne des données fausses, les dégâts sont limités à la tâche courante. Un tool qui modifie l'état — écrit dans une base de données, envoie un message, exécute un paiement — porte des conséquences sur le monde réel qui ne peuvent pas être annulées. Ces tools méritent un soin supplémentaire dans leur conception : des paramètres de confirmation explicites, des garanties d'idempotency, des états d'erreur clairs sur lesquels l'agent peut raisonner.
 
-The agent is only as good as the tools you gave it. Design them like the interfaces they are.
+L'agent est aussi bon que les tools que tu lui as donnés. Conçois-les comme les interfaces qu'ils sont.

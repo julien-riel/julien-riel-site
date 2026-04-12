@@ -3,17 +3,17 @@ title: "55. La programmation agentique récompense le penseur paresseux"
 date: 2026-04-09
 tags:
   - mindset
-description: "Lazy, here, is a technical term."
+description: "Paresseux, ici, est un terme technique."
 ---
 
-Lazy, here, is a technical term. The lazy thinker is the one who asks: what's the simplest version of this that could work? What can I not build and still solve the problem? Where am I adding complexity that isn't earning its keep? This is the disposition that produces clean systems, and it's unusually valuable in agentic programming because the temptation toward unnecessary complexity is unusually strong.
+Paresseux, ici, est un terme technique. Le penseur paresseux est celui qui demande : quelle est la version la plus simple de ça qui pourrait marcher ? Qu'est-ce que je peux ne pas construire tout en résolvant le problème ? Où est-ce que j'ajoute de la complexité qui ne gagne pas sa place ? C'est la disposition qui produit des systèmes propres, et elle est particulièrement précieuse en programmation agentique parce que la tentation de complexité inutile y est particulièrement forte.
 
-Agents make complexity cheap to add. You can wire in another tool, extend the system prompt, add another agent to the pipeline — all without writing much code. The cost of adding capability feels low. The cost of the complexity you've added doesn't show up until you're debugging a production failure and you can't tell which of the seven components contributed to it.
+Les agents rendent la complexité peu coûteuse à ajouter. Tu peux brancher un autre tool, étendre le system prompt, ajouter un autre agent au pipeline — le tout sans écrire beaucoup de code. Le coût d'ajouter de la capacité semble bas. Le coût de la complexité que tu as ajoutée n'apparaît que quand tu débogues une panne en production et que tu n'arrives pas à dire lequel des sept composants y a contribué.
 
-The lazy approach starts with the smallest possible system. One agent, minimal tools, a prompt that does the least it needs to. Run it. See where it fails. Add exactly what's needed to address the failure — nothing more. This isn't iterative development as a methodology; it's iterative development as a discipline against the impulse to anticipate problems that haven't occurred yet.
+L'approche paresseuse commence par le plus petit système possible. Un agent, des tools minimaux, un prompt qui fait le moins qu'il lui faut. Lance-le. Regarde où ça casse. Ajoute exactement ce qui est nécessaire pour traiter la panne — rien de plus. Ce n'est pas du développement itératif comme méthodologie ; c'est du développement itératif comme discipline contre l'impulsion d'anticiper des problèmes qui ne se sont pas encore produits.
 
-The industrious thinker builds the system they imagined. The lazy thinker builds the system the problem actually requires, which is almost always smaller. Imagined requirements are generous. Real requirements are constrained. The gap between them is waste — complexity that consumes maintenance time, introduces failure modes, and makes the system harder to reason about without making it better at the actual task.
+Le penseur industrieux construit le système qu'il a imaginé. Le penseur paresseux construit le système que le problème exige vraiment, qui est presque toujours plus petit. Les exigences imaginées sont généreuses. Les exigences réelles sont contraintes. L'écart entre les deux est du gaspillage — de la complexité qui consomme du temps de maintenance, introduit des modes de défaillance et rend le système plus dur à raisonner sans le rendre meilleur pour la tâche réelle.
 
-There's also a cognitive economy argument. Agentic systems require genuine mental effort to understand — the probabilistic behavior, the context dynamics, the interaction between components. Every unnecessary component is more surface area your brain has to hold. The lazy system is easier to debug, easier to explain, easier to hand off, and easier to improve because you can actually see all of it.
+Il y a aussi un argument d'économie cognitive. Les systèmes agentiques demandent un vrai effort mental à comprendre — le comportement probabiliste, les dynamiques de contexte, l'interaction entre composants. Chaque composant inutile est plus de surface que ton cerveau doit tenir. Le système paresseux est plus facile à déboguer, plus facile à expliquer, plus facile à transmettre et plus facile à améliorer parce que tu peux réellement le voir en entier.
 
-The lazy thinker asks what can be removed. The answer is usually more than expected.
+Le penseur paresseux demande ce qui peut être enlevé. La réponse est généralement plus que prévu.

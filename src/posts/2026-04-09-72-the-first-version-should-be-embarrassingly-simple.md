@@ -3,31 +3,31 @@ title: "72. La première version devrait être embarrassamment simple"
 date: 2026-04-09
 tags:
   - mindset
-description: "Every lasting principle in software has a version of this at its core."
+description: "Chaque principe durable en logiciel a une version de ceci en son cœur."
 ---
 
-Every lasting principle in software has a version of this at its core. Start simple. Ship early. Learn from real use. The specific failure mode it's preventing is always the same: the system designed in the absence of evidence, built to handle requirements that turned out not to be real, complex in ways that cost maintenance time without adding user value.
+Chaque principe durable en logiciel a une version de ceci en son cœur. Commencer simple. Livrer tôt. Apprendre de l'usage réel. Le mode d'échec qu'il prévient est toujours le même : le système conçu en l'absence de preuves, bâti pour gérer des exigences qui se révèlent ne pas être réelles, complexe de façons qui coûtent du temps de maintenance sans ajouter de valeur pour l'utilisateur.
 
-In agentic programming, this principle is more important and more frequently violated than almost anywhere else. The tooling makes complexity cheap to add. The demos of sophisticated multi-agent systems make simple single-agent solutions feel inadequate. The field moves fast and there's a pressure to use the latest techniques, to build the architecture that will scale, to solve problems you don't have yet. The result is first versions that are several versions ahead of what the evidence justifies.
+En programmation agentique, ce principe est plus important et plus souvent violé que presque partout ailleurs. L'outillage rend la complexité peu coûteuse à ajouter. Les démos de systèmes multi-agents sophistiqués font paraître inadéquates les solutions simples à un seul agent. Le domaine bouge vite et il y a une pression pour utiliser les dernières techniques, pour bâtir l'architecture qui scalera, pour résoudre des problèmes que tu n'as pas encore. Résultat : des premières versions qui sont plusieurs versions en avance sur ce que les preuves justifient.
 
-The embarrassingly simple first version is a single agent with a minimal prompt, a small number of tools, no complex orchestration, and a human review step for anything consequential. It probably handles only the most common case. It probably fails on inputs outside that case in ways that are obvious and recoverable. It probably doesn't impress anyone who sees it. It also runs, produces real outputs, and generates the evidence that every subsequent design decision should be based on.
+La première version embarrassamment simple, c'est un seul agent avec un prompt minimal, un petit nombre d'outils, pas d'orchestration complexe, et une étape de revue humaine pour tout ce qui est conséquent. Elle ne gère probablement que le cas le plus courant. Elle échoue probablement sur les entrées hors de ce cas, de façons évidentes et récupérables. Elle n'impressionne probablement personne qui la voit. Elle tourne aussi, produit de vraies sorties, et génère les preuves sur lesquelles toute décision de conception ultérieure devrait s'appuyer.
 
-The evidence you get from the simple version is irreplaceable. Real users interact with it in ways you didn't anticipate. The common case turns out to be slightly different from what you assumed. The failure modes are different from the ones you designed around. The thing you thought would be the hard problem isn't, and something you didn't think about at all is. You can't know any of this without running the system, and the simple version runs sooner, cheaper, and with less to unwind when you need to change direction.
+Les preuves que tu obtiens de la version simple sont irremplaçables. De vrais utilisateurs interagissent avec elle de façons que tu n'avais pas anticipées. Le cas courant se révèle légèrement différent de ce que tu supposais. Les modes d'échec sont différents de ceux que tu avais anticipés. Ce que tu pensais être le problème difficile ne l'est pas, et quelque chose auquel tu n'avais pas du tout pensé l'est. Tu ne peux rien savoir de tout cela sans faire tourner le système, et la version simple tourne plus tôt, moins cher, et avec moins à défaire quand tu dois changer de direction.
 
-There's also something clarifying about the constraint of simplicity. When you allow yourself to build the complex version immediately, you defer the hard question of what the system actually needs to do. Simplicity forces the answer. One agent means one job. One prompt means one clear scope. One human review step means one explicit judgment about what can and can't be trusted to the machine. The constraints reveal the design.
+Il y a aussi quelque chose de clarifiant dans la contrainte de simplicité. Quand tu t'autorises à bâtir la version complexe tout de suite, tu reportes la question difficile de ce que le système doit réellement faire. La simplicité force la réponse. Un agent veut dire un travail. Un prompt veut dire une portée claire. Une étape de revue humaine veut dire un jugement explicite sur ce qui peut et ne peut pas être confié à la machine. Les contraintes révèlent la conception.
 
-The embarrassingly simple version isn't the final version. It's the version that earns the right to the next one.
+La version embarrassamment simple n'est pas la version finale. C'est celle qui mérite le droit à la suivante.
 
-Start there. The sophistication will come when it's deserved.
-
----
-
----
-
-## Part 6 — The Developer as User
-
-*For developers who work alongside AI coding assistants — Claude Code, GitHub Copilot, Cursor, and their successors.*
+Commence là. La sophistication viendra quand elle sera méritée.
 
 ---
 
-### Working with the Assistant
+---
+
+## Partie 6 — Le développeur comme utilisateur
+
+*Pour les développeurs qui travaillent aux côtés des assistants de code IA — Claude Code, GitHub Copilot, Cursor, et leurs successeurs.*
+
+---
+
+### Travailler avec l'assistant

@@ -1,17 +1,17 @@
 ---
-title: "83. Commencez votre prompt par le résultat, pas la méthode"
+title: "83. Commence ton prompt par le résultat, pas la méthode"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "\"Refactor this function\" is a method instruction."
+description: "« Refactor this function » est une instruction de méthode."
 ---
 
-"Refactor this function" is a method instruction. "Make this function testable in isolation without changing its public interface" is an outcome instruction. The difference is significant: the method instruction delegates the entire design decision to the assistant, while the outcome instruction specifies what success looks like and leaves the implementation path open.
+« Refactor this function » est une instruction de méthode. « Make this function testable in isolation without changing its public interface » est une instruction de résultat. La différence est significative : l'instruction de méthode délègue toute la décision de design à l'assistant, tandis que l'instruction de résultat spécifie à quoi ressemble le succès et laisse le chemin d'implémentation ouvert.
 
-Outcome-first prompts produce better results because they give the assistant a target to optimize toward rather than a procedure to execute. When you specify the outcome, the assistant can evaluate whether its approach achieves it and adjust. When you specify the method, the assistant executes the method whether or not it achieves what you actually needed.
+Les prompts orientés résultat produisent de meilleurs outputs parce qu'ils donnent à l'assistant une cible à optimiser plutôt qu'une procédure à exécuter. Quand tu spécifies le résultat, l'assistant peut évaluer si son approche l'atteint et ajuster. Quand tu spécifies la méthode, l'assistant exécute la méthode qu'elle atteigne ou non ce dont tu avais vraiment besoin.
 
-The discipline of outcome-first prompting also forces you to clarify your own goals. "Refactor this function" often means several different things — improve readability, reduce complexity, improve performance, make it testable — and you might not have decided which one you actually want. Writing the outcome forces the decision. What, specifically, should be true about the code when you're done that isn't true now?
+La discipline du prompting orienté résultat te force aussi à clarifier tes propres objectifs. « Refactor this function » peut signifier plusieurs choses différentes — améliorer la lisibilité, réduire la complexité, améliorer la performance, rendre testable — et tu n'as peut-être pas décidé laquelle tu veux vraiment. Écrire le résultat force la décision. Quoi, spécifiquement, devrait être vrai à propos du code quand tu as fini qui ne l'est pas maintenant ?
 
-This doesn't mean you can never specify the method. Sometimes you know the method is correct and you want the assistant to implement it. But even then, adding the outcome as a check — "implement X approach so that Y is achieved" — gives the assistant a way to flag when the method doesn't serve the outcome. That feedback is often worth more than the implementation itself.
+Ça ne veut pas dire que tu ne peux jamais spécifier la méthode. Parfois tu sais que la méthode est correcte et tu veux que l'assistant l'implémente. Mais même alors, ajouter le résultat comme vérification — « implement X approach so that Y is achieved » — donne à l'assistant un moyen de signaler quand la méthode ne sert pas le résultat. Ce feedback vaut souvent plus que l'implémentation elle-même.
 
-Know what done looks like before you describe how to get there.
+Sache à quoi ressemble « fait » avant de décrire comment y arriver.

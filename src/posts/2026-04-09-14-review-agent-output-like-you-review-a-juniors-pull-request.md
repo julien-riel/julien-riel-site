@@ -3,17 +3,17 @@ title: "14. Révisez la sortie de l'agent comme vous révisez la PR d'un junior"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "The right mental model for reviewing agent output isn't proofreading — it's code review."
+description: "Le bon modèle mental pour réviser l'output d'un agent, ce n'est pas la relecture — c'est la code review."
 ---
 
-The right mental model for reviewing agent output isn't proofreading — it's code review. Not a quick scan for typos, but a careful read for correctness, edge cases, hidden assumptions, and the things that look right but aren't.
+Le bon modèle mental pour réviser l'output d'un agent, ce n'est pas la relecture — c'est la code review. Pas un survol rapide pour les fautes de frappe, mais une lecture attentive pour la justesse, les cas limites, les suppositions cachées, et les choses qui ont l'air correctes mais qui ne le sont pas.
 
-A junior developer's pull request deserves real attention not because juniors are bad at their jobs, but because they're working with less context than you have. They might not know about the edge case you've seen before. They might have solved the stated problem while missing the unstated constraint. The code might work today and fail under conditions they didn't think to test. The review isn't a formality — it's where the knowledge transfer happens and where the errors get caught before they matter.
+La pull request d'un développeur junior mérite une vraie attention, non pas parce que les juniors sont mauvais dans leur travail, mais parce qu'ils travaillent avec moins de contexte que toi. Ils peuvent ne pas connaître le cas limite que tu as déjà vu. Ils peuvent avoir résolu le problème énoncé tout en manquant la contrainte implicite. Le code peut marcher aujourd'hui et échouer dans des conditions qu'ils n'ont pas pensé à tester. La review n'est pas une formalité — c'est là que le transfert de connaissance se fait et où les erreurs sont attrapées avant qu'elles n'aient de l'importance.
 
-Agent output has the same profile. The agent is capable, often impressively so, but its knowledge of your specific context is limited to what you gave it. It doesn't know what you've learned from three years on this codebase. It doesn't know about the customer who does the unusual thing that breaks the obvious implementation. It doesn't know that the last person who took this approach regretted it. It knows what you told it, and it generalized from there.
+L'output d'un agent a le même profil. L'agent est capable, souvent de façon impressionnante, mais sa connaissance de ton contexte spécifique est limitée à ce que tu lui as donné. Il ne sait pas ce que tu as appris en trois ans sur ce codebase. Il ne connaît pas le client qui fait la chose inhabituelle qui casse l'implémentation évidente. Il ne sait pas que la dernière personne qui a pris cette approche l'a regretté. Il sait ce que tu lui as dit, et il a généralisé à partir de là.
 
-Reviewing with this frame changes what you look for. You stop asking "is this grammatically correct" or "does this generally make sense" and start asking "is this actually right for our situation." You look for places where the agent made a reasonable assumption that happens to be wrong for your context. You check the edges — what happens with empty input, with unusually large input, with the user who does the thing nobody anticipated.
+Réviser avec ce cadre change ce que tu cherches. Tu arrêtes de demander « est-ce que c'est grammaticalement correct » ou « est-ce que ça a du sens en général » et tu commences à demander « est-ce que c'est vraiment juste pour notre situation ». Tu cherches les endroits où l'agent a fait une supposition raisonnable qui se trouve être fausse dans ton contexte. Tu vérifies les bords — ce qui se passe avec un input vide, avec un input inhabituellement gros, avec l'utilisateur qui fait la chose que personne n'avait anticipée.
 
-The failure mode of treating agent output as finished work is subtle because the output often looks finished. It's fluent, well-structured, internally consistent. These are surface properties. Correctness for your specific situation is a deeper property, and it doesn't come from the model — it comes from you.
+Le mode d'échec consistant à traiter l'output d'un agent comme du travail terminé est subtil parce que l'output a souvent l'air terminé. Il est fluide, bien structuré, cohérent en interne. Ce sont des propriétés de surface. La justesse dans ta situation spécifique est une propriété plus profonde, et elle ne vient pas du modèle — elle vient de toi.
 
-The agent drafted it. You're responsible for it. Review accordingly.
+L'agent a écrit le brouillon. Tu en es responsable. Révise en conséquence.

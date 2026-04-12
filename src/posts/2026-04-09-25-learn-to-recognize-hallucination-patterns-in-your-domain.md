@@ -1,22 +1,22 @@
 ---
-title: "25. Apprenez à reconnaître les patterns d'hallucination dans votre domaine"
+title: "25. Apprends à reconnaître les patterns d'hallucination dans ton domaine"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "Hallucination — the model generating plausible-sounding content that isn't grounded in fact — is not random."
+description: "L'hallucination — le modèle qui génère du contenu qui sonne plausible mais n'est pas ancré dans les faits — n'est pas aléatoire."
 ---
 
-Hallucination — the model generating plausible-sounding content that isn't grounded in fact — is not random. It has patterns. Models hallucinate in predictable ways, in predictable situations, and the developers who work most effectively with agents have learned to recognize the patterns that are specific to their domain.
+L'hallucination — le modèle qui génère du contenu qui sonne plausible mais n'est pas ancré dans les faits — n'est pas aléatoire. Elle a des patterns. Les modèles hallucinent de façons prévisibles, dans des situations prévisibles, et les développeurs qui travaillent le plus efficacement avec les agents ont appris à reconnaître les patterns spécifiques à leur domaine.
 
-The general patterns are well documented. Models fabricate citations with the right structure but wrong details. They confuse entities that are similar in some dimension — same name, same field, same time period. They fill gaps in their knowledge with extrapolations that follow the logic of the domain but aren't actually true. They're more likely to hallucinate at the edges of their training data — niche topics, recent events, highly specialized domains where the training corpus was thin.
+Les patterns généraux sont bien documentés. Les modèles fabriquent des citations avec la bonne structure mais les mauvais détails. Ils confondent des entités qui se ressemblent sur une dimension — même nom, même domaine, même période. Ils comblent les trous de leurs connaissances avec des extrapolations qui suivent la logique du domaine mais ne sont pas réellement vraies. Ils sont plus susceptibles d'halluciner aux marges de leurs données d'entraînement — sujets de niche, événements récents, domaines hautement spécialisés où le corpus d'entraînement était mince.
 
-But the general patterns are less useful than the domain-specific ones. A developer working with a legal agent learns that the model reliably fabricates case citations — gets the court and the general area of law right, invents the case name and date. A developer working with a medical agent learns that the model tends to confuse similar drug names and misstate dosages in ways that follow pharmaceutical naming conventions. A developer working with a code-generation agent learns that the model confidently uses library functions that don't exist but probably should.
+Mais les patterns généraux sont moins utiles que ceux spécifiques au domaine. Un développeur qui travaille avec un agent juridique apprend que le modèle fabrique de façon fiable des citations de jurisprudence — il a la bonne cour et le bon domaine général du droit, il invente le nom de la cause et la date. Un développeur qui travaille avec un agent médical apprend que le modèle a tendance à confondre des noms de médicaments similaires et à mal énoncer les dosages d'une façon qui suit les conventions de nomenclature pharmaceutique. Un développeur qui travaille avec un agent de génération de code apprend que le modèle utilise avec confiance des fonctions de bibliothèque qui n'existent pas mais qui devraient probablement exister.
 
-These patterns are learnable, but only through exposure. You have to run the agent on enough real tasks, catch enough specific failures, and build up a picture of where this model, on this task, in this domain, tends to go wrong. That knowledge doesn't transfer cleanly from model to model or domain to domain — it's acquired locally, per system.
+Ces patterns sont apprenables, mais seulement par l'exposition. Tu dois exécuter l'agent sur suffisamment de tâches réelles, attraper suffisamment d'échecs spécifiques, et construire une image de là où ce modèle, sur cette tâche, dans ce domaine, a tendance à se tromper. Cette connaissance ne se transfère pas proprement d'un modèle à l'autre ou d'un domaine à l'autre — elle s'acquiert localement, par système.
 
-The payoff is a targeted skepticism that's much more efficient than global distrust. Instead of verifying everything, you verify the things that are likely to be wrong. You build checks for the specific failure modes you've learned to expect. You know which parts of the output to read carefully and which parts you can trust.
+Le bénéfice, c'est un scepticisme ciblé qui est beaucoup plus efficace que la méfiance globale. Au lieu de tout vérifier, tu vérifies les choses qui sont susceptibles d'être fausses. Tu construis des vérifications pour les modes d'échec spécifiques que tu as appris à attendre. Tu sais quelles parties de l'output lire attentivement et quelles parties tu peux croire.
 
-General skepticism protects you from known hallucinations. Domain knowledge tells you where to look.
+Le scepticisme général te protège des hallucinations connues. La connaissance du domaine te dit où regarder.
 
 ---
 

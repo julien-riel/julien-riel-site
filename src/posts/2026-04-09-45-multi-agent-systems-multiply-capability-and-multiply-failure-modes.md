@@ -1,19 +1,19 @@
 ---
-title: "45. Les systèmes multi-agents multiplient les capacités et les modes de défaillance"
+title: "45. Les systèmes multi-agent multiplient les capacités et multiplient les failure modes"
 date: 2026-04-09
 tags:
   - agents-in-the-real-world
-description: "The case for multi-agent systems is compelling."
+description: "Les arguments pour les systèmes multi-agent sont convaincants."
 ---
 
-The case for multi-agent systems is compelling. Complex tasks can be decomposed into parallel workstreams. Specialized agents outperform generalists on their specific domains. Orchestration allows capabilities to be combined in ways no single agent could achieve. The whole is greater than the sum of its parts.
+Les arguments pour les systèmes multi-agent sont convaincants. Les tâches complexes peuvent être décomposées en flux de travail parallèles. Des agents spécialisés surperforment les généralistes dans leurs domaines spécifiques. L'orchestration permet de combiner des capacités d'une façon qu'aucun agent unique ne pourrait atteindre. Le tout est supérieur à la somme des parties.
 
-The case against rushing into multi-agent systems is equally compelling, and less often made. Every agent you add is another source of variance, another failure mode, another system whose behavior you need to understand and test. In a single-agent system, a failure has one origin. In a multi-agent system, a failure can originate anywhere, propagate through handoffs in non-obvious ways, and arrive at the output looking like something completely different from what caused it.
+Les arguments contre la précipitation dans les systèmes multi-agent sont tout aussi convaincants, et moins souvent avancés. Chaque agent que tu ajoutes est une source de variance de plus, un failure mode de plus, un système de plus dont tu dois comprendre et tester le comportement. Dans un système à un seul agent, un échec a une origine. Dans un système multi-agent, un échec peut provenir de n'importe où, se propager à travers des handoffs de façons non évidentes, et arriver à la sortie en ressemblant à quelque chose de complètement différent de sa cause.
 
-The handoff problem is particular to multi-agent architectures and particularly insidious. Agent A produces output that looks correct. Agent B receives it, interprets it slightly differently than Agent A intended, and produces output that reflects that misinterpretation. Agent C receives Agent B's output, makes a reasonable inference from it, and the final result is confidently wrong in a way that traces back to a subtle semantic slip three steps earlier. Each agent did its job. The system failed.
+Le problème des handoffs est propre aux architectures multi-agent et particulièrement insidieux. L'agent A produit une sortie qui a l'air correcte. L'agent B la reçoit, l'interprète légèrement différemment de l'intention de l'agent A, et produit une sortie qui reflète cette mauvaise interprétation. L'agent C reçoit la sortie de B, en fait une inférence raisonnable, et le résultat final est confiant et faux d'une manière qui remonte à un glissement sémantique subtil trois étapes plus tôt. Chaque agent a fait son travail. Le système a échoué.
 
-This argues not against multi-agent systems, but for building them incrementally. Start with the single-agent version, even if you know it won't scale to the full problem. Understand its failure modes. Then decompose one piece at a time, validating each handoff explicitly before adding the next agent. The teams that design the full multi-agent architecture upfront and build it all at once accumulate technical debt they can't see until the whole thing is running.
+Ça ne plaide pas contre les systèmes multi-agent, mais pour les construire de façon incrémentale. Commence par la version à un seul agent, même si tu sais qu'elle ne passera pas à l'échelle pour le problème complet. Comprends ses failure modes. Puis décompose une pièce à la fois, en validant explicitement chaque handoff avant d'ajouter l'agent suivant. Les équipes qui conçoivent l'architecture multi-agent complète d'emblée et la construisent d'un coup accumulent une dette technique qu'elles ne voient pas jusqu'à ce que le tout tourne.
 
-Observability becomes non-negotiable at multi-agent scale. You need to be able to trace a final output back through every agent that contributed to it, with the full context and reasoning at each step. Without that, debugging a multi-agent failure is guesswork.
+L'observabilité devient non négociable à l'échelle multi-agent. Tu dois pouvoir tracer une sortie finale à travers chaque agent qui y a contribué, avec le context complet et le raisonnement à chaque étape. Sans ça, déboguer un échec multi-agent, c'est deviner.
 
-More agents means more capability. It also means more places to lose the thread.
+Plus d'agents signifie plus de capacité. Ça signifie aussi plus d'endroits où perdre le fil.

@@ -3,19 +3,19 @@ title: "30. Ne laissez pas votre agent toucher la production avant qu'il ne vous
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "There's a moment in every agentic project where the system is working well enough in testing that the temptation to deploy becomes almost irresistible."
+description: "Dans chaque projet agentic, il arrive un moment où le système fonctionne assez bien en test pour que la tentation de déployer devienne presque irrésistible."
 ---
 
-There's a moment in every agentic project where the system is working well enough in testing that the temptation to deploy becomes almost irresistible. The demos are clean. The obvious cases all pass. The team has been looking at it for weeks and nobody can find a new way to break it. Ship it.
+Dans chaque projet agentic, il arrive un moment où le système fonctionne assez bien en test pour que la tentation de déployer devienne presque irrésistible. Les démos sont propres. Les cas évidents passent tous. L'équipe le regarde depuis des semaines et personne ne trouve une nouvelle façon de le casser. On livre.
 
-Don't. Not yet.
+Non. Pas encore.
 
-The gap between "working in testing" and "working in production" is wider for agentic systems than for most software, because agentic systems encounter a much more diverse distribution of inputs in the real world than any test suite captures. Users do unexpected things. They provide context in unusual formats. They ask questions at the boundary of scope. They combine capabilities in ways you never anticipated. The agent that handles your test cases gracefully can still fail badly on the inputs you didn't think to test.
+L'écart entre « ça marche en test » et « ça marche en production » est plus large pour les systèmes agentic que pour la plupart des logiciels, parce que les systèmes agentic rencontrent dans le monde réel une distribution d'inputs bien plus diverse qu'aucune suite de tests ne capture. Les utilisateurs font des choses inattendues. Ils fournissent du contexte dans des formats inhabituels. Ils posent des questions à la limite du périmètre. Ils combinent des capacités d'une façon que tu n'avais jamais anticipée. L'agent qui gère tes cas de test avec élégance peut quand même échouer lamentablement sur les inputs que tu n'as pas pensé à tester.
 
-The discipline is to run the system in staging — against real-world-like inputs, with real-world-like variability — until it stops surprising you. Not until it handles everything perfectly, but until the failure modes are familiar. Until you've seen the edge cases and decided how to handle them. Until the behavior feels predictable not because it never fails, but because when it fails, it fails in ways you recognize and have accounted for.
+La discipline, c'est de faire tourner le système en staging — contre des inputs qui ressemblent au monde réel, avec la variabilité du monde réel — jusqu'à ce qu'il arrête de te surprendre. Pas jusqu'à ce qu'il gère tout parfaitement, mais jusqu'à ce que les modes de défaillance te soient familiers. Jusqu'à ce que tu aies vu les cas limites et décidé comment les traiter. Jusqu'à ce que le comportement te paraisse prévisible non pas parce qu'il n'échoue jamais, mais parce que quand il échoue, il échoue de façons que tu reconnais et que tu as anticipées.
 
-The "bored you" standard is deliberately subjective. It means the system has been running long enough that you're no longer discovering new failure modes. You've stopped being surprised. The last interesting failure was a while ago. That's when you have enough confidence in the system's behavior to trust it with real users.
+Le standard « t'ennuyer » est délibérément subjectif. Ça veut dire que le système tourne depuis assez longtemps pour que tu ne découvres plus de nouveaux modes de défaillance. Tu as arrêté d'être surpris. Le dernier échec intéressant date d'un moment. C'est à ce moment-là que tu as assez confiance dans le comportement du système pour le confier à de vrais utilisateurs.
 
-This requires patience that's genuinely hard to maintain when stakeholders are eager and the system looks ready. The argument for waiting is asymmetric: a premature deployment that fails badly costs more — in user trust, in debugging time, in reputation — than a careful deployment that takes a few more weeks.
+Ça demande une patience qui est vraiment difficile à maintenir quand les parties prenantes sont impatientes et que le système semble prêt. L'argument pour attendre est asymétrique : un déploiement prématuré qui échoue lamentablement coûte plus cher — en confiance des utilisateurs, en temps de debug, en réputation — qu'un déploiement prudent qui prend quelques semaines de plus.
 
-Let it bore you first. Production is not a testing environment.
+Laisse-le t'ennuyer d'abord. La production n'est pas un environnement de test.

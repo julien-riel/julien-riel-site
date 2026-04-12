@@ -3,15 +3,15 @@ title: "75. Lisez chaque ligne qu'il écrit"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "The speed of generation is the trap."
+description: "La vitesse de génération, c'est le piège."
 ---
 
-The speed of generation is the trap. The assistant produces fifty lines of code in three seconds, it looks plausible, the tests pass, you commit. Two days later you're debugging a failure that traces back to a subtle logic error in those fifty lines — an error that would have been obvious if you'd read carefully, which you didn't because it arrived fast and looked right.
+La vitesse de génération, c'est le piège. L'assistant produit cinquante lignes de code en trois secondes, ça a l'air plausible, les tests passent, tu commit. Deux jours plus tard, tu débogues une défaillance qui remonte à une erreur de logique subtile dans ces cinquante lignes — une erreur qui aurait été évidente si tu avais lu attentivement, ce que tu n'as pas fait parce qu'elle est arrivée vite et avait l'air correcte.
 
-Speed of production and correctness of production are independent variables. The assistant generates code at a rate that creates a psychological pressure to accept it at the same rate. Resist this. The code deserves the same reading you'd give to a pull request from a competent colleague — not suspicious, not line-by-line word parsing, but genuine comprehension. Do you understand what each part does? Does it do what you intended? Are there edge cases the implementation doesn't handle?
+La vitesse de production et la justesse de production sont des variables indépendantes. L'assistant génère du code à un rythme qui crée une pression psychologique pour l'accepter au même rythme. Résiste. Le code mérite la même lecture que tu accorderais à une pull request d'un collègue compétent — ni méfiante, ni une analyse mot à mot, mais une vraie compréhension. Comprends-tu ce que chaque partie fait ? Fait-elle ce que tu voulais ? Y a-t-il des cas limites que l'implémentation ne gère pas ?
 
-The cases where careful reading matters most are exactly the cases where it's hardest to maintain: when you're tired, when you're on deadline, when the task feels routine, when you've asked for something similar many times before and it's always been fine. The assistant doesn't get tired. It doesn't get sloppy under pressure. But it also doesn't know what you actually need — it knows what you asked for. Those are sometimes different things, and only you can catch the gap.
+Les cas où la lecture attentive importe le plus sont exactement ceux où c'est le plus difficile à maintenir : quand tu es fatigué, quand tu as une échéance, quand la tâche semble routinière, quand tu as demandé quelque chose de similaire plusieurs fois auparavant et que c'était toujours correct. L'assistant ne se fatigue pas. Il ne devient pas négligent sous pression. Mais il ne sait pas non plus ce dont tu as réellement besoin — il sait ce que tu as demandé. Ce sont parfois des choses différentes, et toi seul peux attraper l'écart.
 
-There's a specific failure mode worth naming: the code that is technically correct but wrong for your situation. It compiles, the tests pass, the logic is sound — but it solves a subtly different problem than the one you have. This failure is invisible if you're only checking that the code runs. It's visible if you're reading to understand.
+Il y a un mode d'échec spécifique qui vaut la peine d'être nommé : le code qui est techniquement correct mais faux pour ta situation. Il compile, les tests passent, la logique est saine — mais il résout un problème subtilement différent de celui que tu as. Cet échec est invisible si tu vérifies seulement que le code tourne. Il est visible si tu lis pour comprendre.
 
-The assistant writes the first draft. You're responsible for every line that ships.
+L'assistant écrit la première version. Tu es responsable de chaque ligne qui est livrée.

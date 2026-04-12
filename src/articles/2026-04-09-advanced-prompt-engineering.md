@@ -4,37 +4,37 @@ date: 2026-04-09
 tags:
   - prompting
   - architecture
-description: "Patterns that separate prompts that work in demos from prompts that work in production — context management, structured outputs, few-shot engineering, and version control."
+description: "Les patterns qui séparent les prompts qui fonctionnent en démo de ceux qui tiennent en production — gestion du contexte, outputs structurés, ingénierie few-shot et contrôle de version."
 ---
 
-## A Practical Guide for Agentic Programmers
+## Un guide pratique pour programmeurs agentiques
 
-You already know how to write a prompt. You know about system messages, few-shot examples, and telling the model to "think step by step." That's prompt engineering 101. This guide is about what comes after — the patterns that separate prompts that work in demos from prompts that work in production.
+Tu sais déjà écrire un prompt. Tu connais les system prompts, les exemples few-shot et l'astuce qui consiste à demander au modèle de « penser étape par étape ». Ça, c'est prompt engineering 101. Ce guide traite de ce qui vient ensuite — les patterns qui séparent les prompts qui fonctionnent en démo de ceux qui tiennent en production.
 
-## The Fundamental Shift: Prompts Are Software
+## Le changement fondamental : les prompts sont du logiciel
 
-The first thing to internalize is that a prompt in a production system is not a message you send to a chatbot. It's a software artifact. It has inputs, outputs, dependencies, and failure modes. It should be versioned, tested, reviewed, and deployed with the same rigor as application code.
+La première chose à intégrer, c'est qu'un prompt dans un système de production n'est pas un message envoyé à un chatbot. C'est un artefact logiciel. Il a des inputs, des outputs, des dépendances et des modes de défaillance. Il devrait être versionné, testé, revu et déployé avec la même rigueur que du code applicatif.
 
-WHOOP tracks over 2,500 prompt iterations across 41 production agents. Cursor open-sourced an entire library (Priompt) for compiling prompts as JSX components with priority scores. These teams treat prompts as engineering artifacts because they've learned the hard way that a casual prompt change can silently degrade a production system.
+WHOOP suit plus de 2 500 itérations de prompt à travers 41 agents en production. Cursor a rendu open source une librairie complète (Priompt) pour compiler les prompts comme des composants JSX avec des scores de priorité. Ces équipes traitent les prompts comme des artefacts d'ingénierie parce qu'elles ont appris à la dure qu'un changement désinvolte de prompt peut silencieusement dégrader un système en production.
 
-If your prompts live in a string variable inside your application code, with no version history, no eval suite, and no deployment process — you don't have a prompt engineering practice. You have a liability.
+Si tes prompts vivent dans une variable string au sein du code de ton application, sans historique de version, sans suite d'évals et sans processus de déploiement — tu n'as pas de pratique de prompt engineering. Tu as une dette.
 
-## Structural Patterns That Scale
+## Des patterns structurels qui scalent
 
-### Separate Concerns in the Prompt
+### Sépare les préoccupations dans le prompt
 
-A well-structured prompt has distinct sections, each with a clear purpose:
+Un prompt bien structuré a des sections distinctes, chacune avec un but clair :
 
-- **Role and constraints:** Who the model is, what it can and cannot do, what tone to use.
-- **Context:** The data the model needs to answer — retrieved documents, user profile, conversation history.
-- **Task specification:** What exactly to do with the context. Be precise about format, length, and structure.
-- **Output format:** If you need JSON, define the schema. If you need a specific structure, show it.
+- **Rôle et contraintes :** qui est le modèle, ce qu'il peut et ne peut pas faire, quel ton utiliser.
+- **Contexte :** les données dont le modèle a besoin pour répondre — documents récupérés, profil utilisateur, historique de conversation.
+- **Spécification de la tâche :** ce qu'il faut faire exactement avec le contexte. Sois précis sur le format, la longueur et la structure.
+- **Format d'output :** si tu as besoin de JSON, définis le schema. Si tu as besoin d'une structure spécifique, montre-la.
 
-Mixing these concerns creates fragile prompts. When role instructions bleed into context, or task specifications are scattered across the prompt, small changes have unpredictable cascading effects. Keep sections distinct, even if it means being more verbose.
+Mélanger ces préoccupations crée des prompts fragiles. Quand les instructions de rôle débordent sur le contexte, ou que les spécifications de tâche sont éparpillées dans le prompt, de petits changements ont des effets en cascade imprévisibles. Garde les sections distinctes, même si ça veut dire être plus verbeux.
 
-### Use Structured Output Formats
+### Utilise des formats d'output structurés
 
-Whenever your downstream system needs to parse the model's response, define the output format explicitly. For programmatic consumption, use JSON with a defined schema. For structured content, use XML tags or markdown with consistent headings.
+Chaque fois que ton système en aval doit parser la réponse du modèle, définis explicitement le format d'output. Pour une consommation programmatique, utilise du JSON avec un schema défini. Pour du contenu structuré, utilise des tags XML ou du markdown avec des titres cohérents.
 
 ```
 Respond in the following JSON format:
@@ -46,35 +46,35 @@ Respond in the following JSON format:
 }
 ```
 
-Structured outputs reduce parsing errors, make evaluation easier (you can check individual fields), and constrain the model's tendency to ramble. Many APIs now support structured output natively — use it.
+Les outputs structurés réduisent les erreurs de parsing, rendent l'évaluation plus facile (tu peux vérifier des champs individuels) et contiennent la tendance du modèle à divaguer. Beaucoup d'APIs supportent maintenant les outputs structurés nativement — sers-t'en.
 
-### Negative Space: Tell the Model What Not to Do
+### Espace négatif : dis au modèle ce qu'il ne doit PAS faire
 
-Models have strong defaults. Without explicit constraints, they'll be verbose, hedging, and eager to please. The most impactful prompt improvements are often subtractive — telling the model what to avoid.
+Les modèles ont des comportements par défaut très marqués. Sans contraintes explicites, ils seront verbeux, hésitants et empressés de plaire. Les améliorations de prompt les plus percutantes sont souvent soustractives — dire au modèle ce qu'il faut éviter.
 
-Effective negative constraints:
-- "Do not make up information. If you don't know, say so."
-- "Do not include disclaimers or caveats unless specifically relevant."
-- "Do not repeat the question back before answering."
-- "If the retrieved context doesn't contain the answer, say 'I don't have enough information' — do not guess."
+Contraintes négatives efficaces :
+- « N'invente pas d'information. Si tu ne sais pas, dis-le. »
+- « N'inclus pas d'avertissements ou de mises en garde sauf si spécifiquement pertinents. »
+- « Ne répète pas la question avant de répondre. »
+- « Si le contexte récupéré ne contient pas la réponse, dis « Je n'ai pas assez d'information » — ne devine pas. »
 
-These constraints are especially important in agentic systems where the output feeds into another step. A hallucinated intermediate result compounds through the pipeline.
+Ces contraintes sont particulièrement importantes dans les systèmes agentiques où l'output alimente une autre étape. Un résultat intermédiaire halluciné se propage et s'amplifie dans le pipeline.
 
-## Context Management: The Hard Problem
+## La gestion du contexte : le vrai problème
 
-The most impactful skill in advanced prompt engineering isn't wordsmithing — it's context management. The model can only use what's in the context window. Getting the right information into that window, in the right order, at the right priority, is where production prompts succeed or fail.
+La compétence la plus percutante en prompt engineering avancé, ce n'est pas le travail stylistique — c'est la gestion du contexte. Le modèle ne peut utiliser que ce qui se trouve dans la context window. Faire entrer la bonne information dans cette fenêtre, dans le bon ordre, avec la bonne priorité, c'est là que les prompts de production réussissent ou échouent.
 
-### Prioritize Context Ruthlessly
+### Priorise le contexte sans pitié
 
-Context windows are budgets. Every token spent on low-value context is a token not spent on something useful. Cursor's Priompt library makes this explicit: each prompt element has a priority score, and when the token budget is exceeded, lower-priority elements are dropped via binary search.
+Les context windows sont des budgets. Chaque token dépensé sur du contexte peu utile est un token non dépensé sur quelque chose d'utile. La librairie Priompt de Cursor rend ça explicite : chaque élément de prompt a un score de priorité, et quand le budget de tokens est dépassé, les éléments de plus basse priorité sont supprimés via une recherche binaire.
 
-You don't need Priompt to apply this principle. Rank your context sources by importance. Put the most critical information first (models attend to the beginning of the context more reliably). Truncate from the bottom, not randomly. And measure: does adding this context actually improve your eval scores, or is it just noise?
+Tu n'as pas besoin de Priompt pour appliquer ce principe. Classe tes sources de contexte par importance. Place l'information la plus critique en premier (les modèles portent attention au début du contexte de façon plus fiable). Tronque par le bas, pas au hasard. Et mesure : est-ce qu'ajouter ce contexte améliore réellement tes scores d'évals, ou c'est juste du bruit ?
 
-### Dynamic Context Assembly
+### Assemblage dynamique du contexte
 
-Production prompts are rarely static. They're assembled at runtime from multiple sources: system instructions (fixed), retrieved documents (variable), user profile (variable), conversation history (growing), tool results (dynamic).
+Les prompts de production sont rarement statiques. Ils sont assemblés à l'exécution à partir de plusieurs sources : instructions système (fixes), documents récupérés (variables), profil utilisateur (variable), historique de conversation (qui grossit), résultats de tool use (dynamiques).
 
-Design your prompt as a template with slots:
+Conçois ton prompt comme un template avec des emplacements :
 
 ```
 [SYSTEM INSTRUCTIONS - fixed, ~500 tokens]
@@ -85,32 +85,32 @@ Design your prompt as a template with slots:
 [OUTPUT INSTRUCTIONS - format, constraints]
 ```
 
-This pattern makes it explicit where each piece of context comes from, how much budget it gets, and what gets cut first when the window is tight. WHOOP's inline tools take this further — data retrieval is embedded directly in the prompt template via markup, executed in parallel before generation begins.
+Ce pattern rend explicite d'où vient chaque morceau de contexte, quel budget il reçoit et ce qui saute en premier quand la fenêtre est serrée. Les inline tools de WHOOP vont plus loin — la récupération de données est intégrée directement dans le template du prompt via du balisage, exécutée en parallèle avant que la génération ne commence.
 
-### Manage Conversation History Deliberately
+### Gère l'historique de conversation délibérément
 
-In multi-turn conversations, history grows with every exchange. Naive approaches append everything, eventually pushing critical context out of the window. Smarter approaches:
+Dans les conversations multi-tours, l'historique grossit à chaque échange. Les approches naïves empilent tout, finissant par pousser du contexte critique hors de la fenêtre. Des approches plus intelligentes :
 
-- **Sliding window:** Keep only the last N turns. Simple, but loses early context.
-- **Summarization:** Periodically summarize older turns into a compact representation. Cursor's Composer 2 does this during RL training — the model learns when and how to self-summarize.
-- **Selective retention:** Keep turns that contain important decisions or context, drop purely transactional ones.
-- **Memory extraction:** Pull key facts from the conversation into a structured memory store (as WHOOP does with memory nuggets), and inject them as context rather than keeping raw history.
+- **Fenêtre glissante :** garde seulement les N derniers tours. Simple, mais perd le contexte initial.
+- **Résumé :** résume périodiquement les tours plus anciens en une représentation compacte. Composer 2 de Cursor fait ça pendant l'entraînement RL — le modèle apprend quand et comment s'auto-résumer.
+- **Rétention sélective :** garde les tours qui contiennent des décisions ou du contexte importants, lâche ceux qui sont purement transactionnels.
+- **Extraction mémoire :** extrais les faits clés de la conversation dans un store mémoire structuré (comme WHOOP le fait avec ses memory nuggets), et injecte-les comme contexte plutôt que garder l'historique brut.
 
-## Few-Shot Engineering
+## Ingénierie few-shot
 
-Few-shot examples are often more effective than detailed instructions. The model learns format, tone, reasoning patterns, and edge case handling from examples in ways that instructions alone can't convey.
+Les exemples few-shot sont souvent plus efficaces que des instructions détaillées. Le modèle apprend le format, le ton, les patterns de raisonnement et la gestion des cas limites à partir d'exemples, d'une façon que les instructions seules ne peuvent pas transmettre.
 
-### Quality Over Quantity
+### Qualité plutôt que quantité
 
-Two perfect examples beat ten mediocre ones. Each example should demonstrate exactly the behavior you want, including how to handle difficult cases. Include at least one example that shows the model *not* doing something — refusing a bad request, saying "I don't know," or handling an edge case gracefully.
+Deux exemples parfaits battent dix exemples médiocres. Chaque exemple devrait démontrer exactement le comportement que tu veux, y compris comment gérer les cas difficiles. Inclus au moins un exemple qui montre le modèle en train de *ne pas* faire quelque chose — refuser une mauvaise requête, dire « Je ne sais pas », ou gérer un cas limite avec grâce.
 
-### Cover the Distribution
+### Couvre la distribution
 
-Your examples should represent the range of inputs the model will encounter. If 80% of queries are simple lookups and 20% are complex reasoning, your examples should roughly match that distribution. Don't only show the hard cases — the model needs to know how simple cases should look too.
+Tes exemples devraient représenter l'éventail des inputs que le modèle rencontrera. Si 80 % des requêtes sont de simples recherches et 20 % du raisonnement complexe, tes exemples devraient à peu près correspondre à cette distribution. Ne montre pas seulement les cas difficiles — le modèle doit aussi savoir à quoi ressemblent les cas simples.
 
-### Use Negative Examples
+### Utilise des exemples négatifs
 
-Show the model what a bad response looks like and why it's bad:
+Montre au modèle à quoi ressemble une mauvaise réponse et pourquoi elle est mauvaise :
 
 ```
 Example (BAD response):
@@ -124,19 +124,19 @@ Response: Your average heart rate during sleep last night was 54 BPM, which is 3
 Why this is good: Uses the user's actual data with contextual comparison.
 ```
 
-This contrast pattern is one of the most effective prompt engineering techniques. The model learns not just what to do, but what to avoid and why.
+Ce pattern de contraste est l'une des techniques de prompt engineering les plus efficaces. Le modèle apprend non seulement quoi faire, mais aussi ce qu'il faut éviter et pourquoi.
 
-## Chain of Thought and Reasoning Control
+## Chain-of-thought et contrôle du raisonnement
 
-### When to Use Chain of Thought
+### Quand utiliser chain-of-thought
 
-Chain of thought (CoT) — asking the model to show its reasoning before giving an answer — improves accuracy on tasks that require multi-step reasoning: math, logic, planning, complex analysis. It doesn't help (and can hurt) on simple lookup tasks, classification, or extraction.
+Le chain-of-thought (CoT) — demander au modèle de montrer son raisonnement avant de donner une réponse — améliore la précision sur les tâches qui demandent du raisonnement en plusieurs étapes : maths, logique, planification, analyse complexe. Il n'aide pas (et peut nuire) sur les tâches de recherche simples, la classification ou l'extraction.
 
-WHOOP learned this when evaluating GPT-5: the model's reasoning mode underperformed GPT-4.1 on low-latency chat queries. The reasoning overhead added latency without improving quality for straightforward questions. Use CoT deliberately, not as a default.
+WHOOP l'a appris en évaluant GPT-5 : le mode de raisonnement du modèle sous-performait GPT-4.1 sur les requêtes de chat à faible latence. La surcharge du raisonnement ajoutait de la latence sans améliorer la qualité pour des questions directes. Utilise CoT délibérément, pas par défaut.
 
-### Structured Reasoning
+### Raisonnement structuré
 
-Rather than "think step by step" (which is vague), give the model a specific reasoning structure:
+Plutôt que « pense étape par étape » (qui est vague), donne au modèle une structure de raisonnement spécifique :
 
 ```
 Before answering, analyze the question using these steps:
@@ -146,11 +146,11 @@ Before answering, analyze the question using these steps:
 4. If the data is missing, state what's missing and don't guess
 ```
 
-This produces more consistent and debuggable reasoning chains. You can evaluate each step independently, catching failures in reasoning even when the final answer happens to be correct.
+Ça produit des chaînes de raisonnement plus cohérentes et debuggables. Tu peux évaluer chaque étape indépendamment, attrapant des défaillances de raisonnement même quand la réponse finale se trouve être correcte.
 
-### Hide the Reasoning When Needed
+### Cache le raisonnement quand il le faut
 
-In user-facing applications, you often want the model to reason internally but only show the conclusion. Use XML tags or delimiters to separate reasoning from output:
+Dans les applications face utilisateur, tu veux souvent que le modèle raisonne en interne mais montre seulement la conclusion. Utilise des tags XML ou des délimiteurs pour séparer le raisonnement de l'output :
 
 ```
 <reasoning>
@@ -161,29 +161,29 @@ In user-facing applications, you often want the model to reason internally but o
 </response>
 ```
 
-Parse out the reasoning in your application layer. Keep it in your logs for debugging. This gives you the accuracy benefits of CoT without the UX cost of verbose responses.
+Parse le raisonnement dans ta couche applicative. Garde-le dans tes logs pour le debug. Ça te donne les bénéfices de précision du CoT sans le coût UX des réponses verbeuses.
 
-## Production Prompt Practices
+## Pratiques de prompts en production
 
-### Version Everything
+### Versionne tout
 
-Every prompt change should be tracked — who changed it, when, why, and what the eval results were before and after. Use a prompt management system (Priompt, PromptLayer, Humanloop, or even a Git repo with a naming convention). The goal: you should be able to roll back to any previous version in minutes.
+Chaque changement de prompt devrait être suivi — qui l'a changé, quand, pourquoi, et quels étaient les résultats d'évals avant et après. Utilise un système de gestion de prompts (Priompt, PromptLayer, Humanloop, ou même un repo Git avec une convention de nommage). L'objectif : tu devrais pouvoir revenir à n'importe quelle version précédente en quelques minutes.
 
-### Test Before You Ship
+### Teste avant de livrer
 
-Run your eval suite on every prompt change. Compare metrics against the baseline. Look for regressions across the full test set, not just spot-checks on a few examples. The Memory agent regression at WHOOP — where a "better" prompt was measurably worse — was caught by automated evals, not manual review.
+Fais tourner ta suite d'évals sur chaque changement de prompt. Compare les métriques à la baseline. Cherche les régressions sur l'ensemble du jeu de tests, pas juste des vérifications ponctuelles sur quelques exemples. La régression de l'agent Memory chez WHOOP — où un « meilleur » prompt était mesurablement pire — a été attrapée par des évals automatisées, pas par une revue manuelle.
 
-### Treat Prompt Debt Like Tech Debt
+### Traite la dette de prompt comme de la dette technique
 
-Prompts accumulate cruft: instructions added for edge cases that were later fixed elsewhere, redundant constraints, examples that no longer match the model's behavior. Periodically audit your prompts. Remove instructions that evals show have no effect. Simplify where possible. A shorter prompt that performs the same is a better prompt — it's cheaper, faster, and less likely to confuse the model.
+Les prompts accumulent des scories : instructions ajoutées pour des cas limites qui ont été corrigés ailleurs par la suite, contraintes redondantes, exemples qui ne correspondent plus au comportement du modèle. Audite périodiquement tes prompts. Enlève les instructions que les évals montrent sans effet. Simplifie quand c'est possible. Un prompt plus court qui performe pareil est un meilleur prompt — il coûte moins cher, il est plus rapide et il a moins de chances d'embrouiller le modèle.
 
-## The Takeaway
+## À retenir
 
-Advanced prompt engineering is systems engineering applied to natural language. The skills that matter aren't creative writing — they're context management, structured decomposition, systematic evaluation, and disciplined version control. The best prompt is not the cleverest one. It's the one that works reliably at scale, fails predictably, and improves measurably when you change it.
+Le prompt engineering avancé, c'est de l'ingénierie des systèmes appliquée au langage naturel. Les compétences qui comptent ne sont pas celles de l'écriture créative — ce sont la gestion du contexte, la décomposition structurée, l'évaluation systématique et un contrôle de version discipliné. Le meilleur prompt n'est pas le plus astucieux. C'est celui qui fonctionne de façon fiable à grande échelle, qui échoue de façon prévisible et qui s'améliore de façon mesurable quand tu le modifies.
 
-## Further Reading
+## Pour aller plus loin
 
-- [Priompt](https://github.com/anysphere/priompt) — Cursor's open-source priority-based prompt compilation library
-- [Anthropic's Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) — Comprehensive guide to prompting Claude effectively
-- [From Idea To Agent In Less Than Ten Minutes](https://engineering.prod.whoop.com/ai-studio) — WHOOP's AI Studio and inline tools pattern
-- [OpenAI Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering) — Official best practices from OpenAI
+- [Priompt](https://github.com/anysphere/priompt) — la librairie open source de Cursor pour compiler des prompts par priorité
+- [Guide de prompt engineering d'Anthropic](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview) — guide complet pour prompter Claude efficacement
+- [From Idea To Agent In Less Than Ten Minutes](https://engineering.prod.whoop.com/ai-studio) — AI Studio de WHOOP et le pattern des inline tools
+- [Guide de prompt engineering d'OpenAI](https://platform.openai.com/docs/guides/prompt-engineering) — les bonnes pratiques officielles d'OpenAI

@@ -3,15 +3,15 @@ title: "92. Utilisez le Markdown, pas la prose, pour les spécifications"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "A specification written as flowing prose is hard to reference, hard to update, and hard to provide as context."
+description: "Une spécification écrite en prose continue est difficile à référencer, difficile à mettre à jour et difficile à fournir comme contexte."
 ---
 
-A specification written as flowing prose is hard to reference, hard to update, and hard to provide as context. A specification written in structured Markdown — with headers, lists, code examples, and explicit sections for requirements, constraints, and edge cases — is easy to navigate, easy to maintain, and easy to drop into a prompt context.
+Une spécification écrite en prose continue est difficile à référencer, difficile à mettre à jour et difficile à fournir comme contexte. Une spécification écrite en markdown structuré — avec des en-têtes, des listes, des exemples de code, et des sections explicites pour les exigences, les contraintes et les cas limites — est facile à naviguer, facile à maintenir, et facile à injecter dans un contexte de prompt.
 
-The structure does work that prose can't. A list of acceptance criteria is unambiguous in a way that a paragraph describing the feature isn't. A code example showing the expected interface is clearer than three sentences explaining it. An explicit section called "Out of Scope" prevents the assistant from helpfully adding features you didn't ask for. The format enforces a discipline of specificity that prose tends to undermine.
+La structure fait un travail que la prose ne peut pas faire. Une liste de critères d'acceptation est non ambiguë d'une manière qu'un paragraphe décrivant la feature ne l'est pas. Un exemple de code montrant l'interface attendue est plus clair que trois phrases qui l'expliquent. Une section explicite intitulée « Out of Scope » empêche l'assistant d'ajouter serviablement des features que tu n'as pas demandées. Le format impose une discipline de spécificité que la prose tend à saper.
 
-Markdown specifications also compose well. You can include the relevant section of the spec in a prompt rather than the whole document. You can update a single section without rewriting the entire spec. You can link between sections when one constraint depends on another. These properties matter more as the project grows and the spec becomes a living document rather than a one-time artifact.
+Les spécifications en markdown se composent aussi bien. Tu peux inclure la section pertinente de la spec dans un prompt plutôt que le document entier. Tu peux mettre à jour une seule section sans réécrire toute la spec. Tu peux créer des liens entre sections quand une contrainte dépend d'une autre. Ces propriétés comptent davantage à mesure que le projet grandit et que la spec devient un document vivant plutôt qu'un artefact ponctuel.
 
-There's a template worth developing for your own use: a standard structure for feature specifications that works well for you and the assistant. Something like: Problem Statement, Proposed Solution, Acceptance Criteria, Edge Cases, Out of Scope, Open Questions. The specific sections matter less than the habit of using them consistently — consistency means you always know where to look for the constraint you need.
+Il y a un template qui vaut la peine d'être développé pour ton propre usage: une structure standard pour les specs de features qui marche bien pour toi et pour l'assistant. Quelque chose comme: Énoncé du problème, Solution proposée, Critères d'acceptation, Cas limites, Hors-scope, Questions ouvertes. Les sections spécifiques comptent moins que l'habitude de les utiliser de manière cohérente — la cohérence signifie que tu sais toujours où chercher la contrainte dont tu as besoin.
 
-The format of the spec determines how well you can use it. Structure it for the work you're going to do with it.
+Le format de la spec détermine à quel point tu peux l'utiliser. Structure-la pour le travail que tu vas faire avec.

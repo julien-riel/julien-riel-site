@@ -3,15 +3,15 @@ title: "97. Plus le projet est gros, plus vous devez rester aux commandes"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "The temptation scales with the capability."
+description: "La tentation grandit avec la capacité."
 ---
 
-The temptation scales with the capability. On a small task, handing the assistant full autonomy and reviewing the output feels like a reasonable tradeoff. On a large project, the same approach applied across dozens of sessions produces a codebase that reflects the assistant's judgment more than yours — one where the architectural coherence you didn't specify has been replaced by the assistant's defaults.
+La tentation grandit avec la capacité. Sur une petite tâche, donner à l'assistant une autonomie complète et réviser l'output a l'air d'un compromis raisonnable. Sur un gros projet, la même approche appliquée à travers des dizaines de sessions produit un codebase qui reflète le jugement de l'assistant plus que le tien — un dans lequel la cohérence architecturale que tu n'as pas spécifiée a été remplacée par les defaults de l'assistant.
 
-This isn't a failure of the assistant. It's a failure of oversight at the scale where oversight matters most. Small tasks have small blast radii. Large projects accumulate decisions across many sessions, and decisions made without your guidance in session three constrain what's possible in session thirty. The autonomy that was productive on the small task becomes drift on the large project.
+Ce n'est pas un échec de l'assistant. C'est un échec de supervision à l'échelle où la supervision compte le plus. Les petites tâches ont un petit rayon d'explosion. Les gros projets accumulent des décisions à travers plusieurs sessions, et les décisions prises sans ton guidage à la session trois contraignent ce qui est possible à la session trente. L'autonomie qui était productive sur la petite tâche devient une dérive sur le gros projet.
 
-The response isn't to do more of the work yourself — it's to increase the frequency and depth of review, not decrease it. More sessions means more checkpoints, not fewer. More generated code means more careful reading, not less. The overhead of oversight scales with the stakes, not with the volume of output.
+La réponse n'est pas de faire plus de travail toi-même — c'est d'augmenter la fréquence et la profondeur de la revue, pas de la diminuer. Plus de sessions veut dire plus de points de contrôle, pas moins. Plus de code généré veut dire plus de lecture soigneuse, pas moins. L'overhead de la supervision grandit avec les enjeux, pas avec le volume d'output.
 
-The developers who maintain control of large AI-assisted projects are the ones who stay close to the architectural decisions — who review not just whether the code works but whether it reflects the design they intended. They treat each session as a collaboration where their judgment governs the direction and the assistant contributes the execution. They don't let the momentum of fast generation substitute for the deliberateness of good design.
+Les développeurs qui maintiennent le contrôle sur de gros projets assistés par IA sont ceux qui restent proches des décisions architecturales — qui révisent non seulement si le code marche mais s'il reflète le design qu'ils avaient en tête. Ils traitent chaque session comme une collaboration où leur jugement gouverne la direction et où l'assistant contribue l'exécution. Ils ne laissent pas le momentum de la génération rapide remplacer la délibération du bon design.
 
-The assistant is faster than you. You're responsible for where it's going. Both of those things are true at the same time.
+L'assistant est plus rapide que toi. Tu es responsable de l'endroit où il va. Les deux choses sont vraies en même temps.

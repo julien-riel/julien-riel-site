@@ -1,19 +1,19 @@
 ---
-title: "22. La chaîne de pensée est un outil de débogage, pas juste une astuce de performance"
+title: "22. Le chain-of-thought est un outil de débogage, pas juste une astuce de performance"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "Chain-of-thought prompting — asking the model to reason through a problem step by step before producing an answer — reliably improves performance on complex tasks."
+description: "Le prompting chain-of-thought — demander au modèle de raisonner étape par étape avant de produire une réponse — améliore de façon fiable la performance sur les tâches complexes."
 ---
 
-Chain-of-thought prompting — asking the model to reason through a problem step by step before producing an answer — reliably improves performance on complex tasks. This is well established. What's less discussed is that the reasoning trace it produces is also one of the most useful debugging artifacts in your agentic system.
+Le prompting chain-of-thought — demander au modèle de raisonner étape par étape avant de produire une réponse — améliore de façon fiable la performance sur les tâches complexes. C'est bien établi. Ce qui est moins discuté, c'est que la trace de reasoning qu'il produit est aussi l'un des artefacts de débogage les plus utiles dans ton système agentique.
 
-When an agent produces a wrong answer without a reasoning trace, you have an input and an output and a gap you can't see into. You can change the prompt and see if the output changes, but you're working blind. When an agent produces a wrong answer with a reasoning trace, you can often see exactly where it went wrong — the step where it made a flawed assumption, the point where it misread the context, the place where two constraints conflicted and it resolved them the wrong way. That's actionable information.
+Quand un agent produit une mauvaise réponse sans trace de reasoning, tu as un input, un output, et un vide dans lequel tu ne peux pas voir. Tu peux changer le prompt et voir si l'output change, mais tu travailles à l'aveugle. Quand un agent produit une mauvaise réponse avec une trace de reasoning, tu peux souvent voir exactement où ça a dérapé — l'étape où il a fait une hypothèse erronée, le point où il a mal lu le context, l'endroit où deux contraintes sont entrées en conflit et il les a résolues dans le mauvais sens. C'est de l'information exploitable.
 
-This reframes how you should think about chain-of-thought in production systems. It's not just a performance feature to turn on for hard problems — it's observability infrastructure. The reasoning trace is a log of the agent's decision process. Like any good log, it's most valuable when things go wrong.
+Ça recadre la façon dont tu devrais penser au chain-of-thought dans les systèmes en production. Ce n'est pas juste une fonctionnalité de performance à activer pour les problèmes difficiles — c'est de l'infrastructure d'observability. La trace de reasoning est un log du processus de décision de l'agent. Comme tout bon log, elle est d'autant plus précieuse quand les choses tournent mal.
 
-The practical implication is to preserve reasoning traces even when you don't need them for the task itself. Route them to your logging system. Include them in your eval outputs. When you're investigating a failure, start with the trace. You'll often find the problem faster than any amount of prompt tweaking would reveal it.
+L'implication pratique, c'est de préserver les traces de reasoning même quand tu n'en as pas besoin pour la tâche elle-même. Route-les vers ton système de logging. Inclus-les dans les outputs de tes evals. Quand tu enquêtes sur un échec, commence par la trace. Tu trouveras souvent le problème plus vite qu'avec n'importe quel ajustement de prompt.
 
-There's a caveat worth holding onto: the reasoning trace is an output, not a window into computation. It can be coherent and wrong. A plausible-looking reasoning chain that leads to an incorrect conclusion is still a useful debugging artifact — it tells you the model constructed a believable path to the wrong place, which narrows down what kind of prompt change might help. But don't make the mistake of trusting the trace as proof of correctness.
+Une mise en garde mérite d'être gardée en tête : la trace de reasoning est un output, pas une fenêtre sur le calcul. Elle peut être cohérente et fausse. Une chaîne de reasoning qui a l'air plausible mais qui mène à une conclusion incorrecte reste un artefact de débogage utile — elle te dit que le modèle a construit un chemin crédible vers le mauvais endroit, ce qui restreint le type de changement de prompt qui pourrait aider. Mais ne fais pas l'erreur de prendre la trace pour une preuve de justesse.
 
-Think of chain-of-thought as a flight recorder. You hope you never need it. You're glad it was running when you do.
+Pense au chain-of-thought comme à une boîte noire d'avion. Tu espères ne jamais en avoir besoin. Tu es content qu'elle tournait quand tu en as besoin.

@@ -1,17 +1,17 @@
 ---
-title: "81. Le contexte est une compétence que vous pouvez améliorer"
+title: "81. Le contexte est une compétence que tu peux améliorer"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "Knowing what context to provide — and how to provide it — is the most leveraged skill in working with an AI coding assistant."
+description: "Savoir quel context fournir — et comment le fournir — est la compétence la plus à effet de levier quand tu travailles avec un AI coding assistant."
 ---
 
-Knowing what context to provide — and how to provide it — is the most leveraged skill in working with an AI coding assistant. Two developers giving the same assistant the same task will get different results, and the difference often comes down to context quality. One pastes the relevant interface and a representative example. The other writes a one-line request. The outputs are not comparable.
+Savoir quel context fournir — et comment le fournir — est la compétence la plus à effet de levier quand tu travailles avec un AI coding assistant. Deux développeurs qui donnent au même assistant la même tâche vont obtenir des résultats différents, et la différence se joue souvent sur la qualité du context. L'un colle l'interface pertinente et un exemple représentatif. L'autre écrit une requête d'une ligne. Les outputs ne sont pas comparables.
 
-Context quality has several dimensions. Relevance: the assistant works better with the specific file it needs to understand than with the entire repository. Precision: a concrete example of the pattern you want to follow is more useful than an abstract description of it. Completeness: the constraints that seem obvious to you — the error handling style, the naming conventions, the dependencies you want to avoid — need to be stated explicitly. Format: structured context is easier for the model to use than a wall of pasted text.
+La qualité du context a plusieurs dimensions. Pertinence : l'assistant travaille mieux avec le fichier spécifique qu'il doit comprendre qu'avec le repository en entier. Précision : un exemple concret du pattern que tu veux suivre est plus utile qu'une description abstraite de celui-ci. Complétude : les contraintes qui te semblent évidentes — le style de gestion d'erreurs, les conventions de nommage, les dépendances que tu veux éviter — doivent être énoncées explicitement. Format : un context structuré est plus facile à utiliser pour le modèle qu'un mur de texte collé.
 
-The skill develops through deliberate attention to failure. When the assistant produces something wrong, ask: what was missing from the context that would have prevented this? Usually something was — a constraint you forgot to mention, an example you didn't paste, a convention you assumed was obvious. Add it to your mental checklist for the next prompt.
+La compétence se développe par une attention délibérée à l'échec. Quand l'assistant produit quelque chose de faux, demande-toi : qu'est-ce qui manquait dans le context qui aurait pu empêcher ça ? Habituellement, quelque chose manquait — une contrainte que tu as oublié de mentionner, un exemple que tu n'as pas collé, une convention que tu supposais évidente. Ajoute-la à ta liste mentale pour le prochain prompt.
 
-Over time, you develop a sense for what context a given type of task needs. Code refactoring needs the existing code and the target interface. Test writing needs the function signature and an example of how the module's tests are structured. Bug fixing needs the error message, the stack trace, and the code path that produced them. These patterns become intuitive with practice.
+Avec le temps, tu développes un sens de quel context un type de tâche donné nécessite. Le refactoring de code a besoin du code existant et de l'interface cible. L'écriture de tests a besoin de la signature de la fonction et d'un exemple de comment les tests du module sont structurés. Le bug fixing a besoin du message d'erreur, de la stack trace, et du chemin de code qui les a produits. Ces patterns deviennent intuitifs avec la pratique.
 
-The assistant's capability is fixed. Your ability to use it isn't. Context is where the improvement lives.
+La capacité de l'assistant est fixe. Ta capacité à l'utiliser ne l'est pas. Le context est là où vit l'amélioration.

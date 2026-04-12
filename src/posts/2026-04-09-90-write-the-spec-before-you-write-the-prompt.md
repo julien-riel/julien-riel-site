@@ -3,15 +3,15 @@ title: "90. Écrivez la spec avant d'écrire le prompt"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "For a small task — fix this bug, add this field — the prompt can be the spec."
+description: "Pour une petite tâche — corriger ce bug, ajouter ce champ — le prompt peut être la spec."
 ---
 
-For a small task — fix this bug, add this field — the prompt can be the spec. For anything significant — a new module, a new API, a substantial refactoring — prompting without a spec produces code that implements what you asked for rather than what you needed. Those are the same thing only when you've thought carefully about what you need, which is the work that writing a spec requires.
+Pour une petite tâche — corriger ce bug, ajouter ce champ — le prompt peut être la spec. Pour n'importe quoi de significatif — un nouveau module, une nouvelle API, un refactoring substantiel — prompter sans spec produit du code qui implémente ce que tu as demandé plutôt que ce dont tu avais besoin. Ce sont les mêmes choses seulement quand tu as réfléchi soigneusement à ce dont tu as besoin, et c'est précisément le travail qu'écrire une spec exige.
 
-A spec doesn't have to be a formal document. It can be a short prose description: what this thing does, what it doesn't do, how it fits into the existing system, what the edge cases are, what success looks like. The discipline of writing it down — before the code exists — forces the decisions that prompting tries to skip. Where does the data come from? How are errors surfaced? What happens when the dependency is unavailable? Writing the spec surfaces these questions. Prompting buries them.
+Une spec n'a pas à être un document formel. Ça peut être une courte description en prose: ce que la chose fait, ce qu'elle ne fait pas, comment elle s'intègre au système existant, quels sont les cas limites, à quoi ressemble le succès. La discipline de l'écrire — avant que le code n'existe — force les décisions que le prompting essaie de contourner. D'où viennent les données? Comment les erreurs sont-elles remontées? Qu'arrive-t-il quand la dépendance n'est pas disponible? Écrire la spec fait émerger ces questions. Prompter les enterre.
 
-The spec also serves as the reference point for review. When the assistant produces an implementation, the question isn't "does this look reasonable?" — it's "does this implement the spec?" Reasonable-looking code that doesn't implement the spec is a failure. Spec-driven review is faster and more reliable than intuition-driven review because the target is explicit.
+La spec sert aussi de point de référence pour la revue. Quand l'assistant produit une implémentation, la question n'est pas « est-ce que ça a l'air raisonnable? » — c'est « est-ce que ça implémente la spec? ». Du code qui a l'air raisonnable mais qui n'implémente pas la spec, c'est un échec. La revue pilotée par la spec est plus rapide et plus fiable que la revue pilotée par l'intuition, parce que la cible est explicite.
 
-On a collaborative team, the spec is also communication — it's how you establish alignment on what's being built before code exists, when changing direction is cheap. A prompt sent directly to an assistant before the team has aligned on the spec is a way of generating code you might have to throw away.
+Dans une équipe collaborative, la spec est aussi de la communication — c'est comme ça que tu établis un alignement sur ce qui sera construit avant que le code n'existe, au moment où changer de direction est bon marché. Un prompt envoyé directement à un assistant avant que l'équipe se soit alignée sur la spec, c'est une façon de générer du code que tu pourrais avoir à jeter.
 
-Write the spec. The prompt is how you hand it to the assistant.
+Écris la spec. Le prompt, c'est comme ça que tu la passes à l'assistant.

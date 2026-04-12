@@ -3,19 +3,19 @@ title: "16. Les prompts dérivent — versionnez-les comme du code"
 date: 2026-04-09
 tags:
   - prompting-as-engineering
-description: "A prompt that works today will not necessarily work tomorrow."
+description: "Un prompt qui marche aujourd'hui ne marchera pas nécessairement demain."
 ---
 
-A prompt that works today will not necessarily work tomorrow. Models get updated. Your application evolves. The edge cases your prompt was tuned to handle give way to new ones. Someone tweaks the wording to fix one behavior and inadvertently breaks another. Six months later, nobody can explain why the prompt says what it says, and changing it feels risky because nobody knows what it's holding together.
+Un prompt qui marche aujourd'hui ne marchera pas nécessairement demain. Les modèles sont mis à jour. Ton application évolue. Les cas limites auxquels ton prompt était ajusté cèdent la place à de nouveaux. Quelqu'un ajuste la formulation pour corriger un comportement et casse un autre par inadvertance. Six mois plus tard, personne ne peut expliquer pourquoi le prompt dit ce qu'il dit, et le changer semble risqué parce que personne ne sait ce qu'il tient ensemble.
 
-This is software decay, and it happens to prompts for the same reasons it happens to code: they accumulate changes without documentation, they become load-bearing without anyone declaring them so, and the context that made them sensible at the time evaporates along with the people who wrote them.
+C'est de la décomposition logicielle, et ça arrive aux prompts pour les mêmes raisons que ça arrive au code : ils accumulent des changements sans documentation, ils deviennent porteurs sans que personne ne le déclare, et le contexte qui les rendait sensés à l'époque s'évapore en même temps que les gens qui les ont écrits.
 
-Version control is the obvious fix. Prompts belong in repositories, with commit messages that explain not just what changed but why. "Made the tone more formal" is a poor commit message. "Made the tone more formal after customer feedback indicated the previous register felt too casual for enterprise users" is a design document. Future you — or the colleague who inherits this system — needs the why, not just the what.
+Le version control est la solution évidente. Les prompts appartiennent à des repositories, avec des messages de commit qui expliquent non seulement ce qui a changé mais pourquoi. « Ton rendu plus formel » est un mauvais message de commit. « Ton rendu plus formel après que les retours clients ont indiqué que le registre précédent semblait trop décontracté pour les utilisateurs entreprise » est un document de design. Toi du futur — ou le collègue qui hérite de ce système — a besoin du pourquoi, pas juste du quoi.
 
-Beyond version control, prompts benefit from the same review culture as code. Changes to system prompts should go through review, especially for production systems. The reviewer isn't checking grammar — they're asking whether this change could affect behavior in ways the author didn't anticipate. A one-line prompt change can have broad effects that aren't obvious until they surface in production.
+Au-delà du version control, les prompts bénéficient de la même culture de review que le code. Les changements aux system prompts devraient passer par une review, surtout pour les systèmes en production. Le reviewer ne vérifie pas la grammaire — il demande si ce changement pourrait affecter le comportement d'une façon que l'auteur n'a pas anticipée. Un changement de prompt d'une ligne peut avoir des effets étendus qui ne sont pas évidents avant qu'ils ne surgissent en production.
 
-The more invisible problem is the prompt that drifts without anyone noticing. Nobody changed the file. The model changed. A system prompt that was calibrated against one version of a model may behave differently against the next — subtly, in ways that don't trigger obvious errors but shift the output distribution in directions nobody intended. Catching this requires evaluation: running your prompts against a test set and comparing outputs across model versions.
+Le problème plus invisible, c'est le prompt qui dérive sans que personne ne le remarque. Personne n'a changé le fichier. Le modèle a changé. Un system prompt qui était calibré contre une version d'un modèle peut se comporter différemment contre la suivante — subtilement, d'une façon qui ne déclenche pas d'erreurs évidentes mais qui décale la distribution des outputs dans des directions que personne n'avait prévues. Attraper ça exige de l'évaluation : faire tourner tes prompts contre un jeu de test et comparer les outputs entre les versions de modèles.
 
-Treat the prompt as source code. It has the same fragility, the same need for documentation, and the same capacity to become unmaintainable if you don't take care of it from the start.
+Traite le prompt comme du code source. Il a la même fragilité, le même besoin de documentation, et la même capacité à devenir immaintable si tu n'en prends pas soin dès le début.
 
-What's not versioned is already lost.
+Ce qui n'est pas versionné est déjà perdu.

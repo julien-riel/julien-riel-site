@@ -3,19 +3,19 @@ title: "31. Les petits agents battent les gros agents"
 date: 2026-04-09
 tags:
   - building-agentic-systems
-description: "The instinct when building agentic systems is to make the agent capable of everything."
+description: "L'instinct quand on construit des systèmes agentic, c'est de rendre l'agent capable de tout."
 ---
 
-The instinct when building agentic systems is to make the agent capable of everything. One agent, one prompt, all the tools, all the tasks. It seems efficient. It's actually a trap.
+L'instinct quand on construit des systèmes agentic, c'est de rendre l'agent capable de tout. Un seul agent, un seul prompt, tous les tools, toutes les tâches. Ça semble efficace. C'est en fait un piège.
 
-Big agents are hard to reason about. When a single agent is responsible for understanding the user's intent, retrieving relevant information, calling external APIs, formatting output, and handling errors, you've created a system where any failure could be caused by anything. Debugging becomes archaeology. You dig through logs trying to figure out which part of the agent's reasoning went wrong, and often you can't tell, because the failure is somewhere in the middle of a long chain of decisions the agent made without explaining itself.
+Les gros agents sont difficiles à raisonner. Quand un seul agent est responsable de comprendre l'intention de l'utilisateur, de récupérer l'information pertinente, d'appeler des APIs externes, de formater la sortie et de gérer les erreurs, tu as créé un système où n'importe quelle défaillance peut être causée par n'importe quoi. Le debug devient de l'archéologie. Tu fouilles dans les logs en essayant de comprendre quelle partie du raisonnement de l'agent a déraillé, et souvent tu ne peux pas le dire, parce que la défaillance est quelque part au milieu d'une longue chaîne de décisions que l'agent a prises sans s'expliquer.
 
-Small agents have a narrower job. A classifier that determines task type. A retriever that pulls relevant context. A generator that drafts output. A validator that checks it. Each one does one thing and is testable in isolation. When something breaks, you know where to look. When you want to improve performance, you know what to change without worrying about breaking something else.
+Les petits agents ont un job plus étroit. Un classificateur qui détermine le type de tâche. Un retriever qui tire le contexte pertinent. Un générateur qui rédige la sortie. Un validateur qui la vérifie. Chacun fait une chose et est testable isolément. Quand quelque chose casse, tu sais où regarder. Quand tu veux améliorer la performance, tu sais quoi changer sans te soucier de casser autre chose.
 
-This mirrors everything we already know about software design. Small, focused functions are easier to test than large, sprawling ones. The same principle applies here — the unit of composition in an agentic system is the agent, and small units compose better than large ones.
+Ça reflète tout ce qu'on sait déjà sur le design logiciel. Les petites fonctions ciblées sont plus faciles à tester que les grosses fonctions tentaculaires. Le même principe s'applique ici — l'unité de composition dans un système agentic est l'agent, et les petites unités se composent mieux que les grosses.
 
-The practical objection is latency: multiple agents in sequence means multiple model calls, and model calls are slow. That's real. But it's often overweighted. A pipeline of three small agents that reliably produces correct output is usually better than one big agent that's fast but wrong fifteen percent of the time and opaque when it fails. Reliability compounds in ways latency doesn't.
+L'objection pratique, c'est la latence : plusieurs agents en séquence veut dire plusieurs appels au modèle, et les appels au modèle sont lents. C'est réel. Mais c'est souvent surpondéré. Une pipeline de trois petits agents qui produit de manière fiable une sortie correcte vaut généralement mieux qu'un gros agent qui est rapide mais qui se trompe quinze pour cent du temps et qui est opaque quand il échoue. La fiabilité se compose d'une façon que la latence ne fait pas.
 
-There's also a context window argument for small agents. A focused agent needs focused context — a smaller, more precise slice of information. A big agent accumulates context across multiple sub-tasks, burns through the window, and starts losing important information from earlier in the conversation. Small agents reset cleanly between tasks.
+Il y a aussi un argument context window en faveur des petits agents. Un agent focalisé a besoin d'un contexte focalisé — une tranche d'information plus petite et plus précise. Un gros agent accumule du contexte à travers plusieurs sous-tâches, brûle la window et commence à perdre des informations importantes du début de la conversation. Les petits agents repartent proprement entre les tâches.
 
-Start with the smallest agent that could possibly work. Make it bigger only when the seams start to show.
+Commence avec le plus petit agent qui pourrait fonctionner. Rends-le plus gros seulement quand les coutures commencent à se voir.

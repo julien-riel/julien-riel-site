@@ -3,17 +3,17 @@ title: "11. Donnez à votre agent un rôle, pas juste une tâche"
 date: 2026-04-09
 tags:
   - working-with-agents
-description: "There's a difference between telling an agent what to do and telling an agent what it is."
+description: "Il y a une différence entre dire à un agent ce qu'il doit faire et lui dire ce qu'il est."
 ---
 
-There's a difference between telling an agent what to do and telling an agent what it is. "Summarize this document" is a task. "You are a senior technical writer summarizing internal documentation for a non-technical audience" is a role. The role produces better results — not because of magic words, but because it loads a coherent set of behaviors, constraints, and priorities that the model can apply consistently across everything the task requires.
+Il y a une différence entre dire à un agent ce qu'il doit faire et lui dire ce qu'il est. « Résume ce document » est une tâche. « Tu es un rédacteur technique senior qui résume de la documentation interne pour un public non technique » est un rôle. Le rôle produit de meilleurs résultats — pas grâce à des mots magiques, mais parce qu'il charge un ensemble cohérent de comportements, de contraintes et de priorités que le modèle peut appliquer de façon constante à tout ce que la tâche exige.
 
-Roles work because language models are trained on human-generated text, which is full of role-specific behavior. The way a lawyer reads a contract is different from the way an engineer reads one. The way a copy editor approaches a paragraph is different from the way a developer does. When you assign a role, you're not just setting a tone — you're activating a cluster of domain-specific behaviors that the model has learned from examples of people in that role doing that kind of work.
+Les rôles fonctionnent parce que les LLM sont entraînés sur du texte produit par des humains, qui est rempli de comportements spécifiques à des rôles. La façon dont un avocat lit un contrat est différente de celle d'un ingénieur. La façon dont un correcteur aborde un paragraphe est différente de celle d'un développeur. Quand tu assignes un rôle, tu ne fixes pas juste un ton — tu actives un ensemble de comportements propres à un domaine que le modèle a appris à partir d'exemples de personnes occupant ce rôle et faisant ce type de travail.
 
-The practical difference is visible in edge cases. Give an agent the task "review this code for bugs" and it will find bugs. Give it the role "you are a senior engineer doing a security-focused code review before a production deployment" and it will find different bugs — it will weight differently, flag differently, and explain its findings in a way that's calibrated to what a security-conscious senior engineer would care about. The task is the same. The lens is different.
+La différence concrète est visible dans les cas limites. Donne à un agent la tâche « révise ce code pour y trouver des bugs » et il trouvera des bugs. Donne-lui le rôle « tu es un ingénieur senior qui fait une code review axée sécurité avant un déploiement en production » et il trouvera des bugs différents — il pondérera différemment, signalera différemment, et expliquera ses trouvailles d'une façon calibrée sur ce qui importerait à un senior soucieux de sécurité. La tâche est la même. L'angle est différent.
 
-Roles also provide a consistent fallback for situations the task specification didn't anticipate. If you've told the agent it's a technical writer for a non-technical audience, and the document contains jargon you didn't explicitly tell it to simplify, it has a principle for handling that case. Without the role, it has to guess. Guessing is where inconsistency lives.
+Les rôles fournissent aussi un repli cohérent pour les situations que la spécification de la tâche n'avait pas anticipées. Si tu as dit à l'agent qu'il est rédacteur technique pour un public non technique, et que le document contient du jargon que tu ne lui as pas explicitement dit de simplifier, il a un principe pour gérer ce cas. Sans le rôle, il doit deviner. C'est dans la devinette que vit l'inconsistance.
 
-The failure mode is roles that are too vague to be useful — "you are a helpful assistant who is good at many things" doesn't give the model anything to work with. Useful roles are specific about domain, audience, and the values that should guide tradeoffs. Not just what the agent is, but how it thinks.
+Le mode d'échec, ce sont les rôles trop vagues pour être utiles — « tu es un assistant serviable qui est bon à beaucoup de choses » ne donne rien au modèle sur quoi travailler. Les rôles utiles sont précis sur le domaine, le public et les valeurs qui doivent guider les arbitrages. Pas seulement ce qu'est l'agent, mais comment il pense.
 
-Tell the agent what it is. The task follows from the role.
+Dis à l'agent ce qu'il est. La tâche découle du rôle.

@@ -3,15 +3,15 @@ title: "80. Ne laissez pas l'assistant piloter l'architecture"
 date: 2026-04-09
 tags:
   - developer-as-user
-description: "The assistant is excellent at implementing decisions."
+description: "L'assistant est excellent pour implémenter des décisions."
 ---
 
-The assistant is excellent at implementing decisions. It is not the right entity to make them. This distinction collapses quickly in practice — you ask for an implementation, the implementation implies an architecture, you accept the implementation, and the architecture is now in your codebase without having been deliberately chosen.
+L'assistant est excellent pour implémenter des décisions. Ce n'est pas la bonne entité pour les prendre. Cette distinction s'effondre rapidement en pratique — tu demandes une implémentation, l'implémentation implique une architecture, tu acceptes l'implémentation, et l'architecture est maintenant dans ton codebase sans avoir été choisie délibérément.
 
-The failure mode is subtle because the assistant's architectural choices are usually reasonable. It picks well-known patterns, uses standard abstractions, makes conventional decisions. The problem isn't that the choices are bad in the abstract — it's that they might not be right for your specific context, your team's conventions, your system's constraints, your long-term direction. The assistant doesn't know any of that unless you've told it, and architectural decisions are exactly the kind of thing that's hard to fully specify in a prompt.
+Le mode d'échec est subtil parce que les choix architecturaux de l'assistant sont généralement raisonnables. Il prend des patterns bien connus, utilise des abstractions standards, fait des décisions conventionnelles. Le problème n'est pas que les choix sont mauvais dans l'absolu — c'est qu'ils ne sont peut-être pas les bons pour ton contexte spécifique, les conventions de ton équipe, les contraintes de ton système, ta direction à long terme. L'assistant ne sait rien de tout ça à moins que tu le lui aies dit, et les décisions architecturales sont exactement le genre de chose qu'il est difficile de spécifier complètement dans un prompt.
 
-The practical rule is to make the architectural decision before you prompt, not after. Before asking the assistant to implement a new feature, decide how it should fit into the existing structure. Before asking it to add a new module, decide where that module belongs and how it communicates with its neighbors. The prompt should specify the architecture. The assistant should implement it.
+La règle pratique est de prendre la décision architecturale avant de prompter, pas après. Avant de demander à l'assistant d'implémenter une nouvelle fonctionnalité, décide comment elle devrait s'insérer dans la structure existante. Avant de lui demander d'ajouter un nouveau module, décide où ce module appartient et comment il communique avec ses voisins. Le prompt devrait spécifier l'architecture. L'assistant devrait l'implémenter.
 
-When you're not sure what the right architecture is — which is often — that's a signal to do the design work first, not to delegate it to the assistant. Ask the assistant to help you think through options, describe the tradeoffs, identify the constraints you might be missing. Use it as a thinking partner in the design process. But make the decision yourself, explicitly, before the code exists.
+Quand tu n'es pas sûr de quelle est la bonne architecture — ce qui est souvent le cas — c'est un signal qu'il faut faire le travail de design en premier, pas de le déléguer à l'assistant. Demande à l'assistant de t'aider à réfléchir aux options, décrire les compromis, identifier les contraintes que tu pourrais manquer. Utilise-le comme partenaire de réflexion dans le processus de design. Mais prends la décision toi-même, explicitement, avant que le code n'existe.
 
-The assistant builds what you give it to build. Make sure you're the one deciding what to build.
+L'assistant construit ce que tu lui donnes à construire. Assure-toi que c'est toi qui décides quoi construire.
