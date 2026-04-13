@@ -3,7 +3,7 @@ layout: base.njk
 ---
 {# Generate TOC and related posts #}
 {% set toc = content | toc %}
-{% set relatedPosts = page.url | relatedPosts(tags, collections) %}
+{% set relatedPosts = page.url | relatedContent(tags, currentLang, collections, 4) %}
 
 <article class="post">
   <header class="post-header">

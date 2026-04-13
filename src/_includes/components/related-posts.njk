@@ -3,8 +3,14 @@
   <h2 class="related-posts-title">{{ t.post.related }}</h2>
   <ul class="related-posts-list">
     {% for post in relatedPosts %}
+    {% set sectionLabel = "" %}
+    {% if "/posts/" in post.url %}{% set sectionLabel = t.post.sectionEssay %}
+    {% elif "/articles/" in post.url %}{% set sectionLabel = t.post.sectionArticle %}
+    {% elif "/case-studies/" in post.url %}{% set sectionLabel = t.post.sectionCaseStudy %}
+    {% endif %}
     <li class="related-post-item">
       <a href="{{ post.url }}">
+        {% if sectionLabel %}<span class="related-post-section">{{ sectionLabel }}</span>{% endif %}
         <span class="related-post-title">{{ post.data.title }}</span>
       </a>
     </li>

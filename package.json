@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "npm run clean && eleventy",
+    "build": "npm run clean && eleventy && node scripts/generate-feed.js",
     "build:prod": "NODE_ENV=production npm run build",
     "clean": "rm -rf _site",
     "preview": "npx serve _site -p 3000",

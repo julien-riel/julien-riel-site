@@ -30,6 +30,9 @@
   {# Canonical URL #}
   <link rel="canonical" href="{{ metadata.url }}{{ page.url }}">
 
+  {# RSS / Atom feed — absolute URL avoids Vite asset rewriting #}
+  <link rel="alternate" type="application/atom+xml" title="{{ metadata.title }} — {% if currentLang == 'en' %}Feed{% else %}Flux{% endif %}" href="{{ metadata.url }}{% if currentLang == 'en' %}/en/feed.xml{% else %}/feed.xml{% endif %}">
+
   {# Preconnect to Google Fonts for faster loading #}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

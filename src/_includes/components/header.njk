@@ -20,6 +20,12 @@
         <a href="{{ langPrefix }}/case-studies/" role="menuitem"{% if page.url.includes('/case-studies/') %} aria-current="page"{% endif %}>{{ t.nav.caseStudies }}</a>
       </li>
       <li class="nav-item" role="none">
+        <a href="/tags/" role="menuitem"{% if page.url.includes('/tags/') %} aria-current="page"{% endif %}>{{ t.nav.tags }}</a>
+      </li>
+      <li class="nav-item" role="none">
+        <a href="{{ langPrefix }}/reading-guide/" role="menuitem"{% if page.url.includes('/reading-guide/') %} aria-current="page"{% endif %}>{{ t.nav.readingGuide }}</a>
+      </li>
+      <li class="nav-item" role="none">
         {% if currentLang == "fr" %}
           <a href="/en{{ page.url }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
         {% else %}

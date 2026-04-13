@@ -67,6 +67,56 @@ function getRelatedPosts(currentUrl, currentTags, allPosts, limit = 3) {
     .map((item) => item.post);
 }
 
+/**
+ * Gets related content across essays, articles, and case studies.
+ * Ranks by shared tags; ties broken by section diversity so the "See also"
+ * block tends to span multiple sections rather than pile up in one.
+ */
+const STRUCTURAL_TAGS = new Set(["posts", "articles", "case-studies"]);
+
+function getRelatedContent(currentUrl, currentTags, currentLang, collections, limit = 4) {
+  const postTags = (currentTags || []).filter((t) => !STRUCTURAL_TAGS.has(t));
+  if (postTags.length === 0) return [];
+
+  const pools = [
+    { section: "posts", items: collections.posts || [] },
+    { section: "articles", items: collections.articles || [] },
+    { section: "case-studies", items: collections["case-studies"] || [] },
+  ];
+
+  const candidates = [];
+  for (const { section, items } of pools) {
+    for (const p of items) {
+      if (p.url === currentUrl) continue;
+      if (p.data.draft) continue;
+      if (currentLang && p.data.lang !== currentLang) continue;
+      const pTags = (p.data.tags || []).filter((t) => !STRUCTURAL_TAGS.has(t));
+      const score = postTags.filter((t) => pTags.includes(t)).length;
+      if (score > 0) candidates.push({ post: p, score, section });
+    }
+  }
+
+  candidates.sort((a, b) => b.score - a.score);
+
+  // Section-aware selection: walk the sorted list and prefer items from sections
+  // not yet represented, until each section has one, then fill remaining slots.
+  const seenSections = new Set();
+  const picked = [];
+  for (const c of candidates) {
+    if (picked.length >= limit) break;
+    if (!seenSections.has(c.section)) {
+      picked.push(c);
+      seenSections.add(c.section);
+    }
+  }
+  for (const c of candidates) {
+    if (picked.length >= limit) break;
+    if (!picked.includes(c)) picked.push(c);
+  }
+
+  return picked.map((c) => c.post);
+}
+
 export default function(eleventyConfig) {
   // Configure markdown-it with anchor plugin
   const mdOptions = {
@@ -253,6 +303,11 @@ export default function(eleventyConfig) {
   eleventyConfig.addFilter("relatedPosts", function(url, tags, collections, limit = 3) {
     const allPosts = collections.posts || [];
     return getRelatedPosts(url, tags, allPosts, limit);
+  });
+
+  // Filter: get related content across essays, articles, and case studies
+  eleventyConfig.addFilter("relatedContent", function(url, tags, lang, collections, limit = 4) {
+    return getRelatedContent(url, tags, lang, collections, limit);
   });
 
   // Filter: filter posts by tag

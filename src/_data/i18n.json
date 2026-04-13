@@ -3,7 +3,10 @@
     "nav": {
       "essays": "Essais",
       "articles": "Articles",
-      "caseStudies": "Études de cas"
+      "caseStudies": "Études de cas",
+      "tags": "Sujets",
+      "readingGuide": "Guide de lecture",
+      "about": "À propos"
     },
     "home": {
       "title": "Accueil",
@@ -13,7 +16,7 @@
       "explore": "Explorer",
       "exploreEssays": "97 courts essais sur les principes fondamentaux de la programmation agentique",
       "exploreArticles": "Guides techniques approfondis sur le RAG, les évaluations, le prompting et les architectures multi-agents",
-      "exploreCaseStudies": "Analyses détaillées de WHOOP Coach et Cursor — comment ils ont construit leurs systèmes agentiques"
+      "exploreCaseStudies": "Analyses détaillées de WHOOP Coach, Cursor, Duolingo et Klarna — succès, transformations et échecs instructifs"
     },
     "sections": {
       "essaysIntroP1": "Ce livre est une collection de 97 courts essais, chacun construit autour d'une seule idée. Pas de chapitres qui dépendent des précédents. Pas d'argument progressif qui exige de commencer au début. Ouvrez n'importe où et trouvez quelque chose d'utile.",
@@ -26,7 +29,10 @@
     },
     "post": {
       "contents": "Sommaire",
-      "related": "Articles connexes",
+      "related": "Voir aussi",
+      "sectionEssay": "Essai",
+      "sectionArticle": "Article",
+      "sectionCaseStudy": "Étude de cas",
       "previous": "Précédent",
       "next": "Suivant",
       "minRead": "min de lecture",
@@ -54,7 +60,10 @@
     "nav": {
       "essays": "Essays",
       "articles": "Articles",
-      "caseStudies": "Case Studies"
+      "caseStudies": "Case Studies",
+      "tags": "Topics",
+      "readingGuide": "Reading Guide",
+      "about": "About"
     },
     "home": {
       "title": "Home",
@@ -64,7 +73,7 @@
       "explore": "Explore",
       "exploreEssays": "97 short essays on the foundational principles of agentic programming",
       "exploreArticles": "In-depth technical guides on RAG, evaluations, prompting, and multi-agent architectures",
-      "exploreCaseStudies": "Detailed analyses of WHOOP Coach and Cursor — how they built their agentic systems"
+      "exploreCaseStudies": "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures"
     },
     "sections": {
       "essaysIntroP1": "This book is a collection of 97 short essays, each built around a single idea. No chapters that depend on chapters before them. No progressive argument that requires you to start at the beginning. Open anywhere and find something useful.",
@@ -77,7 +86,10 @@
     },
     "post": {
       "contents": "Contents",
-      "related": "Related",
+      "related": "See also",
+      "sectionEssay": "Essay",
+      "sectionArticle": "Article",
+      "sectionCaseStudy": "Case study",
       "previous": "Previous",
       "next": "Next",
       "minRead": "min read",
