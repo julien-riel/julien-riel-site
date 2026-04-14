@@ -6,8 +6,11 @@
   },
   "url": "https://julien-riel.com",
   "author": {
-    "name": "Julien Riel",
-    "email": "contact@julien-riel.com"
+    "name": "Julien Riel"
+  },
+  "social": {
+    "linkedin": "https://www.linkedin.com/in/julien-riel-0833523a/",
+    "github": "https://github.com/julien-riel"
   },
   "language": "fr"
 }

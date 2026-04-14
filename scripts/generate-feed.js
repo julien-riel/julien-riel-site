@@ -4,7 +4,6 @@ import path from "path";
 const siteUrl = "https://julien-riel.com";
 const siteTitle = "Julien Riel";
 const authorName = "Julien Riel";
-const authorEmail = "contact@julien-riel.com";
 
 const parseFrontmatter = (raw) => {
   const m = raw.match(/^---\n([\s\S]*?)\n---/);
@@ -73,7 +72,6 @@ const renderFeed = (lang, entries, subtitle) => {
   <id>${siteUrl}${homePath}</id>
   <author>
     <name>${authorName}</name>
-    <email>${authorEmail}</email>
   </author>
 ${entryXml}
 </feed>
