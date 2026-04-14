@@ -4,8 +4,83 @@
    Colors: Copper/Amber + Teal + Warm Cream
    ========================================================================== */
 
-/* Google Fonts - loaded via preload in HTML for performance */
-/* font-display: swap ensures text is visible during font load */
+/* ==========================================================================
+   Self-hosted fonts (@font-face)
+   font-display: swap keeps text visible while fonts load.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/dm-serif-display-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/dm-serif-display-400-italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/assets/fonts/outfit-300.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/outfit-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/outfit-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/outfit-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+}
 
 /* ==========================================================================
    CSS Custom Properties
@@ -180,17 +255,6 @@ a:hover {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-/* ==========================================================================
-   Layout Container
-   ========================================================================== */
-
-.container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
 }
 
 /* ==========================================================================
@@ -541,34 +605,6 @@ main {
   min-height: 60vh;
 }
 
-/* ==========================================================================
-   Posts Section (Homepage)
-   ========================================================================== */
-
-.posts-section {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-3xl) var(--space-lg);
-}
-
-.posts-section h2 {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 400;
-  margin-bottom: var(--space-2xl);
-  color: var(--color-text);
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
-.posts-section h2::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-border), transparent);
-}
-
 .post-list {
   list-style: none;
   display: grid;
@@ -695,118 +731,6 @@ main {
   color: var(--color-primary);
   font-style: normal;
   font-weight: 500;
-}
-
-/* ==========================================================================
-   Parts Grid (kept for Essays listing page)
-   ========================================================================== */
-
-.parts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-xl);
-}
-
-@media (min-width: 768px) {
-  .parts-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .parts-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.part-card {
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  transition: box-shadow var(--transition-base), border-color var(--transition-base);
-}
-
-.part-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-primary-light);
-}
-
-.part-card-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 400;
-  color: var(--color-primary);
-  margin-bottom: var(--space-sm);
-}
-
-.part-card-desc {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-  margin-bottom: var(--space-md);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border-light);
-}
-
-.part-card-articles {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-.part-card-articles li {
-  margin-bottom: var(--space-xs);
-}
-
-.part-card-articles a {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  padding: var(--space-xs) 0;
-  text-decoration: none;
-  transition: color var(--transition-fast);
-  line-height: 1.4;
-}
-
-.part-card-articles a:hover {
-  color: var(--color-primary);
-}
-
-/* ==========================================================================
-   Case Studies Section (Homepage)
-   ========================================================================== */
-
-.case-studies-section {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
-}
-
-.case-studies-section > h2 {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 400;
-  margin-bottom: var(--space-md);
-  color: var(--color-text);
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
-.case-studies-section > h2::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-border), transparent);
-}
-
-.case-studies-intro {
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-xl);
-  font-size: 1.05rem;
 }
 
 /* ==========================================================================
@@ -2431,10 +2355,6 @@ main {
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 0 var(--space-md);
-  }
-
   .post {
     padding: var(--space-xl) var(--space-md);
   }
@@ -2498,15 +2418,164 @@ main {
     font-size: 1rem;
   }
 
-  .posts-section {
-    padding: var(--space-xl) var(--space-md);
-  }
-
   .post-card {
     padding: var(--space-lg);
   }
 
   .nav-container {
     padding: var(--space-md);
+  }
+}
+
+/* ==========================================================================
+   Print styles
+   Optimized for long-form reading: hide chrome, serif on white,
+   show URLs after external links, avoid orphan page breaks.
+   ========================================================================== */
+
+@media print {
+  /* Reset to ink-friendly defaults */
+  :root {
+    --color-bg: #ffffff;
+    --color-bg-elevated: #ffffff;
+    --color-text: #000000;
+    --color-text-secondary: #222222;
+    --color-text-muted: #444444;
+    --color-primary: #000000;
+    --color-border: #cccccc;
+    --color-border-light: #dddddd;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  /* Hide site chrome and interactive elements */
+  .site-header,
+  .site-footer,
+  .nav-container,
+  .nav-menu,
+  .nav-toggle,
+  .skip-link,
+  .post-sidebar,
+  .essay-nav,
+  .related-posts,
+  .search-container,
+  .copy-button,
+  .lang-switch,
+  .header-anchor,
+  .post-card-tags,
+  .hero-decoration {
+    display: none !important;
+  }
+
+  main,
+  .post,
+  .post-layout,
+  .post-content {
+    display: block !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  /* Title block */
+  .post-title {
+    font-size: 22pt;
+    margin: 0 0 0.4em 0;
+    color: #000000;
+  }
+
+  .post-meta {
+    font-size: 9pt;
+    color: #555555;
+    margin-bottom: 1.5em;
+  }
+
+  /* Body typography */
+  .post-content {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #000000;
+  }
+
+  .post-content h2 {
+    font-size: 15pt;
+    margin-top: 1.4em;
+    page-break-after: avoid;
+  }
+
+  .post-content h3 {
+    font-size: 12pt;
+    margin-top: 1.2em;
+    page-break-after: avoid;
+  }
+
+  .post-content p,
+  .post-content li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .post-content pre,
+  .post-content blockquote,
+  .post-content img,
+  .post-content figure,
+  .post-content table {
+    page-break-inside: avoid;
+  }
+
+  .post-content pre {
+    border: 1px solid #cccccc;
+    background: #f5f5f5 !important;
+    color: #000000;
+    font-size: 9pt;
+    padding: 0.6em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .post-content code {
+    background: #f0f0f0 !important;
+    color: #000000;
+    border: 1px solid #dddddd;
+  }
+
+  /* Links: keep readable in print; show URL after external links only */
+  a,
+  a:visited {
+    color: #000000;
+    text-decoration: underline;
+  }
+
+  .post-content a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555555;
+    word-break: break-all;
+  }
+
+  /* Avoid printing decorative URL after fragment or mail links */
+  .post-content a[href^="#"]::after,
+  .post-content a[href^="mailto:"]::after {
+    content: "";
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 18mm 16mm;
   }
 }

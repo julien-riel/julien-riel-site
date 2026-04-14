@@ -455,6 +455,21 @@ export default function(eleventyConfig) {
   // Copy static assets
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
+  // Self-hosted fonts: copy specific woff2 files from @fontsource packages
+  const fontFiles = {
+    "node_modules/@fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2": "assets/fonts/dm-serif-display-400.woff2",
+    "node_modules/@fontsource/dm-serif-display/files/dm-serif-display-latin-400-italic.woff2": "assets/fonts/dm-serif-display-400-italic.woff2",
+    "node_modules/@fontsource/outfit/files/outfit-latin-300-normal.woff2": "assets/fonts/outfit-300.woff2",
+    "node_modules/@fontsource/outfit/files/outfit-latin-400-normal.woff2": "assets/fonts/outfit-400.woff2",
+    "node_modules/@fontsource/outfit/files/outfit-latin-500-normal.woff2": "assets/fonts/outfit-500.woff2",
+    "node_modules/@fontsource/outfit/files/outfit-latin-600-normal.woff2": "assets/fonts/outfit-600.woff2",
+    "node_modules/@fontsource/outfit/files/outfit-latin-700-normal.woff2": "assets/fonts/outfit-700.woff2",
+    "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2": "assets/fonts/jetbrains-mono-400.woff2",
+    "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2": "assets/fonts/jetbrains-mono-500.woff2",
+    "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2": "assets/fonts/jetbrains-mono-600.woff2",
+  };
+  eleventyConfig.addPassthroughCopy(fontFiles);
+
   // Watch CSS and JS files
   eleventyConfig.addWatchTarget("src/assets/");
 

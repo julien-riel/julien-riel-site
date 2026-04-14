@@ -30,19 +30,27 @@
   {# Canonical URL #}
   <link rel="canonical" href="{{ metadata.url }}{{ page.url }}">
 
+  {# hreflang alternates — tells Google which URL to serve per locale.
+     Skipped for pages without a translated counterpart (tags are shared). #}
+  {% if "/tags/" not in page.url %}
+    {% if currentLang == "en" %}
+      {% set frUrl = page.url | replace("/en/", "/") %}
+      {% set enUrl = page.url %}
+    {% else %}
+      {% set frUrl = page.url %}
+      {% set enUrl = "/en" + page.url %}
+    {% endif %}
+    <link rel="alternate" hreflang="fr" href="{{ metadata.url }}{{ frUrl }}">
+    <link rel="alternate" hreflang="en" href="{{ metadata.url }}{{ enUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ metadata.url }}{{ frUrl }}">
+  {% endif %}
+
   {# RSS / Atom feed — absolute URL avoids Vite asset rewriting #}
   <link rel="alternate" type="application/atom+xml" title="{{ metadata.title }} — {% if currentLang == 'en' %}Feed{% else %}Flux{% endif %}" href="{{ metadata.url }}{% if currentLang == 'en' %}/en/feed.xml{% else %}/feed.xml{% endif %}">
 
-  {# Preconnect to Google Fonts for faster loading #}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  {# Preload critical fonts with font-display: swap #}
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap">
-  </noscript>
+  {# Preload critical fonts (self-hosted) — body + display for fast first paint #}
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/outfit-400.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-serif-display-400.woff2" crossorigin>
 
   {# Styles #}
   <link rel="stylesheet" href="/assets/css/main.css">
