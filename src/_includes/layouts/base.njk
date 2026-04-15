@@ -55,6 +55,8 @@
   {# Styles #}
   <link rel="stylesheet" href="/assets/css/main.css">
 
+  {% include "components/analytics.njk" %}
+
   {# JSON-LD Structured Data #}
   {% if layout == 'post.njk' %}
   <script type="application/ld+json">
@@ -110,6 +112,7 @@
   </main>
 
   {% include "components/footer.njk" %}
+  {% include "components/consent-banner.njk" %}
 
   <script type="module" src="/assets/js/main.js"></script>
 </body>

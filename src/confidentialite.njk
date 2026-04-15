@@ -1,0 +1,53 @@
+---
+layout: page
+title: Politique de confidentialité
+description: Comment ce site utilise les cookies et traite vos données personnelles conformément au RGPD.
+permalink: /confidentialite/
+lang: fr
+eleventyExcludeFromCollections: true
+---
+
+<div class="page-content">
+  <p><em>Dernière mise à jour : {{ "now" | dateFormat("long", "fr") }}</em></p>
+
+  <h2>Qui est responsable du traitement</h2>
+  <p>Le responsable du traitement est {{ metadata.author.name }}, éditeur de ce site personnel ({{ metadata.url }}). Pour toute question relative à vos données, écrivez à <a href="mailto:{{ metadata.contact.privacy }}">{{ metadata.contact.privacy }}</a>.</p>
+
+  <h2>Quelles données sont collectées</h2>
+  <p>Ce site n'utilise aucun formulaire, ne demande pas de compte, et ne collecte aucune donnée personnelle en dehors de ce qui est décrit ci-dessous.</p>
+  <p>Si vous donnez votre consentement via le bandeau affiché à votre première visite, le site charge <strong>Google Analytics 4</strong> (Google Ireland Ltd.), qui dépose des cookies et collecte les informations suivantes :</p>
+  <ul>
+    <li>Pages consultées, durée, profondeur de défilement</li>
+    <li>Clics sur les liens sortants, changement de langue, clic sur le flux RSS</li>
+    <li>Données techniques : type d'appareil, navigateur, système d'exploitation, langue</li>
+    <li>Adresse IP (anonymisée — le dernier octet est tronqué avant stockage)</li>
+  </ul>
+  <p>Aucune donnée n'est utilisée pour de la publicité ciblée. Les signaux publicitaires Google (<em>Google Signals</em>) sont désactivés, tout comme la personnalisation publicitaire.</p>
+
+  <h2>Base légale et finalité</h2>
+  <p>La base légale est votre <strong>consentement</strong> (art. 6-1-a RGPD), recueilli via le bandeau avant tout dépôt de cookie. Tant que vous n'avez pas accepté, aucun cookie d'analyse n'est déposé et aucune donnée n'est envoyée à Google — le <em>Consent Mode v2</em> de Google est configuré en <code>denied</code> par défaut.</p>
+  <p>La finalité est strictement statistique : comprendre quels contenus sont lus, d'où viennent les visiteurs, et quels sujets intéressent les lecteurs afin d'orienter les prochains essais.</p>
+
+  <h2>Cookies déposés</h2>
+  <p>Si vous acceptez, les cookies suivants peuvent être déposés par Google Analytics :</p>
+  <ul>
+    <li><code>_ga</code> : identifiant unique de visiteur — durée 2 ans</li>
+    <li><code>_ga_&lt;ID&gt;</code> : état de session GA4 — durée 2 ans</li>
+  </ul>
+  <p>Aucun cookie de suivi publicitaire, aucun pixel de réseau social, aucun tracker tiers supplémentaire.</p>
+
+  <h2>Transferts hors UE</h2>
+  <p>Google Analytics implique un transfert de données vers les États-Unis. Google s'appuie sur le <em>Data Privacy Framework</em> UE-États-Unis et sur les clauses contractuelles types de la Commission européenne pour encadrer ces transferts.</p>
+
+  <h2>Durée de conservation</h2>
+  <p>Les données d'analyse sont conservées 14 mois par Google Analytics, puis supprimées automatiquement.</p>
+
+  <h2>Vos droits</h2>
+  <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Pour exercer ces droits, écrivez à <a href="mailto:{{ metadata.contact.privacy }}">{{ metadata.contact.privacy }}</a>. Vous pouvez également introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">cnil.fr</a>) ou de votre autorité de protection des données locale.</p>
+
+  <h2>Retirer votre consentement</h2>
+  <p>Vous pouvez retirer votre consentement à tout moment en effaçant les cookies et le <em>localStorage</em> de ce site dans les paramètres de votre navigateur. Le bandeau s'affichera de nouveau à votre prochaine visite.</p>
+
+  <h2>Modifications</h2>
+  <p>Cette politique peut être mise à jour pour refléter des changements techniques ou légaux. La date en haut de page indique la dernière révision.</p>
+</div>

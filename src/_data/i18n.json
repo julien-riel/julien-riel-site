@@ -45,7 +45,16 @@
       "itemsPlural": "éléments",
       "noContent": "Aucun contenu avec ce tag.",
       "langSwitch": "EN",
-      "langSwitchLabel": "English version"
+      "langSwitchLabel": "English version",
+      "privacy": "Confidentialité",
+      "privacyUrl": "/confidentialite/"
+    },
+    "consent": {
+      "message": "Ce site utilise des cookies d'analyse (Google Analytics) pour comprendre comment les lecteurs utilisent le contenu. Aucune donnée n'est partagée avec des tiers à des fins publicitaires.",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "learnMore": "En savoir plus",
+      "ariaLabel": "Bannière de consentement aux cookies"
     },
     "parts": {
       "developer-as-user": { "title": "Partie 6 — Le développeur comme utilisateur", "desc": "Utiliser les assistants de code IA : contexte, architecture, grands projets et contrôle." },
@@ -102,7 +111,16 @@
       "itemsPlural": "items",
       "noContent": "No content with this tag yet.",
       "langSwitch": "FR",
-      "langSwitchLabel": "Version française"
+      "langSwitchLabel": "Version française",
+      "privacy": "Privacy",
+      "privacyUrl": "/en/privacy/"
+    },
+    "consent": {
+      "message": "This site uses analytics cookies (Google Analytics) to understand how readers use the content. No data is shared with third parties for advertising.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "learnMore": "Learn more",
+      "ariaLabel": "Cookie consent banner"
     },
     "parts": {
       "developer-as-user": { "title": "Part 6 — The Developer as User", "desc": "Using AI coding assistants: context, architecture, large projects, and control." },

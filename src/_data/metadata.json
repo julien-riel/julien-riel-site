@@ -12,5 +12,11 @@
     "linkedin": "https://www.linkedin.com/in/julien-riel/",
     "github": "https://github.com/julien-riel"
   },
+  "analytics": {
+    "ga4MeasurementId": "G-0QVJW94154"
+  },
+  "contact": {
+    "privacy": "rgpd@julien-riel.com"
+  },
   "language": "fr"
 }

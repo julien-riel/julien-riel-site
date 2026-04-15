@@ -325,6 +325,13 @@ function initSmoothScroll() {
   });
 }
 
+async function initConsentLazy() {
+  if (!document.getElementById("consent-banner")) return;
+  const { initConsent, initAnalyticsEvents } = await import("./consent.js");
+  initConsent();
+  initAnalyticsEvents();
+}
+
 // Initialize all features when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   // Critical path: initialize immediately
@@ -336,6 +343,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Deferred: load search only if needed, during idle time
   scheduleIdle(() => initSearchLazy(), 1000);
+
+  // Deferred: consent banner + analytics events (non-blocking)
+  scheduleIdle(() => initConsentLazy(), 500);
 
   // Deferred: load diagram libraries during idle time (non-critical)
   scheduleIdle(() => {

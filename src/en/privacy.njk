@@ -1,0 +1,53 @@
+---
+layout: page
+title: Privacy Policy
+description: How this site uses cookies and handles personal data in accordance with GDPR.
+permalink: /en/privacy/
+lang: en
+eleventyExcludeFromCollections: true
+---
+
+<div class="page-content">
+  <p><em>Last updated: {{ "now" | dateFormat("long", "en") }}</em></p>
+
+  <h2>Who is the data controller</h2>
+  <p>The data controller is {{ metadata.author.name }}, publisher of this personal site ({{ metadata.url }}). For any question about your data, write to <a href="mailto:{{ metadata.contact.privacy }}">{{ metadata.contact.privacy }}</a>.</p>
+
+  <h2>What data is collected</h2>
+  <p>This site has no forms, no accounts, and collects no personal data beyond what is described below.</p>
+  <p>If you give consent via the banner shown on your first visit, the site loads <strong>Google Analytics 4</strong> (Google Ireland Ltd.), which sets cookies and collects:</p>
+  <ul>
+    <li>Pages viewed, time on page, scroll depth</li>
+    <li>Outbound link clicks, language switches, RSS clicks</li>
+    <li>Technical data: device type, browser, OS, language</li>
+    <li>IP address (anonymized — last octet truncated before storage)</li>
+  </ul>
+  <p>No data is used for targeted advertising. Google Signals is disabled, and ad personalization is turned off.</p>
+
+  <h2>Legal basis and purpose</h2>
+  <p>The legal basis is your <strong>consent</strong> (GDPR art. 6-1-a), collected through the banner before any cookie is set. Until you accept, no analytics cookies are set and no data is sent to Google — Google's <em>Consent Mode v2</em> is configured as <code>denied</code> by default.</p>
+  <p>The purpose is strictly statistical: understanding which essays are read, where readers come from, and which topics matter — to inform what to write next.</p>
+
+  <h2>Cookies set</h2>
+  <p>If you accept, the following cookies may be set by Google Analytics:</p>
+  <ul>
+    <li><code>_ga</code>: unique visitor identifier — 2 years</li>
+    <li><code>_ga_&lt;ID&gt;</code>: GA4 session state — 2 years</li>
+  </ul>
+  <p>No advertising cookies, no social network pixels, no additional third-party trackers.</p>
+
+  <h2>Transfers outside the EU</h2>
+  <p>Google Analytics involves transfers of data to the United States. Google relies on the EU-US <em>Data Privacy Framework</em> and on the European Commission's Standard Contractual Clauses to frame these transfers.</p>
+
+  <h2>Retention</h2>
+  <p>Analytics data is retained by Google Analytics for 14 months, then automatically deleted.</p>
+
+  <h2>Your rights</h2>
+  <p>Under GDPR, you have the right to access, rectify, erase, restrict, object to, and port your data. To exercise these rights, write to <a href="mailto:{{ metadata.contact.privacy }}">{{ metadata.contact.privacy }}</a>. You may also lodge a complaint with your local data protection authority (in France: <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">CNIL</a>).</p>
+
+  <h2>Withdrawing your consent</h2>
+  <p>You can withdraw consent at any time by clearing this site's cookies and <em>localStorage</em> in your browser settings. The banner will show again on your next visit.</p>
+
+  <h2>Changes</h2>
+  <p>This policy may be updated to reflect technical or legal changes. The date at the top of the page indicates the last revision.</p>
+</div>

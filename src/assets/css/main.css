@@ -2579,3 +2579,75 @@ main {
     margin: 18mm 16mm;
   }
 }
+
+/* ==========================================================================
+   Consent banner (GDPR)
+   ========================================================================== */
+.consent-banner {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  max-width: 44rem;
+  margin-inline: auto;
+  background: var(--color-bg, #fdf8f3);
+  color: var(--color-text, #1a1a1a);
+  border: 1px solid var(--color-border, #d4c4b0);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 1rem 1.25rem;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+.consent-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.consent-banner-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.consent-banner-message {
+  margin: 0;
+  flex: 1 1 20rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.consent-banner-link {
+  color: var(--color-accent, #b8600a);
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+.consent-banner-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.consent-btn {
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  border: 1px solid var(--color-border, #d4c4b0);
+  background: transparent;
+  color: inherit;
+}
+.consent-btn-accept {
+  background: var(--color-accent, #b8600a);
+  color: #fff;
+  border-color: var(--color-accent, #b8600a);
+}
+.consent-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #b8600a);
+  outline-offset: 2px;
+}
+@media (max-width: 480px) {
+  .consent-banner-actions { width: 100%; }
+  .consent-btn { flex: 1; }
+}

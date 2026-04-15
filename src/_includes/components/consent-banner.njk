@@ -1,0 +1,14 @@
+{% if metadata.analytics.ga4MeasurementId %}
+<div id="consent-banner" class="consent-banner" role="dialog" aria-live="polite" aria-label="{{ t.consent.ariaLabel }}" hidden>
+  <div class="consent-banner-inner">
+    <p class="consent-banner-message">
+      {{ t.consent.message }}
+      <a href="{{ t.post.privacyUrl }}" class="consent-banner-link">{{ t.consent.learnMore }}</a>
+    </p>
+    <div class="consent-banner-actions">
+      <button type="button" class="consent-btn consent-btn-decline" data-consent="decline">{{ t.consent.decline }}</button>
+      <button type="button" class="consent-btn consent-btn-accept" data-consent="accept">{{ t.consent.accept }}</button>
+    </div>
+  </div>
+</div>
+{% endif %}

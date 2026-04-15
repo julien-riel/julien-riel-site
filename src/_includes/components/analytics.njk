@@ -1,0 +1,35 @@
+{# Google Analytics 4 with Consent Mode v2 — denied by default (GDPR).
+   Loads gtag.js only if a measurement ID is configured in metadata.json.
+   The consent.js script flips analytics_storage to 'granted' after user accepts. #}
+{% if metadata.analytics.ga4MeasurementId %}
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': 'denied',
+    'functionality_storage': 'denied',
+    'personalization_storage': 'denied',
+    'security_storage': 'granted',
+    'wait_for_update': 500
+  });
+  gtag('set', 'ads_data_redaction', true);
+  gtag('set', 'url_passthrough', false);
+
+  try {
+    if (localStorage.getItem('consent.analytics') === 'granted') {
+      gtag('consent', 'update', { 'analytics_storage': 'granted' });
+    }
+  } catch (e) {}
+
+  gtag('js', new Date());
+  gtag('config', '{{ metadata.analytics.ga4MeasurementId }}', {
+    'anonymize_ip': true,
+    'allow_google_signals': false,
+    'allow_ad_personalization_signals': false
+  });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ metadata.analytics.ga4MeasurementId }}"></script>
+{% endif %}
