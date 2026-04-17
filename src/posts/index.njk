@@ -32,7 +32,7 @@ lang: fr
 
   {% for key in partKeys %}
   <div class="essay-part">
-    <h2 class="essay-part-title">{{ t.parts[key].title }}</h2>
+    <h2 id="{{ key }}" class="essay-part-title">{{ t.parts[key].title }}</h2>
     <p class="essay-part-desc">{{ t.parts[key].desc }}</p>
     <ol class="essay-list">
       {% for post in langPosts %}
