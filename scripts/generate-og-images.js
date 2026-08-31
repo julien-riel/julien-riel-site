@@ -49,6 +49,7 @@ const SECTION_LABELS = {
   posts: { fr: "ESSAI", en: "ESSAY" },
   articles: { fr: "ARTICLE", en: "ARTICLE" },
   "case-studies": { fr: "ÉTUDE DE CAS", en: "CASE STUDY" },
+  home: { fr: "PROGRAMMATION AGENTIQUE", en: "AGENTIC PROGRAMMING" },
 };
 
 const parseFrontmatter = (raw) => {
@@ -300,14 +301,56 @@ const STATIC_CARDS = [
     description: "Courts essais sur la construction, l'utilisation et la compréhension des agents IA.",
     section: "posts",
     lang: "fr",
-    slug: "_home",
+    slug: "_index",
   },
   {
     title: "97 Things Every Agentic Programmer Should Know",
     description: "Short essays on building, using, and thinking clearly about AI agents.",
     section: "posts",
     lang: "en",
-    slug: "_home",
+    slug: "_index",
+  },
+  {
+    title: "Julien Riel",
+    description: "Essais, études de cas et guides techniques sur la programmation agentique.",
+    section: "home",
+    lang: "fr",
+    slug: "_index",
+  },
+  {
+    title: "Julien Riel",
+    description: "Essays, case studies, and technical guides on agentic programming.",
+    section: "home",
+    lang: "en",
+    slug: "_index",
+  },
+  {
+    title: "Articles",
+    description: "Guides techniques approfondis sur le RAG, les évaluations, le prompting et les architectures multi-agents.",
+    section: "articles",
+    lang: "fr",
+    slug: "_index",
+  },
+  {
+    title: "Articles",
+    description: "In-depth technical guides on RAG, evaluations, prompting, and multi-agent architectures.",
+    section: "articles",
+    lang: "en",
+    slug: "_index",
+  },
+  {
+    title: "Études de cas",
+    description: "Analyses détaillées de WHOOP Coach, Cursor, Duolingo et Klarna — succès, transformations et échecs instructifs.",
+    section: "case-studies",
+    lang: "fr",
+    slug: "_index",
+  },
+  {
+    title: "Case Studies",
+    description: "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures.",
+    section: "case-studies",
+    lang: "en",
+    slug: "_index",
   },
 ];
 
