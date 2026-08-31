@@ -1,0 +1,25 @@
+---
+layout: base.njk
+title: Mes projets
+description: Petits outils et expérimentations construits en programmation agentique — utilisables directement dans le navigateur.
+permalink: /projets/
+lang: fr
+---
+
+<div class="sites-page">
+  <header class="page-header">
+    <h1 class="page-title">{{ title }}</h1>
+    <p class="page-description">{{ description }}</p>
+  </header>
+
+  <ul class="sites-grid">
+    {% for projet in projets %}
+    <li class="site-item">
+      <a href="{{ projet.url }}" class="site-link">
+        <span class="site-name">{{ projet.emoji }} {{ projet.name.fr }}</span>
+        <span class="site-description">{{ projet.description.fr }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

@@ -1,0 +1,14 @@
+[
+  {
+    "name": {
+      "fr": "Planificateur de terrasse",
+      "en": "Deck planner"
+    },
+    "description": {
+      "fr": "Un outil de dessin pour planifier l'aménagement d'une terrasse : dalles, meubles, plantes, zoom, aimant à la grille, export JSON et PNG. Une seule page HTML, sans dépendance, construite en paire avec Claude.",
+      "en": "A drawing tool to plan a deck layout: tiles, furniture, plants, zoom, snap-to-grid, JSON and PNG export. A single dependency-free HTML page, built in pair with Claude. French only."
+    },
+    "url": "/projets/planificateur-terrasse/",
+    "emoji": "🪴"
+  }
+]

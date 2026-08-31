@@ -1,0 +1,1344 @@
+---
+permalink: /projets/planificateur-terrasse/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planificateur de terrasse</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%AA%B4%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --accent: #2f6fed;
+    --bord: #d5d9de;
+    --fond: #f4f5f7;
+    --encre: #1f2937;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--encre);
+    display: flex;
+    flex-direction: column;
+    background: var(--fond);
+    overflow: hidden;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 14px;
+    background: #243140;
+    color: #fff;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 16px; font-weight: 600; white-space: nowrap; }
+  .outils { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .outils button {
+    background: #39485c;
+    color: #fff;
+    border: 1px solid #4c5d73;
+    border-radius: 6px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .outils button:hover:not(:disabled) { background: #46586f; }
+  .outils button:disabled { opacity: .45; cursor: default; }
+  .sep { width: 1px; align-self: stretch; background: #4c5d73; margin: 2px 4px; }
+  .case { display: flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; }
+  #zoomLbl { min-width: 52px; text-align: center; font-variant-numeric: tabular-nums; font-size: 13px; }
+  main { flex: 1; display: flex; min-height: 0; }
+  #boite {
+    width: 100px;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 1px solid var(--bord);
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  #boite .titreBoite {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+  #boite .catBoite {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #9aa2ac;
+    text-align: center;
+    margin-top: 8px;
+    border-top: 1px solid #eceef1;
+    padding-top: 6px;
+  }
+  #boite .outil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 7px 2px;
+    background: #fff;
+    border: 1px solid var(--bord);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    color: #4b5563;
+  }
+  #boite .outil:hover { border-color: var(--accent); background: #f0f5ff; }
+  #boite .outil svg { width: 44px; height: 44px; display: block; }
+  #scene-wrap { flex: 1; position: relative; min-width: 0; }
+  #scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #e9ebe6;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    display: block;
+  }
+  .objet { cursor: move; }
+  #panel {
+    width: 272px;
+    overflow-y: auto;
+    background: #fff;
+    border-left: 1px solid var(--bord);
+    padding: 12px;
+    flex-shrink: 0;
+  }
+  #panel section { margin-bottom: 18px; }
+  #panel h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+  .champ { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .champ label { font-size: 13px; color: #374151; }
+  .champ input[type=number] {
+    width: 82px;
+    padding: 4px 6px;
+    border: 1px solid var(--bord);
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: right;
+  }
+  .info { font-size: 12px; color: #6b7280; margin: 4px 0 8px; }
+  .rangee { display: flex; gap: 6px; margin-top: 6px; }
+  .rangee button {
+    flex: 1;
+    padding: 6px 4px;
+    border: 1px solid var(--bord);
+    background: #f8f9fa;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12.5px;
+    color: var(--encre);
+  }
+  .rangee button:hover { border-color: var(--accent); }
+  .rangee button.danger:hover { border-color: #d33; color: #c22; }
+  footer {
+    display: flex;
+    gap: 18px;
+    padding: 5px 14px;
+    background: #fff;
+    border-top: 1px solid var(--bord);
+    font-size: 12px;
+    color: #556;
+    flex-wrap: wrap;
+  }
+  footer #stAide { margin-left: auto; color: #8a93a0; }
+  ul.aide { padding-left: 16px; font-size: 12px; color: #556; display: flex; flex-direction: column; gap: 4px; }
+  kbd {
+    background: #eef1f4;
+    border: 1px solid #d5d9de;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 0 4px;
+    font: 11px ui-monospace, monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/projets/" title="Retour à mes projets" style="color:#9fb3cc;text-decoration:none;font-size:13px;white-space:nowrap;">← julien-riel.com</a>
+  <h1>🪴 Planificateur de terrasse</h1>
+  <div class="outils">
+    <button id="btnUndo" title="Annuler (Ctrl+Z)">↶ Annuler</button>
+    <button id="btnRedo" title="Rétablir (Ctrl+Y)">↷ Rétablir</button>
+    <span class="sep"></span>
+    <button id="btnZoomOut" title="Zoom arrière">−</button>
+    <span id="zoomLbl">100 %</span>
+    <button id="btnZoomIn" title="Zoom avant">+</button>
+    <button id="btnFit" title="Ajuster la vue au plan">Ajuster</button>
+    <span class="sep"></span>
+    <label class="case"><input type="checkbox" id="snapGrid"> Aimanter aux dalles</label>
+    <span class="sep"></span>
+    <button id="btnNew" title="Créer un nouveau plan vide">Nouveau</button>
+    <button id="btnImport" title="Importer un plan (JSON)">Importer…</button>
+    <button id="btnExport" title="Exporter le plan (JSON)">Exporter JSON</button>
+    <button id="btnPng" title="Exporter une image du plan">Exporter PNG</button>
+  </div>
+</header>
+
+<main>
+  <aside id="boite">
+    <div class="titreBoite">Ajouter</div>
+  </aside>
+
+  <div id="scene-wrap">
+    <svg id="scene" xmlns="http://www.w3.org/2000/svg">
+      <g id="worldG">
+        <g id="terraceL"></g>
+        <g id="objectsL"></g>
+        <g id="overlayL"></g>
+      </g>
+    </svg>
+  </div>
+
+  <aside id="panel">
+    <section>
+      <h2>Terrasse</h2>
+      <div class="champ"><label for="inCols">Dalles en largeur</label><input id="inCols" type="number" min="1" max="100" step="1"></div>
+      <div class="champ"><label for="inRows">Dalles en hauteur</label><input id="inRows" type="number" min="1" max="100" step="1"></div>
+      <div class="champ"><label for="inDalle">Côté d'une dalle (po)</label><input id="inDalle" type="number" min="4" max="96" step="1"></div>
+      <p id="terraceInfo" class="info"></p>
+    </section>
+
+    <section id="objSection" hidden>
+      <h2 id="objTitle">Objet</h2>
+      <div class="champ"><label for="inW">Largeur (po)</label><input id="inW" type="number" min="4" max="600" step="1"></div>
+      <div class="champ"><label for="inH">Hauteur (po)</label><input id="inH" type="number" min="4" max="600" step="1"></div>
+      <div class="champ"><label for="inRot">Rotation (°)</label><input id="inRot" type="number" step="5"></div>
+      <p id="objInfo" class="info"></p>
+      <div class="rangee">
+        <button id="btnDup" title="Dupliquer (Ctrl+D)">⧉ Dupliquer</button>
+        <button id="btnDel" class="danger" title="Supprimer (Suppr)">🗑 Supprimer</button>
+      </div>
+      <div class="rangee">
+        <button id="btnFwd" title="Amener l'objet vers l'avant">⬆ Avancer</button>
+        <button id="btnBwd" title="Envoyer l'objet vers l'arrière">⬇ Reculer</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Aide</h2>
+      <ul class="aide">
+        <li>Cliquer un objet : sélectionner</li>
+        <li>Glisser le fond : déplacer la vue</li>
+        <li>Molette : zoom</li>
+        <li><kbd>Suppr</kbd> supprimer l'objet</li>
+        <li><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd> annuler / rétablir</li>
+        <li><kbd>Ctrl</kbd>+<kbd>D</kbd> dupliquer</li>
+        <li><kbd>Flèches</kbd> déplacer de 1 po (<kbd>Maj</kbd> : 6 po)</li>
+        <li><kbd>R</kbd> pivoter de 15°</li>
+        <li><kbd>Maj</kbd> + poignée de rotation : pas de 15°</li>
+        <li><kbd>Échap</kbd> désélectionner</li>
+      </ul>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  <span id="stTerrasse"></span>
+  <span id="stCurseur"></span>
+  <span id="stAide">Le plan est sauvegardé automatiquement dans ce navigateur.</span>
+</footer>
+
+<input type="file" id="fileInput" accept=".json,application/json" hidden>
+
+<script>
+'use strict';
+
+/* ---------- Constantes ---------- */
+
+const LS_KEY = 'planificateur-terrasse-v1';
+const MIN_SIZE = 4;
+const MAX_SIZE = 600;
+const ZOOM_MIN = 0.01;
+const ZOOM_MAX = 60;
+const ZOOM_BASE = 4; /* px par pouce correspondant à 100 % */
+const POS_LIMIT = 20000; /* borne des coordonnées importées, en pouces */
+const CLICK_SLOP = 3; /* seuil en px avant qu'un clic devienne un glissement */
+
+const TYPES = {
+  /* Assises */
+  divan:           { nom: 'Divan',             cat: 'Assises',        w: 84,  h: 36 },
+  chaise:          { nom: 'Chaise',            cat: 'Assises',        w: 24,  h: 24 },
+  chaiseLongue:    { nom: 'Chaise longue',     cat: 'Assises',        w: 28,  h: 78 },
+  banc:            { nom: 'Banc',              cat: 'Assises',        w: 48,  h: 16 },
+  pouf:            { nom: 'Pouf',              cat: 'Assises',        w: 22,  h: 22 },
+  /* Tables */
+  table:           { nom: 'Table',             cat: 'Tables',         w: 60,  h: 36 },
+  tableRonde:      { nom: 'Table ronde',       cat: 'Tables',         w: 48,  h: 48 },
+  tableBasse:      { nom: 'Table basse',       cat: 'Tables',         w: 40,  h: 22 },
+  tableBasseRonde: { nom: 'Table basse ronde', cat: 'Tables',         w: 36,  h: 36 },
+  console:         { nom: 'Console',           cat: 'Tables',         w: 48,  h: 16 },
+  /* Parasols */
+  parasolRond:     { nom: 'Parasol rond',      cat: 'Parasols',       w: 90,  h: 90 },
+  parasolCarre:    { nom: 'Parasol carré',     cat: 'Parasols',       w: 78,  h: 78 },
+  parasolDeporte:  { nom: 'Parasol déporté',   cat: 'Parasols',       w: 100, h: 130 },
+  /* Feu et cuisine */
+  bbq:             { nom: 'Barbecue',          cat: 'Feu et cuisine', w: 52,  h: 26 },
+  foyerRond:       { nom: 'Foyer rond',        cat: 'Feu et cuisine', w: 42,  h: 42 },
+  foyerRect:       { nom: 'Foyer table',       cat: 'Feu et cuisine', w: 50,  h: 30 },
+  /* Rangement */
+  coffre:          { nom: 'Coffre',            cat: 'Rangement',      w: 52,  h: 26 },
+  chariot:         { nom: 'Chariot',           cat: 'Rangement',      w: 34,  h: 20 },
+  /* Divers */
+  gazebo:          { nom: 'Gazebo',            cat: 'Divers',         w: 144, h: 144 },
+  spa:             { nom: 'Spa',               cat: 'Divers',         w: 80,  h: 80 },
+  plante:          { nom: 'Plante',            cat: 'Divers',         w: 18,  h: 18 },
+};
+
+/* ---------- État ---------- */
+
+function defaultState() {
+  return { version: 1, terrasse: { cols: 8, rows: 6, dalle: 24 }, objets: [] };
+}
+
+let state = defaultState();
+let selectedId = null;
+let nextId = 1;
+let view = { scale: ZOOM_BASE, tx: 40, ty: 40 };
+let hist = [];
+let histIx = -1;
+let drag = null;
+
+/* ---------- Références DOM ---------- */
+
+const svg = document.getElementById('scene');
+const worldG = document.getElementById('worldG');
+const terraceL = document.getElementById('terraceL');
+const objectsL = document.getElementById('objectsL');
+const overlayL = document.getElementById('overlayL');
+const boite = document.getElementById('boite');
+const fileInput = document.getElementById('fileInput');
+const inCols = document.getElementById('inCols');
+const inRows = document.getElementById('inRows');
+const inDalle = document.getElementById('inDalle');
+const inW = document.getElementById('inW');
+const inH = document.getElementById('inH');
+const inRot = document.getElementById('inRot');
+const objSection = document.getElementById('objSection');
+const objTitle = document.getElementById('objTitle');
+const objInfo = document.getElementById('objInfo');
+const terraceInfo = document.getElementById('terraceInfo');
+const stTerrasse = document.getElementById('stTerrasse');
+const stCurseur = document.getElementById('stCurseur');
+const zoomLbl = document.getElementById('zoomLbl');
+const btnUndo = document.getElementById('btnUndo');
+const btnRedo = document.getElementById('btnRedo');
+const snapGrid = document.getElementById('snapGrid');
+
+/* ---------- Utilitaires ---------- */
+
+const rad = d => d * Math.PI / 180;
+const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+const nn = v => Math.max(0.4, v); /* évite les dimensions SVG négatives */
+const pi = v => (v / 12).toLocaleString('fr-CA', { maximumFractionDigits: 2 });
+
+function rot2(px, py, ang) {
+  const c = Math.cos(ang), s = Math.sin(ang);
+  return [px * c - py * s, px * s + py * c];
+}
+
+function parseNum(v) {
+  return parseFloat(String(v).replace(',', '.'));
+}
+
+function finiteOr(v, d) {
+  v = Number(v);
+  return Number.isFinite(v) ? v : d;
+}
+
+function clampIntDef(v, min, max, d) {
+  v = Math.round(Number(v));
+  return Number.isFinite(v) ? clamp(v, min, max) : d;
+}
+
+function clampNumDef(v, min, max, d) {
+  v = Number(v);
+  return Number.isFinite(v) ? clamp(v, min, max) : d;
+}
+
+function byId(id) { return state.objets.find(o => o.id === id); }
+function sel() { return selectedId ? byId(selectedId) : null; }
+function selIdx() { return state.objets.findIndex(o => o.id === selectedId); }
+
+function screenToWorld(clientX, clientY) {
+  const r = svg.getBoundingClientRect();
+  return [
+    (clientX - r.left - view.tx) / view.scale,
+    (clientY - r.top - view.ty) / view.scale,
+  ];
+}
+
+function snapStep() {
+  return snapGrid.checked ? state.terrasse.dalle / 2 : 0.5;
+}
+
+/* ---------- Historique et persistance ---------- */
+
+function snapshot() { return JSON.stringify(state); }
+
+function save() {
+  try { localStorage.setItem(LS_KEY, snapshot()); }
+  catch (err) { /* stockage indisponible : on continue sans sauvegarde */ }
+}
+
+function commit() {
+  const s = snapshot();
+  if (histIx >= 0 && hist[histIx] === s) { save(); renderAll(); return; }
+  hist = hist.slice(0, histIx + 1);
+  hist.push(s);
+  if (hist.length > 100) hist.shift();
+  histIx = hist.length - 1;
+  save();
+  renderAll();
+}
+
+/* Les déplacements au clavier sont regroupés en une seule entrée d'historique */
+let keyCommitTimer = 0;
+
+function deferCommit() {
+  clearTimeout(keyCommitTimer);
+  keyCommitTimer = setTimeout(() => { keyCommitTimer = 0; commit(); }, 350);
+  scheduleRender();
+}
+
+function flushPendingCommit() {
+  if (keyCommitTimer) {
+    clearTimeout(keyCommitTimer);
+    keyCommitTimer = 0;
+    commit();
+  }
+}
+
+function loadSnapshot(s) {
+  state = JSON.parse(s);
+  selectedId = null;
+  save();
+  renderAll();
+}
+
+function undo() { flushPendingCommit(); if (histIx > 0) { histIx--; loadSnapshot(hist[histIx]); } }
+function redo() { flushPendingCommit(); if (histIx < hist.length - 1) { histIx++; loadSnapshot(hist[histIx]); } }
+
+function sanitize(d) {
+  if (!d || typeof d !== 'object' || !d.terrasse) {
+    throw new Error('format de plan invalide');
+  }
+  const out = defaultState();
+  const t = d.terrasse;
+  out.terrasse.cols = clampIntDef(t.cols, 1, 100, 8);
+  out.terrasse.rows = clampIntDef(t.rows, 1, 100, 6);
+  out.terrasse.dalle = clampNumDef(t.dalle, 4, 96, 24);
+  const arr = Array.isArray(d.objets) ? d.objets : [];
+  let n = 1;
+  for (const o of arr) {
+    if (!o || typeof o.type !== 'string' || !Object.prototype.hasOwnProperty.call(TYPES, o.type)) continue;
+    out.objets.push({
+      id: 'o' + (n++),
+      type: o.type,
+      x: clampNumDef(o.x, -POS_LIMIT, POS_LIMIT, 0),
+      y: clampNumDef(o.y, -POS_LIMIT, POS_LIMIT, 0),
+      w: clampNumDef(o.w, MIN_SIZE, MAX_SIZE, TYPES[o.type].w),
+      h: clampNumDef(o.h, MIN_SIZE, MAX_SIZE, TYPES[o.type].h),
+      rot: ((finiteOr(o.rot, 0) % 360) + 360) % 360,
+    });
+  }
+  nextId = Math.max(nextId, n);
+  return out;
+}
+
+function loadFromStorage() {
+  try {
+    const s = localStorage.getItem(LS_KEY);
+    if (s) state = sanitize(JSON.parse(s));
+  } catch (err) {
+    console.warn('Plan sauvegardé illisible, plan par défaut utilisé.', err);
+    state = defaultState();
+  }
+}
+
+/* ---------- Dessin des objets ---------- */
+
+function drawShape(type, w, h) {
+  switch (type) {
+    case 'divan': return drawDivan(w, h);
+    case 'chaise': return drawChaise(w, h);
+    case 'chaiseLongue': return drawChaiseLongue(w, h);
+    case 'banc': return drawBanc(w, h);
+    case 'pouf': return drawPouf(w, h);
+    case 'table': return drawTable(w, h);
+    case 'tableRonde': return drawTableRonde(w, h);
+    case 'tableBasse': return drawTableBasse(w, h);
+    case 'tableBasseRonde': return drawTableBasseRonde(w, h);
+    case 'console': return drawConsole(w, h);
+    case 'parasolRond': return drawParasolRond(w, h);
+    case 'parasolCarre': return drawParasolCarre(w, h);
+    case 'parasolDeporte': return drawParasolDeporte(w, h);
+    case 'bbq': return drawBBQ(w, h);
+    case 'foyerRond': return drawFoyerRond(w, h);
+    case 'foyerRect': return drawFoyerRect(w, h);
+    case 'coffre': return drawCoffre(w, h);
+    case 'chariot': return drawChariot(w, h);
+    case 'gazebo': return drawGazebo(w, h);
+    case 'spa': return drawSpa(w, h);
+    case 'plante': return drawPlante(w, h);
+    default:
+      return `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="#ccc" stroke="#888" stroke-width="1"/>`;
+  }
+}
+
+function drawDivan(w, h) {
+  const back = Math.min(9, h * 0.28);
+  const arm = Math.min(8, w * 0.16);
+  const seatW = w - 2 * arm;
+  const seatH = h - back;
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="3" fill="#8b99a6" stroke="#57646f" stroke-width="1"/>`;
+  s += `<rect x="${-w / 2 + 0.8}" y="${-h / 2 + 0.8}" width="${nn(w - 1.6)}" height="${nn(back)}" rx="2.5" fill="#7b8b9b" stroke="#57646f" stroke-width="0.5"/>`;
+  s += `<rect x="${-w / 2 + 0.8}" y="${-h / 2 + 0.8}" width="${nn(arm)}" height="${nn(h - 1.6)}" rx="2.5" fill="#7b8b9b" stroke="#57646f" stroke-width="0.5"/>`;
+  s += `<rect x="${w / 2 - arm - 0.8}" y="${-h / 2 + 0.8}" width="${nn(arm)}" height="${nn(h - 1.6)}" rx="2.5" fill="#7b8b9b" stroke="#57646f" stroke-width="0.5"/>`;
+  if (seatW > 6 && seatH > 5) {
+    const n = Math.max(1, Math.round(seatW / 26));
+    const cw = seatW / n;
+    for (let i = 0; i < n; i++) {
+      s += `<rect x="${(-w / 2 + arm + i * cw + 1).toFixed(2)}" y="${(-h / 2 + back + 1).toFixed(2)}" width="${nn(cw - 2).toFixed(2)}" height="${nn(seatH - 2.6).toFixed(2)}" rx="2.2" fill="#a3b3c0" stroke="#57646f" stroke-width="0.5"/>`;
+    }
+  }
+  return s;
+}
+
+function drawChaise(w, h) {
+  const back = Math.min(5, h * 0.22);
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2" fill="#c09a68" stroke="#8a6a40" stroke-width="0.9"/>`;
+  s += `<rect x="${-w / 2 + 0.7}" y="${-h / 2 + 0.7}" width="${nn(w - 1.4)}" height="${nn(back)}" rx="1.6" fill="#a9834f" stroke="#8a6a40" stroke-width="0.5"/>`;
+  s += `<rect x="${-w / 2 + 2}" y="${-h / 2 + back + 1.4}" width="${nn(w - 4)}" height="${nn(h - back - 3.4)}" rx="1.8" fill="#d9c6a6" stroke="#8a6a40" stroke-width="0.5"/>`;
+  return s;
+}
+
+function drawChaiseLongue(w, h) {
+  const backH = h * 0.34;
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="3.5" fill="#5aa39a" stroke="#3c7a72" stroke-width="1"/>`;
+  for (let i = 1; i <= 3; i++) {
+    const y = -h / 2 + backH * i / 4;
+    s += `<line x1="${-w / 2 + 2.5}" y1="${y.toFixed(2)}" x2="${w / 2 - 2.5}" y2="${y.toFixed(2)}" stroke="#3c7a72" stroke-width="0.6"/>`;
+  }
+  s += `<line x1="${-w / 2 + 1.5}" y1="${(-h / 2 + backH).toFixed(2)}" x2="${w / 2 - 1.5}" y2="${(-h / 2 + backH).toFixed(2)}" stroke="#3c7a72" stroke-width="1"/>`;
+  for (let j = 1; j <= 2; j++) {
+    const y = -h / 2 + backH + (h - backH) * j / 3;
+    s += `<line x1="${-w / 2 + 2.5}" y1="${y.toFixed(2)}" x2="${w / 2 - 2.5}" y2="${y.toFixed(2)}" stroke="#4b8d85" stroke-width="0.6"/>`;
+  }
+  return s;
+}
+
+function drawTable(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2.5" fill="#c59a66" stroke="#8f6740" stroke-width="1"/>`;
+  const n = Math.max(2, Math.round(w / 8));
+  for (let i = 1; i < n; i++) {
+    const x = -w / 2 + i * (w / n);
+    s += `<line x1="${x.toFixed(2)}" y1="${-h / 2 + 1}" x2="${x.toFixed(2)}" y2="${h / 2 - 1}" stroke="#b28a58" stroke-width="0.4"/>`;
+  }
+  s += `<rect x="${-w / 2 + 1.6}" y="${-h / 2 + 1.6}" width="${nn(w - 3.2)}" height="${nn(h - 3.2)}" rx="1.8" fill="none" stroke="#a37d4e" stroke-width="0.5"/>`;
+  s += `<circle cx="0" cy="0" r="1.6" fill="#8f6740"/>`;
+  return s;
+}
+
+function drawTableRonde(w, h) {
+  const rx = w / 2, ry = h / 2;
+  let s = `<ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="#c59a66" stroke="#8f6740" stroke-width="1"/>`;
+  s += `<ellipse cx="0" cy="0" rx="${nn(rx - 2.2)}" ry="${nn(ry - 2.2)}" fill="none" stroke="#a37d4e" stroke-width="0.5"/>`;
+  for (let a = 0; a < 180; a += 45) {
+    const px = Math.cos(rad(a)) * nn(rx - 3);
+    const py = Math.sin(rad(a)) * nn(ry - 3);
+    s += `<line x1="${(-px).toFixed(2)}" y1="${(-py).toFixed(2)}" x2="${px.toFixed(2)}" y2="${py.toFixed(2)}" stroke="#b28a58" stroke-width="0.4"/>`;
+  }
+  s += `<circle cx="0" cy="0" r="1.6" fill="#8f6740"/>`;
+  return s;
+}
+
+function drawBBQ(w, h) {
+  const shelf = Math.min(10, w * 0.18);
+  const bw = w - 2 * shelf;
+  let s = '';
+  s += `<rect x="${-w / 2}" y="${-h / 2 + 2}" width="${nn(shelf - 1)}" height="${nn(h - 4)}" rx="1.5" fill="#9aa3ad" stroke="#5f6870" stroke-width="0.7"/>`;
+  s += `<rect x="${w / 2 - shelf + 1}" y="${-h / 2 + 2}" width="${nn(shelf - 1)}" height="${nn(h - 4)}" rx="1.5" fill="#9aa3ad" stroke="#5f6870" stroke-width="0.7"/>`;
+  s += `<rect x="${-bw / 2}" y="${-h / 2}" width="${nn(bw)}" height="${h}" rx="2.5" fill="#454d57" stroke="#272e35" stroke-width="1"/>`;
+  s += `<line x1="${-bw / 2 + 2}" y1="0" x2="${bw / 2 - 2}" y2="0" stroke="#5d6773" stroke-width="0.6"/>`;
+  s += `<rect x="${(-bw * 0.32).toFixed(2)}" y="${h / 2 - 3}" width="${nn(bw * 0.64).toFixed(2)}" height="1.6" rx="0.8" fill="#c9ced4" stroke="#8b939e" stroke-width="0.4"/>`;
+  s += `<circle cx="0" cy="${(-h / 4).toFixed(2)}" r="1.7" fill="#c9ced4" stroke="#272e35" stroke-width="0.5"/>`;
+  return s;
+}
+
+function drawGazebo(w, h) {
+  const post = Math.max(3, Math.min(6, Math.min(w, h) * 0.05));
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="rgba(122,101,74,0.12)" stroke="none" pointer-events="none"/>`;
+  s += `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="none" stroke="#7a654a" stroke-width="1.4"/>`;
+  s += `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="none" stroke="rgba(0,0,0,0)" stroke-width="8" pointer-events="stroke"/>`;
+  s += `<line x1="${-w / 2}" y1="${-h / 2}" x2="${w / 2}" y2="${h / 2}" stroke="#9b8767" stroke-width="0.8" stroke-dasharray="4 3"/>`;
+  s += `<line x1="${-w / 2}" y1="${h / 2}" x2="${w / 2}" y2="${-h / 2}" stroke="#9b8767" stroke-width="0.8" stroke-dasharray="4 3"/>`;
+  s += `<rect x="-4" y="-4" width="8" height="8" fill="none" stroke="#9b8767" stroke-width="0.8"/>`;
+  const px = w / 2 - 1 - post, py = h / 2 - 1 - post;
+  s += `<rect x="${-w / 2 + 1}" y="${-h / 2 + 1}" width="${post}" height="${post}" fill="#7a654a"/>`;
+  s += `<rect x="${px}" y="${-h / 2 + 1}" width="${post}" height="${post}" fill="#7a654a"/>`;
+  s += `<rect x="${-w / 2 + 1}" y="${py}" width="${post}" height="${post}" fill="#7a654a"/>`;
+  s += `<rect x="${px}" y="${py}" width="${post}" height="${post}" fill="#7a654a"/>`;
+  return s;
+}
+
+function drawPlante(w, h) {
+  const rx = w / 2, ry = h / 2;
+  let s = `<ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="#a5643d" stroke="#7c4a2c" stroke-width="0.8"/>`;
+  s += `<ellipse cx="0" cy="0" rx="${nn(rx * 0.82)}" ry="${nn(ry * 0.82)}" fill="#8a5232"/>`;
+  const fr = Math.max(0.6, Math.min(rx, ry) * 0.42);
+  for (let i = 0; i < 6; i++) {
+    const a = i * Math.PI / 3;
+    const px = Math.cos(a) * rx * 0.38;
+    const py = Math.sin(a) * ry * 0.38;
+    s += `<circle cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="${fr.toFixed(2)}" fill="#5d8f52" stroke="#446e3b" stroke-width="0.4"/>`;
+  }
+  s += `<circle cx="0" cy="0" r="${Math.max(0.6, Math.min(rx, ry) * 0.34).toFixed(2)}" fill="#6fa063"/>`;
+  return s;
+}
+
+function drawBanc(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2" fill="#c09a68" stroke="#8a6a40" stroke-width="0.9"/>`;
+  for (let i = 1; i <= 2; i++) {
+    const y = -h / 2 + h * i / 3;
+    s += `<line x1="${-w / 2 + 1.5}" y1="${y.toFixed(2)}" x2="${w / 2 - 1.5}" y2="${y.toFixed(2)}" stroke="#8a6a40" stroke-width="0.5"/>`;
+  }
+  return s;
+}
+
+function drawPouf(w, h) {
+  const r = Math.min(w, h) * 0.32;
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="${r.toFixed(2)}" fill="#b59394" stroke="#8a6a6b" stroke-width="0.9"/>`;
+  s += `<rect x="${-w / 2 + 2}" y="${-h / 2 + 2}" width="${nn(w - 4)}" height="${nn(h - 4)}" rx="${Math.max(0.5, r - 2).toFixed(2)}" fill="none" stroke="#8a6a6b" stroke-width="0.5" stroke-dasharray="1.6 1.6"/>`;
+  s += `<circle cx="0" cy="0" r="${Math.max(0.6, Math.min(w, h) * 0.06).toFixed(2)}" fill="#8a6a6b"/>`;
+  return s;
+}
+
+function drawTableBasse(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2.5" fill="#cfa876" stroke="#997647" stroke-width="0.9"/>`;
+  const n = Math.max(2, Math.round(h / 6));
+  for (let i = 1; i < n; i++) {
+    const y = -h / 2 + i * (h / n);
+    s += `<line x1="${-w / 2 + 1}" y1="${y.toFixed(2)}" x2="${w / 2 - 1}" y2="${y.toFixed(2)}" stroke="#bd9663" stroke-width="0.4"/>`;
+  }
+  s += `<rect x="${-w / 2 + 1.4}" y="${-h / 2 + 1.4}" width="${nn(w - 2.8)}" height="${nn(h - 2.8)}" rx="1.6" fill="none" stroke="#ab8756" stroke-width="0.5"/>`;
+  return s;
+}
+
+function drawTableBasseRonde(w, h) {
+  const rx = w / 2, ry = h / 2;
+  let s = `<ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="#cfa876" stroke="#997647" stroke-width="0.9"/>`;
+  s += `<ellipse cx="0" cy="0" rx="${nn(rx - 2)}" ry="${nn(ry - 2)}" fill="none" stroke="#ab8756" stroke-width="0.5"/>`;
+  for (const f of [-0.33, 0.33]) {
+    const y = ry * f;
+    const x = rx * Math.sqrt(Math.max(0, 1 - f * f)) * 0.94;
+    s += `<line x1="${(-x).toFixed(2)}" y1="${y.toFixed(2)}" x2="${x.toFixed(2)}" y2="${y.toFixed(2)}" stroke="#bd9663" stroke-width="0.4"/>`;
+  }
+  return s;
+}
+
+function drawConsole(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2" fill="#b98f5e" stroke="#84643c" stroke-width="0.9"/>`;
+  const n = Math.max(2, Math.round(w / 8));
+  for (let i = 1; i < n; i++) {
+    const x = -w / 2 + i * (w / n);
+    s += `<line x1="${x.toFixed(2)}" y1="${-h / 2 + 1}" x2="${x.toFixed(2)}" y2="${h / 2 - 1}" stroke="#a67c4c" stroke-width="0.4"/>`;
+  }
+  s += `<rect x="${-w / 2 + 1.4}" y="${-h / 2 + 1.4}" width="${nn(w - 2.8)}" height="${nn(h - 2.8)}" rx="1.4" fill="none" stroke="#97744a" stroke-width="0.5"/>`;
+  return s;
+}
+
+/* Toile de parasol vue de dessus : 8 pointes en deux tons + mât central */
+function parasolCanopy(cy, rx, ry) {
+  const shades = ['#e6c383', '#d9b06a'];
+  let s = `<g transform="translate(0 ${cy.toFixed(2)})">`;
+  for (let i = 0; i < 8; i++) {
+    const a1 = rad(i * 45), a2 = rad((i + 1) * 45);
+    const x1 = Math.cos(a1) * rx, y1 = Math.sin(a1) * ry;
+    const x2 = Math.cos(a2) * rx, y2 = Math.sin(a2) * ry;
+    s += `<path d="M0 0 L${x1.toFixed(2)} ${y1.toFixed(2)} A${rx.toFixed(2)} ${ry.toFixed(2)} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${shades[i % 2]}" stroke="#b08c4f" stroke-width="0.5"/>`;
+  }
+  const mr = Math.min(Math.min(rx, ry) * 0.9, Math.max(0.8, Math.min(rx, ry) * 0.07));
+  s += `<circle cx="0" cy="0" r="${mr.toFixed(2)}" fill="#7a6544"/>`;
+  s += '</g>';
+  return s;
+}
+
+function drawParasolRond(w, h) {
+  return parasolCanopy(0, w / 2, h / 2);
+}
+
+function drawParasolCarre(w, h) {
+  const shades = ['#e6c383', '#d9b06a'];
+  const tri = [
+    [[-w / 2, -h / 2], [w / 2, -h / 2]],
+    [[w / 2, -h / 2], [w / 2, h / 2]],
+    [[w / 2, h / 2], [-w / 2, h / 2]],
+    [[-w / 2, h / 2], [-w / 2, -h / 2]],
+  ];
+  let s = '';
+  tri.forEach((p, i) => {
+    s += `<path d="M0 0 L${p[0][0]} ${p[0][1]} L${p[1][0]} ${p[1][1]} Z" fill="${shades[i % 2]}" stroke="#b08c4f" stroke-width="0.5"/>`;
+  });
+  s += `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="none" stroke="#b08c4f" stroke-width="0.8"/>`;
+  s += `<circle cx="0" cy="0" r="${Math.max(0.8, Math.min(w, h) * 0.035).toFixed(2)}" fill="#7a6544"/>`;
+  return s;
+}
+
+function drawParasolDeporte(w, h) {
+  const baseH = Math.max(3, h * 0.10);
+  const gap = h * 0.06;
+  const ch = Math.max(1, h - baseH - gap);
+  const cy = -h / 2 + ch / 2;
+  let s = `<line x1="0" y1="${cy.toFixed(2)}" x2="0" y2="${(h / 2 - baseH / 2).toFixed(2)}" stroke="#5f6870" stroke-width="1.6"/>`;
+  const bw = Math.min(w, Math.max(6, w * 0.34));
+  s += `<rect x="${(-bw / 2).toFixed(2)}" y="${(h / 2 - baseH).toFixed(2)}" width="${bw.toFixed(2)}" height="${baseH.toFixed(2)}" rx="1.2" fill="#6b7480" stroke="#4c545c" stroke-width="0.7"/>`;
+  s += parasolCanopy(cy, w / 2, ch / 2);
+  return s;
+}
+
+function drawFoyerRond(w, h) {
+  const rx = w / 2, ry = h / 2;
+  let s = `<ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="#8d8d86" stroke="#63635d" stroke-width="1"/>`;
+  s += `<ellipse cx="0" cy="0" rx="${nn(rx * 0.83)}" ry="${nn(ry * 0.83)}" fill="none" stroke="#6f6f68" stroke-width="0.5" stroke-dasharray="3 2"/>`;
+  s += `<ellipse cx="0" cy="0" rx="${nn(rx * 0.66)}" ry="${nn(ry * 0.66)}" fill="#57504b" stroke="#3f3a36" stroke-width="0.5"/>`;
+  const fr = Math.min(rx, ry);
+  s += `<circle cx="${(-fr * 0.18).toFixed(2)}" cy="${(fr * 0.10).toFixed(2)}" r="${nn(fr * 0.28).toFixed(2)}" fill="#e07b33"/>`;
+  s += `<circle cx="${(fr * 0.20).toFixed(2)}" cy="${(-fr * 0.06).toFixed(2)}" r="${nn(fr * 0.24).toFixed(2)}" fill="#d9542b"/>`;
+  s += `<circle cx="${(fr * 0.02).toFixed(2)}" cy="${(fr * 0.02).toFixed(2)}" r="${nn(fr * 0.16).toFixed(2)}" fill="#f2b84b"/>`;
+  return s;
+}
+
+function drawFoyerRect(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2.5" fill="#6e6a63" stroke="#4c4842" stroke-width="1"/>`;
+  s += `<rect x="${-w / 2 + 1.8}" y="${-h / 2 + 1.8}" width="${nn(w - 3.6)}" height="${nn(h - 3.6)}" rx="1.6" fill="none" stroke="#57534c" stroke-width="0.5"/>`;
+  const bw = nn(w * 0.44), bh = nn(h * 0.42);
+  s += `<rect x="${(-bw / 2).toFixed(2)}" y="${(-bh / 2).toFixed(2)}" width="${bw.toFixed(2)}" height="${bh.toFixed(2)}" rx="1.2" fill="#3e3a35" stroke="#2c2925" stroke-width="0.5"/>`;
+  const fr = Math.min(bw, bh);
+  s += `<circle cx="${(-fr * 0.25).toFixed(2)}" cy="0" r="${nn(fr * 0.22).toFixed(2)}" fill="#e07b33"/>`;
+  s += `<circle cx="${(fr * 0.22).toFixed(2)}" cy="0" r="${nn(fr * 0.19).toFixed(2)}" fill="#d9542b"/>`;
+  s += `<circle cx="0" cy="0" r="${nn(fr * 0.13).toFixed(2)}" fill="#f2b84b"/>`;
+  return s;
+}
+
+function drawCoffre(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="2" fill="#9a7b52" stroke="#6e5638" stroke-width="1"/>`;
+  const n = Math.max(2, Math.round(w / 7));
+  for (let i = 1; i < n; i++) {
+    const x = -w / 2 + i * (w / n);
+    s += `<line x1="${x.toFixed(2)}" y1="${-h / 2 + 1}" x2="${x.toFixed(2)}" y2="${h / 2 - 1}" stroke="#87683f" stroke-width="0.4"/>`;
+  }
+  s += `<rect x="${-w / 2 + 1.2}" y="${-h / 2 + 1.2}" width="${nn(w - 2.4)}" height="${nn(h - 2.4)}" rx="1.4" fill="none" stroke="#6e5638" stroke-width="0.5"/>`;
+  s += `<rect x="${(-w / 2 + 0.8).toFixed(2)}" y="${(-h * 0.18).toFixed(2)}" width="1.6" height="${nn(h * 0.36).toFixed(2)}" rx="0.8" fill="#6e5638"/>`;
+  s += `<rect x="${(w / 2 - 2.4).toFixed(2)}" y="${(-h * 0.18).toFixed(2)}" width="1.6" height="${nn(h * 0.36).toFixed(2)}" rx="0.8" fill="#6e5638"/>`;
+  return s;
+}
+
+function drawChariot(w, h) {
+  const handleW = Math.min(3, w * 0.1);
+  const bw = nn(w - handleW - 1.5);
+  const bx = -w / 2;
+  let s = `<rect x="${bx}" y="${-h / 2}" width="${bw.toFixed(2)}" height="${h}" rx="2" fill="#8a9199" stroke="#5f6870" stroke-width="0.8"/>`;
+  s += `<rect x="${(bx + 1.5).toFixed(2)}" y="${-h / 2 + 1.5}" width="${nn(bw - 3).toFixed(2)}" height="${nn(h - 3).toFixed(2)}" rx="1.3" fill="none" stroke="#6d757d" stroke-width="0.5"/>`;
+  const wr = Math.max(0.5, Math.min(bw, h) * 0.07);
+  const wx1 = bx + wr + 1.2, wx2 = bx + bw - wr - 1.2;
+  const wy1 = -h / 2 + wr + 1.2, wy2 = h / 2 - wr - 1.2;
+  if (wx2 - wx1 > wr && wy2 - wy1 > wr) {
+    for (const cx of [wx1, wx2]) {
+      for (const cy of [wy1, wy2]) {
+        s += `<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${wr.toFixed(2)}" fill="#4c545c"/>`;
+      }
+    }
+  }
+  s += `<line x1="${(bx + bw).toFixed(2)}" y1="${(-h * 0.24).toFixed(2)}" x2="${(w / 2 - handleW / 2).toFixed(2)}" y2="${(-h * 0.24).toFixed(2)}" stroke="#5f6870" stroke-width="0.7"/>`;
+  s += `<line x1="${(bx + bw).toFixed(2)}" y1="${(h * 0.24).toFixed(2)}" x2="${(w / 2 - handleW / 2).toFixed(2)}" y2="${(h * 0.24).toFixed(2)}" stroke="#5f6870" stroke-width="0.7"/>`;
+  s += `<rect x="${(w / 2 - handleW).toFixed(2)}" y="${(-h * 0.30).toFixed(2)}" width="${handleW.toFixed(2)}" height="${nn(h * 0.60).toFixed(2)}" rx="${(handleW / 2).toFixed(2)}" fill="#5f6870"/>`;
+  return s;
+}
+
+function drawSpa(w, h) {
+  let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="${(Math.min(w, h) * 0.12).toFixed(2)}" fill="#7a6a58" stroke="#57493a" stroke-width="1"/>`;
+  const iw = nn(w - 7), ih = nn(h - 7);
+  s += `<rect x="${(-iw / 2).toFixed(2)}" y="${(-ih / 2).toFixed(2)}" width="${iw.toFixed(2)}" height="${ih.toFixed(2)}" rx="${(Math.min(iw, ih) * 0.14).toFixed(2)}" fill="#5ea3c9" stroke="#3f7fa3" stroke-width="0.7"/>`;
+  const sw = Math.min(iw, ih) * 0.30;
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      const x = sx > 0 ? iw / 2 - sw : -iw / 2;
+      const y = sy > 0 ? ih / 2 - sw : -ih / 2;
+      s += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${sw.toFixed(2)}" height="${sw.toFixed(2)}" rx="1.8" fill="#79b7d6"/>`;
+    }
+  }
+  const bub = [[-0.15, 0.05, 0.05], [0.1, -0.12, 0.04], [0.02, 0.18, 0.035], [0.22, 0.1, 0.03], [-0.2, -0.18, 0.03]];
+  for (const [fx, fy, fr] of bub) {
+    s += `<circle cx="${(fx * iw).toFixed(2)}" cy="${(fy * ih).toFixed(2)}" r="${nn(fr * Math.min(iw, ih)).toFixed(2)}" fill="#ffffff" opacity="0.55"/>`;
+  }
+  return s;
+}
+
+/* ---------- Rendu ---------- */
+
+function terraceMarkup() {
+  const { cols, rows, dalle: sz } = state.terrasse;
+  const W = cols * sz, H = rows * sz;
+  const j = Math.min(1.2, sz * 0.05);
+  const shades = ['#d1c9bc', '#c8c0b1'];
+  let cells = '';
+  for (let i = 0; i < 2; i++) {
+    for (let k = 0; k < 2; k++) {
+      cells += `<rect x="${(i * sz + j / 2).toFixed(2)}" y="${(k * sz + j / 2).toFixed(2)}" width="${(sz - j).toFixed(2)}" height="${(sz - j).toFixed(2)}" rx="${Math.min(1, sz * 0.03).toFixed(2)}" fill="${shades[(i + k) % 2]}"/>`;
+    }
+  }
+  return `<defs><pattern id="motifDalles" x="0" y="0" width="${2 * sz}" height="${2 * sz}" patternUnits="userSpaceOnUse"><rect width="${2 * sz}" height="${2 * sz}" fill="#a99f8e"/>${cells}</pattern></defs>` +
+    `<rect x="0" y="0" width="${W}" height="${H}" fill="url(#motifDalles)"/>` +
+    `<rect x="0" y="0" width="${W}" height="${H}" fill="none" stroke="#8b8172" stroke-width="1"/>`;
+}
+
+function objectsMarkup(interactive) {
+  return state.objets.map(o =>
+    `<g ${interactive ? `data-id="${o.id}" class="objet" ` : ''}transform="translate(${o.x} ${o.y}) rotate(${o.rot})">${drawShape(o.type, o.w, o.h)}</g>`
+  ).join('');
+}
+
+function resizeCursor(cx, cy, o) {
+  /* direction de la diagonale de la poignée dans le repère écran, rotation incluse */
+  let a = Math.atan2(cy * o.h, cx * o.w) * 180 / Math.PI + o.rot;
+  a = ((a % 180) + 180) % 180;
+  const names = ['ew-resize', 'nwse-resize', 'ns-resize', 'nesw-resize'];
+  return names[Math.round(a / 45) % 4];
+}
+
+function overlayMarkup() {
+  const o = sel();
+  if (!o) return '';
+  const k = 1 / view.scale;
+  const hs = 10 * k;
+  let s = `<g transform="translate(${o.x} ${o.y}) rotate(${o.rot})">`;
+  s += `<rect x="${-o.w / 2}" y="${-o.h / 2}" width="${o.w}" height="${o.h}" fill="none" stroke="#2f6fed" stroke-width="${1.6 * k}" pointer-events="none"/>`;
+  s += `<line x1="0" y1="${-o.h / 2}" x2="0" y2="${-o.h / 2 - 24 * k}" stroke="#2f6fed" stroke-width="${1.6 * k}" pointer-events="none"/>`;
+  s += `<circle data-handle="rotate" cx="0" cy="${-o.h / 2 - 24 * k}" r="${7 * k}" fill="#fff" stroke="#2f6fed" stroke-width="${1.8 * k}" style="cursor:grab"/>`;
+  const corners = [['nw', -1, -1], ['ne', 1, -1], ['se', 1, 1], ['sw', -1, 1]];
+  for (const [c, cx, cy] of corners) {
+    s += `<rect data-handle="resize" data-corner="${c}" x="${cx * o.w / 2 - hs / 2}" y="${cy * o.h / 2 - hs / 2}" width="${hs}" height="${hs}" fill="#fff" stroke="#2f6fed" stroke-width="${1.8 * k}" style="cursor:${resizeCursor(cx, cy, o)}"/>`;
+  }
+  s += '</g>';
+  return s;
+}
+
+function renderAll() {
+  worldG.setAttribute('transform', `translate(${view.tx} ${view.ty}) scale(${view.scale})`);
+  terraceL.innerHTML = terraceMarkup();
+  objectsL.innerHTML = objectsMarkup(true);
+  overlayL.innerHTML = overlayMarkup();
+  renderPanel();
+  renderStatus();
+  renderToolbar();
+}
+
+let rafId = 0;
+function scheduleRender() {
+  if (!rafId) {
+    rafId = requestAnimationFrame(() => { rafId = 0; renderAll(); });
+  }
+}
+
+function setVal(el, v) {
+  if (document.activeElement !== el) el.value = v;
+}
+
+function renderPanel() {
+  const t = state.terrasse;
+  setVal(inCols, t.cols);
+  setVal(inRows, t.rows);
+  setVal(inDalle, t.dalle);
+  const W = t.cols * t.dalle, H = t.rows * t.dalle;
+  terraceInfo.textContent = `${W} × ${H} po (${pi(W)} × ${pi(H)} pi) · ${t.cols * t.rows} dalles`;
+  const o = sel();
+  objSection.hidden = !o;
+  if (o) {
+    objTitle.textContent = TYPES[o.type].nom;
+    setVal(inW, o.w);
+    setVal(inH, o.h);
+    setVal(inRot, Math.round(o.rot));
+    objInfo.textContent = `${o.w} × ${o.h} po (${pi(o.w)} × ${pi(o.h)} pi)`;
+  }
+}
+
+function renderStatus() {
+  const t = state.terrasse;
+  const W = t.cols * t.dalle, H = t.rows * t.dalle;
+  stTerrasse.textContent = `Terrasse : ${t.cols} × ${t.rows} dalles de ${t.dalle} po — ${W} × ${H} po (${pi(W)} × ${pi(H)} pi)`;
+}
+
+function renderToolbar() {
+  btnUndo.disabled = histIx <= 0;
+  btnRedo.disabled = histIx >= hist.length - 1;
+  zoomLbl.textContent = Math.round(view.scale / ZOOM_BASE * 100) + ' %';
+}
+
+/* ---------- Actions ---------- */
+
+function addObject(type) {
+  flushPendingCommit();
+  const t = TYPES[type];
+  const r = svg.getBoundingClientRect();
+  const wx = (r.width / 2 - view.tx) / view.scale;
+  const wy = (r.height / 2 - view.ty) / view.scale;
+  const o = {
+    id: 'o' + (nextId++),
+    type,
+    x: Math.round(wx),
+    y: Math.round(wy),
+    w: t.w,
+    h: t.h,
+    rot: 0,
+  };
+  state.objets.push(o);
+  selectedId = o.id;
+  commit();
+}
+
+function deleteSel() {
+  flushPendingCommit();
+  const i = selIdx();
+  if (i < 0) return;
+  state.objets.splice(i, 1);
+  selectedId = null;
+  commit();
+}
+
+function duplicateSel() {
+  flushPendingCommit();
+  const o = sel();
+  if (!o) return;
+  const c = Object.assign({}, o, { id: 'o' + (nextId++), x: o.x + 12, y: o.y + 12 });
+  state.objets.push(c);
+  selectedId = c.id;
+  commit();
+}
+
+function bringForward() {
+  flushPendingCommit();
+  const i = selIdx();
+  if (i < 0 || i >= state.objets.length - 1) return;
+  const [o] = state.objets.splice(i, 1);
+  state.objets.splice(i + 1, 0, o);
+  commit();
+}
+
+function sendBackward() {
+  flushPendingCommit();
+  const i = selIdx();
+  if (i <= 0) return;
+  const [o] = state.objets.splice(i, 1);
+  state.objets.splice(i - 1, 0, o);
+  commit();
+}
+
+function zoomAt(factor, sx, sy) {
+  const wx = (sx - view.tx) / view.scale;
+  const wy = (sy - view.ty) / view.scale;
+  view.scale = clamp(view.scale * factor, ZOOM_MIN, ZOOM_MAX);
+  view.tx = sx - wx * view.scale;
+  view.ty = sy - wy * view.scale;
+  scheduleRender();
+}
+
+function fitView() {
+  const t = state.terrasse;
+  const W = t.cols * t.dalle, H = t.rows * t.dalle;
+  let minx = 0, miny = 0, maxx = W, maxy = H;
+  for (const o of state.objets) {
+    const r = Math.hypot(o.w, o.h) / 2;
+    minx = Math.min(minx, o.x - r);
+    miny = Math.min(miny, o.y - r);
+    maxx = Math.max(maxx, o.x + r);
+    maxy = Math.max(maxy, o.y + r);
+  }
+  const rect = svg.getBoundingClientRect();
+  if (rect.width < 40 || rect.height < 40) { renderAll(); return; }
+  const m = 30;
+  let s = clamp(Math.min(
+    (rect.width - 2 * m) / (maxx - minx),
+    (rect.height - 2 * m) / (maxy - miny)
+  ), ZOOM_MIN, ZOOM_MAX);
+  if (!Number.isFinite(s)) s = ZOOM_BASE;
+  view.scale = s;
+  view.tx = (rect.width - (maxx - minx) * s) / 2 - minx * s;
+  view.ty = (rect.height - (maxy - miny) * s) / 2 - miny * s;
+  renderAll();
+}
+
+/* ---------- Export / import ---------- */
+
+function download(name, blob) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+function exportJSON() {
+  download('plan-terrasse.json', new Blob([snapshot()], { type: 'application/json' }));
+}
+
+function exportPNG() {
+  const t = state.terrasse;
+  const W = t.cols * t.dalle, H = t.rows * t.dalle;
+  let minx = -12, miny = -12, maxx = W + 12, maxy = H + 12;
+  for (const o of state.objets) {
+    const r = Math.hypot(o.w, o.h) / 2 + 6;
+    minx = Math.min(minx, o.x - r);
+    miny = Math.min(miny, o.y - r);
+    maxx = Math.max(maxx, o.x + r);
+    maxy = Math.max(maxy, o.y + r);
+  }
+  const w = maxx - minx, h = maxy - miny;
+  /* résolution bornée par la surface maximale de canvas des navigateurs (~125 Mpx sur Firefox) */
+  let px = clamp(2400 / Math.max(w, h), 2, 16);
+  px = Math.min(px, Math.sqrt(1e8 / (w * h)), 16000 / Math.max(w, h));
+  const pw = Math.max(1, Math.round(w * px)), ph = Math.max(1, Math.round(h * px));
+  const svgStr = `<svg xmlns="http://www.w3.org/2000/svg" width="${pw}" height="${ph}" viewBox="${minx} ${miny} ${w} ${h}">` +
+    `<rect x="${minx}" y="${miny}" width="${w}" height="${h}" fill="#eceee9"/>` +
+    terraceMarkup() + objectsMarkup(false) + '</svg>';
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = pw;
+    c.height = ph;
+    c.getContext('2d').drawImage(img, 0, 0);
+    c.toBlob(b => {
+      if (b) download('plan-terrasse.png', b);
+      else alert("Échec de l'export PNG.");
+    }, 'image/png');
+  };
+  img.onerror = () => alert("Échec de l'export PNG.");
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+}
+
+function importJSON() {
+  fileInput.click();
+}
+
+/* ---------- Boîte à outils ---------- */
+
+function buildToolbox() {
+  let lastCat = null;
+  for (const [type, t] of Object.entries(TYPES)) {
+    if (t.cat !== lastCat) {
+      lastCat = t.cat;
+      const hdr = document.createElement('div');
+      hdr.className = 'catBoite';
+      hdr.textContent = t.cat;
+      boite.appendChild(hdr);
+    }
+    const b = document.createElement('button');
+    b.className = 'outil';
+    b.type = 'button';
+    b.title = `Ajouter : ${t.nom}`;
+    const k = 36 / Math.max(t.w, t.h);
+    const iw = t.w * k, ih = t.h * k;
+    b.innerHTML = `<svg viewBox="-22 -22 44 44" aria-hidden="true">${drawShape(type, iw, ih)}</svg><span>${t.nom}</span>`;
+    b.addEventListener('click', () => addObject(type));
+    boite.appendChild(b);
+  }
+}
+
+/* ---------- Interactions souris / pointeur ---------- */
+
+function onPointerDown(e) {
+  if (drag) return; /* un seul pointeur pilote à la fois : on ignore les contacts supplémentaires */
+  if (e.button !== 0 && e.button !== 1) return;
+  flushPendingCommit();
+  try { svg.setPointerCapture(e.pointerId); } catch (err) { /* sans gravité */ }
+  const base = {
+    pointerId: e.pointerId, button: e.button,
+    cx0: e.clientX, cy0: e.clientY,
+    lastX: e.clientX, lastY: e.clientY,
+    moved: false,
+  };
+
+  if (e.button === 1) {
+    e.preventDefault();
+    drag = Object.assign(base, { mode: 'pan' });
+    return;
+  }
+
+  const [wx, wy] = screenToWorld(e.clientX, e.clientY);
+  const handle = e.target.closest('[data-handle]');
+  const o = sel();
+
+  if (handle && o) {
+    if (handle.dataset.handle === 'rotate') {
+      drag = Object.assign(base, {
+        mode: 'rot', id: o.id,
+        a0: Math.atan2(wy - o.y, wx - o.x) - rad(o.rot),
+      });
+    } else {
+      const c = handle.dataset.corner;
+      const sx = c.includes('e') ? 1 : -1;
+      const sy = c.includes('s') ? 1 : -1;
+      const [fx, fy] = rot2(-sx * o.w / 2, -sy * o.h / 2, rad(o.rot));
+      drag = Object.assign(base, {
+        mode: 'resize', id: o.id,
+        sx, sy, fx: o.x + fx, fy: o.y + fy, rot: o.rot,
+      });
+    }
+    return;
+  }
+
+  const g = e.target.closest('[data-id]');
+  if (g) {
+    selectedId = g.dataset.id;
+    const ob = sel();
+    drag = Object.assign(base, { mode: 'move', id: ob.id, dx: ob.x - wx, dy: ob.y - wy });
+    renderAll();
+  } else {
+    drag = Object.assign(base, { mode: 'pan' });
+  }
+}
+
+function onPointerMove(e) {
+  const [wx, wy] = screenToWorld(e.clientX, e.clientY);
+  stCurseur.textContent = `x ${Math.round(wx)} po · y ${Math.round(wy)} po`;
+
+  if (!drag || e.pointerId !== drag.pointerId) return;
+
+  /* un clic n'est un glissement qu'au-delà du seuil, sinon rien n'est modifié */
+  if (!drag.moved) {
+    if (Math.abs(e.clientX - drag.cx0) + Math.abs(e.clientY - drag.cy0) <= CLICK_SLOP) return;
+    drag.moved = true;
+  }
+
+  if (drag.mode === 'pan') {
+    /* déplacement incrémental : reste cohérent même si un zoom molette survient en plein pan */
+    view.tx += e.clientX - drag.lastX;
+    view.ty += e.clientY - drag.lastY;
+    drag.lastX = e.clientX;
+    drag.lastY = e.clientY;
+    scheduleRender();
+    return;
+  }
+
+  const o = byId(drag.id);
+  if (!o) { drag = null; return; }
+
+  if (drag.mode === 'move') {
+    const g = snapStep();
+    /* on aimante la boîte englobante réelle (rotation incluse) sur la grille */
+    const th = rad(o.rot);
+    const ex = (Math.abs(o.w * Math.cos(th)) + Math.abs(o.h * Math.sin(th))) / 2;
+    const ey = (Math.abs(o.w * Math.sin(th)) + Math.abs(o.h * Math.cos(th))) / 2;
+    o.x = Math.round((wx + drag.dx - ex) / g) * g + ex;
+    o.y = Math.round((wy + drag.dy - ey) / g) * g + ey;
+  } else if (drag.mode === 'rot') {
+    let deg = (Math.atan2(wy - o.y, wx - o.x) - drag.a0) * 180 / Math.PI;
+    deg = e.shiftKey ? Math.round(deg / 15) * 15 : Math.round(deg);
+    o.rot = ((deg % 360) + 360) % 360;
+  } else if (drag.mode === 'resize') {
+    const [lx, ly] = rot2(wx - drag.fx, wy - drag.fy, -rad(drag.rot));
+    o.w = Math.round(clamp(lx * drag.sx, MIN_SIZE, MAX_SIZE));
+    o.h = Math.round(clamp(ly * drag.sy, MIN_SIZE, MAX_SIZE));
+    const [ox, oy] = rot2(drag.sx * o.w / 2, drag.sy * o.h / 2, rad(drag.rot));
+    o.x = drag.fx + ox;
+    o.y = drag.fy + oy;
+  }
+  scheduleRender();
+}
+
+function onPointerUp(e) {
+  if (!drag || e.pointerId !== drag.pointerId) return;
+  const d = drag;
+  drag = null;
+  if (d.mode === 'pan') {
+    if (!d.moved && e.type === 'pointerup' && d.button === 0) {
+      selectedId = null;
+      renderAll();
+    }
+    return;
+  }
+  if (d.moved) commit();
+  else renderAll();
+}
+
+function onWheel(e) {
+  e.preventDefault();
+  const r = svg.getBoundingClientRect();
+  const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+  zoomAt(factor, e.clientX - r.left, e.clientY - r.top);
+}
+
+/* ---------- Clavier ---------- */
+
+function onKeyDown(e) {
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+  if (drag) return; /* pas de raccourcis pendant un glissement en cours */
+  const mod = e.ctrlKey || e.metaKey;
+  const k = e.key;
+
+  if (mod && !e.shiftKey && (k === 'z' || k === 'Z')) { e.preventDefault(); undo(); return; }
+  if (mod && (k === 'y' || k === 'Y' || (e.shiftKey && (k === 'z' || k === 'Z')))) { e.preventDefault(); redo(); return; }
+  if (mod && (k === 'd' || k === 'D')) { e.preventDefault(); duplicateSel(); return; }
+  if (k === 'Escape') {
+    if (selectedId) { selectedId = null; renderAll(); }
+    return;
+  }
+
+  const o = sel();
+  if (!o) return;
+
+  if (k === 'Delete' || k === 'Backspace') { e.preventDefault(); deleteSel(); return; }
+
+  const step = e.shiftKey ? 6 : 1;
+  let changed = false;
+  if (k === 'ArrowLeft') { o.x -= step; changed = true; }
+  else if (k === 'ArrowRight') { o.x += step; changed = true; }
+  else if (k === 'ArrowUp') { o.y -= step; changed = true; }
+  else if (k === 'ArrowDown') { o.y += step; changed = true; }
+  else if (k === 'r' || k === 'R') { o.rot = (o.rot + 15) % 360; changed = true; }
+  if (changed) { e.preventDefault(); deferCommit(); }
+}
+
+/* ---------- Panneau de propriétés ---------- */
+
+function onTerraceInput(input, key, min, max, isInt) {
+  input.addEventListener('change', () => {
+    flushPendingCommit();
+    const v = parseNum(input.value);
+    if (Number.isFinite(v)) {
+      state.terrasse[key] = isInt ? Math.round(clamp(v, min, max)) : clamp(v, min, max);
+      commit();
+    }
+    /* resynchronise même si le champ garde le focus (valeur clampée ou saisie invalide) */
+    input.value = state.terrasse[key];
+    renderAll();
+  });
+}
+
+function onObjInput(input, apply, display) {
+  /* l'objet cible est capturé au focus : si la sélection change avant le blur,
+     la valeur tapée s'applique bien à l'objet en cours d'édition */
+  input.addEventListener('focus', () => { input._targetId = selectedId; });
+  input.addEventListener('blur', () => { renderAll(); });
+  input.addEventListener('change', () => {
+    flushPendingCommit();
+    const o = byId(input._targetId) || sel();
+    if (!o) return;
+    const v = parseNum(input.value);
+    if (Number.isFinite(v)) {
+      apply(o, v);
+      commit();
+    }
+    input.value = display(o);
+  });
+}
+
+/* ---------- Branchements ---------- */
+
+function wireEvents() {
+  svg.addEventListener('pointerdown', onPointerDown);
+  svg.addEventListener('pointermove', onPointerMove);
+  svg.addEventListener('pointerup', onPointerUp);
+  svg.addEventListener('pointercancel', onPointerUp);
+  svg.addEventListener('wheel', onWheel, { passive: false });
+  svg.addEventListener('contextmenu', e => e.preventDefault());
+
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('pagehide', flushPendingCommit);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushPendingCommit();
+  });
+
+  document.getElementById('btnUndo').addEventListener('click', undo);
+  document.getElementById('btnRedo').addEventListener('click', redo);
+  document.getElementById('btnFit').addEventListener('click', fitView);
+  document.getElementById('btnZoomIn').addEventListener('click', () => {
+    const r = svg.getBoundingClientRect();
+    zoomAt(1.25, r.width / 2, r.height / 2);
+  });
+  document.getElementById('btnZoomOut').addEventListener('click', () => {
+    const r = svg.getBoundingClientRect();
+    zoomAt(1 / 1.25, r.width / 2, r.height / 2);
+  });
+  document.getElementById('btnNew').addEventListener('click', () => {
+    if (confirm('Créer un nouveau plan ? Le plan actuel sera remplacé.')) {
+      flushPendingCommit();
+      state = defaultState();
+      selectedId = null;
+      commit();
+      fitView();
+    }
+  });
+  document.getElementById('btnExport').addEventListener('click', exportJSON);
+  document.getElementById('btnImport').addEventListener('click', importJSON);
+  document.getElementById('btnPng').addEventListener('click', exportPNG);
+  document.getElementById('btnDup').addEventListener('click', duplicateSel);
+  document.getElementById('btnDel').addEventListener('click', deleteSel);
+  document.getElementById('btnFwd').addEventListener('click', bringForward);
+  document.getElementById('btnBwd').addEventListener('click', sendBackward);
+  snapGrid.addEventListener('change', () => renderAll());
+
+  onTerraceInput(inCols, 'cols', 1, 100, true);
+  onTerraceInput(inRows, 'rows', 1, 100, true);
+  onTerraceInput(inDalle, 'dalle', 4, 96, false);
+
+  onObjInput(inW, (o, v) => { o.w = clamp(v, MIN_SIZE, MAX_SIZE); }, o => o.w);
+  onObjInput(inH, (o, v) => { o.h = clamp(v, MIN_SIZE, MAX_SIZE); }, o => o.h);
+  onObjInput(inRot, (o, v) => { o.rot = ((v % 360) + 360) % 360; }, o => Math.round(o.rot));
+
+  fileInput.addEventListener('change', () => {
+    const f = fileInput.files && fileInput.files[0];
+    fileInput.value = '';
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        flushPendingCommit();
+        state = sanitize(JSON.parse(rd.result));
+        selectedId = null;
+        commit();
+        fitView();
+      } catch (err) {
+        alert('Impossible d\'importer ce fichier : ' + err.message);
+      }
+    };
+    rd.onerror = () => alert('Impossible de lire ce fichier.');
+    rd.readAsText(f);
+  });
+}
+
+/* ---------- Démarrage ---------- */
+
+function init() {
+  loadFromStorage();
+  hist = [snapshot()];
+  histIx = 0;
+  buildToolbox();
+  wireEvents();
+  fitView();
+}
+
+init();
+</script>
+</body>
+</html>
