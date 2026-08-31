@@ -11,7 +11,7 @@
     </button>
     <ul class="nav-menu" id="main-nav" role="menubar">
       <li class="nav-item" role="none">
-        <a href="{{ langPrefix }}/posts/" role="menuitem"{% if page.url.includes('/posts/') %} aria-current="page"{% endif %}>{{ t.nav.essays }}</a>
+        <a href="{{ essaysUrl }}" role="menuitem"{% if page.url.includes('/97-choses/') or page.url.includes('/97-things/') %} aria-current="page"{% endif %}>{{ t.nav.essays }}</a>
       </li>
       <li class="nav-item" role="none">
         <a href="{{ langPrefix }}/articles/" role="menuitem"{% if page.url.includes('/articles/') %} aria-current="page"{% endif %}>{{ t.nav.articles }}</a>
@@ -24,9 +24,9 @@
       </li>
       <li class="nav-item" role="none">
         {% if currentLang == "fr" %}
-          <a href="/en{{ page.url }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
+          <a href="/en{{ page.url | replace('/97-choses/', '/97-things/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
         {% else %}
-          <a href="{{ page.url | replace('/en/', '/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>
+          <a href="{{ page.url | replace('/en/', '/') | replace('/97-things/', '/97-choses/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>
         {% endif %}
       </li>
       <li class="nav-item nav-search" role="none">

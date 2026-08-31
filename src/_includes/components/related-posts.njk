@@ -4,7 +4,7 @@
   <ul class="related-posts-list">
     {% for post in relatedPosts %}
     {% set sectionLabel = "" %}
-    {% if "/posts/" in post.url %}{% set sectionLabel = t.post.sectionEssay %}
+    {% if "/97-choses/" in post.url or "/97-things/" in post.url %}{% set sectionLabel = t.post.sectionEssay %}
     {% elif "/articles/" in post.url %}{% set sectionLabel = t.post.sectionArticle %}
     {% elif "/case-studies/" in post.url %}{% set sectionLabel = t.post.sectionCaseStudy %}
     {% endif %}

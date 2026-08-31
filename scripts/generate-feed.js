@@ -79,12 +79,12 @@ ${entryXml}
 };
 
 const frEntries = collectEntries([
-  ["src/posts", "posts"],
+  ["src/posts", "97-choses"],
   ["src/articles", "articles"],
   ["src/case-studies", "case-studies"],
 ]);
 const enEntries = collectEntries([
-  ["src/en/posts", "posts"],
+  ["src/en/posts", "97-things"],
   ["src/en/articles", "articles"],
   ["src/en/case-studies", "case-studies"],
 ]);

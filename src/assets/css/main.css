@@ -712,6 +712,191 @@ main {
 }
 
 /* ==========================================================================
+   Homepage — Author Presentation
+   ========================================================================== */
+
+.home-hero {
+  text-align: left;
+}
+
+.home-hero-content {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-right: clamp(0px, 10vw, 200px);
+}
+
+.home-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent-light);
+  margin-bottom: var(--space-lg);
+}
+
+.home-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  margin-bottom: var(--space-xl);
+}
+
+.home-hero .home-lede {
+  margin: 0;
+  max-width: 640px;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.home-bio {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-lg) var(--space-xl);
+}
+
+.home-bio-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .home-bio-grid {
+    grid-template-columns: minmax(0, 1.8fr) minmax(240px, 1fr);
+    gap: var(--space-3xl);
+  }
+}
+
+.home-bio-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.home-bio-text p {
+  margin-bottom: var(--space-lg);
+}
+
+.home-bio-text p:first-child::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  line-height: 0.85;
+  float: left;
+  padding-right: 0.12em;
+  color: var(--color-primary);
+}
+
+.home-bio-text em {
+  color: var(--color-primary);
+}
+
+.home-facts {
+  position: sticky;
+  top: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+}
+
+.home-facts-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.home-facts-list {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+}
+
+.home-facts-list dt {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-light);
+  margin-bottom: var(--space-xs);
+}
+
+.home-facts-list dd {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.home-featured {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-2xl);
+  margin-bottom: var(--space-xl);
+  text-decoration: none;
+  overflow: hidden;
+  position: relative;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.home-featured:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-light);
+}
+
+.home-featured-number {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(4rem, 8vw, 6.5rem);
+  line-height: 1;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.home-featured-body {
+  display: block;
+}
+
+.home-featured-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1.25;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.home-featured-desc {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.home-featured-desc em {
+  color: var(--color-primary);
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .home-featured {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+}
+
+/* ==========================================================================
    Section Intro (Listing Pages)
    ========================================================================== */
 

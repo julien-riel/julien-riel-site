@@ -9,11 +9,11 @@
         <span class="post-card-badge post-card-badge--case-study">{{ t.nav.caseStudies if t else "Case Study" }}</span>
       {% elif post.url.includes('/articles/') %}
         <span class="post-card-badge post-card-badge--article">Article</span>
-      {% elif post.url.includes('/posts/') %}
+      {% elif post.url.includes('/97-choses/') or post.url.includes('/97-things/') %}
         <span class="post-card-badge post-card-badge--essay">{{ t.nav.essays if t else "Essay" }}</span>
       {% endif %}
       <span class="post-card-reading-time">{{ post.templateContent | readingTime }} {{ (t.post.minRead if t else "min read") }}</span>
-      {% set isEssay = post.url.includes('/posts/') %}
+      {% set isEssay = post.url.includes('/97-choses/') or post.url.includes('/97-things/') %}
       {% if not isEssay %}
       <time class="post-card-date" datetime="{{ post.date | dateFormat('iso') }}">
         {{ post.date | dateFormat('short', currentLang) }}

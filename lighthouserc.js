@@ -8,7 +8,7 @@ export default {
       staticDistDir: "./_site",
       url: [
         "http://localhost/",
-        "http://localhost/posts/",
+        "http://localhost/97-choses/",
         "http://localhost/tags/",
       ],
       numberOfRuns: 3,

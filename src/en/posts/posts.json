@@ -3,5 +3,5 @@
   "tags": ["posts"],
   "draft": false,
   "lang": "en",
-  "permalink": "/en/posts/{{ page.fileSlug }}/"
+  "permalink": "/en/97-things/{{ page.fileSlug }}/"
 }

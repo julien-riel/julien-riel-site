@@ -23,7 +23,7 @@ test.describe("Search functionality", () => {
 
   test("typing in search shows results dropdown", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     // Wait for results to appear
     await page.waitForSelector(".search-results.is-open", { timeout: 5000 });
@@ -34,7 +34,7 @@ test.describe("Search functionality", () => {
 
   test("search results contain matching articles", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     await page.waitForSelector(".search-result-item", { timeout: 5000 });
 
@@ -44,12 +44,12 @@ test.describe("Search functionality", () => {
 
     // Check that results contain Python-related content
     const firstResultTitle = await resultItems.first().locator(".search-result-title").textContent();
-    expect(firstResultTitle.toLowerCase()).toContain("python");
+    expect(firstResultTitle.toLowerCase()).toContain("rag");
   });
 
-  test("search for 'intelligence artificielle' returns results", async ({ page }) => {
+  test("search for 'agent' returns results", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("intelligence artificielle");
+    await searchInput.fill("agent");
 
     await page.waitForSelector(".search-result-item", { timeout: 5000 });
 
@@ -60,7 +60,7 @@ test.describe("Search functionality", () => {
 
   test("clicking a search result navigates to the article", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     await page.waitForSelector(".search-result-item", { timeout: 5000 });
 
@@ -75,7 +75,7 @@ test.describe("Search functionality", () => {
 
   test("search highlights matching terms", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     await page.waitForSelector(".search-result-item", { timeout: 5000 });
 
@@ -88,7 +88,7 @@ test.describe("Search functionality", () => {
     const searchInput = page.locator("#search-input");
 
     // First search
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
     await page.waitForSelector(".search-results.is-open", { timeout: 5000 });
 
     // Clear search
@@ -111,7 +111,7 @@ test.describe("Search functionality", () => {
 
   test("keyboard navigation works in search results", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     await page.waitForSelector(".search-result-item", { timeout: 5000 });
 
@@ -124,7 +124,7 @@ test.describe("Search functionality", () => {
 
   test("Escape key closes search results", async ({ page }) => {
     const searchInput = page.locator("#search-input");
-    await searchInput.fill("python");
+    await searchInput.fill("rag");
 
     await page.waitForSelector(".search-results.is-open", { timeout: 5000 });
 

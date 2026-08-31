@@ -1,0 +1,26 @@
+---
+pagination:
+  data: redirects
+  size: 1
+  alias: redirect
+redirects:
+  - { from: "/posts/", to: "/97-choses/", lang: "fr" }
+  - { from: "/en/posts/", to: "/en/97-things/", lang: "en" }
+  - { from: "/about/", to: "/", lang: "fr" }
+  - { from: "/en/about/", to: "/en/", lang: "en" }
+permalink: "{{ redirect.from }}index.html"
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="{{ redirect.lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url={{ redirect.to }}">
+  <link rel="canonical" href="{{ metadata.url }}{{ redirect.to }}">
+  <meta name="robots" content="noindex">
+  <title>{{ metadata.title }}</title>
+</head>
+<body>
+  <p><a href="{{ redirect.to }}">{{ metadata.title }}</a></p>
+</body>
+</html>

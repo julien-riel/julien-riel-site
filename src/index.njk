@@ -1,32 +1,52 @@
 ---
 layout: base.njk
 title: Accueil
+description: Julien Riel — architecte de solutions TI à Montréal. Essais, études de cas et guides techniques sur la programmation agentique.
 lang: fr
 ---
 
-<section class="hero">
+<section class="hero home-hero">
   <div class="hero-decoration hero-decoration--1"></div>
   <div class="hero-decoration hero-decoration--2"></div>
-  <div class="hero-content">
-    <h1><span class="highlight">97 choses</span> que tout programmeur agentique devrait savoir</h1>
-    <p>{{ t.home.heroSubtitle }}</p>
+  <div class="home-hero-content">
+    <p class="home-kicker">Architecte de solutions TI · Montréal</p>
+    <h1>Julien <span class="highlight">Riel</span></h1>
+    <p class="home-lede">Près de vingt ans à bâtir des applications web. Depuis 2023, j'explore ce que les agents IA changent à la façon d'écrire du logiciel — et j'écris ici ce que j'apprends en chemin.</p>
   </div>
 </section>
 
-<section class="book-intro">
-  <div class="book-intro-content">
-    <p>{{ t.home.introP1 }}</p>
-    <p>{{ t.home.introP2 }}</p>
+<section class="home-bio">
+  <div class="home-bio-grid">
+    <div class="home-bio-text">
+      <p>Architecte de solutions TI à la Ville de Montréal, basé à Longueuil, Québec. D'abord la gestion documentaire et la publication des textes de loi du Québec chez Irosoft, puis six ans en gestion d'actif et de patrimoine chez Desjardins, et depuis 2017 le portefeuille applicatif municipal. Formé à l'UQAM en informatique et génie logiciel.</p>
+      <p>Vingt ans, ça veut dire que j'ai vu passer assez de technologies pour me méfier des emballements. Ce qui se passe avec les agents IA est différent. Ce n'est pas un framework de plus — c'est un changement dans <em>comment</em> on écrit du logiciel, dans ce qu'on considère « fonctionnel », dans ce qu'on peut déléguer et à qui.</p>
+      <p>Ce site est écrit en collaboration avec Claude (Anthropic) — ce qui est lui-même une démonstration du sujet. Les idées, les décisions éditoriales et l'arc de chaque texte viennent de moi. La rédaction, le débogage et l'itération se font en paire avec l'agent.</p>
+    </div>
+    <aside class="home-facts" aria-label="En bref">
+      <h2 class="home-facts-title">En bref</h2>
+      <dl class="home-facts-list">
+        <div><dt>Rôle</dt><dd>Architecte de solutions TI, Ville de Montréal</dd></div>
+        <div><dt>Base</dt><dd>Longueuil, Québec</dd></div>
+        <div><dt>Formation</dt><dd>UQAM — informatique et génie logiciel</dd></div>
+        <div><dt>Sujet</dt><dd>Programmation agentique</dd></div>
+        <div><dt>Contact</dt><dd><a href="{{ metadata.social.github }}" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="{{ metadata.social.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a></dd></div>
+      </dl>
+    </aside>
   </div>
 </section>
 
 <section class="explore-section">
   <h2>{{ t.home.explore }}</h2>
+
+  <a href="{{ essaysUrl }}" class="home-featured">
+    <span class="home-featured-number" aria-hidden="true">97</span>
+    <span class="home-featured-body">
+      <span class="home-featured-title">97 choses que tout programmeur agentique devrait savoir</span>
+      <span class="home-featured-desc">La collection que j'aurais voulu lire il y a deux ans : des essais courts, concrets, tirés de ce qui casse en production. Un clin d'œil au format <em>97 Things</em> d'O'Reilly — chacun autour d'une seule idée, sans ordre de lecture imposé.</span>
+    </span>
+  </a>
+
   <div class="explore-grid">
-    <a href="/posts/" class="explore-card">
-      <h3>{{ t.nav.essays }}</h3>
-      <p>{{ t.home.exploreEssays }}</p>
-    </a>
     <a href="/articles/" class="explore-card">
       <h3>{{ t.nav.articles }}</h3>
       <p>{{ t.home.exploreArticles }}</p>
@@ -34,6 +54,10 @@ lang: fr
     <a href="/case-studies/" class="explore-card">
       <h3>{{ t.nav.caseStudies }}</h3>
       <p>{{ t.home.exploreCaseStudies }}</p>
+    </a>
+    <a href="/reading-guide/" class="explore-card">
+      <h3>{{ t.nav.readingGuide }}</h3>
+      <p>{{ t.home.exploreReadingGuide }}</p>
     </a>
   </div>
 </section>

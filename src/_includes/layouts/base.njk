@@ -34,11 +34,11 @@
      Skipped for pages without a translated counterpart (tags are shared). #}
   {% if "/tags/" not in page.url %}
     {% if currentLang == "en" %}
-      {% set frUrl = page.url | replace("/en/", "/") %}
+      {% set frUrl = page.url | replace("/en/", "/") | replace("/97-things/", "/97-choses/") %}
       {% set enUrl = page.url %}
     {% else %}
       {% set frUrl = page.url %}
-      {% set enUrl = "/en" + page.url %}
+      {% set enUrl = "/en" + (page.url | replace("/97-choses/", "/97-things/")) %}
     {% endif %}
     <link rel="alternate" hreflang="fr" href="{{ metadata.url }}{{ frUrl }}">
     <link rel="alternate" hreflang="en" href="{{ metadata.url }}{{ enUrl }}">
@@ -113,6 +113,27 @@
 
   {% include "components/footer.njk" %}
   {% include "components/consent-banner.njk" %}
+
+  {# Inline search data for Lunr.js — current language only, lightweight (title/description/tags). #}
+  <script id="search-data" type="application/json">
+  [
+  {%- set searchItems = [] -%}
+  {%- for p in collections.posts | filterByLang(currentLang) -%}{% set _ = searchItems.push(p) %}{%- endfor -%}
+  {%- for a in collections.articles | filterByLang(currentLang) -%}{% set _ = searchItems.push(a) %}{%- endfor -%}
+  {%- for c in collections["case-studies"] | filterByLang(currentLang) -%}{% set _ = searchItems.push(c) %}{%- endfor -%}
+  {%- for item in searchItems %}
+    {
+      "id": "{{ item.url }}",
+      "url": "{{ item.url }}",
+      "title": {{ item.data.title | dump | safe }},
+      "description": {{ (item.data.description or "") | dump | safe }},
+      "date": "{{ item.date | dateFormat('iso') }}",
+      "tags": {{ (item.data.tags | default([])) | dump | safe }},
+      "content": {{ (item.data.description or "") | dump | safe }}
+    }{% if not loop.last %},{% endif %}
+  {%- endfor %}
+  ]
+  </script>
 
   <script type="module" src="/assets/js/main.js"></script>
 </body>

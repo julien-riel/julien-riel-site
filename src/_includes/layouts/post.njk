@@ -10,7 +10,7 @@ layout: base.njk
     <h1 class="post-title">{{ title }}</h1>
     <div class="post-meta">
       <span class="post-reading-time">{{ content | readingTime }} {{ t.post.minRead }}</span>
-      {% if not page.url.startsWith('/posts/') and not page.url.startsWith('/en/posts/') %}
+      {% if not page.url.startsWith('/97-choses/') and not page.url.startsWith('/en/97-things/') %}
       <time class="post-date" datetime="{{ date | dateFormat('iso') }}">
         {{ date | dateFormat('long', currentLang) }}
       </time>
@@ -39,8 +39,8 @@ layout: base.njk
   </div>
 
   {# Prev/Next navigation for essays #}
-  {% set isEssay = page.url.startsWith('/posts/') or page.url.startsWith('/en/posts/') %}
-  {% if isEssay and page.url != '/posts/' and page.url != '/en/posts/' %}
+  {% set isEssay = page.url.startsWith('/97-choses/') or page.url.startsWith('/en/97-things/') %}
+  {% if isEssay and page.url != '/97-choses/' and page.url != '/en/97-things/' %}
     {% set essays = collections.posts | filterByLang(currentLang) %}
     {% set currentIndex = -1 %}
     {% for essay in essays %}

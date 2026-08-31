@@ -40,9 +40,15 @@ eleventyExcludeFromCollections: true
   </url>
   {%- endfor %}
 
-  {# Blog index #}
+  {# Essays index #}
   <url>
-    <loc>{{ metadata.url }}/posts/</loc>
+    <loc>{{ metadata.url }}/97-choses/</loc>
+    <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>{{ metadata.url }}/en/97-things/</loc>
     <lastmod>{{ "now" | dateFormat('iso') }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

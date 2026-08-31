@@ -5,18 +5,14 @@
       "articles": "Articles",
       "caseStudies": "Études de cas",
       "tags": "Sujets",
-      "readingGuide": "Guide de lecture",
-      "about": "À propos"
+      "readingGuide": "Guide de lecture"
     },
     "home": {
       "title": "Accueil",
-      "heroSubtitle": "Courts essais sur la construction, l'utilisation et la compréhension des agents IA.",
-      "introP1": "Les agents sont partout. Ils écrivent du code, répondent aux clients, traitent des documents, prennent des décisions. Les développeurs qui construisent ces systèmes — et ceux qui les utilisent au quotidien — apprennent en marchant. Certaines leçons viennent de l'expérience. D'autres viennent de pannes en production qui auraient pu être évitées.",
-      "introP2": "Cette collection contient 97 de ces leçons. Chaque essai est autonome. Pas de dépendances, pas d'ordre de lecture requis. Choisissez celui qui correspond à votre situation et commencez par là.",
       "explore": "Explorer",
-      "exploreEssays": "97 courts essais sur les principes fondamentaux de la programmation agentique",
       "exploreArticles": "Guides techniques approfondis sur le RAG, les évaluations, le prompting et les architectures multi-agents",
-      "exploreCaseStudies": "Analyses détaillées de WHOOP Coach, Cursor, Duolingo et Klarna — succès, transformations et échecs instructifs"
+      "exploreCaseStudies": "Analyses détaillées de WHOOP Coach, Cursor, Duolingo et Klarna — succès, transformations et échecs instructifs",
+      "exploreReadingGuide": "Quatre parcours de lecture suggérés selon ton contexte — utilisateur quotidien, bâtisseur ou décideur"
     },
     "sections": {
       "essaysIntroP1": "Ce livre est une collection de 97 courts essais, chacun construit autour d'une seule idée. Pas de chapitres qui dépendent des précédents. Pas d'argument progressif qui exige de commencer au début. Ouvrez n'importe où et trouvez quelque chose d'utile.",
@@ -57,12 +53,30 @@
       "ariaLabel": "Bannière de consentement aux cookies"
     },
     "parts": {
-      "developer-as-user": { "title": "Partie 6 — Le développeur comme utilisateur", "desc": "Utiliser les assistants de code IA : contexte, architecture, grands projets et contrôle." },
-      "working-with-agents": { "title": "Partie 1 — Travailler avec les agents", "desc": "Modèles mentaux, systèmes probabilistes, contexte, débogage et supervision humaine." },
-      "prompting-as-engineering": { "title": "Partie 2 — Le prompting comme ingénierie", "desc": "Versionnage, exemples, contraintes négatives, system prompts comme contrats." },
-      "building-agentic-systems": { "title": "Partie 3 — Construire des systèmes agentiques", "desc": "Observabilité, évaluations, design d'outils, état, retries, coûts et kill switches." },
-      "agents-in-the-real-world": { "title": "Partie 4 — Les agents dans le monde réel", "desc": "Utilisateurs, latence, sécurité, injection de prompt, périmètre et systèmes multi-agents." },
-      "mindset": { "title": "Partie 5 — État d'esprit", "desc": "Expertise, écriture, incertitude, responsabilité et clarté de pensée." }
+      "developer-as-user": {
+        "title": "Partie 6 — Le développeur comme utilisateur",
+        "desc": "Utiliser les assistants de code IA : contexte, architecture, grands projets et contrôle."
+      },
+      "working-with-agents": {
+        "title": "Partie 1 — Travailler avec les agents",
+        "desc": "Modèles mentaux, systèmes probabilistes, contexte, débogage et supervision humaine."
+      },
+      "prompting-as-engineering": {
+        "title": "Partie 2 — Le prompting comme ingénierie",
+        "desc": "Versionnage, exemples, contraintes négatives, system prompts comme contrats."
+      },
+      "building-agentic-systems": {
+        "title": "Partie 3 — Construire des systèmes agentiques",
+        "desc": "Observabilité, évaluations, design d'outils, état, retries, coûts et kill switches."
+      },
+      "agents-in-the-real-world": {
+        "title": "Partie 4 — Les agents dans le monde réel",
+        "desc": "Utilisateurs, latence, sécurité, injection de prompt, périmètre et systèmes multi-agents."
+      },
+      "mindset": {
+        "title": "Partie 5 — État d'esprit",
+        "desc": "Expertise, écriture, incertitude, responsabilité et clarté de pensée."
+      }
     }
   },
   "en": {
@@ -71,18 +85,14 @@
       "articles": "Articles",
       "caseStudies": "Case Studies",
       "tags": "Topics",
-      "readingGuide": "Reading Guide",
-      "about": "About"
+      "readingGuide": "Reading Guide"
     },
     "home": {
       "title": "Home",
-      "heroSubtitle": "Short essays on building, using, and thinking clearly about AI agents.",
-      "introP1": "Agents are everywhere now. They write code, answer customers, process documents, make decisions. The developers building these systems — and the developers using them every day — are figuring it out as they go. Some lessons come from experience. Others come from production failures that could have been avoided.",
-      "introP2": "This collection is 97 of those lessons. Each essay stands alone. No dependencies between them, no required reading order. Pick the one that matches where you are right now and start there.",
       "explore": "Explore",
-      "exploreEssays": "97 short essays on the foundational principles of agentic programming",
       "exploreArticles": "In-depth technical guides on RAG, evaluations, prompting, and multi-agent architectures",
-      "exploreCaseStudies": "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures"
+      "exploreCaseStudies": "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures",
+      "exploreReadingGuide": "Four suggested reading paths depending on where you are — daily user, builder, or decision-maker"
     },
     "sections": {
       "essaysIntroP1": "This book is a collection of 97 short essays, each built around a single idea. No chapters that depend on chapters before them. No progressive argument that requires you to start at the beginning. Open anywhere and find something useful.",
@@ -123,12 +133,30 @@
       "ariaLabel": "Cookie consent banner"
     },
     "parts": {
-      "developer-as-user": { "title": "Part 6 — The Developer as User", "desc": "Using AI coding assistants: context, architecture, large projects, and control." },
-      "working-with-agents": { "title": "Part 1 — Working with Agents", "desc": "Mental models, probabilistic systems, context, debugging, and human oversight." },
-      "prompting-as-engineering": { "title": "Part 2 — Prompting as Engineering", "desc": "Versioning, examples, negative constraints, system prompts as contracts." },
-      "building-agentic-systems": { "title": "Part 3 — Building Agentic Systems", "desc": "Observability, evals, tool design, state, retries, cost, and kill switches." },
-      "agents-in-the-real-world": { "title": "Part 4 — Agents in the Real World", "desc": "Users, latency, security, prompt injection, scope, and multi-agent systems." },
-      "mindset": { "title": "Part 5 — Mindset", "desc": "Expertise, writing, uncertainty, responsibility, and thinking clearly." }
+      "developer-as-user": {
+        "title": "Part 6 — The Developer as User",
+        "desc": "Using AI coding assistants: context, architecture, large projects, and control."
+      },
+      "working-with-agents": {
+        "title": "Part 1 — Working with Agents",
+        "desc": "Mental models, probabilistic systems, context, debugging, and human oversight."
+      },
+      "prompting-as-engineering": {
+        "title": "Part 2 — Prompting as Engineering",
+        "desc": "Versioning, examples, negative constraints, system prompts as contracts."
+      },
+      "building-agentic-systems": {
+        "title": "Part 3 — Building Agentic Systems",
+        "desc": "Observability, evals, tool design, state, retries, cost, and kill switches."
+      },
+      "agents-in-the-real-world": {
+        "title": "Part 4 — Agents in the Real World",
+        "desc": "Users, latency, security, prompt injection, scope, and multi-agent systems."
+      },
+      "mindset": {
+        "title": "Part 5 — Mindset",
+        "desc": "Expertise, writing, uncertainty, responsibility, and thinking clearly."
+      }
     }
   }
 }

@@ -209,6 +209,7 @@ export default function(eleventyConfig) {
       return data.i18n ? data.i18n[lang] : {};
     },
     langPrefix: (data) => (data.lang || "fr") === "en" ? "/en" : "",
+    essaysUrl: (data) => (data.lang || "fr") === "en" ? "/en/97-things/" : "/97-choses/",
   });
 
   // Collection: all posts sorted by date (newest first), excluding drafts

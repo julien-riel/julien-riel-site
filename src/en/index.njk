@@ -1,33 +1,53 @@
 ---
 layout: base.njk
 title: Home
+description: Julien Riel — IT solutions architect in Montréal. Essays, case studies, and technical guides on agentic programming.
 lang: en
 permalink: /en/
 ---
 
-<section class="hero">
+<section class="hero home-hero">
   <div class="hero-decoration hero-decoration--1"></div>
   <div class="hero-decoration hero-decoration--2"></div>
-  <div class="hero-content">
-    <h1><span class="highlight">97 Things</span> Every Agentic Programmer Should Know</h1>
-    <p>{{ t.home.heroSubtitle }}</p>
+  <div class="home-hero-content">
+    <p class="home-kicker">IT Solutions Architect · Montréal</p>
+    <h1>Julien <span class="highlight">Riel</span></h1>
+    <p class="home-lede">Close to twenty years building web applications. Since 2023, I've been exploring what AI agents change about how we write software — and writing down what I learn along the way.</p>
   </div>
 </section>
 
-<section class="book-intro">
-  <div class="book-intro-content">
-    <p>{{ t.home.introP1 }}</p>
-    <p>{{ t.home.introP2 }}</p>
+<section class="home-bio">
+  <div class="home-bio-grid">
+    <div class="home-bio-text">
+      <p>IT solutions architect at the City of Montréal, based in Longueuil, Québec. First document management and publishing Québec's legal texts at Irosoft, then six years in asset and wealth management at Desjardins, and since 2017 the City's application portfolio. Trained at UQAM in computer science and software engineering.</p>
+      <p>Twenty years means I've seen enough technologies come and go to be wary of hype cycles. What's happening with AI agents is different. This isn't another framework — it's a shift in <em>how</em> we write software, in what counts as "working," in what can be delegated and to whom.</p>
+      <p>This site is written in collaboration with Claude (Anthropic) — which is itself a demonstration of the subject. The ideas, the editorial decisions, and the arc of each piece come from me. The drafting, the debugging, and the iteration happen in pair with the agent.</p>
+    </div>
+    <aside class="home-facts" aria-label="At a glance">
+      <h2 class="home-facts-title">At a glance</h2>
+      <dl class="home-facts-list">
+        <div><dt>Role</dt><dd>IT Solutions Architect, City of Montréal</dd></div>
+        <div><dt>Based in</dt><dd>Longueuil, Québec</dd></div>
+        <div><dt>Education</dt><dd>UQAM — computer science &amp; software engineering</dd></div>
+        <div><dt>Focus</dt><dd>Agentic programming</dd></div>
+        <div><dt>Contact</dt><dd><a href="{{ metadata.social.github }}" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="{{ metadata.social.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a></dd></div>
+      </dl>
+    </aside>
   </div>
 </section>
 
 <section class="explore-section">
   <h2>{{ t.home.explore }}</h2>
+
+  <a href="{{ essaysUrl }}" class="home-featured">
+    <span class="home-featured-number" aria-hidden="true">97</span>
+    <span class="home-featured-body">
+      <span class="home-featured-title">97 Things Every Agentic Programmer Should Know</span>
+      <span class="home-featured-desc">The collection I wish I'd read two years ago: short, concrete essays drawn from what breaks in production. A nod to O'Reilly's <em>97 Things</em> format — each built around a single idea, with no required reading order.</span>
+    </span>
+  </a>
+
   <div class="explore-grid">
-    <a href="/en/posts/" class="explore-card">
-      <h3>{{ t.nav.essays }}</h3>
-      <p>{{ t.home.exploreEssays }}</p>
-    </a>
     <a href="/en/articles/" class="explore-card">
       <h3>{{ t.nav.articles }}</h3>
       <p>{{ t.home.exploreArticles }}</p>
@@ -35,6 +55,10 @@ permalink: /en/
     <a href="/en/case-studies/" class="explore-card">
       <h3>{{ t.nav.caseStudies }}</h3>
       <p>{{ t.home.exploreCaseStudies }}</p>
+    </a>
+    <a href="/en/reading-guide/" class="explore-card">
+      <h3>{{ t.nav.readingGuide }}</h3>
+      <p>{{ t.home.exploreReadingGuide }}</p>
     </a>
   </div>
 </section>

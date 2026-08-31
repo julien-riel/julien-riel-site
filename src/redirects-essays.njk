@@ -1,0 +1,22 @@
+---
+pagination:
+  data: collections.posts
+  size: 1
+  alias: redirectPost
+permalink: "{% if redirectPost.data.lang == 'en' %}/en{% endif %}/posts/{{ redirectPost.fileSlug }}/index.html"
+eleventyExcludeFromCollections: true
+---
+{%- set target = redirectPost.url -%}
+<!DOCTYPE html>
+<html lang="{{ redirectPost.data.lang or 'fr' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url={{ target }}">
+  <link rel="canonical" href="{{ metadata.url }}{{ target }}">
+  <meta name="robots" content="noindex">
+  <title>{{ redirectPost.data.title }}</title>
+</head>
+<body>
+  <p><a href="{{ target }}">{{ redirectPost.data.title }}</a></p>
+</body>
+</html>
