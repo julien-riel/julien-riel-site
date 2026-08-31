@@ -210,6 +210,20 @@ export default function(eleventyConfig) {
     },
     langPrefix: (data) => (data.lang || "fr") === "en" ? "/en" : "",
     essaysUrl: (data) => (data.lang || "fr") === "en" ? "/en/97-things/" : "/97-choses/",
+    // Open Graph image path, matching the files scripts/generate-og-images.js
+    // writes to /assets/og/. Content pages are identified by their structural tag;
+    // other pages can set `image` in front matter explicitly.
+    image: (data) => {
+      if (data.image) return data.image;
+      // Only markdown content files get a derived card; section index pages
+      // (.njk) inherit the structural tag but have their own card via front matter.
+      if (!data.page.inputPath || !data.page.inputPath.endsWith(".md")) return undefined;
+      const tags = data.tags || [];
+      const section = ["posts", "articles", "case-studies"].find((s) => tags.includes(s));
+      if (!section) return undefined;
+      const lang = data.lang || "fr";
+      return `/assets/og/${lang}-${section}-${data.page.fileSlug}.png`;
+    },
   });
 
   // Collection: all posts sorted by date (newest first), excluding drafts
