@@ -325,6 +325,16 @@ function initSmoothScroll() {
   });
 }
 
+/**
+ * Initialize glossary filtering lazily
+ * Only loads glossary.js on the glossary page
+ */
+async function initGlossaryLazy() {
+  if (!document.querySelector("[data-glossary-toolbar]")) return;
+  const { initGlossary } = await import("./glossary.js");
+  initGlossary();
+}
+
 async function initConsentLazy() {
   if (!document.getElementById("consent-banner")) return;
   const { initConsent, initAnalyticsEvents } = await import("./consent.js");
@@ -343,6 +353,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Deferred: load search only if needed, during idle time
   scheduleIdle(() => initSearchLazy(), 1000);
+
+  // Deferred: glossary filter, only on the glossary page
+  scheduleIdle(() => initGlossaryLazy(), 500);
 
   // Deferred: consent banner + analytics events (non-blocking)
   scheduleIdle(() => initConsentLazy(), 500);

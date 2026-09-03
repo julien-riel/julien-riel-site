@@ -1,0 +1,1059 @@
+{
+  "categories": [
+    {
+      "id": "fondations",
+      "fr": "Fondations",
+      "en": "Foundations",
+      "descFr": "Le vocabulaire de l'apprentissage automatique, sous les modèles de langage.",
+      "descEn": "The machine learning vocabulary that sits underneath language models."
+    },
+    {
+      "id": "modeles",
+      "fr": "Modèles",
+      "en": "Models",
+      "descFr": "Ce qu'on appelle « un modèle », et les familles qu'on distingue.",
+      "descEn": "What we call \"a model\", and the families worth telling apart."
+    },
+    {
+      "id": "entrainement",
+      "fr": "Entraînement",
+      "en": "Training",
+      "descFr": "Comment un modèle acquiert — et perd — ses capacités.",
+      "descEn": "How a model acquires — and loses — its capabilities."
+    },
+    {
+      "id": "contexte",
+      "fr": "Jetons et contexte",
+      "en": "Tokens and context",
+      "descFr": "L'unité de facturation, l'unité de mémoire, et la contrainte qui gouverne tout le reste.",
+      "descEn": "The billing unit, the memory unit, and the constraint that governs everything else."
+    },
+    {
+      "id": "prompting",
+      "fr": "Prompting",
+      "en": "Prompting",
+      "descFr": "Ce qu'on écrit au modèle, et comment on l'écrit.",
+      "descEn": "What you write to the model, and how you write it."
+    },
+    {
+      "id": "agents",
+      "fr": "Agents et harnais",
+      "en": "Agents and harnesses",
+      "descFr": "Ce qui transforme un modèle qui répond en système qui agit.",
+      "descEn": "What turns a model that answers into a system that acts."
+    },
+    {
+      "id": "rag",
+      "fr": "Récupération et mémoire",
+      "en": "Retrieval and memory",
+      "descFr": "Donner au modèle accès à des connaissances qu'il n'a pas apprises.",
+      "descEn": "Giving the model access to knowledge it never learned."
+    },
+    {
+      "id": "evaluation",
+      "fr": "Évaluation et fiabilité",
+      "en": "Evaluation and reliability",
+      "descFr": "Comment savoir si ça marche, et comment ça casse.",
+      "descEn": "How to know whether it works, and how it breaks."
+    },
+    {
+      "id": "exploitation",
+      "fr": "Exploitation",
+      "en": "Operations",
+      "descFr": "Les contraintes qui décident si un prototype devient un produit.",
+      "descEn": "The constraints that decide whether a prototype becomes a product."
+    }
+  ],
+  "terms": [
+    {
+      "id": "intelligence-artificielle",
+      "category": "fondations",
+      "en": "Artificial intelligence (AI)",
+      "fr": "Intelligence artificielle (IA)",
+      "defFr": "Terme parapluie pour les systèmes qui accomplissent des tâches qu'on associait au raisonnement humain. En pratique, quand quelqu'un dit « IA » aujourd'hui, il parle presque toujours d'apprentissage automatique appliqué à de grands modèles. Le mot est trop large pour être utile en conception : demande toujours de quel modèle et de quelle tâche on parle.",
+      "defEn": "Umbrella term for systems that perform tasks we used to associate with human reasoning. In practice, when someone says \"AI\" today they almost always mean machine learning applied to large models. The word is too broad to be useful in design: always ask which model and which task.",
+      "source": {
+        "label": "Wikipédia — Intelligence artificielle",
+        "url": "https://fr.wikipedia.org/wiki/Intelligence_artificielle"
+      }
+    },
+    {
+      "id": "machine-learning",
+      "category": "fondations",
+      "en": "Machine learning",
+      "fr": "Apprentissage automatique",
+      "frAlt": "machine learning",
+      "defFr": "Approche où le comportement du programme est dérivé de données plutôt qu'écrit à la main. Tu ne codes pas les règles, tu fournis des exemples et un objectif à optimiser. Conséquence directe pour un développeur : le comportement n'est plus lisible dans le code source, il est encodé dans des paramètres numériques.",
+      "defEn": "An approach where the program's behaviour is derived from data rather than written by hand. You don't code the rules; you supply examples and an objective to optimize. Direct consequence for a developer: behaviour is no longer readable in source code, it's encoded in numeric parameters.",
+      "source": {
+        "label": "Google — Machine Learning Crash Course",
+        "url": "https://developers.google.com/machine-learning/crash-course"
+      }
+    },
+    {
+      "id": "deep-learning",
+      "category": "fondations",
+      "en": "Deep learning",
+      "fr": "Apprentissage profond",
+      "defFr": "Sous-ensemble de l'apprentissage automatique fondé sur des réseaux de neurones à plusieurs couches. La profondeur permet au modèle de construire ses propres représentations intermédiaires au lieu de dépendre de caractéristiques choisies par un humain. C'est ce qui a rendu possible le traitement du langage et de l'image à l'échelle actuelle.",
+      "defEn": "A subset of machine learning built on neural networks with many layers. Depth lets the model build its own intermediate representations instead of relying on human-chosen features. This is what made language and image processing work at today's scale.",
+      "source": {
+        "label": "Wikipedia — Deep learning",
+        "url": "https://en.wikipedia.org/wiki/Deep_learning"
+      }
+    },
+    {
+      "id": "reseau-de-neurones",
+      "category": "fondations",
+      "en": "Neural network",
+      "fr": "Réseau de neurones",
+      "defFr": "Fonction mathématique composée de couches d'unités simples, chacune combinant ses entrées avec des poids puis appliquant une non-linéarité. Rien de biologique là-dedans malgré le nom : c'est de l'algèbre linéaire empilée. Sa force est de pouvoir approximer des fonctions très complexes si on lui donne assez de paramètres et de données.",
+      "defEn": "A mathematical function made of layers of simple units, each combining its inputs with weights and applying a non-linearity. Nothing biological about it despite the name: it's stacked linear algebra. Its strength is approximating very complex functions given enough parameters and data.",
+      "source": {
+        "label": "3Blue1Brown — But what is a neural network?",
+        "url": "https://www.3blue1brown.com/topics/neural-networks"
+      }
+    },
+    {
+      "id": "transformer",
+      "category": "fondations",
+      "en": "Transformer",
+      "fr": "Transformeur",
+      "frAlt": "transformer",
+      "defFr": "Architecture de réseau de neurones publiée par Google en 2017, qui traite une séquence entière en parallèle grâce au mécanisme d'attention plutôt que mot par mot. C'est l'architecture derrière pratiquement tous les modèles de langage actuels. Le « T » de GPT.",
+      "defEn": "A neural network architecture published by Google in 2017 that processes a whole sequence in parallel through attention rather than word by word. It's the architecture behind virtually every current language model. The \"T\" in GPT.",
+      "source": {
+        "label": "Vaswani et al. — Attention Is All You Need (arXiv)",
+        "url": "https://arxiv.org/abs/1706.03762"
+      }
+    },
+    {
+      "id": "attention",
+      "category": "fondations",
+      "en": "Attention",
+      "fr": "Attention",
+      "defFr": "Mécanisme par lequel le modèle pondère l'importance de chaque jeton du contexte quand il traite un jeton donné. C'est ce qui lui permet de relier un pronom à son antécédent trente lignes plus haut. Son coût croît avec le carré de la longueur du contexte — d'où le prix d'une fenêtre de contexte très grande.",
+      "defEn": "The mechanism by which the model weighs how much each token in the context matters while processing a given token. It's what lets it connect a pronoun to its antecedent thirty lines earlier. Its cost grows with the square of context length — which is why very large context windows are expensive.",
+      "source": {
+        "label": "Jay Alammar — The Illustrated Transformer",
+        "url": "https://jalammar.github.io/illustrated-transformer/"
+      }
+    },
+    {
+      "id": "parametre",
+      "category": "fondations",
+      "en": "Parameter",
+      "fr": "Paramètre",
+      "defFr": "Valeur numérique apprise pendant l'entraînement. Le compte de paramètres (7 milliards, 70 milliards…) donne un ordre de grandeur de la capacité du modèle et de la mémoire nécessaire pour l'exécuter. Ce n'est pas une mesure de qualité : un petit modèle bien entraîné bat souvent un gros modèle mal entraîné.",
+      "defEn": "A numeric value learned during training. Parameter count (7 billion, 70 billion…) gives a rough sense of a model's capacity and of the memory needed to run it. It is not a quality metric: a small, well-trained model often beats a large, poorly trained one.",
+      "source": {
+        "label": "Google — Machine Learning Glossary: parameter",
+        "url": "https://developers.google.com/machine-learning/glossary#parameter"
+      }
+    },
+    {
+      "id": "poids",
+      "category": "fondations",
+      "en": "Weights",
+      "fr": "Poids",
+      "defFr": "Les paramètres d'un réseau de neurones, vus comme le fichier qu'on télécharge et qu'on charge en mémoire. « Les poids d'un modèle » désigne concrètement ses connaissances : deux modèles de même architecture aux poids différents sont deux modèles différents. C'est aussi l'objet des débats sur l'ouverture — publier les poids, c'est publier le modèle.",
+      "defEn": "The parameters of a neural network, seen as the file you download and load into memory. \"A model's weights\" is concretely its knowledge: two models with the same architecture and different weights are two different models. It's also what openness debates are about — publishing the weights is publishing the model.",
+      "source": {
+        "label": "Google — Machine Learning Glossary: weight",
+        "url": "https://developers.google.com/machine-learning/glossary#weight"
+      }
+    },
+    {
+      "id": "embedding",
+      "category": "fondations",
+      "en": "Embedding",
+      "fr": "Plongement vectoriel",
+      "frAlt": "embedding",
+      "defFr": "Représentation d'un texte, d'une image ou d'un jeton sous forme de vecteur de nombres, construite de façon que la proximité géométrique traduise la proximité de sens. C'est la brique de base de la recherche sémantique et du RAG : on compare des vecteurs, pas des mots.",
+      "defEn": "A representation of a text, image, or token as a vector of numbers, built so that geometric closeness reflects closeness in meaning. It's the building block of semantic search and RAG: you compare vectors, not words.",
+      "source": {
+        "label": "Google — Embeddings (Machine Learning Crash Course)",
+        "url": "https://developers.google.com/machine-learning/crash-course/embeddings"
+      }
+    },
+    {
+      "id": "surapprentissage",
+      "category": "fondations",
+      "en": "Overfitting",
+      "fr": "Surapprentissage",
+      "defFr": "Quand un modèle mémorise ses données d'entraînement au point de mal généraliser sur des données nouvelles. Excellents résultats à l'entraînement, mauvais en production. La version agentique du problème : un prompt réglé au millimètre sur tes vingt cas de test qui s'effondre sur le vingt et unième.",
+      "defEn": "When a model memorizes its training data so well that it generalizes poorly to new data. Great training scores, poor production behaviour. The agentic version of the problem: a prompt tuned to perfection on your twenty test cases that collapses on the twenty-first.",
+      "source": {
+        "label": "Google — Machine Learning Glossary: overfitting",
+        "url": "https://developers.google.com/machine-learning/glossary#overfitting"
+      }
+    },
+    {
+      "id": "modele",
+      "category": "modeles",
+      "en": "Model",
+      "fr": "Modèle",
+      "defFr": "Un fichier de poids plus le code qui sait l'exécuter. Vu du développeur, c'est une fonction : tu donnes du texte, elle rend du texte, sans état entre deux appels. Tout ce qui ressemble à de la mémoire — historique de conversation, fichiers ouverts, résultats d'outils — est renvoyé au modèle à chaque appel par le code qui l'entoure.",
+      "defEn": "A file of weights plus the code that knows how to run it. From a developer's seat it's a function: you pass text, it returns text, with no state between calls. Anything that looks like memory — conversation history, open files, tool results — is re-sent to the model on every call by the code around it.",
+      "source": {
+        "label": "Wikipedia — Foundation model",
+        "url": "https://en.wikipedia.org/wiki/Foundation_model"
+      },
+      "related": {
+        "fr": "/articles/understanding-llms/",
+        "en": "/en/articles/understanding-llms/",
+        "labelFr": "Que se passe-t-il, vraiment, quand vous parlez à une IA ?",
+        "labelEn": "What's Really Happening When You Talk to an AI"
+      }
+    },
+    {
+      "id": "llm",
+      "category": "modeles",
+      "en": "Large language model (LLM)",
+      "fr": "LLM",
+      "frAlt": "grand modèle de langage",
+      "defFr": "Modèle entraîné sur d'immenses corpus de texte à prédire le prochain jeton. Tout le reste — répondre à une question, écrire du code, résumer — est une conséquence de cette seule tâche. Retenir ça évite beaucoup de mauvaises intuitions : le modèle ne cherche pas la vérité, il cherche la continuation plausible.",
+      "defEn": "A model trained on huge text corpora to predict the next token. Everything else — answering a question, writing code, summarizing — falls out of that single task. Remembering this prevents a lot of bad intuitions: the model isn't looking for truth, it's looking for a plausible continuation.",
+      "source": {
+        "label": "Wikipedia — Large language model",
+        "url": "https://en.wikipedia.org/wiki/Large_language_model"
+      },
+      "related": {
+        "fr": "/articles/understanding-llms/",
+        "en": "/en/articles/understanding-llms/",
+        "labelFr": "Que se passe-t-il, vraiment, quand vous parlez à une IA ?",
+        "labelEn": "What's Really Happening When You Talk to an AI"
+      }
+    },
+    {
+      "id": "modele-de-fondation",
+      "category": "modeles",
+      "en": "Foundation model",
+      "fr": "Modèle de fondation",
+      "defFr": "Modèle généraliste entraîné à grande échelle, destiné à être adapté à de nombreuses tâches en aval plutôt qu'à une seule. Le terme vient de Stanford en 2021 et insiste sur une propriété économique : l'entraînement coûte des dizaines de millions, l'adaptation coûte peu.",
+      "defEn": "A general-purpose model trained at scale, meant to be adapted to many downstream tasks rather than one. The term comes from Stanford in 2021 and stresses an economic property: training costs tens of millions, adapting costs little.",
+      "source": {
+        "label": "Stanford CRFM — On the Opportunities and Risks of Foundation Models",
+        "url": "https://arxiv.org/abs/2108.07258"
+      }
+    },
+    {
+      "id": "modele-frontiere",
+      "category": "modeles",
+      "en": "Frontier model",
+      "fr": "Modèle frontière",
+      "defFr": "Le modèle le plus capable disponible à un moment donné, généralement le plus gros et le plus cher de sa famille. Le terme sert autant en marketing qu'en politique publique, où il désigne les modèles assez puissants pour justifier une surveillance particulière. Techniquement, « frontière » est une position dans un classement, pas une propriété du modèle — et la position change tous les quelques mois.",
+      "defEn": "The most capable model available at a given moment, usually the largest and most expensive of its family. The term is used as much in marketing as in policy, where it means models powerful enough to warrant specific oversight. Technically \"frontier\" is a ranking position, not a property of the model — and the position changes every few months.",
+      "source": {
+        "label": "Anderljung et al. — Frontier AI Regulation (arXiv)",
+        "url": "https://arxiv.org/abs/2307.03718"
+      }
+    },
+    {
+      "id": "modele-de-raisonnement",
+      "category": "modeles",
+      "en": "Reasoning model",
+      "fr": "Modèle de raisonnement",
+      "defFr": "Modèle entraîné à produire une longue chaîne de réflexion interne avant sa réponse finale, et à dépenser plus de calcul à l'inférence quand le problème est dur. Meilleur sur les maths, le code et la planification ; plus lent et plus cher. À réserver aux tâches où le raisonnement est le goulot, pas à la reformulation d'un courriel.",
+      "defEn": "A model trained to produce a long internal chain of thought before its final answer, and to spend more compute at inference time when the problem is hard. Better at math, code, and planning; slower and more expensive. Save it for tasks where reasoning is the bottleneck, not for rewriting an email.",
+      "source": {
+        "label": "DeepSeek-AI — DeepSeek-R1 (arXiv)",
+        "url": "https://arxiv.org/abs/2501.12948"
+      }
+    },
+    {
+      "id": "modele-multimodal",
+      "category": "modeles",
+      "en": "Multimodal model",
+      "fr": "Modèle multimodal",
+      "defFr": "Modèle qui accepte ou produit plusieurs types de données — texte, image, audio, vidéo — dans un même espace de représentation. En pratique agentique, c'est ce qui permet à un agent de lire une capture d'écran, un diagramme ou un PDF scanné au lieu d'exiger du texte propre.",
+      "defEn": "A model that accepts or produces several data types — text, image, audio, video — in a shared representation space. In agentic practice, it's what lets an agent read a screenshot, a diagram, or a scanned PDF instead of demanding clean text.",
+      "source": {
+        "label": "Wikipedia — Multimodal learning",
+        "url": "https://en.wikipedia.org/wiki/Multimodal_learning"
+      }
+    },
+    {
+      "id": "poids-ouverts",
+      "category": "modeles",
+      "en": "Open-weights model",
+      "fr": "Modèle à poids ouverts",
+      "defFr": "Modèle dont les poids sont publiés et exécutables sur ton infrastructure. Ce n'est pas la même chose qu'« open source » : les données d'entraînement et le code d'entraînement restent souvent fermés, et la licence peut restreindre les usages. L'intérêt pratique : contrôle des données, coût prévisible, pas de dépendance à une API.",
+      "defEn": "A model whose weights are published and runnable on your own infrastructure. Not the same thing as \"open source\": training data and training code often stay closed, and the licence may restrict use. The practical appeal: data control, predictable cost, no API dependency.",
+      "source": {
+        "label": "Wikipedia — Open weights",
+        "url": "https://en.wikipedia.org/wiki/Open_weights"
+      }
+    },
+    {
+      "id": "distillation",
+      "category": "modeles",
+      "en": "Distillation",
+      "fr": "Distillation",
+      "defFr": "Entraîner un petit modèle à imiter les sorties d'un gros. On échange un peu de capacité contre beaucoup de vitesse et de coût. C'est l'origine de la plupart des petits modèles rapides que tu utilises pour du classement ou du routage.",
+      "defEn": "Training a small model to imitate the outputs of a large one. You trade a little capability for a lot of speed and cost. It's where most of the small, fast models you use for classification or routing come from.",
+      "source": {
+        "label": "Hinton et al. — Distilling the Knowledge in a Neural Network (arXiv)",
+        "url": "https://arxiv.org/abs/1503.02531"
+      }
+    },
+    {
+      "id": "quantification",
+      "category": "modeles",
+      "en": "Quantization",
+      "fr": "Quantification",
+      "frAlt": "quantization",
+      "defFr": "Réduire la précision numérique des poids — de 16 bits à 8 ou 4 — pour faire tenir un modèle sur du matériel plus modeste. La qualité baisse un peu, la mémoire baisse beaucoup. C'est ce qui rend possible d'exécuter un modèle sérieux sur un portable.",
+      "defEn": "Reducing the numeric precision of the weights — from 16 bits down to 8 or 4 — so a model fits on more modest hardware. Quality drops a little, memory drops a lot. It's what makes running a serious model on a laptop possible.",
+      "source": {
+        "label": "Dettmers et al. — LLM.int8() (arXiv)",
+        "url": "https://arxiv.org/abs/2208.07339"
+      }
+    },
+    {
+      "id": "pre-entrainement",
+      "category": "entrainement",
+      "en": "Pre-training",
+      "fr": "Préentraînement",
+      "defFr": "La phase longue et coûteuse où le modèle apprend le langage en prédisant le prochain jeton sur des téraoctets de texte. Elle produit un modèle qui sait continuer un texte mais pas encore suivre une consigne — c'est le travail des phases suivantes.",
+      "defEn": "The long, expensive phase where the model learns language by predicting the next token across terabytes of text. It produces a model that can continue text but can't yet follow an instruction — that's the job of the later phases.",
+      "source": {
+        "label": "Brown et al. — Language Models are Few-Shot Learners (arXiv)",
+        "url": "https://arxiv.org/abs/2005.14165"
+      }
+    },
+    {
+      "id": "fine-tuning",
+      "category": "entrainement",
+      "en": "Fine-tuning",
+      "fr": "Fine-tuning",
+      "frAlt": "réglage fin, ajustement",
+      "defFr": "Poursuivre l'entraînement d'un modèle existant sur un jeu de données spécifique pour lui donner un comportement, un format ou un ton particulier. Utile pour la forme, rarement pour les faits : si l'information change, la mettre dans le contexte via du RAG est presque toujours le bon réflexe.",
+      "defEn": "Continuing training of an existing model on a specific dataset to give it a particular behaviour, format, or tone. Useful for form, rarely for facts: when the information changes, putting it in the context via RAG is almost always the right move.",
+      "source": {
+        "label": "Wikipedia — Fine-tuning (deep learning)",
+        "url": "https://en.wikipedia.org/wiki/Fine-tuning_(deep_learning)"
+      },
+      "related": {
+        "fr": "/articles/fine-tuning-vs-rag/",
+        "en": "/en/articles/fine-tuning-vs-rag/",
+        "labelFr": "Fine-tuning vs RAG : quand enseigner au modèle et quand lui montrer la réponse",
+        "labelEn": "Fine-Tuning vs. RAG: When to Teach the Model and When to Show It the Answer"
+      }
+    },
+    {
+      "id": "lora",
+      "category": "entrainement",
+      "en": "LoRA (low-rank adaptation)",
+      "fr": "LoRA",
+      "defFr": "Technique de fine-tuning qui gèle les poids d'origine et n'entraîne qu'un petit ensemble de matrices additionnelles. On passe de milliards de paramètres à ajuster à quelques millions : entraînement possible sur un seul GPU, et plusieurs adaptations échangeables sur un même modèle de base.",
+      "defEn": "A fine-tuning technique that freezes the original weights and trains only a small set of additional matrices. You go from billions of parameters to tune down to a few million: training fits on a single GPU, and several swappable adapters can share one base model.",
+      "source": {
+        "label": "Hu et al. — LoRA (arXiv)",
+        "url": "https://arxiv.org/abs/2106.09685"
+      }
+    },
+    {
+      "id": "rlhf",
+      "category": "entrainement",
+      "en": "RLHF (reinforcement learning from human feedback)",
+      "fr": "RLHF",
+      "frAlt": "apprentissage par renforcement à partir de rétroaction humaine",
+      "defFr": "Phase où des humains classent des réponses du modèle, un modèle de récompense apprend leurs préférences, puis le modèle est optimisé contre cette récompense. C'est ce qui transforme un moteur de complétion en assistant utile — et aussi ce qui explique sa tendance à te donner raison.",
+      "defEn": "The phase where humans rank model responses, a reward model learns their preferences, and the model is then optimized against that reward. It's what turns a completion engine into a useful assistant — and also why it tends to agree with you.",
+      "source": {
+        "label": "Ouyang et al. — Training language models to follow instructions (arXiv)",
+        "url": "https://arxiv.org/abs/2203.02155"
+      }
+    },
+    {
+      "id": "alignement",
+      "category": "entrainement",
+      "en": "Alignment",
+      "fr": "Alignement",
+      "defFr": "L'ensemble des techniques visant à faire correspondre le comportement du modèle aux intentions et aux valeurs de ceux qui le déploient. Concrètement, c'est ce qui produit les refus, les mises en garde et les limites de comportement. Un modèle aligné n'est pas un modèle sûr : c'est un modèle dont les défaillances sont plus prévisibles.",
+      "defEn": "The set of techniques aimed at making a model's behaviour match the intentions and values of those deploying it. Concretely, it's what produces refusals, caveats, and behavioural limits. An aligned model isn't a safe model: it's a model whose failures are more predictable.",
+      "source": {
+        "label": "Wikipedia — AI alignment",
+        "url": "https://en.wikipedia.org/wiki/AI_alignment"
+      }
+    },
+    {
+      "id": "donnees-entrainement",
+      "category": "entrainement",
+      "en": "Training data",
+      "fr": "Données d'entraînement",
+      "defFr": "Le corpus dont le modèle tire tout ce qu'il sait. Sa composition explique les biais, les lacunes et les forces observées à l'usage — un modèle nourri surtout de code Python sera meilleur en Python. C'est aussi le point de contact avec le droit d'auteur et la vie privée.",
+      "defEn": "The corpus from which the model draws everything it knows. Its composition explains the biases, gaps, and strengths you see in use — a model fed mostly Python will be better at Python. It's also where copyright and privacy questions land.",
+      "source": {
+        "label": "Gebru et al. — Datasheets for Datasets (arXiv)",
+        "url": "https://arxiv.org/abs/1803.09010"
+      }
+    },
+    {
+      "id": "date-de-coupure",
+      "category": "entrainement",
+      "en": "Knowledge cutoff",
+      "fr": "Date de coupure des connaissances",
+      "defFr": "La date après laquelle le modèle n'a rien vu. Tout ce qui est plus récent — une version de bibliothèque, une API, une actualité — doit lui être fourni dans le contexte. Un modèle interrogé sur l'après-coupure ne dit pas « je ne sais pas » : il invente quelque chose de plausible.",
+      "defEn": "The date after which the model has seen nothing. Anything newer — a library version, an API, a news event — has to be handed to it in the context. Asked about the post-cutoff world, a model doesn't say \"I don't know\": it invents something plausible.",
+      "source": {
+        "label": "Cheng et al. — Dated Data: Tracing Knowledge Cutoffs (arXiv)",
+        "url": "https://arxiv.org/abs/2403.12958"
+      }
+    },
+    {
+      "id": "jeton",
+      "category": "contexte",
+      "en": "Token",
+      "fr": "Jeton",
+      "frAlt": "token",
+      "defFr": "L'unité que le modèle lit et écrit : un fragment de mot, pas un caractère ni un mot entier. En anglais, environ quatre caractères par jeton ; en français, un peu moins à cause des accents et des mots plus longs. C'est l'unité de facturation, l'unité de la fenêtre de contexte et l'unité de la latence — donc l'unité qui compte.",
+      "defEn": "The unit the model reads and writes: a fragment of a word, not a character and not a whole word. In English, roughly four characters per token; in French, a bit less, because of accents and longer words. It's the billing unit, the context-window unit, and the latency unit — so it's the unit that matters.",
+      "source": {
+        "label": "Hugging Face — Summary of the tokenizers",
+        "url": "https://huggingface.co/docs/transformers/tokenizer_summary"
+      }
+    },
+    {
+      "id": "tokenisation",
+      "category": "contexte",
+      "en": "Tokenization",
+      "fr": "Tokenisation",
+      "frAlt": "segmentation en jetons",
+      "defFr": "L'étape qui découpe ton texte en jetons avant que le modèle le voie. C'est pour ça qu'un modèle compte mal les lettres d'un mot : il ne voit pas les lettres. La plupart des comportements étranges sur les chiffres, les URL ou les caractères rares viennent de là.",
+      "defEn": "The step that splits your text into tokens before the model ever sees it. It's why a model miscounts the letters in a word: it doesn't see letters. Most odd behaviour around digits, URLs, or rare characters starts here.",
+      "source": {
+        "label": "Sennrich et al. — Subword Units / BPE (arXiv)",
+        "url": "https://arxiv.org/abs/1508.07909"
+      }
+    },
+    {
+      "id": "fenetre-de-contexte",
+      "category": "contexte",
+      "en": "Context window",
+      "fr": "Fenêtre de contexte",
+      "defFr": "Le nombre maximal de jetons que le modèle peut prendre en compte en un seul appel : consigne système, historique, documents, résultats d'outils et réponse en cours, tout compris. C'est un budget, pas un espace de rangement. Et l'attention n'y est pas uniforme : ce qui se trouve au milieu d'un très long contexte est moins bien exploité que ce qui se trouve au début ou à la fin.",
+      "defEn": "The maximum number of tokens the model can take into account in a single call: system prompt, history, documents, tool results, and the answer being written, all included. It's a budget, not storage. And attention across it isn't uniform: material in the middle of a very long context is used less well than material at the start or the end.",
+      "source": {
+        "label": "Liu et al. — Lost in the Middle (arXiv)",
+        "url": "https://arxiv.org/abs/2307.03172"
+      },
+      "related": {
+        "fr": "/articles/context-window/",
+        "en": "/en/articles/context-window/",
+        "labelFr": "Le contexte est fini. Programmons en conséquence.",
+        "labelEn": "Context Is Finite. Program Accordingly."
+      }
+    },
+    {
+      "id": "compaction",
+      "category": "contexte",
+      "en": "Compaction",
+      "fr": "Compaction",
+      "defFr": "Remplacer un historique de conversation devenu trop long par un résumé, pour continuer à travailler sans dépasser la fenêtre. Opération à perte : ce qui n'est pas dans le résumé disparaît. Sur une longue session agentique, c'est souvent le moment où l'agent « oublie » une contrainte donnée au début.",
+      "defEn": "Replacing a conversation history that has grown too long with a summary, so work can continue without overflowing the window. It's lossy: whatever isn't in the summary is gone. In a long agentic session, that's often the moment an agent \"forgets\" a constraint you set at the start.",
+      "source": {
+        "label": "Anthropic — Effective context engineering for AI agents",
+        "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+      },
+      "related": {
+        "fr": "/articles/context-window/",
+        "en": "/en/articles/context-window/",
+        "labelFr": "Le contexte est fini. Programmons en conséquence.",
+        "labelEn": "Context Is Finite. Program Accordingly."
+      }
+    },
+    {
+      "id": "mise-en-cache-de-prompt",
+      "category": "contexte",
+      "en": "Prompt caching",
+      "fr": "Mise en cache de prompt",
+      "defFr": "Réutiliser le calcul déjà fait sur un préfixe de contexte identique d'un appel à l'autre, au lieu de le refaire. Coût et latence baissent fortement sur les préfixes stables. La conséquence pratique : mets ce qui ne change pas — consignes, documentation, schémas — au début du prompt, et ce qui varie à la fin.",
+      "defEn": "Reusing the computation already done on an identical context prefix from one call to the next instead of redoing it. Cost and latency drop sharply on stable prefixes. The practical consequence: put what doesn't change — instructions, documentation, schemas — at the start of the prompt, and what varies at the end.",
+      "source": {
+        "label": "Anthropic — Prompt caching",
+        "url": "https://docs.claude.com/en/docs/build-with-claude/prompt-caching"
+      }
+    },
+    {
+      "id": "inference",
+      "category": "contexte",
+      "en": "Inference",
+      "fr": "Inférence",
+      "defFr": "L'exécution du modèle sur une entrée pour produire une sortie — par opposition à l'entraînement, qui modifie les poids. Chaque appel d'API est une inférence. C'est là que se paient la latence, le coût et l'empreinte énergétique de ton application au quotidien.",
+      "defEn": "Running the model on an input to produce an output — as opposed to training, which changes the weights. Every API call is an inference. It's where your application's day-to-day latency, cost, and energy footprint are actually paid.",
+      "source": {
+        "label": "Google — Machine Learning Glossary: inference",
+        "url": "https://developers.google.com/machine-learning/glossary#inference"
+      }
+    },
+    {
+      "id": "temperature",
+      "category": "contexte",
+      "en": "Temperature",
+      "fr": "Température",
+      "defFr": "Paramètre qui règle le degré d'aléatoire du tirage du prochain jeton. Proche de zéro, le modèle prend systématiquement le jeton le plus probable — sorties stables, plus répétitives. Plus haut, il explore — plus varié, moins fiable. Pour de l'extraction ou du code, garde-la basse.",
+      "defEn": "The parameter that controls how random the next-token draw is. Near zero, the model always takes the most likely token — stable, more repetitive output. Higher, it explores — more varied, less reliable. For extraction or code, keep it low.",
+      "source": {
+        "label": "Hugging Face — How to generate text",
+        "url": "https://huggingface.co/blog/how-to-generate"
+      }
+    },
+    {
+      "id": "echantillonnage",
+      "category": "contexte",
+      "en": "Sampling (top-p, top-k)",
+      "fr": "Échantillonnage",
+      "defFr": "La stratégie de sélection du prochain jeton parmi les candidats probables. Top-k limite le tirage aux k meilleurs, top-p (nucleus) aux candidats couvrant p % de la masse de probabilité. Avec la température, ce sont les trois molettes qui décident si ton système est ennuyeux ou imprévisible.",
+      "defEn": "The strategy for picking the next token among likely candidates. Top-k restricts the draw to the k best, top-p (nucleus) to the candidates covering p% of the probability mass. Along with temperature, these are the three dials that decide whether your system is boring or unpredictable.",
+      "source": {
+        "label": "Holtzman et al. — The Curious Case of Neural Text Degeneration (arXiv)",
+        "url": "https://arxiv.org/abs/1904.09751"
+      }
+    },
+    {
+      "id": "streaming",
+      "category": "contexte",
+      "en": "Streaming",
+      "fr": "Streaming",
+      "frAlt": "diffusion en continu",
+      "defFr": "Renvoyer la réponse jeton par jeton au fur et à mesure de sa génération plutôt qu'en un bloc final. Le temps total ne change pas ; le temps avant le premier caractère visible, oui. C'est une décision d'expérience utilisateur avant d'être une décision d'infrastructure.",
+      "defEn": "Returning the response token by token as it is generated rather than as one final block. Total time doesn't change; time to the first visible character does. It's a user-experience decision before it's an infrastructure one.",
+      "source": {
+        "label": "MDN — Server-sent events",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events"
+      }
+    },
+    {
+      "id": "prompt",
+      "category": "prompting",
+      "en": "Prompt",
+      "fr": "Prompt",
+      "frAlt": "invite",
+      "defFr": "Le texte envoyé au modèle pour obtenir un comportement. Dans un système agentique, ce n'est pas une question posée à la volée : c'est un artefact versionné, testé et révisé comme du code, parce que c'est lui qui détermine le comportement du système.",
+      "defEn": "The text sent to the model to obtain a behaviour. In an agentic system it isn't a question typed on the fly: it's an artifact that gets versioned, tested, and reviewed like code, because it's what determines how the system behaves.",
+      "source": {
+        "label": "Wikipedia — Prompt engineering",
+        "url": "https://en.wikipedia.org/wiki/Prompt_engineering"
+      }
+    },
+    {
+      "id": "prompt-systeme",
+      "category": "prompting",
+      "en": "System prompt",
+      "fr": "Prompt système",
+      "defFr": "Les consignes placées en tête du contexte, qui définissent le rôle, les contraintes et le format attendus pour toute la conversation. Le modèle leur accorde plus de poids qu'aux messages ordinaires, mais ce n'est pas une frontière de sécurité : du contenu hostile dans le contexte peut les contredire.",
+      "defEn": "The instructions placed at the head of the context, defining the role, constraints, and expected format for the whole conversation. The model weighs them more heavily than ordinary messages, but they aren't a security boundary: hostile content in the context can contradict them.",
+      "source": {
+        "label": "Anthropic — System prompts",
+        "url": "https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/system-prompts"
+      }
+    },
+    {
+      "id": "prompt-engineering",
+      "category": "prompting",
+      "en": "Prompt engineering",
+      "fr": "Prompt engineering",
+      "frAlt": "ingénierie de prompt",
+      "defFr": "La pratique consistant à structurer l'entrée pour obtenir un comportement fiable : rôle, exemples, format de sortie, contraintes explicites, et surtout ce qu'il ne faut pas faire. Moins de la magie que de la spécification — la plupart des mauvais résultats viennent d'une consigne ambiguë, pas d'un modèle faible.",
+      "defEn": "The practice of structuring the input to get reliable behaviour: role, examples, output format, explicit constraints, and above all what not to do. Less magic than specification — most bad results come from an ambiguous instruction, not a weak model.",
+      "source": {
+        "label": "DAIR.AI — Prompt Engineering Guide",
+        "url": "https://www.promptingguide.ai/"
+      },
+      "related": {
+        "fr": "/articles/advanced-prompt-engineering/",
+        "en": "/en/articles/advanced-prompt-engineering/",
+        "labelFr": "Ingénierie de prompts avancée : au-delà des bases",
+        "labelEn": "Advanced Prompt Engineering: Beyond the Basics"
+      }
+    },
+    {
+      "id": "few-shot",
+      "category": "prompting",
+      "en": "Zero-shot / few-shot",
+      "fr": "Zero-shot / few-shot",
+      "frAlt": "sans exemple / à quelques exemples",
+      "defFr": "Demander une tâche sans aucun exemple (zero-shot) ou avec quelques exemples placés dans le prompt (few-shot). Les exemples valent souvent mieux qu'un long paragraphe d'explication, surtout pour imposer un format de sortie. Attention : ce n'est pas du fine-tuning, rien n'est appris — les exemples repartent avec chaque appel.",
+      "defEn": "Asking for a task with no examples (zero-shot) or with a few examples placed in the prompt (few-shot). Examples usually beat a long paragraph of explanation, especially for pinning down an output format. Careful: this isn't fine-tuning, nothing is learned — the examples are re-sent on every call.",
+      "source": {
+        "label": "Brown et al. — Language Models are Few-Shot Learners (arXiv)",
+        "url": "https://arxiv.org/abs/2005.14165"
+      }
+    },
+    {
+      "id": "chaine-de-pensee",
+      "category": "prompting",
+      "en": "Chain of thought",
+      "fr": "Chaîne de pensée",
+      "defFr": "Amener le modèle à écrire son raisonnement étape par étape avant sa conclusion. Ça améliore les tâches à plusieurs étapes, et ça donne surtout une trace lisible : quand la réponse est fausse, tu vois où le raisonnement a dévié. Le raisonnement affiché reste une production du modèle, pas une explication fidèle de son calcul.",
+      "defEn": "Getting the model to write its reasoning step by step before its conclusion. It improves multi-step tasks, and above all it gives you a readable trace: when the answer is wrong, you can see where the reasoning drifted. The displayed reasoning is still model output, not a faithful account of its computation.",
+      "source": {
+        "label": "Wei et al. — Chain-of-Thought Prompting (arXiv)",
+        "url": "https://arxiv.org/abs/2201.11903"
+      }
+    },
+    {
+      "id": "raisonnement-etendu",
+      "category": "prompting",
+      "en": "Extended thinking",
+      "fr": "Raisonnement étendu",
+      "defFr": "Mode où le modèle dispose d'un budget de jetons dédié à réfléchir avant de répondre. Différent du chain-of-thought demandé dans le prompt : ici, le budget est un paramètre d'appel, et les jetons de réflexion sont facturés. Utile quand la qualité de la décision prime sur la latence.",
+      "defEn": "A mode where the model is given a token budget dedicated to thinking before it answers. Different from chain-of-thought asked for in the prompt: here the budget is a call parameter, and the thinking tokens are billed. Useful when decision quality matters more than latency.",
+      "source": {
+        "label": "Anthropic — Extended thinking",
+        "url": "https://docs.claude.com/en/docs/build-with-claude/extended-thinking"
+      }
+    },
+    {
+      "id": "agent",
+      "category": "agents",
+      "en": "Agent",
+      "fr": "Agent",
+      "defFr": "Système où un modèle décide lui-même des actions à enchaîner pour atteindre un but, en s'appuyant sur des outils et sur le résultat de ses actions précédentes. La distinction utile n'est pas « agent ou pas » mais « qui décide de la prochaine étape » : si c'est ton code, c'est un pipeline ; si c'est le modèle, c'est un agent.",
+      "defEn": "A system where a model itself decides which actions to chain toward a goal, using tools and the results of its previous actions. The useful distinction isn't \"agent or not\" but \"who decides the next step\": if it's your code, it's a pipeline; if it's the model, it's an agent.",
+      "source": {
+        "label": "Anthropic — Building effective agents",
+        "url": "https://www.anthropic.com/engineering/building-effective-agents"
+      }
+    },
+    {
+      "id": "agentique",
+      "category": "agents",
+      "en": "Agentic",
+      "fr": "Agentique",
+      "defFr": "Qualifie un système dont le déroulement n'est pas fixé à l'avance mais décidé par un modèle à l'exécution. Le mot désigne un curseur plutôt qu'une catégorie : plus le système choisit ses propres étapes, plus il est agentique — et plus il demande des garde-fous et de l'observabilité.",
+      "defEn": "Describes a system whose control flow isn't fixed in advance but decided by a model at run time. The word marks a slider rather than a category: the more the system picks its own steps, the more agentic it is — and the more guardrails and observability it needs.",
+      "source": {
+        "label": "Anthropic — Building effective agents",
+        "url": "https://www.anthropic.com/engineering/building-effective-agents"
+      }
+    },
+    {
+      "id": "harnais",
+      "category": "agents",
+      "en": "Harness",
+      "fr": "Harnais",
+      "defFr": "Tout le code autour du modèle : la boucle d'appel, la gestion du contexte, les outils exposés, les permissions, les tentatives de reprise et les journaux. Le modèle est interchangeable, le harnais est ton produit. C'est là que se joue la différence entre deux assistants qui utilisent pourtant le même modèle.",
+      "defEn": "All the code around the model: the call loop, context management, the exposed tools, permissions, retries, and logs. The model is swappable; the harness is your product. It's where two assistants running the very same model end up different.",
+      "source": {
+        "label": "Anthropic — Building agents with the Claude Agent SDK",
+        "url": "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk"
+      }
+    },
+    {
+      "id": "boucle-d-agent",
+      "category": "agents",
+      "en": "Agent loop",
+      "fr": "Boucle d'agent",
+      "defFr": "Le cycle fondamental : le modèle observe le contexte, choisit une action, le harnais l'exécute, le résultat retourne dans le contexte, et on recommence jusqu'à une condition d'arrêt. Toute la fiabilité d'un agent tient à cette condition d'arrêt et à ce qu'on remet dans le contexte à chaque tour.",
+      "defEn": "The fundamental cycle: the model observes the context, picks an action, the harness executes it, the result goes back into the context, and round it goes until a stopping condition. An agent's reliability rests entirely on that stopping condition and on what you put back into the context each turn.",
+      "source": {
+        "label": "Anthropic — Building effective agents",
+        "url": "https://www.anthropic.com/engineering/building-effective-agents"
+      }
+    },
+    {
+      "id": "outil",
+      "category": "agents",
+      "en": "Tool",
+      "fr": "Outil",
+      "defFr": "Fonction que le modèle peut demander d'exécuter — lire un fichier, interroger une base, appeler une API. Sa description est un prompt : un nom précis et une documentation claire améliorent le comportement de l'agent plus sûrement qu'un modèle plus gros.",
+      "defEn": "A function the model can ask to have executed — read a file, query a database, call an API. Its description is a prompt: a precise name and clear documentation improve agent behaviour more reliably than a bigger model does.",
+      "source": {
+        "label": "Schick et al. — Toolformer (arXiv)",
+        "url": "https://arxiv.org/abs/2302.04761"
+      }
+    },
+    {
+      "id": "appel-d-outil",
+      "category": "agents",
+      "en": "Tool call (function calling)",
+      "fr": "Appel d'outil",
+      "defFr": "La sortie structurée par laquelle le modèle demande l'exécution d'un outil avec ses arguments. Le modèle n'exécute rien lui-même : il produit une intention, ton code décide de l'honorer ou non. C'est précisément là que se place le contrôle des permissions.",
+      "defEn": "The structured output through which the model requests a tool with its arguments. The model executes nothing itself: it produces an intent, and your code decides whether to honour it. That's exactly where permission checks belong.",
+      "source": {
+        "label": "Anthropic — Tool use overview",
+        "url": "https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview"
+      }
+    },
+    {
+      "id": "skill",
+      "category": "agents",
+      "en": "Skill",
+      "fr": "Skill",
+      "defFr": "Ensemble d'instructions, de scripts et de ressources qu'un agent charge à la demande quand une tâche le nécessite. L'idée est de garder le contexte léger par défaut : au lieu de tout mettre dans le prompt système, on décrit la compétence en une ligne et on ne charge le détail qu'au moment utile.",
+      "defEn": "A bundle of instructions, scripts, and resources an agent loads on demand when a task calls for it. The idea is to keep the context light by default: instead of putting everything in the system prompt, you describe the capability in one line and load the detail only when it's needed.",
+      "source": {
+        "label": "Anthropic — Agent Skills",
+        "url": "https://docs.claude.com/en/docs/agents-and-tools/agent-skills"
+      }
+    },
+    {
+      "id": "mcp",
+      "category": "agents",
+      "en": "MCP (Model Context Protocol)",
+      "fr": "MCP",
+      "defFr": "Protocole ouvert qui standardise la façon dont un agent se connecte à des sources de données et à des outils externes. L'intérêt est le même que pour LSP chez les éditeurs : un serveur MCP écrit une fois est utilisable par tous les clients compatibles, au lieu d'une intégration par produit.",
+      "defEn": "An open protocol standardizing how an agent connects to external data sources and tools. The appeal is the same as LSP for editors: an MCP server written once works with every compatible client, instead of one integration per product.",
+      "source": {
+        "label": "Model Context Protocol — Documentation",
+        "url": "https://modelcontextprotocol.io"
+      }
+    },
+    {
+      "id": "sous-agent",
+      "category": "agents",
+      "en": "Subagent",
+      "fr": "Sous-agent",
+      "defFr": "Agent lancé par un autre agent avec une tâche délimitée et son propre contexte. L'avantage principal n'est pas le parallélisme mais l'isolation du contexte : le sous-agent explore, rapporte une conclusion, et le bruit de son exploration ne pollue pas le contexte principal.",
+      "defEn": "An agent launched by another agent with a bounded task and its own context. The main benefit isn't parallelism but context isolation: the subagent explores, reports a conclusion, and the noise of its exploration never lands in the main context.",
+      "source": {
+        "label": "Anthropic — How we built our multi-agent research system",
+        "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+      },
+      "related": {
+        "fr": "/articles/multi-agent-architectures/",
+        "en": "/en/articles/multi-agent-architectures/",
+        "labelFr": "Architectures multi-agent : quand un seul agent ne suffit pas",
+        "labelEn": "Multi-Agent Architectures: When One Agent Isn't Enough"
+      }
+    },
+    {
+      "id": "orchestration",
+      "category": "agents",
+      "en": "Orchestration",
+      "fr": "Orchestration",
+      "defFr": "La coordination de plusieurs modèles, outils ou agents : qui fait quoi, dans quel ordre, avec quel budget, et que faire en cas d'échec. C'est de la tuyauterie ordinaire — file d'attente, reprise, idempotence — et elle mérite d'être traitée comme telle plutôt que confiée à un modèle.",
+      "defEn": "Coordinating several models, tools, or agents: who does what, in what order, on what budget, and what happens on failure. It's ordinary plumbing — queues, retries, idempotency — and it deserves to be treated as such rather than handed to a model.",
+      "source": {
+        "label": "Anthropic — Building effective agents",
+        "url": "https://www.anthropic.com/engineering/building-effective-agents"
+      },
+      "related": {
+        "fr": "/articles/multi-agent-architectures/",
+        "en": "/en/articles/multi-agent-architectures/",
+        "labelFr": "Architectures multi-agent : quand un seul agent ne suffit pas",
+        "labelEn": "Multi-Agent Architectures: When One Agent Isn't Enough"
+      }
+    },
+    {
+      "id": "humain-dans-la-boucle",
+      "category": "agents",
+      "en": "Human in the loop",
+      "fr": "Humain dans la boucle",
+      "defFr": "Point d'arrêt où une personne valide avant qu'une action se produise. À placer là où l'action est difficile à annuler — envoyer un courriel, supprimer des données, pousser en production — et nulle part ailleurs, sinon la validation devient un réflexe et ne protège plus de rien.",
+      "defEn": "A checkpoint where a person approves before an action happens. Put it where the action is hard to undo — sending an email, deleting data, deploying to production — and nowhere else, or approval becomes a reflex and stops protecting anything.",
+      "source": {
+        "label": "Wikipedia — Human-in-the-loop",
+        "url": "https://en.wikipedia.org/wiki/Human-in-the-loop"
+      }
+    },
+    {
+      "id": "garde-fous",
+      "category": "agents",
+      "en": "Guardrails",
+      "fr": "Garde-fous",
+      "defFr": "Contrôles déterministes placés autour du modèle : validation de schéma, listes d'autorisation, plafonds de dépense, filtres de sortie. Un garde-fou implémenté par une consigne dans le prompt n'en est pas un — il doit vivre dans du code que le modèle ne peut pas contourner.",
+      "defEn": "Deterministic controls placed around the model: schema validation, allowlists, spending caps, output filters. A guardrail implemented as an instruction in the prompt isn't one — it has to live in code the model cannot talk its way past.",
+      "source": {
+        "label": "NIST — AI Risk Management Framework",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+      }
+    },
+    {
+      "id": "bac-a-sable",
+      "category": "agents",
+      "en": "Sandbox",
+      "fr": "Bac à sable",
+      "defFr": "Environnement isolé où l'agent exécute du code et des commandes sans pouvoir atteindre le reste du système. Système de fichiers restreint, réseau contrôlé, jetons limités. C'est la seule protection qui tienne quand l'agent exécute du code qu'il vient d'écrire.",
+      "defEn": "An isolated environment where the agent runs code and commands without reaching the rest of the system. Restricted filesystem, controlled network, limited credentials. It's the only protection that holds when the agent runs code it just wrote itself.",
+      "source": {
+        "label": "Wikipedia — Sandbox (computer security)",
+        "url": "https://en.wikipedia.org/wiki/Sandbox_(computer_security)"
+      }
+    },
+    {
+      "id": "memoire",
+      "category": "agents",
+      "en": "Memory",
+      "fr": "Mémoire",
+      "defFr": "Tout mécanisme qui fait persister de l'information entre deux appels au modèle, qui lui n'en garde aucune. Fichiers, base de données, résumés de session, notes structurées : c'est toujours du stockage plus une décision de relecture. Un agent n'a de mémoire que celle que tu lui construis.",
+      "defEn": "Any mechanism that persists information across model calls, since the model itself keeps none. Files, a database, session summaries, structured notes: it's always storage plus a decision about what to read back. An agent has exactly the memory you build for it.",
+      "source": {
+        "label": "Packer et al. — MemGPT (arXiv)",
+        "url": "https://arxiv.org/abs/2310.08560"
+      }
+    },
+    {
+      "id": "rag",
+      "category": "rag",
+      "en": "RAG (retrieval-augmented generation)",
+      "fr": "RAG",
+      "frAlt": "génération augmentée par récupération",
+      "defFr": "Récupérer les documents pertinents à la question, puis les placer dans le contexte avant de demander la réponse. C'est la solution par défaut quand l'information change, est privée ou doit être citée. La qualité d'un système RAG se joue presque entièrement dans l'étape de récupération, pas dans le modèle.",
+      "defEn": "Retrieve the documents relevant to the question, then place them in the context before asking for the answer. It's the default choice when information changes, is private, or must be cited. A RAG system's quality is decided almost entirely in the retrieval step, not in the model.",
+      "source": {
+        "label": "Lewis et al. — Retrieval-Augmented Generation (arXiv)",
+        "url": "https://arxiv.org/abs/2005.11401"
+      },
+      "related": {
+        "fr": "/articles/rag/",
+        "en": "/en/articles/rag/",
+        "labelFr": "RAG : ce que c'est et comment l'utiliser concrètement",
+        "labelEn": "RAG: What It Is and How to Actually Use It"
+      }
+    },
+    {
+      "id": "base-vectorielle",
+      "category": "rag",
+      "en": "Vector database",
+      "fr": "Base de données vectorielle",
+      "defFr": "Base spécialisée dans le stockage d'embeddings et la recherche des plus proches voisins. Utile à grande échelle ; souvent superflue en dessous de quelques dizaines de milliers de documents, où un index classique — ou une simple recherche plein texte — suffit et coûte moins cher.",
+      "defEn": "A database specialized in storing embeddings and searching nearest neighbours. Useful at scale; often unnecessary below a few tens of thousands of documents, where a plain index — or straightforward full-text search — does the job for less.",
+      "source": {
+        "label": "Wikipedia — Vector database",
+        "url": "https://en.wikipedia.org/wiki/Vector_database"
+      }
+    },
+    {
+      "id": "decoupage",
+      "category": "rag",
+      "en": "Chunking",
+      "fr": "Découpage",
+      "frAlt": "chunking",
+      "defFr": "Couper les documents en fragments avant de les indexer. La taille et les frontières des fragments décident de ce que la recherche pourra retrouver : un fragment qui coupe un tableau en deux rend ce tableau inutilisable. C'est le réglage le plus rentable d'un système RAG.",
+      "defEn": "Splitting documents into fragments before indexing them. Fragment size and boundaries decide what retrieval can ever find: a chunk that cuts a table in half makes that table useless. It's the highest-leverage knob in a RAG system.",
+      "source": {
+        "label": "Pinecone — Chunking strategies",
+        "url": "https://www.pinecone.io/learn/chunking-strategies/"
+      },
+      "related": {
+        "fr": "/articles/rag/",
+        "en": "/en/articles/rag/",
+        "labelFr": "RAG : ce que c'est et comment l'utiliser concrètement",
+        "labelEn": "RAG: What It Is and How to Actually Use It"
+      }
+    },
+    {
+      "id": "recherche-semantique",
+      "category": "rag",
+      "en": "Semantic search",
+      "fr": "Recherche sémantique",
+      "defFr": "Rechercher par proximité de sens dans l'espace des embeddings plutôt que par correspondance de mots-clés. Elle retrouve un document qui n'emploie aucun des mots de la question — et rate parfois une correspondance exacte évidente. En pratique, on la combine avec une recherche lexicale.",
+      "defEn": "Searching by closeness of meaning in embedding space rather than by keyword match. It finds a document that uses none of the question's words — and sometimes misses an obvious exact match. In practice you combine it with lexical search.",
+      "source": {
+        "label": "Wikipedia — Semantic search",
+        "url": "https://en.wikipedia.org/wiki/Semantic_search"
+      }
+    },
+    {
+      "id": "reclassement",
+      "category": "rag",
+      "en": "Reranking",
+      "fr": "Reclassement",
+      "defFr": "Deuxième passe qui réordonne les candidats retournés par la recherche à l'aide d'un modèle plus précis mais plus coûteux. On récupère large, on reclasse serré, on ne garde que le haut du panier dans le contexte. Souvent le meilleur rapport qualité-effort pour améliorer un RAG existant.",
+      "defEn": "A second pass that reorders the candidates returned by search using a more accurate but more expensive model. Retrieve broadly, rerank tightly, keep only the top of the list in the context. Often the best effort-to-quality ratio for improving an existing RAG system.",
+      "source": {
+        "label": "Nogueira & Cho — Passage Re-ranking with BERT (arXiv)",
+        "url": "https://arxiv.org/abs/1901.04085"
+      }
+    },
+    {
+      "id": "ancrage",
+      "category": "rag",
+      "en": "Grounding",
+      "fr": "Ancrage",
+      "defFr": "Contraindre la réponse à s'appuyer sur des sources fournies, et rendre cet appui vérifiable par des citations. Un système bien ancré doit pouvoir répondre « ce n'est pas dans les documents » — sans cette porte de sortie, il comblera le vide en inventant.",
+      "defEn": "Constraining the answer to rest on supplied sources, and making that support checkable through citations. A well-grounded system has to be able to say \"it isn't in the documents\" — without that exit, it will fill the gap by inventing.",
+      "source": {
+        "label": "Rashkin et al. — Measuring Attribution in NLG (arXiv)",
+        "url": "https://arxiv.org/abs/2112.12870"
+      }
+    },
+    {
+      "id": "eval",
+      "category": "evaluation",
+      "en": "Eval",
+      "fr": "Éval",
+      "frAlt": "évaluation",
+      "defFr": "Jeu de cas de test conçu pour un système dont les sorties n'ont pas de bonne réponse unique. C'est l'équivalent de la suite de tests en développement classique : sans elle, tu n'as aucun moyen de savoir si ton changement de prompt améliore les choses ou en casse trois autres.",
+      "defEn": "A set of test cases built for a system whose outputs have no single right answer. It's the equivalent of a test suite in ordinary development: without one, you have no way to know whether your prompt change improved things or broke three others.",
+      "source": {
+        "label": "Stanford CRFM — HELM (Holistic Evaluation of Language Models)",
+        "url": "https://crfm.stanford.edu/helm/"
+      },
+      "related": {
+        "fr": "/articles/evals/",
+        "en": "/en/articles/evals/",
+        "labelFr": "Évaluations : comment tester des systèmes qui n'ont pas de bonnes réponses",
+        "labelEn": "Evals: How to Test Systems That Don't Have Right Answers"
+      }
+    },
+    {
+      "id": "benchmark",
+      "category": "evaluation",
+      "en": "Benchmark",
+      "fr": "Banc d'essai",
+      "frAlt": "benchmark",
+      "defFr": "Jeu de tâches standardisé servant à comparer des modèles entre eux. Utile pour dégrossir un choix, insuffisant pour décider : un modèle qui domine un classement public peut être médiocre sur ton domaine, et la contamination des données de test est un problème réel.",
+      "defEn": "A standardized task set used to compare models. Useful for narrowing a choice, insufficient for deciding: a model topping a public leaderboard can be mediocre on your domain, and test-set contamination is a real problem.",
+      "source": {
+        "label": "Jimenez et al. — SWE-bench (arXiv)",
+        "url": "https://arxiv.org/abs/2310.06770"
+      }
+    },
+    {
+      "id": "hallucination",
+      "category": "evaluation",
+      "en": "Hallucination",
+      "fr": "Hallucination",
+      "defFr": "Sortie fluide, confiante et fausse. Ce n'est pas un bogue qu'on corrige mais une propriété du procédé : le modèle produit la continuation la plus plausible, et le plausible n'est pas le vrai. On ne l'élimine pas, on la contient — ancrage, citations, vérification automatique.",
+      "defEn": "Output that is fluent, confident, and wrong. It isn't a bug to be fixed but a property of the process: the model produces the most plausible continuation, and plausible isn't true. You don't eliminate it, you contain it — grounding, citations, automated verification.",
+      "source": {
+        "label": "Ji et al. — Survey of Hallucination in NLG (arXiv)",
+        "url": "https://arxiv.org/abs/2202.03629"
+      }
+    },
+    {
+      "id": "llm-juge",
+      "category": "evaluation",
+      "en": "LLM-as-judge",
+      "fr": "LLM juge",
+      "defFr": "Utiliser un modèle pour noter les sorties d'un autre selon une grille. C'est ce qui rend l'évaluation possible à grande échelle sur des tâches subjectives. Le juge a ses propres biais — position, longueur, style — qu'il faut mesurer contre un échantillon noté par des humains.",
+      "defEn": "Using a model to score another model's outputs against a rubric. It's what makes evaluation possible at scale on subjective tasks. The judge has its own biases — position, length, style — which you have to measure against a human-scored sample.",
+      "source": {
+        "label": "Zheng et al. — Judging LLM-as-a-Judge (arXiv)",
+        "url": "https://arxiv.org/abs/2306.05685"
+      },
+      "related": {
+        "fr": "/articles/evals/",
+        "en": "/en/articles/evals/",
+        "labelFr": "Évaluations : comment tester des systèmes qui n'ont pas de bonnes réponses",
+        "labelEn": "Evals: How to Test Systems That Don't Have Right Answers"
+      }
+    },
+    {
+      "id": "jeu-de-reference",
+      "category": "evaluation",
+      "en": "Golden dataset",
+      "fr": "Jeu de référence",
+      "defFr": "Ensemble d'exemples dont la sortie attendue a été validée par des humains, et qui sert d'étalon à toutes les évaluations suivantes. Le construire est fastidieux et c'est le meilleur investissement d'un projet IA : c'est lui qui transforme « on dirait que c'est mieux » en mesure.",
+      "defEn": "A set of examples whose expected output has been validated by humans, used as the yardstick for every later evaluation. Building one is tedious and it's the best investment in an AI project: it's what turns \"feels better\" into a measurement.",
+      "source": {
+        "label": "Google — Rules of Machine Learning",
+        "url": "https://developers.google.com/machine-learning/guides/rules-of-ml"
+      }
+    },
+    {
+      "id": "determinisme",
+      "category": "evaluation",
+      "en": "Determinism",
+      "fr": "Déterminisme",
+      "defFr": "Propriété d'un système qui rend la même sortie pour la même entrée. Un appel de modèle ne l'est pas par défaut, et même à température nulle des variations subsistent. C'est une décision d'architecture : ce qui doit être reproductible — validation, calculs, effets de bord — appartient à ton code, pas au modèle.",
+      "defEn": "The property of a system that returns the same output for the same input. A model call isn't deterministic by default, and even at zero temperature variation remains. It's an architectural decision: whatever must be reproducible — validation, computation, side effects — belongs in your code, not in the model.",
+      "source": {
+        "label": "Wikipedia — Deterministic algorithm",
+        "url": "https://en.wikipedia.org/wiki/Deterministic_algorithm"
+      }
+    },
+    {
+      "id": "observabilite",
+      "category": "evaluation",
+      "en": "Observability",
+      "fr": "Observabilité",
+      "defFr": "La capacité de reconstituer après coup ce qu'un système a fait et pourquoi. Pour un agent, ça veut dire tracer chaque appel : prompt complet, outils appelés, arguments, résultats, jetons consommés. Sans cette trace, déboguer un comportement non reproductible est impossible.",
+      "defEn": "The ability to reconstruct after the fact what a system did and why. For an agent that means tracing every call: full prompt, tools invoked, arguments, results, tokens consumed. Without that trace, debugging non-reproducible behaviour is impossible.",
+      "source": {
+        "label": "OpenTelemetry — Observability primer",
+        "url": "https://opentelemetry.io/docs/concepts/observability-primer/"
+      }
+    },
+    {
+      "id": "injection-de-prompt",
+      "category": "evaluation",
+      "en": "Prompt injection",
+      "fr": "Injection de prompt",
+      "defFr": "Attaque où du contenu traité par l'agent — page web, courriel, ticket, fichier — contient des instructions que le modèle suit comme si elles venaient de toi. Le modèle ne distingue pas les données des consignes. C'est la vulnérabilité structurelle des systèmes agentiques : tout contenu externe est une entrée non fiable.",
+      "defEn": "An attack where content the agent processes — a web page, an email, a ticket, a file — carries instructions the model follows as if they came from you. The model doesn't separate data from instructions. It's the structural vulnerability of agentic systems: all external content is untrusted input.",
+      "source": {
+        "label": "OWASP — LLM01: Prompt Injection",
+        "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+      }
+    },
+    {
+      "id": "jailbreak",
+      "category": "evaluation",
+      "en": "Jailbreak",
+      "fr": "Jailbreak",
+      "frAlt": "contournement",
+      "defFr": "Formulation conçue pour faire sortir un modèle des limites fixées par son alignement. Différent de l'injection de prompt : ici c'est l'utilisateur qui attaque le modèle, pas un tiers qui détourne l'agent. Les deux se traitent au même endroit — dans le code autour, pas dans le prompt.",
+      "defEn": "A phrasing designed to push a model past the limits set by its alignment. Different from prompt injection: here the user attacks the model, rather than a third party hijacking the agent. Both are handled in the same place — in the surrounding code, not in the prompt.",
+      "source": {
+        "label": "Zou et al. — Universal and Transferable Adversarial Attacks (arXiv)",
+        "url": "https://arxiv.org/abs/2307.15043"
+      }
+    },
+    {
+      "id": "derive",
+      "category": "evaluation",
+      "en": "Drift",
+      "fr": "Dérive",
+      "defFr": "Dégradation progressive des performances quand les données réelles s'éloignent de celles sur lesquelles le système a été réglé — ou quand le fournisseur met le modèle à jour sous toi. Un prompt qui marchait il y a six mois peut ne plus marcher aujourd'hui sans qu'une seule ligne de ton code ait changé.",
+      "defEn": "Gradual performance decay as real-world data drifts away from what the system was tuned on — or as the provider updates the model underneath you. A prompt that worked six months ago may not work today without a single line of your code having changed.",
+      "source": {
+        "label": "Wikipedia — Concept drift",
+        "url": "https://en.wikipedia.org/wiki/Concept_drift"
+      }
+    },
+    {
+      "id": "latence",
+      "category": "exploitation",
+      "en": "Latency / TTFT",
+      "fr": "Latence / TTFT",
+      "defFr": "Le délai entre la requête et la réponse. Pour un modèle, deux mesures comptent : le temps avant le premier jeton (TTFT), qui gouverne la perception de rapidité, et le débit de génération ensuite. Un agent qui enchaîne dix appels multiplie ce délai par dix — la latence est une contrainte d'architecture, pas un détail d'infrastructure.",
+      "defEn": "The delay between request and response. For a model, two measures matter: time to first token (TTFT), which governs perceived speed, and generation throughput after that. An agent chaining ten calls multiplies the delay by ten — latency is an architectural constraint, not an infrastructure detail.",
+      "source": {
+        "label": "Wikipedia — Latency (engineering)",
+        "url": "https://en.wikipedia.org/wiki/Latency_(engineering)"
+      }
+    },
+    {
+      "id": "debit",
+      "category": "exploitation",
+      "en": "Throughput",
+      "fr": "Débit",
+      "defFr": "Le volume traité par unité de temps — jetons par seconde, requêtes par minute. Il s'oppose souvent à la latence : traiter par lots améliore le débit et dégrade le temps de réponse individuel. Choisis lequel tu optimises avant de dimensionner quoi que ce soit.",
+      "defEn": "Volume processed per unit of time — tokens per second, requests per minute. It usually trades against latency: batching improves throughput and worsens individual response time. Decide which one you're optimizing before you size anything.",
+      "source": {
+        "label": "Wikipedia — Throughput",
+        "url": "https://en.wikipedia.org/wiki/Throughput"
+      }
+    },
+    {
+      "id": "limite-de-debit",
+      "category": "exploitation",
+      "en": "Rate limit",
+      "fr": "Limite de débit",
+      "defFr": "Plafond imposé par le fournisseur sur le nombre de requêtes ou de jetons par intervalle. Un agent qui boucle les atteint plus vite qu'une application classique. À traiter comme un mode de fonctionnement normal — attente exponentielle, file, dégradation gracieuse — et non comme une erreur exceptionnelle.",
+      "defEn": "A provider-imposed ceiling on requests or tokens per interval. A looping agent hits it faster than a conventional application does. Treat it as a normal operating mode — exponential backoff, queueing, graceful degradation — not as an exceptional error.",
+      "source": {
+        "label": "Wikipedia — Rate limiting",
+        "url": "https://en.wikipedia.org/wiki/Rate_limiting"
+      }
+    },
+    {
+      "id": "cout-par-jeton",
+      "category": "exploitation",
+      "en": "Cost per token",
+      "fr": "Coût par jeton",
+      "defFr": "Le prix facturé, distinct en entrée et en sortie, généralement par million de jetons. Un agent qui relit tout son historique à chaque tour a un coût quadratique en nombre de tours. Le coût est un paramètre de conception au même titre que la latence : il se calcule avant d'écrire la boucle, pas après la première facture.",
+      "defEn": "The billed price, separate for input and output, usually per million tokens. An agent that re-reads its whole history each turn has a cost quadratic in the number of turns. Cost is a design parameter just like latency: you work it out before writing the loop, not after the first invoice.",
+      "source": {
+        "label": "Anthropic — Pricing",
+        "url": "https://docs.claude.com/en/docs/about-claude/pricing"
+      }
+    }
+  ]
+}

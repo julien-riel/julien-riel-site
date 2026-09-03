@@ -10,6 +10,7 @@ export default {
         "http://localhost/",
         "http://localhost/97-choses/",
         "http://localhost/tags/",
+        "http://localhost/glossaire/",
       ],
       numberOfRuns: 3,
       settings: {

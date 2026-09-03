@@ -50,6 +50,7 @@ const SECTION_LABELS = {
   articles: { fr: "ARTICLE", en: "ARTICLE" },
   "case-studies": { fr: "ÉTUDE DE CAS", en: "CASE STUDY" },
   home: { fr: "PROGRAMMATION AGENTIQUE", en: "AGENTIC PROGRAMMING" },
+  glossaire: { fr: "GLOSSAIRE", en: "GLOSSARY" },
 };
 
 const parseFrontmatter = (raw) => {
@@ -349,6 +350,20 @@ const STATIC_CARDS = [
     title: "Case Studies",
     description: "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures.",
     section: "case-studies",
+    lang: "en",
+    slug: "_index",
+  },
+  {
+    title: "Glossaire de l'IA",
+    description: "Soixante-quinze termes de l'IA définis en français et en anglais, avec une source pour aller plus loin.",
+    section: "glossaire",
+    lang: "fr",
+    slug: "_index",
+  },
+  {
+    title: "AI Glossary",
+    description: "Seventy-five AI terms defined in English and French, each with a source to go deeper.",
+    section: "glossaire",
     lang: "en",
     slug: "_index",
   },

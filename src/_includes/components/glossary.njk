@@ -1,0 +1,65 @@
+{# Bilingual AI glossary. Both /glossaire/ and /en/glossary/ render this from
+   src/_data/glossaire.json, so the two languages can never drift apart. #}
+{% set isFr = currentLang == "fr" %}
+<div class="glossary" data-glossary>
+  <nav class="glossary-nav" aria-label="{{ t.glossary.sections }}">
+    <ul>
+      {%- for cat in glossaire.categories %}
+      <li><a href="#{{ cat.id }}">{{ cat.fr if isFr else cat.en }}</a></li>
+      {%- endfor %}
+    </ul>
+  </nav>
+
+  {# Unhidden by glossary.js — filtering needs JS, the full list does not. #}
+  <div class="glossary-toolbar" data-glossary-toolbar hidden>
+    <label class="visually-hidden" for="glossary-filter">{{ t.glossary.filterLabel }}</label>
+    <input
+      type="search"
+      id="glossary-filter"
+      class="glossary-filter"
+      placeholder="{{ t.glossary.filterPlaceholder }}"
+      autocomplete="off"
+      data-glossary-input
+    >
+    <p class="glossary-status" role="status" aria-live="polite" data-glossary-status data-label="{{ t.glossary.resultsCount }}"></p>
+  </div>
+
+  {%- for cat in glossaire.categories %}
+  {%- set entries = glossaire.terms | glossaryByCategory(cat.id) %}
+  <section class="glossary-section" id="{{ cat.id }}" data-glossary-section>
+    <div class="glossary-section-header">
+      <h2>{{ cat.fr if isFr else cat.en }} <span class="glossary-section-count">{{ entries.length }}</span></h2>
+      <p class="glossary-section-desc">{{ cat.descFr if isFr else cat.descEn }}</p>
+    </div>
+
+    <div class="glossary-entries">
+      {%- for term in entries %}
+      <article class="glossary-entry" id="{{ term.id }}" data-glossary-entry>
+        <h3 class="glossary-term">
+          <a href="#{{ term.id }}" class="glossary-permalink">{{ term.fr if isFr else term.en }}</a>
+        </h3>
+        {%- if (term.fr | lower) != (term.en | lower) %}
+        <p class="glossary-translation" lang="{{ 'en' if isFr else 'fr' }}">{{ term.en if isFr else term.fr }}</p>
+        {%- endif %}
+        {%- if term.frAlt %}
+        <p class="glossary-alt">{{ t.glossary.alsoCalled }} <span lang="fr">{{ term.frAlt }}</span></p>
+        {%- endif %}
+        <p class="glossary-def">{{ term.defFr if isFr else term.defEn }}</p>
+        <p class="glossary-links">
+          <a class="glossary-source" href="{{ term.source.url }}" target="_blank" rel="noopener noreferrer">
+            <span class="glossary-link-label">{{ t.glossary.source }}</span> {{ term.source.label }}
+          </a>
+          {%- if term.related %}
+          <a class="glossary-related" href="{{ term.related.fr if isFr else term.related.en }}">
+            <span class="glossary-link-label">{{ t.glossary.related }}</span> {{ term.related.labelFr if isFr else term.related.labelEn }}
+          </a>
+          {%- endif %}
+        </p>
+      </article>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endfor %}
+
+  <p class="glossary-empty" data-glossary-empty hidden>{{ t.glossary.noResults }}</p>
+</div>

@@ -36,11 +36,11 @@
      Skipped for pages without a translated counterpart (tags are shared). #}
   {% if "/tags/" not in page.url %}
     {% if currentLang == "en" %}
-      {% set frUrl = page.url | replace("/en/", "/") | replace("/97-things/", "/97-choses/") %}
+      {% set frUrl = page.url | replace("/en/", "/") | replace("/97-things/", "/97-choses/") | replace("/glossary/", "/glossaire/") %}
       {% set enUrl = page.url %}
     {% else %}
       {% set frUrl = page.url %}
-      {% set enUrl = "/en" + (page.url | replace("/97-choses/", "/97-things/")) %}
+      {% set enUrl = "/en" + (page.url | replace("/97-choses/", "/97-things/") | replace("/glossaire/", "/glossary/")) %}
     {% endif %}
     <link rel="alternate" hreflang="fr" href="{{ metadata.url }}{{ frUrl }}">
     <link rel="alternate" hreflang="en" href="{{ metadata.url }}{{ enUrl }}">

@@ -6,7 +6,8 @@
       "caseStudies": "Études de cas",
       "projets": "Projets",
       "tags": "Sujets",
-      "readingGuide": "Guide de lecture"
+      "readingGuide": "Guide de lecture",
+      "glossaire": "Glossaire"
     },
     "home": {
       "title": "Accueil",
@@ -14,7 +15,8 @@
       "exploreArticles": "Guides techniques approfondis sur le RAG, les évaluations, le prompting et les architectures multi-agents",
       "exploreCaseStudies": "Analyses détaillées de WHOOP Coach, Cursor, Duolingo et Klarna — succès, transformations et échecs instructifs",
       "exploreReadingGuide": "Quatre parcours de lecture suggérés selon ton contexte — utilisateur quotidien, bâtisseur ou décideur",
-      "exploreProjets": "Petits outils construits en programmation agentique, utilisables directement dans le navigateur — comme le planificateur de terrasse"
+      "exploreProjets": "Petits outils construits en programmation agentique, utilisables directement dans le navigateur — comme le planificateur de terrasse",
+      "exploreGlossaire": "Soixante-quinze termes de l'IA définis en français et en anglais — du poids au harnais — avec une source pour aller plus loin"
     },
     "sections": {
       "essaysIntroP1": "Ce livre est une collection de 97 courts essais, chacun construit autour d'une seule idée. Pas de chapitres qui dépendent des précédents. Pas d'argument progressif qui exige de commencer au début. Ouvrez n'importe où et trouvez quelque chose d'utile.",
@@ -79,6 +81,17 @@
         "title": "Partie 5 — État d'esprit",
         "desc": "Expertise, écriture, incertitude, responsabilité et clarté de pensée."
       }
+    },
+    "glossary": {
+      "filterLabel": "Filtrer les termes",
+      "filterPlaceholder": "Filtrer : jeton, agent, RAG…",
+      "noResults": "Aucun terme ne correspond.",
+      "resultsCount": "terme(s) affiché(s)",
+      "sections": "Sections",
+      "source": "Pour aller plus loin",
+      "related": "Sur ce site",
+      "alsoCalled": "Aussi appelé",
+      "backToTop": "Haut de page"
     }
   },
   "en": {
@@ -88,7 +101,8 @@
       "caseStudies": "Case Studies",
       "projets": "Projects",
       "tags": "Topics",
-      "readingGuide": "Reading Guide"
+      "readingGuide": "Reading Guide",
+      "glossaire": "Glossary"
     },
     "home": {
       "title": "Home",
@@ -96,7 +110,8 @@
       "exploreArticles": "In-depth technical guides on RAG, evaluations, prompting, and multi-agent architectures",
       "exploreCaseStudies": "Detailed analyses of WHOOP Coach, Cursor, Duolingo, and Klarna — successes, transformations, and instructive failures",
       "exploreReadingGuide": "Four suggested reading paths depending on where you are — daily user, builder, or decision-maker",
-      "exploreProjets": "Small tools built with agentic programming, usable right in the browser — like the deck planner"
+      "exploreProjets": "Small tools built with agentic programming, usable right in the browser — like the deck planner",
+      "exploreGlossaire": "Seventy-five AI terms defined in English and French — from weights to harness — each with a source to go deeper"
     },
     "sections": {
       "essaysIntroP1": "This book is a collection of 97 short essays, each built around a single idea. No chapters that depend on chapters before them. No progressive argument that requires you to start at the beginning. Open anywhere and find something useful.",
@@ -161,6 +176,17 @@
         "title": "Part 5 — Mindset",
         "desc": "Expertise, writing, uncertainty, responsibility, and thinking clearly."
       }
+    },
+    "glossary": {
+      "filterLabel": "Filter terms",
+      "filterPlaceholder": "Filter: token, agent, RAG…",
+      "noResults": "No term matches.",
+      "resultsCount": "term(s) shown",
+      "sections": "Sections",
+      "source": "Go deeper",
+      "related": "On this site",
+      "alsoCalled": "Also called",
+      "backToTop": "Back to top"
     }
   }
 }

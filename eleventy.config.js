@@ -210,6 +210,7 @@ export default function(eleventyConfig) {
     },
     langPrefix: (data) => (data.lang || "fr") === "en" ? "/en" : "",
     essaysUrl: (data) => (data.lang || "fr") === "en" ? "/en/97-things/" : "/97-choses/",
+    glossaryUrl: (data) => (data.lang || "fr") === "en" ? "/en/glossary/" : "/glossaire/",
     // Open Graph image path, matching the files scripts/generate-og-images.js
     // writes to /assets/og/. Content pages are identified by their structural tag;
     // other pages can set `image` in front matter explicitly.
@@ -349,6 +350,12 @@ export default function(eleventyConfig) {
     const words = content.replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean).length;
     const minutes = Math.max(1, Math.round(words / 200));
     return `${minutes} min`;
+  });
+
+  // Filter: glossary terms belonging to one category, in data-file order
+  eleventyConfig.addFilter("glossaryByCategory", (terms, category) => {
+    if (!terms || !category) return [];
+    return terms.filter((term) => term.category === category);
   });
 
   // Filter: strip HTML tags from content

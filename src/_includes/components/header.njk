@@ -20,6 +20,9 @@
         <a href="{{ langPrefix }}/case-studies/" role="menuitem"{% if page.url.includes('/case-studies/') %} aria-current="page"{% endif %}>{{ t.nav.caseStudies }}</a>
       </li>
       <li class="nav-item" role="none">
+        <a href="{{ glossaryUrl }}" role="menuitem"{% if page.url.includes('/glossaire/') or page.url.includes('/glossary/') %} aria-current="page"{% endif %}>{{ t.nav.glossaire }}</a>
+      </li>
+      <li class="nav-item" role="none">
         <a href="{{ langPrefix }}/projets/" role="menuitem"{% if page.url.includes('/projets/') %} aria-current="page"{% endif %}>{{ t.nav.projets }}</a>
       </li>
       <li class="nav-item" role="none">
@@ -27,9 +30,9 @@
       </li>
       <li class="nav-item" role="none">
         {% if currentLang == "fr" %}
-          <a href="/en{{ page.url | replace('/97-choses/', '/97-things/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
+          <a href="/en{{ page.url | replace('/97-choses/', '/97-things/') | replace('/glossaire/', '/glossary/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
         {% else %}
-          <a href="{{ page.url | replace('/en/', '/') | replace('/97-things/', '/97-choses/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>
+          <a href="{{ page.url | replace('/en/', '/') | replace('/97-things/', '/97-choses/') | replace('/glossary/', '/glossaire/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>
         {% endif %}
       </li>
       <li class="nav-item nav-search" role="none">
