@@ -275,68 +275,107 @@ eleventyExcludeFromCollections: true
   #banniere span { font: 500 13px var(--mono); color: var(--sourdine); }
   #banniere button { margin-top: 12px; pointer-events: auto; }
 
-  /* ---------- Pupitre de commande ---------- */
+  /* ---------- Pupitre : deux manettes ISO et les pédales ---------- */
 
   #pupitre {
     display: flex;
-    gap: 14px;
     justify-content: space-between;
-    align-items: flex-end;
-    padding: 9px 14px calc(9px + env(safe-area-inset-bottom));
+    align-items: center;
+    gap: 10px;
+    padding: 24px 18px calc(12px + env(safe-area-inset-bottom));
     background: linear-gradient(180deg, #191e23, #101316);
     border-top: 1px solid #000;
     box-shadow: 0 -1px 0 #3a4652 inset;
-    flex-wrap: wrap;
     position: relative;
     z-index: 2;
   }
-  .groupe {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  .manette {
+    position: relative;
+    width: 118px;
+    height: 118px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, rgba(44,55,66,.6), rgba(13,15,17,.75) 70%);
+    border: 1px solid rgba(58,70,82,.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 6px rgba(13,15,17,.35);
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  .groupe > span {
-    font: 600 9px/1 var(--mono);
-    letter-spacing: .14em;
+  .manette .croix::before, .manette .croix::after {
+    content: "";
+    position: absolute;
+    background: rgba(136,150,164,.25);
+  }
+  .manette .croix::before { left: 50%; top: 14px; bottom: 14px; width: 1px; }
+  .manette .croix::after { top: 50%; left: 14px; right: 14px; height: 1px; }
+  .manette .pouce {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 50px; height: 50px;
+    margin: -25px 0 0 -25px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #3b4855, #1c2228);
+    border: 2px solid var(--bord);
+    box-shadow: 0 4px 10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
+    transition: transform .06s linear;
+  }
+  .manette.active .pouce { border-color: var(--orange); box-shadow: 0 4px 10px rgba(0,0,0,.6), 0 0 14px rgba(255,122,24,.45); }
+  .manette .etiq {
+    position: absolute;
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--sourdine);
+    pointer-events: none;
   }
-  .rangee { display: flex; gap: 6px; }
-  .levier {
+  .manette .etiq.h { top: 6px; left: 50%; transform: translateX(-50%); }
+  .manette .etiq.b { bottom: 6px; left: 50%; transform: translateX(-50%); }
+  .manette .etiq.g { left: 5px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+  .manette .etiq.d { right: 5px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+  .nom {
+    position: absolute;
+    top: -17px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    white-space: nowrap;
+  }
+  .chenilles {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    grid-template-rows: repeat(2, 46px);
+    gap: 5px;
+  }
+  .pedale {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    min-width: 58px;
-    padding: 8px 9px 7px;
+    border-radius: 7px;
     background: linear-gradient(180deg, var(--acier-clair), #1a2027);
     border: 1px solid var(--bord);
-    border-radius: 6px;
     color: var(--texte);
+    font-size: 17px;
+    padding: 0;
     cursor: pointer;
     touch-action: none;
     -webkit-user-select: none;
     user-select: none;
-    transition: background .1s, border-color .1s, box-shadow .1s;
+    transition: background .1s, border-color .1s;
   }
-  .levier .glyphe { font-size: 17px; line-height: 1; }
-  .levier .touche {
-    font: 600 8.5px/1 var(--mono);
-    letter-spacing: .08em;
-    color: var(--sourdine);
-  }
-  .levier:hover { border-color: #56646f; }
-  .levier.actif {
+  .pedale:hover { border-color: #56646f; }
+  .pedale.actif {
     background: linear-gradient(180deg, var(--orange), var(--orange-sombre));
     border-color: var(--jaune);
     color: #1a0f04;
     box-shadow: 0 0 16px rgba(255,122,24,.4);
   }
-  .levier.actif .touche { color: rgba(26,15,4,.7); }
-  .levier:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
-  .astuce { font-size: 11.5px; color: var(--sourdine); max-width: 30ch; align-self: center; }
-  .astuce a { color: var(--orange); }
+  .pedale.aide { font: 700 15px var(--ui); color: var(--sourdine); }
+  .pedale:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
   /* ---------- Aide ---------- */
 
@@ -393,17 +432,22 @@ eleventyExcludeFromCollections: true
     .hud-gauche { max-width: 52vw; }
     .hud-droite { min-width: 0; }
     .consigne { display: none; }
-    .astuce { display: none; }
-    .levier { min-width: 50px; padding: 9px 6px; }
+    .manette { width: 102px; height: 102px; }
+    .manette .pouce { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
   }
   @media (max-width: 520px) {
     .bandeau { padding: 6px 10px 7px; }
     .bandeau h1 { font-size: 13px; }
     .cmdes label .lib { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .cmdes { gap: 6px; }
-    #pupitre { gap: 8px; padding-inline: 8px; }
-    .levier { min-width: 44px; }
-    .levier .touche { display: none; }
+    #pupitre { gap: 6px; padding: 22px 8px calc(10px + env(safe-area-inset-bottom)); }
+    .manette { width: 92px; height: 92px; }
+    .manette .pouce { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+    .manette .etiq { display: none; }
+    .manette .nom { font-size: 7.5px; }
+    .manette.gauche .nom { left: 0; transform: none; }
+    .manette.droite .nom { left: auto; right: 0; transform: none; }
+    .chenilles { grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(2, 40px); gap: 4px; }
   }
 </style>
 </head>
@@ -459,42 +503,45 @@ eleventyExcludeFromCollections: true
 </main>
 
 <footer id="pupitre">
-  <div class="groupe">
-    <span>Train de roulement</span>
-    <div class="rangee">
-      <button class="levier" data-action="reculer" aria-label="Reculer"><span class="glyphe">◀</span><span class="touche">←</span></button>
-      <button class="levier" data-action="avancer" aria-label="Avancer"><span class="glyphe">▶</span><span class="touche">→</span></button>
-      <button class="levier" data-action="lameDescend" aria-label="Baisser la lame"><span class="glyphe">⤓</span><span class="touche">F</span></button>
-      <button class="levier" data-action="lameMonte" aria-label="Lever la lame"><span class="glyphe">⤒</span><span class="touche">V</span></button>
-      <button class="levier" data-action="pivoter" aria-label="Pivoter la tourelle"><span class="glyphe">⟲</span><span class="touche">R</span></button>
-    </div>
+  <div class="manette gauche" id="manetteG" aria-label="Manette gauche : rotation de la tourelle et balancier">
+    <span class="nom">Rotation · balancier</span>
+    <span class="croix"></span>
+    <span class="etiq h">Sortir</span><span class="etiq b">Rentrer</span>
+    <span class="etiq g">Pivot</span><span class="etiq d">Pivot</span>
+    <span class="pouce"></span>
   </div>
 
-  <p class="astuce">Coupe de chantier à l'échelle d'une mini-pelle de <a href="https://www.kubota.ca/fr/products/0-2-Ton" target="_blank" rel="noopener">la classe 0–2 t</a>. La terre remuée foisonne et s'écroule à son angle de talus.</p>
+  <div class="chenilles" aria-label="Chenilles et lame">
+    <span class="nom">Chenilles · lame</span>
+    <button class="pedale" data-action="reculer" aria-label="Reculer" title="Reculer (←)">◀</button>
+    <button class="pedale" data-action="avancer" aria-label="Avancer" title="Avancer (→)">▶</button>
+    <button class="pedale aide" id="btnAideBas" aria-label="Commandes" title="Commandes (H)">?</button>
+    <button class="pedale" data-action="lameDescend" aria-label="Baisser la lame" title="Baisser la lame (F)">⤓</button>
+    <button class="pedale" data-action="lameMonte" aria-label="Lever la lame" title="Lever la lame (V)">⤒</button>
+    <button class="pedale" id="btnDemiTour" aria-label="Demi-tour de la tourelle" title="Demi-tour de la tourelle (R)">⟲</button>
+  </div>
 
-  <div class="groupe">
-    <span>Équipement</span>
-    <div class="rangee">
-      <button class="levier" data-action="flecheHaut" aria-label="Lever la flèche"><span class="glyphe">↑</span><span class="touche">W</span></button>
-      <button class="levier" data-action="flecheBas" aria-label="Baisser la flèche"><span class="glyphe">↓</span><span class="touche">S</span></button>
-      <button class="levier" data-action="balancierSort" aria-label="Sortir le balancier"><span class="glyphe">↗</span><span class="touche">E</span></button>
-      <button class="levier" data-action="balancierRentre" aria-label="Rentrer le balancier"><span class="glyphe">↙</span><span class="touche">Q</span></button>
-      <button class="levier" data-action="godetFerme" aria-label="Cavalier : fermer le godet"><span class="glyphe">⤺</span><span class="touche">Z</span></button>
-      <button class="levier" data-action="godetOuvre" aria-label="Ouvrir le godet et vider"><span class="glyphe">⤻</span><span class="touche">X</span></button>
-    </div>
+  <div class="manette droite" id="manetteD" aria-label="Manette droite : flèche et godet">
+    <span class="nom">Flèche · godet</span>
+    <span class="croix"></span>
+    <span class="etiq h">Baisser</span><span class="etiq b">Lever</span>
+    <span class="etiq g">Fermer</span><span class="etiq d">Vider</span>
+    <span class="pouce"></span>
   </div>
 </footer>
 
 <dialog id="aide">
   <div class="aide-corps" tabindex="-1" autofocus>
     <h2>Commandes</h2>
+    <p style="margin-bottom:12px">Les deux manettes suivent la <b>norme ISO</b> des vraies pelles : à gauche, la rotation de la tourelle et le balancier ; à droite, la flèche et le godet. Plus on pousse, plus le mouvement est rapide. En coupe, la tourelle qui pivote se voit de face ou de dos, et l'équipement se projette dans le plan du chantier.</p>
     <div class="table-touches">
-      <div><kbd>←</kbd> <kbd>→</kbd></div><span>Déplacer la machine (chenilles)</span>
-      <div><kbd>W</kbd> <kbd>S</kbd> ou <kbd>↑</kbd> <kbd>↓</kbd></div><span>Lever et baisser la flèche</span>
-      <div><kbd>Q</kbd> <kbd>E</kbd></div><span>Rentrer et sortir le balancier</span>
-      <div><kbd>Z</kbd> <kbd>X</kbd></div><span>Cavalier (fermer) et ouvrir le godet</span>
+      <div><kbd>A</kbd> <kbd>D</kbd></div><span>Rotation de la tourelle (manette gauche, gauche–droite)</span>
+      <div><kbd>W</kbd> <kbd>S</kbd></div><span>Sortir et rentrer le balancier (manette gauche, haut–bas)</span>
+      <div><kbd>I</kbd> <kbd>K</kbd></div><span>Baisser et lever la flèche (manette droite, haut–bas)</span>
+      <div><kbd>J</kbd> <kbd>L</kbd></div><span>Fermer et vider le godet (manette droite, gauche–droite)</span>
+      <div><kbd>←</kbd> <kbd>→</kbd></div><span>Chenilles</span>
       <div><kbd>F</kbd> <kbd>V</kbd></div><span>Baisser et lever la lame de remblayage</span>
-      <div><kbd>R</kbd></div><span>Pivoter la tourelle de 180°</span>
+      <div><kbd>R</kbd></div><span>Demi-tour automatique de la tourelle</span>
       <div><kbd>Maj</kbd></div><span>Mode lent, pour les finitions</span>
     </div>
 
@@ -551,7 +598,7 @@ const LIM = {
   godet: [-2.75, 0.20],
   lame: [-0.30, 0.34],
 };
-const VIT = { fleche: 0.70, balancier: 1.00, godet: 1.40, lame: 0.45, chenille: 1.05 };
+const VIT = { fleche: 0.70, balancier: 1.00, godet: 1.40, lame: 0.45, chenille: 1.05, rotation: 0.95 };
 
 /* ---------- Constantes : le terrain ---------- */
 
@@ -622,8 +669,9 @@ let chantier = 'bac';
 const etat = {
   x: 9.5, y: 0, tangage: 0,
   fleche: 0.45, balancier: -1.6, godet: -1.4, lame: 0.30,
-  pivot: 1,        // +1 : la tourelle regarde vers la droite, −1 vers la gauche
-  pivotCible: 1,
+  rotation: 0,     // angle de la tourelle ; 0 : elle regarde vers la droite
+  rotationCible: null,
+  pivot: 1,        // cos(rotation) : projection de la tourelle dans le plan de coupe
   charge: 0,       // m³ dans le godet
   volume: 0,       // m³ déplacés depuis le début du chantier
   chrono: 0, chronoActif: false, termine: false,
@@ -633,7 +681,8 @@ const particules = [];
 let records = {};
 let sauvegardeEnAttente = false;
 
-const actions = new Set();
+const axes = { rotation: 0, balancier: 0, fleche: 0, godet: 0, chenille: 0, lame: 0 };   // manettes, −1..1
+const clavier = {};
 let lent = false;
 
 /* ---------- Terrain ---------- */
@@ -773,31 +822,38 @@ function asseoir() {
 
 function actionner(dt) {
   const v = lent ? 0.4 : 1;
-  const a = actions;
-  let dir = 0;
-  if (a.has('avancer')) dir += 1;
-  if (a.has('reculer')) dir -= 1;
-  if (dir) {
-    etat.x = clamp(etat.x + dir * VIT.chenille * v * dt, 1.3, LARGEUR - 1.3);
-    etat.chenilleAnim += dir * VIT.chenille * v * dt;
-    pousserLame(dir, dt);
-  }
-  const bouge = (cle, plus, moins, vit) => {
-    let d = 0;
-    if (a.has(plus)) d += 1;
-    if (a.has(moins)) d -= 1;
-    if (d) etat[cle] = clamp(etat[cle] + d * vit * v * dt, LIM[cle][0], LIM[cle][1]);
-  };
-  bouge('fleche', 'flecheHaut', 'flecheBas', VIT.fleche);
-  bouge('balancier', 'balancierSort', 'balancierRentre', VIT.balancier);
-  bouge('godet', 'godetOuvre', 'godetFerme', VIT.godet);
-  bouge('lame', 'lameMonte', 'lameDescend', VIT.lame);
+  const k = (plus, moins) => (clavier[plus] ? 1 : 0) - (clavier[moins] ? 1 : 0);
+  const rot = axes.rotation || k('KeyA', 'KeyD');
+  const bal = axes.balancier || k('KeyW', 'KeyS');
+  const fl = axes.fleche || k('KeyI', 'KeyK');
+  const go = axes.godet || k('KeyL', 'KeyJ');
+  const ch = axes.chenille || k('ArrowRight', 'ArrowLeft');
+  const la = axes.lame || k('KeyV', 'KeyF');
 
-  if (etat.pivot !== etat.pivotCible) {
-    const pas = 3.2 * dt;
-    etat.pivot = Math.abs(etat.pivotCible - etat.pivot) <= pas ? etat.pivotCible : etat.pivot + Math.sign(etat.pivotCible - etat.pivot) * pas;
+  if (ch) {
+    const d = ch * VIT.chenille * v * dt;
+    etat.x = clamp(etat.x + d, 1.3, LARGEUR - 1.3);
+    etat.chenilleAnim += d;
+    pousserLame(ch, dt);
   }
-  if (actions.size && !etat.termine) etat.chronoActif = true;
+  etat.balancier = clamp(etat.balancier + bal * VIT.balancier * v * dt, LIM.balancier[0], LIM.balancier[1]);
+  etat.fleche = clamp(etat.fleche - fl * VIT.fleche * v * dt, LIM.fleche[0], LIM.fleche[1]);
+  etat.godet = clamp(etat.godet + go * VIT.godet * v * dt, LIM.godet[0], LIM.godet[1]);
+  etat.lame = clamp(etat.lame + la * VIT.lame * v * dt, LIM.lame[0], LIM.lame[1]);
+
+  /* Rotation de la tourelle : continue à la manette, ou un demi-tour automatique. */
+  if (rot) {
+    etat.rotationCible = null;
+    etat.rotation += rot * VIT.rotation * v * dt;
+  } else if (etat.rotationCible !== null) {
+    const pas = VIT.rotation * 1.6 * dt;
+    const reste = etat.rotationCible - etat.rotation;
+    if (Math.abs(reste) <= pas) { etat.rotation = etat.rotationCible; etat.rotationCible = null; }
+    else etat.rotation += Math.sign(reste) * pas;
+  }
+  etat.pivot = Math.cos(etat.rotation);
+
+  if ((rot || bal || fl || go || ch || la) && !etat.termine) etat.chronoActif = true;
 }
 
 function creuser() {
@@ -1474,59 +1530,79 @@ function afficherChantier() {
 
 /* ---------- Commandes ---------- */
 
-const TOUCHES = {
-  ArrowLeft: 'reculer', ArrowRight: 'avancer', KeyA: 'reculer', KeyD: 'avancer',
-  ArrowUp: 'flecheHaut', ArrowDown: 'flecheBas', KeyW: 'flecheHaut', KeyS: 'flecheBas',
-  KeyQ: 'balancierRentre', KeyE: 'balancierSort',
-  KeyZ: 'godetFerme', KeyX: 'godetOuvre',
-  KeyF: 'lameDescend', KeyV: 'lameMonte',
-};
+const CODES = /^(Arrow(Left|Right)|Key[ADWSIKJLFV])$/;
 
-function pivoter() {
-  etat.pivotCible = -etat.pivotCible;
+function demiTour() {
+  etat.rotationCible = (etat.rotationCible ?? etat.rotation) + Math.PI;
   etat.chronoActif = !etat.termine;
 }
 
-function brancherCommandes() {
-  window.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || ui.aide.open) return;
-    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = true; return; }
-    if (e.code === 'KeyR') { if (!e.repeat) pivoter(); e.preventDefault(); return; }
-    if (e.code === 'KeyH' || e.key === '?') { ui.aide.showModal(); return; }
-    const a = TOUCHES[e.code];
-    if (!a) return;
+/* Une manette virtuelle : le pouce suit le doigt, la valeur est proportionnelle. */
+function brancherManette(el, surChangement) {
+  const pouce = el.querySelector('.pouce');
+  let id = null;
+  const poser = (e) => {
+    const r = el.getBoundingClientRect();
+    const rr = r.width * 0.34;
+    const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const d = Math.hypot(dx, dy);
+    const f = d > rr ? rr / d : 1;
+    const px = dx * f, py = dy * f;
+    pouce.style.transform = `translate(${px}px, ${py}px)`;
+    const zone = (val) => (Math.abs(val) < 0.12 ? 0 : (val - Math.sign(val) * 0.12) / 0.88);
+    surChangement(zone(px / rr), zone(-py / rr));
+  };
+  el.addEventListener('pointerdown', (e) => {
+    if (id !== null) return;
+    id = e.pointerId;
+    el.setPointerCapture(id);
+    el.classList.add('active');
+    poser(e);
     e.preventDefault();
-    actions.add(a);
-    leviers[a]?.classList.add('actif');
   });
-  window.addEventListener('keyup', (e) => {
-    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = false; return; }
-    const a = TOUCHES[e.code];
-    if (!a) return;
-    actions.delete(a);
-    leviers[a]?.classList.remove('actif');
-  });
-  window.addEventListener('blur', () => {
-    actions.clear();
-    for (const b of Object.values(leviers)) b.classList.remove('actif');
-  });
+  el.addEventListener('pointermove', (e) => { if (e.pointerId === id) poser(e); });
+  const lacher = (e) => {
+    if (e.pointerId !== id) return;
+    id = null;
+    el.classList.remove('active');
+    pouce.style.transform = '';
+    surChangement(0, 0);
+  };
+  el.addEventListener('pointerup', lacher);
+  el.addEventListener('pointercancel', lacher);
+}
 
-  for (const b of document.querySelectorAll('.levier')) {
-    const a = b.dataset.action;
-    leviers[a] = b;
-    if (a === 'pivoter') {
-      b.addEventListener('click', pivoter);
-      continue;
-    }
-    const debut = (e) => { e.preventDefault(); b.setPointerCapture?.(e.pointerId); actions.add(a); b.classList.add('actif'); };
-    const fin = () => { actions.delete(a); b.classList.remove('actif'); };
+function brancherCommandes() {
+  brancherManette(document.getElementById('manetteG'), (x, y) => { axes.rotation = -x; axes.balancier = y; });
+  brancherManette(document.getElementById('manetteD'), (x, y) => { axes.fleche = y; axes.godet = x; });
+
+  const PEDALES = { avancer: ['chenille', 1], reculer: ['chenille', -1], lameDescend: ['lame', -1], lameMonte: ['lame', 1] };
+  for (const b of document.querySelectorAll('.pedale[data-action]')) {
+    const [axe, val] = PEDALES[b.dataset.action];
+    const debut = (e) => { e.preventDefault(); b.setPointerCapture?.(e.pointerId); axes[axe] = val; b.classList.add('actif'); };
+    const fin = () => { if (axes[axe] === val) axes[axe] = 0; b.classList.remove('actif'); };
     b.addEventListener('pointerdown', debut);
     b.addEventListener('pointerup', fin);
     b.addEventListener('pointercancel', fin);
     b.addEventListener('lostpointercapture', fin);
-    b.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); actions.add(a); b.classList.add('actif'); } });
+    b.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); axes[axe] = val; b.classList.add('actif'); } });
     b.addEventListener('keyup', (e) => { if (e.code === 'Space' || e.code === 'Enter') fin(); });
   }
+  document.getElementById('btnDemiTour').addEventListener('click', demiTour);
+  document.getElementById('btnAideBas').addEventListener('click', () => ui.aide.showModal());
+
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || ui.aide.open) return;
+    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = true; return; }
+    if (e.code === 'KeyR') { if (!e.repeat) demiTour(); e.preventDefault(); return; }
+    if (e.code === 'KeyH' || e.key === '?') { ui.aide.showModal(); return; }
+    if (CODES.test(e.code)) { clavier[e.code] = true; e.preventDefault(); }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = false; return; }
+    delete clavier[e.code];
+  });
+  window.addEventListener('blur', () => { for (const c of Object.keys(clavier)) delete clavier[c]; });
 
   ui.chantier.addEventListener('change', () => { demarrerChantier(ui.chantier.value); ui.chantier.blur(); });
   ui.btnReset.addEventListener('click', () => { demarrerChantier(chantier); ui.btnReset.blur(); });
@@ -1538,7 +1614,6 @@ function brancherCommandes() {
     cam.cible = clamp(cam.cible * (e.deltaY > 0 ? 0.9 : 1.1), 34, 150);
   }, { passive: false });
 }
-const leviers = {};
 
 /* ---------- Persistance ---------- */
 
@@ -1550,7 +1625,7 @@ function sauver() {
     const arr = (t) => Array.from(t, (v) => Math.round(v * 1000) / 1000);
     localStorage.setItem(LS_ETAT, JSON.stringify({
       chantier, sol: arr(sol), meuble: arr(meuble), vierge: Array.from(vierge),
-      machine: { x: etat.x, fleche: etat.fleche, balancier: etat.balancier, godet: etat.godet, lame: etat.lame, pivot: etat.pivotCible },
+      machine: { x: etat.x, fleche: etat.fleche, balancier: etat.balancier, godet: etat.godet, lame: etat.lame, rotation: etat.rotation },
       charge: etat.charge, volume: etat.volume, chrono: etat.chrono, termine: etat.termine,
     }));
   } catch (err) { /* stockage indisponible : on continue sans sauvegarde */ }
@@ -1585,7 +1660,9 @@ function charger() {
     etat.balancier = num(m.balancier, -1.6, LIM.balancier[0], LIM.balancier[1]);
     etat.godet = num(m.godet, -1.4, LIM.godet[0], LIM.godet[1]);
     etat.lame = num(m.lame, 0.3, LIM.lame[0], LIM.lame[1]);
-    etat.pivot = etat.pivotCible = m.pivot === -1 ? -1 : 1;
+    etat.rotation = num(m.rotation, 0, -1e4, 1e4);
+    etat.rotationCible = null;
+    etat.pivot = Math.cos(etat.rotation);
     etat.charge = num(d.charge, 0, 0, M.capacite);
     etat.volume = num(d.volume, 0, 0, 1e6);
     etat.chrono = num(d.chrono, 0, 0, 1e7);
@@ -1608,7 +1685,7 @@ function demarrerChantier(cle) {
   Object.assign(etat, {
     x: CHANTIERS[cle].depart, tangage: 0,
     fleche: 0.45, balancier: -1.6, godet: -1.4, lame: 0.30,
-    pivot: 1, pivotCible: 1,
+    rotation: 0, rotationCible: null, pivot: 1,
     charge: 0, volume: 0, chrono: 0, chronoActif: false, termine: false,
   });
   etat.y = hauteurEn(etat.x);

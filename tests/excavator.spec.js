@@ -13,7 +13,9 @@ test.describe("Simulateur de pelle mécanique", () => {
     expect(box.height).toBeGreaterThan(200);
 
     await expect(page.locator("#chantier option")).toHaveCount(4);
-    await expect(page.locator(".levier")).toHaveCount(11);
+    await expect(page.locator(".pedale")).toHaveCount(6);
+    await expect(page.locator("#manetteG .pouce")).toBeVisible();
+    await expect(page.locator("#manetteD .pouce")).toBeVisible();
     await expect(page.getByTestId("volume")).toHaveText("0,00 m³");
   });
 
@@ -24,11 +26,11 @@ test.describe("Simulateur de pelle mécanique", () => {
 
     // Le rendu logiciel des tests peut être lent : on tient la touche jusqu'à l'effet attendu.
     const avant = await page.getByTestId("profondeur").textContent();
-    await page.keyboard.down("ArrowDown");
+    await page.keyboard.down("KeyI");
     await expect
       .poll(() => page.getByTestId("profondeur").textContent(), { timeout: 20000 })
       .not.toBe(avant);
-    await page.keyboard.up("ArrowDown");
+    await page.keyboard.up("KeyI");
     await expect(page.getByTestId("chrono")).not.toHaveText("0:00", { timeout: 15000 });
   });
 
@@ -38,25 +40,25 @@ test.describe("Simulateur de pelle mécanique", () => {
     await page.click("#btnReset");
 
     // Bring the teeth into the ground: boom down until the depth reads negative.
-    await page.keyboard.down("ArrowDown");
+    await page.keyboard.down("KeyI");
     await expect
       .poll(() => page.getByTestId("profondeur").textContent(), { timeout: 20000 })
       .toMatch(/^−0,[2-9]/);
-    await page.keyboard.up("ArrowDown");
-    // Curl the bucket back to scoop until it holds something.
-    await page.keyboard.down("KeyZ");
+    await page.keyboard.up("KeyI");
+    // Close the bucket to scoop until it holds something.
+    await page.keyboard.down("KeyJ");
     await expect
       .poll(async () => parseInt((await page.locator("#valGodet").textContent()) || "0", 10), { timeout: 20000 })
       .toBeGreaterThan(0);
-    await page.keyboard.up("KeyZ");
+    await page.keyboard.up("KeyJ");
   });
 
   test("the terrain survives a reload", async ({ page }) => {
     await page.goto(URL);
     await page.selectOption("#chantier", "nivellement");
-    await page.keyboard.down("ArrowDown");
+    await page.keyboard.down("KeyI");
     await page.waitForTimeout(1400);
-    await page.keyboard.up("ArrowDown");
+    await page.keyboard.up("KeyI");
     // Save is throttled to 2 s; pagehide also flushes it.
     await page.waitForTimeout(2300);
 
