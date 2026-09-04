@@ -132,6 +132,7 @@ eleventyExcludeFromCollections: true
     min-height: 32px;
   }
   select:hover, .bouton:hover { border-color: var(--orange); }
+  .bouton.actif { background: linear-gradient(180deg, var(--orange), var(--orange-sombre)); border-color: var(--jaune); }
   select:focus-visible, .bouton:focus-visible, a:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
   /* ---------- Afficheur de cabine ---------- */
@@ -396,6 +397,7 @@ eleventyExcludeFromCollections: true
       <option value="fosse">Fosse</option>
       <option value="remblai">Remblayage</option>
     </select>
+    <button class="bouton" id="btnVue" title="Vue extérieure / cabine (C)" aria-pressed="false">👁</button>
     <button class="bouton" id="btnReset" title="Remettre le chantier à zéro">↺</button>
   </div>
 </header>
@@ -452,7 +454,7 @@ eleventyExcludeFromCollections: true
 <dialog id="aide">
   <div class="aide-corps" tabindex="-1" autofocus>
     <h2>Commandes</h2>
-    <p>Les deux manettes suivent la <b>norme ISO</b> des vraies pelles : à gauche, la rotation de la tourelle et le balancier ; à droite, la flèche et le godet. Glissez un doigt sur la vue pour tourner la tête, <kbd>⌖</kbd> pour la recentrer.</p>
+    <p>Les deux manettes suivent la <b>norme ISO</b> des vraies pelles : à gauche, la rotation de la tourelle et le balancier ; à droite, la flèche et le godet. Glissez un doigt sur la vue pour tourner la tête, <kbd>⌖</kbd> pour la recentrer. Le bouton <kbd>👁</kbd> (ou <kbd>C</kbd>) passe en vue extérieure, pour juger le godet et le tas.</p>
     <h3>Au clavier</h3>
     <ul>
       <li><kbd>A</kbd> <kbd>D</kbd> rotation de la tourelle · <kbd>W</kbd> <kbd>S</kbd> sortir et rentrer le balancier</li>

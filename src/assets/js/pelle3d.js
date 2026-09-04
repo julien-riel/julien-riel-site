@@ -80,6 +80,7 @@ const etat = {
   rotation: 0, fleche: 0.45, balancier: -1.6, godet: -1.4,
   charge: 0, volume: 0, chrono: 0, chronoActif: false, termine: false,
   regardLacet: 0, regardTangage: -0.30,
+  vueExterieure: false,
 };
 const axes = { rotation: 0, balancier: 0, fleche: 0, godet: 0, chenille: 0, virage: 0 };
 const clavier = {};
@@ -201,6 +202,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.localClippingEnabled = true;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x9cc0e6);
@@ -382,22 +384,52 @@ const godet = new THREE.Group();
 godet.position.set(M.balancier, 0, 0);
 balancier.add(godet);
 {
-  const forme = new THREE.Shape();
+  /* Coque creuse : deux flasques et une tôle de fond cintrée, sans capot sur l'ouverture. */
   const pts = [[0, 0], [0.02, 0.12], [0.12, 0.22], [0.29, 0.22], [0.40, 0.08], [0.42, 0]];
-  forme.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i < pts.length; i++) forme.lineTo(pts[i][0], pts[i][1]);
-  forme.lineTo(0, 0);
-  const geo = new THREE.ExtrudeGeometry(forme, { depth: M.godetLarg, bevelEnabled: false });
-  geo.translate(0, 0, -M.godetLarg / 2);
-  const coque = new THREE.Mesh(geo, matAcier);
-  coque.castShadow = true;
-  godet.add(coque);
+  const w = M.godetLarg;
+  const profil = new THREE.Shape();
+  profil.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) profil.lineTo(pts[i][0], pts[i][1]);
+  profil.lineTo(0, 0);
+  const matTole = new THREE.MeshLambertMaterial({ color: 0xc7ccd1, side: THREE.DoubleSide });
+  for (const z of [-w / 2, w / 2]) {
+    const flasque = new THREE.Mesh(new THREE.ShapeGeometry(profil), matTole);
+    flasque.position.z = z;
+    flasque.castShadow = true;
+    godet.add(flasque);
+  }
+  const fond = new THREE.BufferGeometry();
+  const pos = [], idx = [];
+  for (let i = 0; i < pts.length; i++) {
+    pos.push(pts[i][0], pts[i][1], -w / 2, pts[i][0], pts[i][1], w / 2);
+    if (i > 0) { const k = i * 2; idx.push(k - 2, k - 1, k, k - 1, k + 1, k); }
+  }
+  fond.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  fond.setIndex(idx);
+  fond.computeVertexNormals();
+  const tole = new THREE.Mesh(fond, matTole);
+  tole.castShadow = true;
+  godet.add(tole);
   for (const dz of [-0.14, 0, 0.14]) boite(0.1, 0.03, 0.04, matGris, 0.46, 0.02, dz, godet);   // dents
   boite(0.14, 0.12, 0.2, matGris, 0.04, -0.08, 0, godet);                                       // oreille
 }
-const terreGodet = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.2, M.godetLarg - 0.04), new THREE.MeshLambertMaterial({ color: 0x8a6440 }));
-terreGodet.position.set(0.19, 0.12, 0);
-godet.add(terreGodet);
+
+/* La terre dans le godet : le volume intérieur (avec un dôme au-dessus du bord), coupé par un
+   plan de remplissage qui se déplace avec la charge. */
+const planTerre = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const terreGodet = (() => {
+  const forme = new THREE.Shape();
+  forme.moveTo(0.02, 0.0);
+  for (const [x, y] of [[0.03, 0.115], [0.125, 0.205], [0.285, 0.205], [0.385, 0.08], [0.40, 0.0], [0.33, -0.05], [0.10, -0.05]]) forme.lineTo(x, y);
+  forme.lineTo(0.02, 0.0);
+  const geo = new THREE.ExtrudeGeometry(forme, { depth: M.godetLarg - 0.03, bevelEnabled: false });
+  geo.translate(0, 0, -(M.godetLarg - 0.03) / 2);
+  const mat = new THREE.MeshLambertMaterial({ color: 0x9a6d3f, side: THREE.DoubleSide, clippingPlanes: [planTerre], clipShadows: true });
+  const m = new THREE.Mesh(geo, mat);
+  m.castShadow = true;
+  godet.add(m);
+  return m;
+})();
 
 /* Vérins : corps + tige, orientés chaque image entre deux points du monde. */
 const geoCyl = new THREE.CylinderGeometry(1, 1, 1, 10);
@@ -453,12 +485,13 @@ function appliquerPose() {
   balancier.rotation.z = etat.balancier;
   godet.rotation.z = etat.godet;
   tete.rotation.set(0, -Math.PI / 2 + etat.regardLacet, 0);
-  camera.rotation.set(etat.regardTangage, 0, 0);
+  if (!etat.vueExterieure) camera.rotation.set(etat.regardTangage, 0, 0);
   const f = etat.charge / M.capacite;
   terreGodet.visible = f > 0.02;
-  terreGodet.scale.y = Math.max(0.05, f);
-  terreGodet.position.y = 0.22 - 0.1 * f;
   scene.updateMatrixWorld(true);
+  /* Niveau de terre : 0,22 (fond) quand le godet est vide, −0,05 (dôme) quand il est plein. */
+  const niveau = godet.localToWorld(vA.set(0.2, 0.22 - 0.27 * f, 0));
+  planTerre.setFromNormalAndCoplanarPoint(vDir.set(0, 1, 0).transformDirection(godet.matrixWorld), niveau);
 
   /* Vérins, calculés dans le monde. */
   const pA = tourelle.localToWorld(vA.set(0.25, 0.08, M.pivot.z));
@@ -470,6 +503,28 @@ function appliquerPose() {
   const pE = balancier.localToWorld(vA.set(0.12, 0.09, 0));
   const pF = godet.localToWorld(vB.set(-0.1, -0.14, 0));
   orienterVerin(verins.godet, pE, pF, 0.3);
+
+  /* Vue extérieure : en retrait, du côté de la cabine, le regard sur le godet. */
+  if (etat.vueExterieure) {
+    const poste = tourelle.localToWorld(vA.set(0.3, 1.7, 2.9));
+    camera.position.lerp(poste, 0.15);
+    const dents = godet.localToWorld(vB.set(M.godet, 0, 0));
+    camera.lookAt(dents);
+  }
+}
+
+function basculerVue() {
+  etat.vueExterieure = !etat.vueExterieure;
+  if (etat.vueExterieure) {
+    scene.add(camera);
+    camera.position.copy(tourelle.localToWorld(vA.set(0.3, 1.7, 2.9)));
+  } else {
+    tete.add(camera);
+    camera.position.set(0, 0, 0);
+    camera.rotation.set(etat.regardTangage, 0, 0);
+  }
+  ui.btnVue.classList.toggle('actif', etat.vueExterieure);
+  ui.btnVue.setAttribute('aria-pressed', String(etat.vueExterieure));
 }
 
 /* La machine s'assied sur le relief sous ses chenilles. */
@@ -611,7 +666,7 @@ function verifierFin() {
 
 const ui = {};
 for (const id of ['chantier', 'btnReset', 'btnAide', 'btnRecentrer', 'aide', 'titreChantier', 'consigne', 'valAvancement', 'barreAvancement',
-  'valChrono', 'valGodet', 'barreGodet', 'pisteGodet', 'valProfondeur', 'valVolume', 'banniere', 'banniereTexte', 'btnBanniere', 'chargement']) {
+  'valChrono', 'valGodet', 'barreGodet', 'pisteGodet', 'valProfondeur', 'valVolume', 'banniere', 'banniereTexte', 'btnBanniere', 'chargement', 'btnVue']) {
   ui[id] = document.getElementById(id);
 }
 
@@ -721,6 +776,7 @@ function brancherCommandes() {
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'SELECT' || ui.aide.open) return;
     if (e.code === 'KeyH' || e.key === '?') { ui.aide.showModal(); return; }
+    if (e.code === 'KeyC') { if (!e.repeat) basculerVue(); return; }
     if (e.code.startsWith('Arrow') || /^Key[ADWSIKJL]$/.test(e.code)) { clavier[e.code] = true; e.preventDefault(); }
   });
   window.addEventListener('keyup', (e) => { delete clavier[e.code]; });
@@ -729,6 +785,7 @@ function brancherCommandes() {
   ui.chantier.addEventListener('change', () => { demarrerChantier(ui.chantier.value); ui.chantier.blur(); });
   ui.btnReset.addEventListener('click', () => { demarrerChantier(chantier); ui.btnReset.blur(); });
   ui.btnAide.addEventListener('click', () => ui.aide.showModal());
+  ui.btnVue.addEventListener('click', () => { basculerVue(); ui.btnVue.blur(); });
   ui.btnBanniere.addEventListener('click', () => { ui.banniere.hidden = true; });
 }
 
