@@ -355,14 +355,14 @@ const STATIC_CARDS = [
   },
   {
     title: "Glossaire de l'IA",
-    description: "Soixante-quinze termes de l'IA définis en français et en anglais, avec une source pour aller plus loin.",
+    description: "Quatre-vingt-sept termes de l'IA définis en français et en anglais, avec une source pour aller plus loin.",
     section: "glossaire",
     lang: "fr",
     slug: "_index",
   },
   {
     title: "AI Glossary",
-    description: "Seventy-five AI terms defined in English and French, each with a source to go deeper.",
+    description: "Eighty-seven AI terms defined in English and French, each with a source to go deeper.",
     section: "glossaire",
     lang: "en",
     slug: "_index",

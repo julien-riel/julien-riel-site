@@ -5,10 +5,10 @@ test.describe("Glossary page", () => {
     await page.goto("/glossaire/");
 
     const entries = page.locator("[data-glossary-entry]");
-    await expect(entries).toHaveCount(75);
+    await expect(entries).toHaveCount(87);
 
     const sources = page.locator(".glossary-source");
-    await expect(sources).toHaveCount(75);
+    await expect(sources).toHaveCount(87);
   });
 
   test("filter narrows the list and reports the count", async ({ page }) => {
@@ -21,7 +21,7 @@ test.describe("Glossary page", () => {
 
     // The filter is debounced, so wait for the list to actually narrow.
     const visibleEntries = page.locator("[data-glossary-entry]:not([hidden])");
-    await expect(visibleEntries).not.toHaveCount(75);
+    await expect(visibleEntries).not.toHaveCount(87);
 
     await expect(page.locator("#jeton")).toBeVisible();
     const visible = await visibleEntries.count();
@@ -54,7 +54,7 @@ test.describe("Glossary page", () => {
     await page.locator(".lang-switch").click();
 
     await expect(page).toHaveURL(/\/en\/glossary\/$/);
-    await expect(page.locator("[data-glossary-entry]")).toHaveCount(75);
+    await expect(page.locator("[data-glossary-entry]")).toHaveCount(87);
 
     await page.locator(".lang-switch").click();
     await expect(page).toHaveURL(/\/glossaire\/$/);

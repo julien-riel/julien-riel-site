@@ -57,6 +57,13 @@
       "descEn": "How to know whether it works, and how it breaks."
     },
     {
+      "id": "infrastructure",
+      "fr": "Infrastructure et matériel",
+      "en": "Infrastructure and hardware",
+      "descFr": "Ce sur quoi les modèles tournent, et où passent les données.",
+      "descEn": "What the models actually run on, and where the data goes."
+    },
+    {
       "id": "exploitation",
       "fr": "Exploitation",
       "en": "Operations",
@@ -247,6 +254,18 @@
       "source": {
         "label": "Anderljung et al. — Frontier AI Regulation (arXiv)",
         "url": "https://arxiv.org/abs/2307.03718"
+      }
+    },
+    {
+      "id": "variante-de-modele",
+      "category": "modeles",
+      "en": "Model variant",
+      "fr": "Variante de modèle",
+      "defFr": "Un des membres d'une même famille de modèles — petit, moyen, grand — issus des mêmes recettes d'entraînement mais de tailles et de coûts différents. Choisir une variante, c'est arbitrer entre qualité, latence et prix, et l'arbitrage se fait par tâche : le gros modèle pour planifier, le petit pour classer ou router. Rien n'oblige à n'en utiliser qu'une seule dans un même système.",
+      "defEn": "One member of a model family — small, medium, large — built from the same training recipes but at different sizes and prices. Picking a variant is a trade-off between quality, latency, and cost, and the trade-off is made per task: the large model to plan, the small one to classify or route. Nothing says a single system must use only one.",
+      "source": {
+        "label": "Anthropic — Models overview",
+        "url": "https://docs.claude.com/en/docs/about-claude/models/overview"
       }
     },
     {
@@ -691,6 +710,32 @@
       }
     },
     {
+      "id": "plugin",
+      "category": "agents",
+      "en": "Plugin",
+      "fr": "Plugin",
+      "frAlt": "extension",
+      "defFr": "Paquet installable qui regroupe en un seul objet versionné ce qu'on ajoute à un agent : skills, sous-agents, hooks, serveurs MCP, commandes. L'intérêt est la distribution — au lieu que chaque membre de l'équipe recopie sa configuration, on installe le même paquet depuis un catalogue. Un plugin exécute du code sur ta machine : traite son installation comme celle de n'importe quelle dépendance.",
+      "defEn": "An installable bundle that packages what you add to an agent — skills, subagents, hooks, MCP servers, commands — as one versioned object. The point is distribution: instead of every teammate copying a configuration by hand, everyone installs the same bundle from a catalog. A plugin runs code on your machine: treat installing one like adding any other dependency.",
+      "source": {
+        "label": "Claude Code — Plugins",
+        "url": "https://docs.claude.com/en/docs/claude-code/plugins"
+      }
+    },
+    {
+      "id": "hook",
+      "category": "agents",
+      "en": "Hook",
+      "fr": "Hook",
+      "frAlt": "crochet",
+      "defFr": "Commande que le harnais exécute automatiquement sur un événement du cycle de vie : avant ou après un appel d'outil, au démarrage d'une session, à la fin d'une réponse. La différence avec une consigne dans le prompt est décisive : un hook s'exécute toujours et peut bloquer l'action, alors qu'une consigne peut être ignorée. C'est là que vont le formatage, le lint, les tests et les interdits qui ne se négocient pas.",
+      "defEn": "A command the harness runs automatically on a lifecycle event: before or after a tool call, at session start, at the end of a response. The difference from an instruction in the prompt is decisive: a hook always runs and can block the action, whereas an instruction can be ignored. It's where formatting, linting, tests, and non-negotiable prohibitions belong.",
+      "source": {
+        "label": "Claude Code — Hooks",
+        "url": "https://docs.claude.com/en/docs/claude-code/hooks"
+      }
+    },
+    {
       "id": "mcp",
       "category": "agents",
       "en": "MCP (Model Context Protocol)",
@@ -1005,6 +1050,117 @@
       "source": {
         "label": "Wikipedia — Concept drift",
         "url": "https://en.wikipedia.org/wiki/Concept_drift"
+      }
+    },
+    {
+      "id": "gpu",
+      "category": "infrastructure",
+      "en": "GPU (graphics processing unit)",
+      "fr": "GPU",
+      "frAlt": "processeur graphique",
+      "defFr": "Processeur conçu pour effectuer des milliers d'opérations en parallèle, ce qui correspond exactement aux multiplications de matrices d'un réseau de neurones. C'est le matériel sur lequel tourne pratiquement tout l'entraînement et la majorité de l'inférence. Sa disponibilité, plus que la qualité des modèles, est la contrainte qui structure le marché.",
+      "defEn": "A processor built to run thousands of operations in parallel, which is exactly what a neural network's matrix multiplications need. It's the hardware behind virtually all training and most inference. Its availability, more than model quality, is the constraint that shapes the market.",
+      "source": {
+        "label": "Wikipedia — Graphics processing unit",
+        "url": "https://en.wikipedia.org/wiki/Graphics_processing_unit"
+      }
+    },
+    {
+      "id": "vram",
+      "category": "infrastructure",
+      "en": "VRAM (GPU memory)",
+      "fr": "VRAM",
+      "frAlt": "mémoire du GPU",
+      "defFr": "La mémoire embarquée sur le GPU, et la vraie limite quand on héberge un modèle soi-même. Il faut y loger les poids — grossièrement, le nombre de paramètres multiplié par le nombre d'octets par paramètre, d'où l'intérêt de la quantification — plus le cache d'attention de chaque requête en cours, qui grandit avec la longueur du contexte. C'est ce calcul, pas le nombre de paramètres seul, qui dit si un modèle entre sur ta machine.",
+      "defEn": "The memory on board the GPU, and the real limit when you host a model yourself. It has to hold the weights — roughly, parameter count times bytes per parameter, which is why quantization matters — plus the attention cache for every in-flight request, which grows with context length. That calculation, not parameter count alone, tells you whether a model fits on your hardware.",
+      "source": {
+        "label": "Hugging Face — Model memory anatomy",
+        "url": "https://huggingface.co/docs/transformers/model_memory_anatomy"
+      }
+    },
+    {
+      "id": "accelerateur",
+      "category": "infrastructure",
+      "en": "AI accelerator (TPU, NPU)",
+      "fr": "Accélérateur dédié",
+      "defFr": "Puce conçue spécifiquement pour les charges d'apprentissage automatique plutôt que dérivée du graphisme : TPU chez Google, Trainium et Inferentia chez AWS, NPU dans les téléphones et les portables récents. Meilleur rendement énergétique sur les opérations visées, écosystème logiciel plus étroit. Le choix se fait autant sur la disponibilité et les outils que sur les spécifications.",
+      "defEn": "A chip designed specifically for machine learning workloads rather than derived from graphics: TPUs at Google, Trainium and Inferentia at AWS, NPUs in recent phones and laptops. Better energy efficiency on the operations they target, a narrower software ecosystem. The choice comes down to availability and tooling as much as to specifications.",
+      "source": {
+        "label": "Wikipedia — AI accelerator",
+        "url": "https://en.wikipedia.org/wiki/AI_accelerator"
+      }
+    },
+    {
+      "id": "gpu-centre-de-donnees",
+      "category": "infrastructure",
+      "en": "Datacenter GPU (H100, HGX, DGX)",
+      "fr": "GPU de centre de données",
+      "defFr": "Les GPU de serveur — H100, H200, Blackwell chez NVIDIA — et les systèmes qui les regroupent : HGX pour la carte à huit GPU, DGX pour le serveur complet. Ils se distinguent des cartes grand public par la quantité de mémoire et surtout par l'interconnexion, qui permet à plusieurs GPU de se partager un modèle trop gros pour un seul. C'est l'unité d'achat et de location de la capacité d'inférence.",
+      "defEn": "Server-class GPUs — H100, H200, Blackwell at NVIDIA — and the systems that group them: HGX for the eight-GPU board, DGX for the complete server. What sets them apart from consumer cards is memory capacity and, above all, the interconnect that lets several GPUs share a model too large for one. It's the unit in which inference capacity is bought and rented.",
+      "source": {
+        "label": "NVIDIA — H100 Tensor Core GPU",
+        "url": "https://www.nvidia.com/en-us/data-center/h100/"
+      }
+    },
+    {
+      "id": "serveur-d-inference",
+      "category": "infrastructure",
+      "en": "Inference server",
+      "fr": "Serveur d'inférence",
+      "defFr": "Le logiciel qui expose un modèle en API et l'exécute efficacement : vLLM, TGI, Triton. Son travail est de regrouper les requêtes en lots continus et de gérer le cache d'attention pour ne pas gaspiller de mémoire. C'est lui qui décide de ton débit réel — le même modèle sur le même GPU peut servir dix fois plus de requêtes selon le serveur.",
+      "defEn": "The software that exposes a model as an API and runs it efficiently: vLLM, TGI, Triton. Its job is to batch requests continuously and manage the attention cache so memory isn't wasted. It's what decides your real throughput — the same model on the same GPU can serve ten times more requests depending on the server.",
+      "source": {
+        "label": "Kwon et al. — PagedAttention / vLLM (arXiv)",
+        "url": "https://arxiv.org/abs/2309.06180"
+      }
+    },
+    {
+      "id": "passerelle-ia",
+      "category": "infrastructure",
+      "en": "AI gateway",
+      "fr": "Passerelle IA",
+      "defFr": "Proxy placé entre tes applications et les fournisseurs de modèles. Il centralise ce qu'on ne veut pas réimplémenter dans chaque application : clés d'API, quotas par équipe, journalisation des appels, mise en cache, repli vers un autre fournisseur en cas de panne, et suivi des coûts. C'est aussi le seul endroit où l'on peut réellement appliquer une politique d'usage à l'échelle d'une organisation.",
+      "defEn": "A proxy placed between your applications and model providers. It centralizes what you don't want to reimplement in every application: API keys, per-team quotas, call logging, caching, failover to another provider during an outage, and cost tracking. It's also the only place where a usage policy can genuinely be enforced across an organization.",
+      "source": {
+        "label": "Cloudflare — AI Gateway",
+        "url": "https://developers.cloudflare.com/ai-gateway/"
+      }
+    },
+    {
+      "id": "inference-sur-site",
+      "category": "infrastructure",
+      "en": "Self-hosted inference",
+      "fr": "Inférence sur site",
+      "frAlt": "auto-hébergement, on-premise",
+      "defFr": "Exécuter un modèle à poids ouverts sur ton propre matériel plutôt que d'appeler une API. On y gagne le contrôle des données, un coût fixe et l'absence de limite de débit imposée ; on y perd l'accès aux modèles frontière et on hérite d'un travail d'exploitation réel — capacité, mises à jour, disponibilité. Le calcul devient favorable quand le volume est élevé et régulier.",
+      "defEn": "Running an open-weights model on your own hardware instead of calling an API. You gain data control, a fixed cost, and no imposed rate limits; you lose access to frontier models and inherit real operational work — capacity, updates, availability. The math turns favourable when volume is high and steady.",
+      "source": {
+        "label": "Hugging Face — Text Generation Inference",
+        "url": "https://huggingface.co/docs/text-generation-inference"
+      }
+    },
+    {
+      "id": "inference-en-peripherie",
+      "category": "infrastructure",
+      "en": "Edge inference",
+      "fr": "Inférence en périphérie",
+      "defFr": "Faire tourner un modèle sur l'appareil lui-même — téléphone, portable, équipement industriel — plutôt que dans un centre de données. Latence minimale, fonctionnement hors ligne, données qui ne quittent jamais l'appareil. En contrepartie, un modèle beaucoup plus petit, souvent quantifié, dont il faut vérifier qu'il suffit à la tâche visée.",
+      "defEn": "Running a model on the device itself — phone, laptop, industrial equipment — rather than in a datacenter. Minimal latency, offline operation, data that never leaves the device. In exchange, a much smaller model, usually quantized, which you have to verify is good enough for the task at hand.",
+      "source": {
+        "label": "Wikipedia — Edge computing",
+        "url": "https://en.wikipedia.org/wiki/Edge_computing"
+      }
+    },
+    {
+      "id": "residence-des-donnees",
+      "category": "infrastructure",
+      "en": "Data residency and sovereignty",
+      "fr": "Résidence et souveraineté des données",
+      "defFr": "Où tes données sont traitées et stockées, et quelles lois s'y appliquent. Un appel à une API de modèle est un transfert de données vers un tiers, souvent dans un autre pays — ce qui, dans le secteur public et en santé, est une contrainte de conception avant d'être une question juridique. Les réponses possibles : région d'hébergement contractuelle, passerelle qui filtre ce qui sort, ou inférence sur site.",
+      "defEn": "Where your data is processed and stored, and which laws apply there. A call to a model API is a data transfer to a third party, often in another country — which, in the public sector and in healthcare, is a design constraint before it is a legal question. The available answers: a contractual hosting region, a gateway that filters what leaves, or self-hosted inference.",
+      "source": {
+        "label": "Wikipedia — Data sovereignty",
+        "url": "https://en.wikipedia.org/wiki/Data_sovereignty"
       }
     },
     {
