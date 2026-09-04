@@ -10,5 +10,17 @@
     },
     "url": "/projets/planificateur-terrasse/",
     "emoji": "🪴"
+  },
+  {
+    "name": {
+      "fr": "Simulateur de pelle mécanique",
+      "en": "Excavator simulator"
+    },
+    "description": {
+      "fr": "Une mini-pelle de la classe 0–2 t en coupe de chantier : creusez, transportez et remblayez de la terre au clavier ou au doigt. Le terrain foisonne, s'écroule à son angle de talus et se sauvegarde entre deux visites. Une seule page HTML, sans dépendance.",
+      "en": "A 0–2 t mini-excavator in a cross-section of a job site: dig, carry and backfill soil with the keyboard or touch. The ground swells, slumps at its angle of repose and persists between visits. A single dependency-free HTML page. French only."
+    },
+    "url": "/projets/simulateur-pelle-mecanique/",
+    "emoji": "🚜"
   }
 ]

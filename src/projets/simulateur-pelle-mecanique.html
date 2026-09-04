@@ -1,0 +1,1665 @@
+---
+permalink: /projets/simulateur-pelle-mecanique/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulateur de pelle mécanique</title>
+<meta name="description" content="Un simulateur de mini-pelle hydraulique jouable au clavier ou au doigt : creusez, transportez et remblayez de la terre sur un terrain qui s'effondre à l'angle de talus naturel.">
+<meta name="theme-color" content="#0f1113">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%9C%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 700; font-display: swap;
+    src: url('/assets/fonts/outfit-700.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+  }
+
+  :root {
+    --noir: #0d0f11;
+    --graphite: #16191d;
+    --acier: #212932;
+    --acier-clair: #2c3742;
+    --bord: #3a4652;
+    --orange: #ff7a18;
+    --orange-sombre: #c85405;
+    --jaune: #ffc233;
+    --texte: #e8eef4;
+    --sourdine: #8896a4;
+    --vert: #55cf7c;
+    --rouge: #ff5f4d;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font: 500 14px/1.45 var(--ui);
+    color: var(--texte);
+    background: var(--noir);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---------- Bandeau de tête : plaque de machine ---------- */
+
+  .bandeau {
+    display: flex;
+    align-items: center;
+    gap: 10px 18px;
+    padding: 8px 14px 9px;
+    background:
+      linear-gradient(180deg, #20262d, #14181c);
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 #3a4652 inset, 0 6px 18px rgba(0,0,0,.55);
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 3;
+  }
+  .bandeau::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -4px;
+    height: 4px;
+    background: repeating-linear-gradient(115deg, var(--jaune) 0 14px, #14181c 14px 28px);
+    opacity: .85;
+  }
+  .retour {
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  .retour:hover { color: var(--orange); }
+  .bandeau h1 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+  }
+  .pastille {
+    font: 600 11px/1 var(--mono);
+    letter-spacing: .08em;
+    background: var(--orange);
+    color: #17110a;
+    padding: 5px 7px 4px;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 2px 6px rgba(255,122,24,.35);
+  }
+  .cmdes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+  .cmdes label {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  select, .bouton {
+    font: 500 13px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--acier-clair), var(--acier));
+    border: 1px solid var(--bord);
+    border-radius: 5px;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  select:hover, .bouton:hover { border-color: var(--orange); }
+  select:focus-visible, .bouton:focus-visible, a:focus-visible {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+  }
+  .bouton:active { background: var(--acier); transform: translateY(1px); }
+
+  /* ---------- Scène ---------- */
+
+  main {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: #10151a;
+  }
+  #scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  /* Grain léger : la scène ne doit pas paraître trop propre. */
+  main::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .05;
+    background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+  }
+
+  .hud {
+    position: absolute;
+    top: 12px;
+    background: rgba(13, 15, 17, .82);
+    border: 1px solid rgba(58, 70, 82, .8);
+    border-radius: 7px;
+    padding: 10px 12px;
+    backdrop-filter: blur(7px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.5), 0 1px 0 rgba(255,255,255,.06) inset;
+    pointer-events: none;
+    max-width: min(46vw, 360px);
+  }
+  .hud-gauche { left: 12px; }
+  .hud-droite { right: 12px; min-width: 178px; }
+
+  .hud h2 {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 7px;
+  }
+  .consigne { font-size: 12.5px; color: var(--texte); margin-bottom: 9px; }
+  .consigne b { color: var(--jaune); font-weight: 700; }
+
+  .jauge-libelle {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    margin-bottom: 4px;
+  }
+  .jauge-libelle span:last-child {
+    font-size: 12px;
+    letter-spacing: .02em;
+    color: var(--texte);
+    font-variant-numeric: tabular-nums;
+  }
+  .piste {
+    height: 7px;
+    border-radius: 3px;
+    background: #0a0c0e;
+    border: 1px solid #2a333c;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .piste > i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--orange-sombre), var(--orange));
+    transition: width .12s linear;
+  }
+  .piste.mission > i { background: linear-gradient(90deg, #2f8f52, var(--vert)); }
+  .piste.plein > i { background: linear-gradient(90deg, #b0301f, var(--rouge)); }
+
+  .mesures { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+  .mesures dt {
+    font: 600 9.5px/1.6 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .mesures dd {
+    font: 600 12.5px/1.35 var(--mono);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .mesures dd.alerte { color: var(--jaune); }
+
+  #banniere {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    transform: translateX(-50%);
+    text-align: center;
+    padding: 16px 26px;
+    border-radius: 9px;
+    background: rgba(13, 15, 17, .92);
+    border: 1px solid var(--orange);
+    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+    animation: monte .45s cubic-bezier(.2,.9,.3,1.2) both;
+  }
+  @keyframes monte {
+    from { opacity: 0; transform: translate(-50%, 14px) scale(.96); }
+    to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  }
+  #banniere strong {
+    display: block;
+    font-size: 18px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--jaune);
+    margin-bottom: 4px;
+  }
+  #banniere span { font: 500 13px var(--mono); color: var(--sourdine); }
+  #banniere button { margin-top: 12px; pointer-events: auto; }
+
+  /* ---------- Pupitre de commande ---------- */
+
+  #pupitre {
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 9px 14px calc(9px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, #191e23, #101316);
+    border-top: 1px solid #000;
+    box-shadow: 0 -1px 0 #3a4652 inset;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+  }
+  .groupe {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .groupe > span {
+    font: 600 9px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .rangee { display: flex; gap: 6px; }
+  .levier {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 58px;
+    padding: 8px 9px 7px;
+    background: linear-gradient(180deg, var(--acier-clair), #1a2027);
+    border: 1px solid var(--bord);
+    border-radius: 6px;
+    color: var(--texte);
+    cursor: pointer;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background .1s, border-color .1s, box-shadow .1s;
+  }
+  .levier .glyphe { font-size: 17px; line-height: 1; }
+  .levier .touche {
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .08em;
+    color: var(--sourdine);
+  }
+  .levier:hover { border-color: #56646f; }
+  .levier.actif {
+    background: linear-gradient(180deg, var(--orange), var(--orange-sombre));
+    border-color: var(--jaune);
+    color: #1a0f04;
+    box-shadow: 0 0 16px rgba(255,122,24,.4);
+  }
+  .levier.actif .touche { color: rgba(26,15,4,.7); }
+  .levier:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+  .astuce { font-size: 11.5px; color: var(--sourdine); max-width: 30ch; align-self: center; }
+  .astuce a { color: var(--orange); }
+
+  /* ---------- Aide ---------- */
+
+  dialog {
+    border: 1px solid var(--bord);
+    border-radius: 9px;
+    background: var(--graphite);
+    color: var(--texte);
+    padding: 0;
+    max-width: 620px;
+    width: calc(100% - 32px);
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,.7);
+  }
+  dialog::backdrop { background: rgba(5,7,9,.72); }
+  .aide-corps { padding: 20px 22px 22px; outline: none; }
+  dialog h2 {
+    font-size: 15px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  dialog h3 {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    margin: 16px 0 7px;
+  }
+  dialog p, dialog li { font-size: 13px; color: #cbd5df; }
+  dialog ul { padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+  dialog a { color: var(--orange); }
+  .table-touches { display: grid; grid-template-columns: auto 1fr; gap: 5px 12px; align-items: baseline; }
+  .table-touches div:nth-child(odd) { text-align: right; }
+  .table-touches span { font-size: 13px; color: #cbd5df; }
+  kbd {
+    font: 600 11px/1 var(--mono);
+    background: var(--acier);
+    border: 1px solid var(--bord);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    color: var(--texte);
+    white-space: nowrap;
+  }
+  .fermer { margin-top: 18px; }
+
+  @media (max-width: 780px) {
+    .bandeau h1 span.long { display: none; }
+    .hud { padding: 8px 10px; font-size: 12px; }
+    .hud-gauche { max-width: 52vw; }
+    .hud-droite { min-width: 0; }
+    .consigne { display: none; }
+    .astuce { display: none; }
+    .levier { min-width: 50px; padding: 9px 6px; }
+  }
+  @media (max-width: 520px) {
+    .bandeau { padding: 6px 10px 7px; }
+    .bandeau h1 { font-size: 13px; }
+    .cmdes label .lib { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .cmdes { gap: 6px; }
+    #pupitre { gap: 8px; padding-inline: 8px; }
+    .levier { min-width: 44px; }
+    .levier .touche { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <a class="retour" href="/projets/" title="Retour à mes projets">← julien-riel.com</a>
+  <h1><span class="pastille">0–2 t</span> Simulateur de pelle <span class="long">mécanique</span></h1>
+  <div class="cmdes">
+    <label for="chantier"><span class="lib">Chantier</span>
+      <select id="chantier">
+        <option value="bac">Bac à sable</option>
+        <option value="tranchee">Tranchée de service</option>
+        <option value="remblai">Remblayage</option>
+        <option value="nivellement">Nivellement</option>
+      </select>
+    </label>
+    <button class="bouton" id="btnReset" title="Remettre le chantier à zéro">↺ Réinitialiser</button>
+    <button class="bouton" id="btnAide" title="Commandes et notes techniques">? Commandes</button>
+  </div>
+</header>
+
+<main id="cadre">
+  <canvas id="scene" aria-label="Vue de coupe du chantier avec la pelle mécanique" role="img"></canvas>
+
+  <section class="hud hud-gauche" aria-live="polite">
+    <h2 id="titreChantier">Bac à sable</h2>
+    <p class="consigne" id="consigne"></p>
+    <div class="jauge-libelle"><span>Avancement</span><span id="valAvancement">0 %</span></div>
+    <div class="piste mission"><i id="barreAvancement"></i></div>
+    <dl class="mesures">
+      <dt>Chrono</dt><dd id="valChrono" data-testid="chrono">0:00</dd>
+      <dt>Record</dt><dd id="valRecord">—</dd>
+    </dl>
+  </section>
+
+  <section class="hud hud-droite">
+    <div class="jauge-libelle"><span>Godet</span><span id="valGodet">0 L</span></div>
+    <div class="piste" id="pisteGodet"><i id="barreGodet"></i></div>
+    <dl class="mesures">
+      <dt>Dents</dt><dd id="valProfondeur" data-testid="profondeur">0,00 m</dd>
+      <dt>Portée</dt><dd id="valPortee">0,00 m</dd>
+      <dt>Déblai</dt><dd id="valVolume" data-testid="volume">0,00 m³</dd>
+    </dl>
+  </section>
+
+  <div id="banniere" hidden>
+    <strong id="banniereTitre">Chantier terminé</strong>
+    <span id="banniereTexte"></span>
+    <button class="bouton" id="btnBanniere">Continuer</button>
+  </div>
+</main>
+
+<footer id="pupitre">
+  <div class="groupe">
+    <span>Train de roulement</span>
+    <div class="rangee">
+      <button class="levier" data-action="reculer" aria-label="Reculer"><span class="glyphe">◀</span><span class="touche">←</span></button>
+      <button class="levier" data-action="avancer" aria-label="Avancer"><span class="glyphe">▶</span><span class="touche">→</span></button>
+      <button class="levier" data-action="lameDescend" aria-label="Baisser la lame"><span class="glyphe">⤓</span><span class="touche">F</span></button>
+      <button class="levier" data-action="lameMonte" aria-label="Lever la lame"><span class="glyphe">⤒</span><span class="touche">V</span></button>
+      <button class="levier" data-action="pivoter" aria-label="Pivoter la tourelle"><span class="glyphe">⟲</span><span class="touche">R</span></button>
+    </div>
+  </div>
+
+  <p class="astuce">Coupe de chantier à l'échelle d'une mini-pelle de <a href="https://www.kubota.ca/fr/products/0-2-Ton" target="_blank" rel="noopener">la classe 0–2 t</a>. La terre remuée foisonne et s'écroule à son angle de talus.</p>
+
+  <div class="groupe">
+    <span>Équipement</span>
+    <div class="rangee">
+      <button class="levier" data-action="flecheHaut" aria-label="Lever la flèche"><span class="glyphe">↑</span><span class="touche">W</span></button>
+      <button class="levier" data-action="flecheBas" aria-label="Baisser la flèche"><span class="glyphe">↓</span><span class="touche">S</span></button>
+      <button class="levier" data-action="balancierSort" aria-label="Sortir le balancier"><span class="glyphe">↗</span><span class="touche">E</span></button>
+      <button class="levier" data-action="balancierRentre" aria-label="Rentrer le balancier"><span class="glyphe">↙</span><span class="touche">Q</span></button>
+      <button class="levier" data-action="godetFerme" aria-label="Cavalier : fermer le godet"><span class="glyphe">⤺</span><span class="touche">Z</span></button>
+      <button class="levier" data-action="godetOuvre" aria-label="Ouvrir le godet et vider"><span class="glyphe">⤻</span><span class="touche">X</span></button>
+    </div>
+  </div>
+</footer>
+
+<dialog id="aide">
+  <div class="aide-corps" tabindex="-1" autofocus>
+    <h2>Commandes</h2>
+    <div class="table-touches">
+      <div><kbd>←</kbd> <kbd>→</kbd></div><span>Déplacer la machine (chenilles)</span>
+      <div><kbd>W</kbd> <kbd>S</kbd> ou <kbd>↑</kbd> <kbd>↓</kbd></div><span>Lever et baisser la flèche</span>
+      <div><kbd>Q</kbd> <kbd>E</kbd></div><span>Rentrer et sortir le balancier</span>
+      <div><kbd>Z</kbd> <kbd>X</kbd></div><span>Cavalier (fermer) et ouvrir le godet</span>
+      <div><kbd>F</kbd> <kbd>V</kbd></div><span>Baisser et lever la lame de remblayage</span>
+      <div><kbd>R</kbd></div><span>Pivoter la tourelle de 180°</span>
+      <div><kbd>Maj</kbd></div><span>Mode lent, pour les finitions</span>
+    </div>
+
+    <h3>Comment on charge un godet</h3>
+    <ul>
+      <li>Sortez le balancier, posez les dents sur le sol, puis <b>tirez</b> le balancier vers vous en fermant progressivement le godet : les dents raclent une passe de terre.</li>
+      <li>Le godet ne retient la terre que si son ouverture regarde vers le haut. Ouvrez-le au-dessus du tas pour le vider.</li>
+      <li>Levez la flèche avant de déplacer la machine, sinon les dents labourent le terrain.</li>
+      <li>La lame à l'avant pousse la terre meuble quand la machine avance : c'est l'outil le plus rapide pour niveler ou remblayer.</li>
+    </ul>
+
+    <h3>Ce qui est simulé</h3>
+    <ul>
+      <li>Le terrain est une coupe verticale échantillonnée tous les 5 cm ; les dents y découpent exactement leur trajectoire.</li>
+      <li>La terre remaniée <b>foisonne</b> d'environ 25 % : le tas de déblai occupe plus de place que le trou d'où il sort.</li>
+      <li>Seule la terre meuble s'écroule, à un <b>angle de talus</b> de 34°. Le sol en place tient ses parois verticales — d'où des tranchées nettes tant qu'on ne pile pas le déblai sur la lèvre.</li>
+      <li>La machine s'assied sur le relief : elle prend le tangage du terrain sous ses chenilles et ne peut pas creuser plus bas que le roc, à 2,6 m.</li>
+    </ul>
+
+    <p style="margin-top:14px"><small>Géométrie et capacités inspirées des mini-pelles <a href="https://www.kubota.ca/fr/products/0-2-Ton" target="_blank" rel="noopener">Kubota de la classe 0–2 tonnes</a> — ordres de grandeur, pas une fiche technique.</small></p>
+
+    <form method="dialog"><button class="bouton fermer">Fermer</button></form>
+  </div>
+</dialog>
+
+<script>
+'use strict';
+
+/* ---------- Utilitaires ---------- */
+
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const gauss = (x, centre, sigma) => Math.exp(-((x - centre) ** 2) / (2 * sigma * sigma));
+const lisse = (t) => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+const fmt = (v, dec = 2) => v.toFixed(dec).replace('.', ',');
+
+/* ---------- Constantes : la machine (mètres, radians, secondes) ---------- */
+
+/* Classe 0–2 t : chenilles d'environ 1,7 m, portée de 2,9 m, godet de 35 L. */
+const M = {
+  chenilleL: 1.70, chenilleH: 0.38,
+  fleche: 1.55,          // flèche (boom)
+  balancier: 0.92,       // balancier (arm)
+  godet: 0.42,           // pivot du godet → pointe des dents
+  godetLarg: 0.42,       // largeur du godet (troisième dimension)
+  capacite: 0.035,       // m³, volume foisonné
+  tourelleX: -0.05, tourelleY: 0.52,  // centre de rotation, repère châssis
+  pivotX: 0.42, pivotY: 0.30,         // pied de flèche, repère tourelle
+  lameX: 0.96,           // bord de la lame, repère châssis
+};
+const LIM = {
+  fleche: [-0.75, 1.15],
+  balancier: [-2.75, -0.30],
+  godet: [-2.75, 0.20],
+  lame: [-0.30, 0.34],
+};
+const VIT = { fleche: 0.70, balancier: 1.00, godet: 1.40, lame: 0.45, chenille: 1.05 };
+
+/* ---------- Constantes : le terrain ---------- */
+
+const DX = 0.05;             // pas d'échantillonnage horizontal
+const NB = 560;              // 28 m de chantier
+const LARGEUR = NB * DX;
+const ROC = -2.60;           // on ne creuse pas plus bas
+const FOISONNEMENT = 1.25;   // la terre remuée occupe 25 % de plus
+const PENTE_MEUBLE = Math.tan(34 * Math.PI / 180) * DX;   // différence max entre deux colonnes voisines
+const G = 9.81;
+const LS_ETAT = 'jr-pelle-etat-v1';
+const LS_RECORDS = 'jr-pelle-records-v1';
+
+/* Sol en place : relief doux et déterministe. */
+function profilNaturel(x) {
+  return 0.10 * Math.sin(x * 0.31 + 0.7) + 0.05 * Math.sin(x * 0.83 + 2.1) + 0.02 * Math.sin(x * 2.3);
+}
+/* Creux à bords adoucis, 0 à l'extérieur, 1 au fond. */
+function creux(x, x1, x2, marge) {
+  return lisse((x - x1 + marge) / marge) * lisse((x2 + marge - x) / marge);
+}
+
+/* ---------- Chantiers ---------- */
+
+const CHANTIERS = {
+  bac: {
+    nom: 'Bac à sable',
+    consigne: 'Aucun objectif : creusez, transportez, empilez. Un tas de terre meuble vous attend à droite.',
+    depart: 9.5,
+    sol: (x) => profilNaturel(x),
+    meuble: (x) => 1.10 * gauss(x, 14.5, 1.4),
+    zone: null,
+  },
+  tranchee: {
+    nom: 'Tranchée de service',
+    consigne: 'Creusez la tranchée balisée jusqu\'au <b>trait de fond</b>, sur toute sa longueur. Déposez le déblai où vous voulez — mais pas dans la tranchée.',
+    depart: 15.4,
+    sol: (x) => 0.4 * profilNaturel(x),
+    meuble: () => 0,
+    zone: [17.2, 18.7], cible: -0.85, mode: 'creuser', tol: 0.05,
+  },
+  remblai: {
+    nom: 'Remblayage',
+    consigne: 'Une fosse a été ouverte : ramenez-la au <b>niveau du terrain</b> avec la terre du tas voisin. Le godet et la lame sont vos deux outils.',
+    depart: 13.8,
+    sol: (x) => 0.4 * profilNaturel(x) - 0.78 * creux(x, 16.0, 17.8, 0.30),
+    meuble: (x) => 0.95 * gauss(x, 12.4, 1.15),
+    fosse: [15.7, 18.1],
+    zone: [16.0, 17.8], cible: -0.08, mode: 'remplir', tol: 0.10,
+  },
+  nivellement: {
+    nom: 'Nivellement',
+    consigne: 'Ramenez la zone balisée à la <b>cote zéro</b>, à ±9 cm près. Les bosses sont de la terre meuble : la lame fera l\'essentiel.',
+    depart: 14.6,
+    sol: (x) => 0.4 * profilNaturel(x),
+    meuble: (x) => 0.55 * gauss(x, 16.6, 0.55) + 0.42 * gauss(x, 18.1, 0.45) + 0.6 * gauss(x, 19.6, 0.7),
+    zone: [16.0, 20.5], cible: 0.0, mode: 'niveler', tol: 0.09,
+  },
+};
+
+/* ---------- État ---------- */
+
+const sol = new Float32Array(NB);       // hauteur de la surface, par colonne
+const meuble = new Float32Array(NB);    // épaisseur de terre meuble en haut de la colonne
+const vierge = new Uint8Array(NB);      // 1 tant que la colonne n'a jamais été touchée
+
+let chantier = 'bac';
+const etat = {
+  x: 9.5, y: 0, tangage: 0,
+  fleche: 0.45, balancier: -1.6, godet: -1.4, lame: 0.30,
+  pivot: 1,        // +1 : la tourelle regarde vers la droite, −1 vers la gauche
+  pivotCible: 1,
+  charge: 0,       // m³ dans le godet
+  volume: 0,       // m³ déplacés depuis le début du chantier
+  chrono: 0, chronoActif: false, termine: false,
+  chenilleAnim: 0,
+};
+const particules = [];
+let records = {};
+let sauvegardeEnAttente = false;
+
+const actions = new Set();
+let lent = false;
+
+/* ---------- Terrain ---------- */
+
+function idxDe(x) { return clamp(Math.round(x / DX), 0, NB - 1); }
+
+function hauteurEn(x) {
+  const f = clamp(x / DX, 0, NB - 1);
+  const i = Math.floor(f);
+  const j = Math.min(i + 1, NB - 1);
+  return lerp(sol[i], sol[j], f - i);
+}
+
+function genererTerrain(cle) {
+  const c = CHANTIERS[cle];
+  for (let i = 0; i < NB; i++) {
+    const x = i * DX;
+    const base = c.sol(x);
+    const tas = c.meuble(x);
+    sol[i] = base + tas;
+    meuble[i] = tas;
+    let v = tas < 0.005;
+    if (c.fosse && x > c.fosse[0] && x < c.fosse[1]) v = false;
+    vierge[i] = v ? 1 : 0;
+  }
+}
+
+/* Dépose un volume foisonné de terre autour de x. */
+function deposer(x, vol) {
+  const aire = vol / M.godetLarg;
+  const rayon = 0.12;
+  const i0 = idxDe(x - rayon), i1 = idxDe(x + rayon);
+  let poidsTotal = 0;
+  for (let i = i0; i <= i1; i++) poidsTotal += 1 - Math.abs(i * DX - x) / (rayon + DX);
+  for (let i = i0; i <= i1; i++) {
+    const p = (1 - Math.abs(i * DX - x) / (rayon + DX)) / poidsTotal;
+    const dh = aire * p / DX;
+    sol[i] += dh;
+    meuble[i] += dh;
+    vierge[i] = 0;
+  }
+}
+
+/* Coupe la colonne i jusqu'à la hauteur y et renvoie le volume foisonné enlevé. */
+function couperColonne(i, y, maxVol) {
+  const plancher = Math.max(y, ROC);
+  if (sol[i] <= plancher) return 0;
+  let d = sol[i] - plancher;
+  const partMeuble = Math.min(d, meuble[i]);
+  const partVierge = d - partMeuble;
+  let vol = (partMeuble + partVierge * FOISONNEMENT) * DX * M.godetLarg;
+  if (vol > maxVol) {
+    /* On n'enlève que ce que le godet peut encore prendre, en commençant par le meuble. */
+    const ratio = maxVol / vol;
+    d *= ratio;
+    vol = maxVol;
+  }
+  const enleveMeuble = Math.min(d, meuble[i]);
+  sol[i] -= d;
+  meuble[i] -= enleveMeuble;
+  vierge[i] = 0;
+  return vol;
+}
+
+/* Le talus naturel : seule la terre meuble s'écroule. */
+let sensTassement = 1;
+function tasser(passes) {
+  for (let p = 0; p < passes; p++) {
+    if (sensTassement > 0) {
+      for (let i = 0; i < NB - 1; i++) glisser(i, i + 1);
+    } else {
+      for (let i = NB - 2; i >= 0; i--) glisser(i, i + 1);
+    }
+    sensTassement = -sensTassement;
+  }
+}
+function glisser(i, j) {
+  const d = sol[i] - sol[j];
+  if (d > PENTE_MEUBLE && meuble[i] > 0) {
+    const q = Math.min((d - PENTE_MEUBLE) * 0.5, meuble[i]);
+    sol[i] -= q; meuble[i] -= q; sol[j] += q; meuble[j] += q; vierge[j] = 0;
+  } else if (-d > PENTE_MEUBLE && meuble[j] > 0) {
+    const q = Math.min((-d - PENTE_MEUBLE) * 0.5, meuble[j]);
+    sol[j] -= q; meuble[j] -= q; sol[i] += q; meuble[i] += q; vierge[i] = 0;
+  }
+}
+
+/* ---------- Cinématique ---------- */
+
+function ptChassis(px, py) {
+  const c = Math.cos(etat.tangage), s = Math.sin(etat.tangage);
+  return [etat.x + px * c - py * s, etat.y + px * s + py * c];
+}
+function ptTourelle(px, py) {
+  return ptChassis(M.tourelleX + etat.pivot * px, M.tourelleY + py);
+}
+function dirTourelle(vx, vy) {
+  const c = Math.cos(etat.tangage), s = Math.sin(etat.tangage);
+  const mx = etat.pivot * vx;
+  const x = mx * c - vy * s, y = mx * s + vy * c;
+  const n = Math.hypot(x, y) || 1;
+  return [x / n, y / n];
+}
+
+/* Chaîne flèche → balancier → godet, dans le repère tourelle. */
+function chaine() {
+  const b = etat.fleche, a = b + etat.balancier, k = a + etat.godet;
+  const p0 = [M.pivotX, M.pivotY];
+  const p1 = [p0[0] + M.fleche * Math.cos(b), p0[1] + M.fleche * Math.sin(b)];
+  const p2 = [p1[0] + M.balancier * Math.cos(a), p1[1] + M.balancier * Math.sin(a)];
+  const p3 = [p2[0] + M.godet * Math.cos(k), p2[1] + M.godet * Math.sin(k)];
+  return { p0, p1, p2, p3, b, a, k };
+}
+
+/* La machine s'assied sur le relief sous ses chenilles. */
+function asseoir() {
+  const n = 12;
+  const xs = [], hs = [];
+  let sx = 0, sy = 0;
+  for (let i = 0; i <= n; i++) {
+    const x = etat.x - M.chenilleL / 2 + (M.chenilleL * i) / n;
+    const h = hauteurEn(x);
+    xs.push(x); hs.push(h); sx += x; sy += h;
+  }
+  const mx = sx / (n + 1), my = sy / (n + 1);
+  let num = 0, den = 0;
+  for (let i = 0; i <= n; i++) { num += (xs[i] - mx) * (hs[i] - my); den += (xs[i] - mx) ** 2; }
+  const pente = clamp(num / den, -0.55, 0.55);
+  /* Ligne d'appui : la droite de cette pente qui touche le point le plus haut. */
+  let appui = -Infinity;
+  for (let i = 0; i <= n; i++) appui = Math.max(appui, hs[i] - pente * (xs[i] - etat.x));
+  etat.y = lerp(etat.y, appui, 0.25);
+  etat.tangage = lerp(etat.tangage, Math.atan(pente), 0.2);
+}
+
+/* ---------- Physique de la pelle ---------- */
+
+function actionner(dt) {
+  const v = lent ? 0.4 : 1;
+  const a = actions;
+  let dir = 0;
+  if (a.has('avancer')) dir += 1;
+  if (a.has('reculer')) dir -= 1;
+  if (dir) {
+    etat.x = clamp(etat.x + dir * VIT.chenille * v * dt, 1.3, LARGEUR - 1.3);
+    etat.chenilleAnim += dir * VIT.chenille * v * dt;
+    pousserLame(dir, dt);
+  }
+  const bouge = (cle, plus, moins, vit) => {
+    let d = 0;
+    if (a.has(plus)) d += 1;
+    if (a.has(moins)) d -= 1;
+    if (d) etat[cle] = clamp(etat[cle] + d * vit * v * dt, LIM[cle][0], LIM[cle][1]);
+  };
+  bouge('fleche', 'flecheHaut', 'flecheBas', VIT.fleche);
+  bouge('balancier', 'balancierSort', 'balancierRentre', VIT.balancier);
+  bouge('godet', 'godetOuvre', 'godetFerme', VIT.godet);
+  bouge('lame', 'lameMonte', 'lameDescend', VIT.lame);
+
+  if (etat.pivot !== etat.pivotCible) {
+    const pas = 3.2 * dt;
+    etat.pivot = Math.abs(etat.pivotCible - etat.pivot) <= pas ? etat.pivotCible : etat.pivot + Math.sign(etat.pivotCible - etat.pivot) * pas;
+  }
+  if (actions.size && !etat.termine) etat.chronoActif = true;
+}
+
+function creuser() {
+  const ch = chaine();
+  const [tx, ty] = ptTourelle(ch.p3[0], ch.p3[1]);
+  const reste = M.capacite - etat.charge;
+  if (reste <= 1e-6) return;
+  const i0 = idxDe(tx - 0.06), i1 = idxDe(tx + 0.06);
+  let pris = 0;
+  for (let i = i0; i <= i1; i++) {
+    if (sol[i] > ty) pris += couperColonne(i, ty, reste - pris);
+  }
+  if (pris > 0) {
+    etat.charge += pris;
+    marquerDirty();
+    if (Math.random() < 0.35) poussiere(tx, ty, 1);
+  }
+}
+
+function vidanger(dt) {
+  if (etat.charge <= 0) return;
+  const ch = chaine();
+  const n = dirTourelle(Math.sin(ch.k), -Math.cos(ch.k));   // normale de l'ouverture du godet
+  const fuite = clamp((0.35 - n[1]) / 0.7, 0, 1);
+  if (fuite <= 0) return;
+  const vol = Math.min(etat.charge, 0.06 * fuite * dt);
+  etat.charge -= vol;
+  /* Centre de l'ouverture du godet, d'où tombent les mottes. */
+  const cx = ch.p2[0] + 0.21 * Math.cos(ch.k) + 0.08 * Math.sin(ch.k);
+  const cy = ch.p2[1] + 0.21 * Math.sin(ch.k) - 0.08 * Math.cos(ch.k);
+  const [mx, my] = ptTourelle(cx, cy);
+  const nb = 1 + (Math.random() < fuite ? 1 : 0);
+  for (let i = 0; i < nb; i++) {
+    particules.push({
+      x: mx + (Math.random() - 0.5) * 0.12, y: my,
+      vx: n[0] * 0.5 + (Math.random() - 0.5) * 0.5, vy: n[1] * 0.4 + Math.random() * 0.2,
+      vol: vol / nb, r: 0.035 + Math.random() * 0.03, type: 'motte',
+    });
+  }
+}
+
+/* La lame pousse la terre devant elle quand la machine avance. */
+function pousserLame(dir, dt) {
+  if (dir <= 0) return;
+  const [bx, by] = ptChassis(M.lameX, etat.lame);
+  const i0 = idxDe(bx - 0.05), i1 = idxDe(bx + 0.06);
+  let pris = 0;
+  const max = 0.35 * M.godetLarg * dt;    // m³ par seconde, pour que la lame cale sur un gros tas
+  for (let i = i0; i <= i1; i++) {
+    if (sol[i] > by) pris += couperColonne(i, by, max - pris);
+  }
+  if (pris > 0) {
+    deposer(bx + 0.24, pris);
+    etat.volume += pris;
+    marquerDirty();
+    if (Math.random() < 0.3) poussiere(bx + 0.15, by, 1);
+  }
+}
+
+function poussiere(x, y, n) {
+  for (let i = 0; i < n; i++) {
+    particules.push({
+      x: x + (Math.random() - 0.5) * 0.1, y: y + 0.05,
+      vx: (Math.random() - 0.5) * 0.6, vy: 0.4 + Math.random() * 0.5,
+      vie: 0.7 + Math.random() * 0.4, r: 0.05 + Math.random() * 0.06, type: 'poussiere',
+    });
+  }
+}
+
+function animerParticules(dt) {
+  for (let i = particules.length - 1; i >= 0; i--) {
+    const p = particules[i];
+    if (p.type === 'poussiere') {
+      p.vie -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += 0.12 * dt;
+      if (p.vie <= 0) particules.splice(i, 1);
+      continue;
+    }
+    p.vy -= G * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+    const h = hauteurEn(p.x);
+    if (p.y <= h + p.r * 0.4 || p.x < 0 || p.x > LARGEUR) {
+      const x = clamp(p.x, 0.2, LARGEUR - 0.2);
+      deposer(x, p.vol);
+      etat.volume += p.vol;
+      marquerDirty();
+      particules.splice(i, 1);
+    }
+  }
+  if (particules.length > 400) particules.splice(0, particules.length - 400);
+}
+
+/* ---------- Avancement ---------- */
+
+function avancement() {
+  const c = CHANTIERS[chantier];
+  if (!c.zone) return null;
+  const i0 = idxDe(c.zone[0]), i1 = idxDe(c.zone[1]);
+  let ok = 0;
+  for (let i = i0; i <= i1; i++) if (colonneOk(c, i)) ok++;
+  return ok / (i1 - i0 + 1);
+}
+function colonneOk(c, i) {
+  if (c.mode === 'creuser') return sol[i] <= c.cible + c.tol;
+  if (c.mode === 'remplir') return sol[i] >= c.cible - c.tol;
+  return Math.abs(sol[i] - c.cible) <= c.tol;
+}
+
+function verifierFin() {
+  if (etat.termine) return;
+  const p = avancement();
+  if (p !== null && p >= 0.98) {
+    etat.termine = true;
+    etat.chronoActif = false;
+    const t = etat.chrono;
+    const ancien = records[chantier];
+    let texte = `Terminé en ${fmtChrono(t)}, ${fmt(etat.volume, 2)} m³ déplacés.`;
+    if (!ancien || t < ancien) {
+      records[chantier] = t;
+      sauverRecords();
+      texte += ancien ? ' Nouveau record !' : ' Premier chrono enregistré.';
+    } else {
+      texte += ` Record : ${fmtChrono(ancien)}.`;
+    }
+    ui.banniereTexte.textContent = texte;
+    ui.banniere.hidden = false;
+    marquerDirty();
+  }
+}
+
+/* ---------- Rendu ---------- */
+
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+const cam = { x: 9.5, y: 0, echelle: 80, cible: 80 };
+let W = 0, H = 0, dpr = 1;
+
+function redimensionner() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = Math.max(1, Math.round(r.width));
+  H = Math.max(1, Math.round(r.height));
+  canvas.width = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  cam.cible = clamp(Math.min(W / 11.5, H / 6.4), 34, 150);
+}
+
+function camera() {
+  cam.echelle = lerp(cam.echelle, cam.cible, 0.12);
+  const demiLarg = W / cam.echelle / 2;
+  const cx = demiLarg * 2 >= LARGEUR ? LARGEUR / 2 : clamp(etat.x, demiLarg, LARGEUR - demiLarg);
+  cam.x = lerp(cam.x, cx, 0.08);
+  cam.y = lerp(cam.y, etat.y + 1.0, 0.06);
+}
+
+function dessiner() {
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  dessinerCiel();
+  /* Repère monde : y vers le haut, origine caméra. */
+  const origY = H * 0.64;
+  ctx.setTransform(dpr * cam.echelle, 0, 0, -dpr * cam.echelle,
+    dpr * (W / 2 - cam.x * cam.echelle), dpr * (origY + cam.y * cam.echelle));
+  const gauche = cam.x - W / cam.echelle / 2 - 1, droite = cam.x + W / cam.echelle / 2 + 1;
+  dessinerCollines(gauche, droite);
+  dessinerSol(gauche, droite);
+  dessinerCible();
+  dessinerDecor(gauche, droite);
+  dessinerMachine();
+  dessinerParticules();
+}
+
+function dessinerCiel() {
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#1b2a3d');
+  g.addColorStop(0.45, '#4d6a86');
+  g.addColorStop(0.72, '#c9a27a');
+  g.addColorStop(1, '#e0b58a');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  /* Soleil bas, lumière de fin de journée. */
+  const sx = W * 0.78, sy = H * 0.30;
+  const halo = ctx.createRadialGradient(sx, sy, 6, sx, sy, H * 0.55);
+  halo.addColorStop(0, 'rgba(255,214,150,.9)');
+  halo.addColorStop(0.08, 'rgba(255,190,110,.35)');
+  halo.addColorStop(1, 'rgba(255,170,90,0)');
+  ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, W, H);
+}
+
+function dessinerCollines(g, d) {
+  const couches = [
+    { par: 0.18, base: 1.9, amp: 0.9, freq: 0.16, couleur: 'rgba(96,110,128,.55)' },
+    { par: 0.35, base: 1.2, amp: 0.7, freq: 0.27, couleur: 'rgba(72,84,96,.75)' },
+  ];
+  for (const c of couches) {
+    ctx.beginPath();
+    ctx.moveTo(g, -6);
+    for (let x = g; x <= d; x += 0.25) {
+      const xx = x + cam.x * c.par;
+      const y = c.base + c.amp * (0.6 * Math.sin(xx * c.freq) + 0.4 * Math.sin(xx * c.freq * 2.3 + 1.7)) + 0.08 * Math.sin(xx * 3.1);
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(d, -6);
+    ctx.closePath();
+    ctx.fillStyle = c.couleur;
+    ctx.fill();
+  }
+}
+
+function dessinerSol(g, d) {
+  const i0 = idxDe(g), i1 = idxDe(d);
+  /* Corps du sol. */
+  ctx.beginPath();
+  ctx.moveTo(i0 * DX, -8);
+  for (let i = i0; i <= i1; i++) ctx.lineTo(i * DX, sol[i]);
+  ctx.lineTo(i1 * DX, -8);
+  ctx.closePath();
+  ctx.save();
+  ctx.clip();
+  ctx.fillStyle = '#8d6844';
+  ctx.fillRect(g, -8, d - g, 12);
+  /* Strates. */
+  const strates = [
+    [0.0, -0.55, '#7a5a3b'], [-0.55, -1.3, '#a07c4c'], [-1.3, -2.0, '#8c6f55'],
+    [-2.0, ROC, '#6f6a66'], [ROC, -8, '#4a4a4f'],
+  ];
+  for (const [h1, h2, col] of strates) {
+    ctx.fillStyle = col;
+    ctx.fillRect(g, h2, d - g, h1 - h2);
+  }
+  /* Cailloux dans les strates profondes. */
+  ctx.fillStyle = 'rgba(0,0,0,.14)';
+  for (let x = Math.floor(g); x < d; x += 0.5) {
+    const s = Math.sin(x * 12.9898) * 43758.5453;
+    const f = s - Math.floor(s);
+    const y = -0.7 - f * 1.7;
+    ctx.beginPath();
+    ctx.ellipse(x + f * 0.4, y, 0.05 + f * 0.05, 0.03 + f * 0.02, f * 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = 'rgba(40,40,45,.35)';
+  ctx.fillRect(g, -8, d - g, 8 + ROC);
+  ctx.restore();
+
+  /* Terre meuble : plus claire, grumeleuse. */
+  ctx.beginPath();
+  let ouvert = false;
+  for (let i = i0; i <= i1; i++) {
+    const m = meuble[i];
+    if (m > 0.004) {
+      const x = i * DX;
+      if (!ouvert) { ctx.moveTo(x, sol[i] - m); ouvert = true; }
+      ctx.lineTo(x, sol[i]);
+    } else if (ouvert) {
+      fermerMeuble(i0, i);
+      ouvert = false;
+    }
+  }
+  if (ouvert) fermerMeuble(i0, i1 + 1);
+  ctx.fillStyle = '#b48a56';
+  ctx.fill();
+
+  /* Croûte : herbe sur le sol vierge, terre nue ailleurs. */
+  ctx.lineWidth = 0.07;
+  ctx.lineCap = 'butt';
+  let couleurCourante = null;
+  for (let i = i0; i <= i1; i++) {
+    const c = vierge[i] ? '#6f9a3c' : (meuble[i] > 0.004 ? '#c49a62' : '#5e4630');
+    if (c !== couleurCourante) {
+      if (couleurCourante) { ctx.strokeStyle = couleurCourante; ctx.stroke(); }
+      ctx.beginPath();
+      const j = Math.max(i0, i - 1);
+      ctx.moveTo(j * DX, sol[j]);
+      couleurCourante = c;
+    }
+    ctx.lineTo(i * DX, sol[i]);
+  }
+  if (couleurCourante) { ctx.strokeStyle = couleurCourante; ctx.stroke(); }
+
+  /* Ligne de la surface, fine et sombre. */
+  ctx.beginPath();
+  for (let i = i0; i <= i1; i++) ctx.lineTo(i * DX, sol[i] + 0.035);
+  ctx.strokeStyle = 'rgba(30,20,10,.45)';
+  ctx.lineWidth = 0.02;
+  ctx.stroke();
+}
+function fermerMeuble(i0, iFin) {
+  /* Referme le polygone de meuble en revenant sur la base du meuble. */
+  for (let j = iFin - 1; j >= i0 && meuble[j] > 0.004; j--) ctx.lineTo(j * DX, sol[j] - meuble[j]);
+  ctx.closePath();
+}
+
+function dessinerCible() {
+  const c = CHANTIERS[chantier];
+  if (!c.zone) return;
+  const [x1, x2] = c.zone;
+  ctx.save();
+  ctx.setLineDash([0.12, 0.08]);
+  ctx.lineWidth = 0.025;
+  ctx.strokeStyle = 'rgba(255,230,120,.9)';
+  ctx.beginPath();
+  ctx.moveTo(x1, c.cible); ctx.lineTo(x2, c.cible);
+  ctx.stroke();
+  /* Piquets aux extrémités. */
+  ctx.setLineDash([]);
+  for (const x of [x1, x2]) {
+    const h = hauteurEn(x);
+    ctx.fillStyle = '#ffd24a';
+    ctx.fillRect(x - 0.02, h - 0.1, 0.04, 0.95);
+    ctx.fillStyle = '#ff4d3d';
+    ctx.fillRect(x - 0.02, h + 0.65, 0.04, 0.2);
+  }
+  /* Tolérance pour remplir / niveler. */
+  if (c.mode !== 'creuser') {
+    ctx.fillStyle = 'rgba(255,230,120,.12)';
+    ctx.fillRect(x1, c.cible - c.tol, x2 - x1, c.tol * 2);
+  }
+  /* Témoins colonne par colonne. */
+  const i0 = idxDe(x1), i1 = idxDe(x2);
+  for (let i = i0; i <= i1; i += 3) {
+    ctx.fillStyle = colonneOk(c, i) ? 'rgba(85,207,124,.95)' : 'rgba(255,95,77,.85)';
+    ctx.fillRect(i * DX - 0.03, c.cible - 0.02, 0.06, 0.04);
+  }
+  ctx.restore();
+}
+
+function dessinerDecor(g, d) {
+  /* Quelques conifères pour l'échelle, hors des zones de travail. */
+  for (const x of [2.2, 4.1, 24.5, 26.6]) {
+    if (x < g || x > d) continue;
+    const h = hauteurEn(x);
+    ctx.fillStyle = '#4b3a28';
+    ctx.fillRect(x - 0.05, h - 0.05, 0.1, 0.5);
+    ctx.fillStyle = '#2f5a35';
+    for (let k = 0; k < 3; k++) {
+      const y = h + 0.35 + k * 0.5, w = 0.75 - k * 0.18;
+      ctx.beginPath();
+      ctx.moveTo(x - w, y); ctx.lineTo(x + w, y); ctx.lineTo(x, y + 0.75);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  /* Repères d'échelle : un métré tous les 5 m, discret. */
+  ctx.fillStyle = 'rgba(255,255,255,.28)';
+  for (let x = 5; x < LARGEUR; x += 5) {
+    if (x < g || x > d) continue;
+    const h = hauteurEn(x);
+    ctx.fillRect(x - 0.01, h + 0.05, 0.02, 0.18);
+  }
+}
+
+/* Tige d'une machine : un vérin dont le corps a une longueur fixe. */
+function verin(a, b, corps, rCorps, rTige, couleur) {
+  const dx = b[0] - a[0], dy = b[1] - a[1];
+  const L = Math.hypot(dx, dy) || 1;
+  const ux = dx / L, uy = dy / L;
+  const lc = Math.min(corps, L - 0.06);
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#c7ccd1';
+  ctx.lineWidth = rTige * 2;
+  ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  ctx.strokeStyle = couleur;
+  ctx.lineWidth = rCorps * 2;
+  ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(a[0] + ux * lc, a[1] + uy * lc); ctx.stroke();
+  ctx.strokeStyle = 'rgba(0,0,0,.35)';
+  ctx.lineWidth = rCorps * 0.6;
+  ctx.beginPath(); ctx.moveTo(a[0] + ux * 0.03, a[1] + uy * 0.03 - rCorps * 0.5); ctx.lineTo(a[0] + ux * lc, a[1] + uy * lc - rCorps * 0.5); ctx.stroke();
+  ctx.lineCap = 'butt';
+}
+
+/* Bras effilé et légèrement cintré entre deux articulations. */
+function bras(a, b, w0, w1, cintre, couleur, ombre) {
+  const dx = b[0] - a[0], dy = b[1] - a[1];
+  const L = Math.hypot(dx, dy) || 1;
+  const nx = -dy / L, ny = dx / L;
+  const mx = (a[0] + b[0]) / 2 + nx * cintre, my = (a[1] + b[1]) / 2 + ny * cintre;
+  ctx.beginPath();
+  ctx.moveTo(a[0] + nx * w0, a[1] + ny * w0);
+  ctx.quadraticCurveTo(mx + nx * (w0 + w1) / 2, my + ny * (w0 + w1) / 2, b[0] + nx * w1, b[1] + ny * w1);
+  ctx.lineTo(b[0] - nx * w1, b[1] - ny * w1);
+  ctx.quadraticCurveTo(mx - nx * (w0 + w1) / 2, my - ny * (w0 + w1) / 2, a[0] - nx * w0, a[1] - ny * w0);
+  ctx.closePath();
+  ctx.fillStyle = couleur;
+  ctx.fill();
+  ctx.strokeStyle = ombre;
+  ctx.lineWidth = 0.018;
+  ctx.stroke();
+  /* Arête de lumière. */
+  ctx.beginPath();
+  ctx.moveTo(a[0] + nx * w0 * 0.55, a[1] + ny * w0 * 0.55);
+  ctx.quadraticCurveTo(mx + nx * (w0 + w1) / 2 * 0.55, my + ny * (w0 + w1) / 2 * 0.55, b[0] + nx * w1 * 0.55, b[1] + ny * w1 * 0.55);
+  ctx.strokeStyle = 'rgba(255,255,255,.18)';
+  ctx.lineWidth = 0.02;
+  ctx.stroke();
+}
+
+function articulation(p, r) {
+  ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, Math.PI * 2);
+  ctx.fillStyle = '#2b2f33'; ctx.fill();
+  ctx.beginPath(); ctx.arc(p[0], p[1], r * 0.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#9aa2aa'; ctx.fill();
+}
+
+const ORANGE = '#f27a1f', ORANGE_SOMBRE = '#9e4406';
+
+function dessinerMachine() {
+  ctx.save();
+  ctx.translate(etat.x, etat.y);
+  ctx.rotate(etat.tangage);
+
+  /* Ombre au sol. */
+  ctx.fillStyle = 'rgba(0,0,0,.18)';
+  ctx.beginPath();
+  ctx.ellipse(0, 0.02, M.chenilleL * 0.62, 0.05, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  dessinerLame();
+  dessinerChenilles();
+
+  /* Châssis tournant. */
+  ctx.fillStyle = '#2a3036';
+  ctx.fillRect(-0.72, M.chenilleH, 1.44, 0.14);
+  ctx.fillStyle = '#1b1f23';
+  ctx.fillRect(-0.3, M.chenilleH + 0.14, 0.5, 0.05);
+
+  /* Tourelle : miroir selon le sens de travail. */
+  ctx.translate(M.tourelleX, M.tourelleY);
+  ctx.scale(etat.pivot === 0 ? 0.01 : etat.pivot, 1);
+  dessinerTourelle();
+  dessinerEquipement();
+  ctx.restore();
+}
+
+function dessinerChenilles() {
+  const L = M.chenilleL, h = M.chenilleH, r = h / 2;
+  ctx.beginPath();
+  ctx.moveTo(-L / 2 + r, 0);
+  ctx.lineTo(L / 2 - r, 0);
+  ctx.arc(L / 2 - r, r, r, -Math.PI / 2, Math.PI / 2);
+  ctx.lineTo(-L / 2 + r, h);
+  ctx.arc(-L / 2 + r, r, r, Math.PI / 2, 3 * Math.PI / 2);
+  ctx.closePath();
+  ctx.fillStyle = '#23262a';
+  ctx.fill();
+  ctx.strokeStyle = '#0d0f11';
+  ctx.lineWidth = 0.03;
+  ctx.stroke();
+  /* Patins qui défilent avec le déplacement. */
+  ctx.fillStyle = '#3d4247';
+  const pas = 0.14;
+  const dec = ((etat.chenilleAnim % pas) + pas) % pas;
+  for (let x = -L / 2 + r - pas + dec; x < L / 2 - r; x += pas) {
+    ctx.fillRect(x, 0.0, 0.07, 0.035);
+    ctx.fillRect(x, h - 0.035, 0.07, 0.035);
+  }
+  /* Galets et roues. */
+  for (const x of [-L / 2 + r, L / 2 - r]) {
+    ctx.beginPath(); ctx.arc(x, r, r * 0.62, 0, Math.PI * 2); ctx.fillStyle = '#3a3f45'; ctx.fill();
+    ctx.beginPath(); ctx.arc(x, r, r * 0.3, 0, Math.PI * 2); ctx.fillStyle = '#6d747b'; ctx.fill();
+  }
+  for (let x = -0.42; x <= 0.42; x += 0.28) {
+    ctx.beginPath(); ctx.arc(x, 0.1, 0.06, 0, Math.PI * 2); ctx.fillStyle = '#4a5057'; ctx.fill();
+  }
+  ctx.fillStyle = '#2e3338';
+  ctx.fillRect(-0.6, 0.15, 1.2, 0.14);
+}
+
+function dessinerLame() {
+  const y = etat.lame;
+  /* Bras de la lame depuis le châssis. */
+  ctx.strokeStyle = '#2b3035';
+  ctx.lineWidth = 0.06;
+  ctx.beginPath();
+  ctx.moveTo(0.55, 0.2); ctx.lineTo(M.lameX - 0.1, y + 0.15);
+  ctx.stroke();
+  /* Vérin de lame. */
+  verin([0.6, 0.42], [M.lameX - 0.12, y + 0.24], 0.16, 0.03, 0.012, ORANGE_SOMBRE);
+  /* Lame : plaque cintrée. */
+  ctx.beginPath();
+  ctx.moveTo(M.lameX - 0.12, y + 0.32);
+  ctx.quadraticCurveTo(M.lameX + 0.06, y + 0.2, M.lameX, y);
+  ctx.lineTo(M.lameX - 0.14, y);
+  ctx.quadraticCurveTo(M.lameX - 0.04, y + 0.17, M.lameX - 0.2, y + 0.32);
+  ctx.closePath();
+  ctx.fillStyle = ORANGE;
+  ctx.fill();
+  ctx.strokeStyle = ORANGE_SOMBRE;
+  ctx.lineWidth = 0.018;
+  ctx.stroke();
+  ctx.fillStyle = '#c9ccd0';
+  ctx.fillRect(M.lameX - 0.14, y, 0.15, 0.04);
+}
+
+function dessinerTourelle() {
+  /* Caisson moteur et contrepoids arrondi à l'arrière. */
+  ctx.beginPath();
+  ctx.moveTo(0.52, 0);
+  ctx.lineTo(0.52, 0.5);
+  ctx.lineTo(-0.35, 0.5);
+  ctx.quadraticCurveTo(-0.7, 0.5, -0.7, 0.2);
+  ctx.quadraticCurveTo(-0.7, 0, -0.5, 0);
+  ctx.closePath();
+  ctx.fillStyle = ORANGE;
+  ctx.fill();
+  ctx.strokeStyle = ORANGE_SOMBRE;
+  ctx.lineWidth = 0.018;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(0,0,0,.22)';
+  ctx.fillRect(-0.62, 0.05, 0.9, 0.05);
+  /* Grille d'aération. */
+  ctx.fillStyle = '#4a2a10';
+  for (let k = 0; k < 4; k++) ctx.fillRect(-0.6 + k * 0.07, 0.2, 0.04, 0.22);
+  /* Pot d'échappement. */
+  ctx.fillStyle = '#2a2d31';
+  ctx.fillRect(-0.4, 0.5, 0.06, 0.14);
+
+  /* Cabine : canopy à quatre montants, siège et opérateur. */
+  ctx.fillStyle = '#1d2226';
+  ctx.fillRect(-0.44, 0.5, 0.62, 0.06);            // plancher
+  ctx.fillStyle = '#2f353b';
+  ctx.fillRect(-0.4, 0.56, 0.28, 0.24);            // assise
+  ctx.fillRect(-0.42, 0.56, 0.07, 0.55);           // dossier
+  /* Opérateur, schématique. */
+  ctx.fillStyle = '#3b4a6b';
+  ctx.fillRect(-0.34, 0.78, 0.2, 0.36);            // torse
+  ctx.fillRect(-0.2, 0.6, 0.22, 0.12);             // jambes
+  ctx.fillStyle = '#e0b48c';
+  ctx.beginPath(); ctx.arc(-0.24, 1.24, 0.1, 0, Math.PI * 2); ctx.fill();   // tête
+  ctx.fillStyle = '#ffd24a';
+  ctx.beginPath(); ctx.arc(-0.24, 1.27, 0.11, Math.PI, 2 * Math.PI); ctx.fill();   // casque
+  ctx.fillRect(-0.36, 1.25, 0.24, 0.03);
+  ctx.fillStyle = '#3b4a6b';
+  ctx.fillRect(-0.16, 0.9, 0.2, 0.06);             // bras vers les leviers
+  ctx.fillStyle = '#1d2226';
+  ctx.fillRect(0.04, 0.66, 0.03, 0.3);             // levier
+  ctx.fillRect(0.1, 0.66, 0.03, 0.3);
+  /* Montants et toit. */
+  ctx.fillStyle = '#1d2226';
+  ctx.fillRect(-0.5, 0.5, 0.05, 1.05);
+  ctx.fillRect(0.15, 0.5, 0.05, 1.05);
+  ctx.fillRect(-0.55, 1.5, 0.8, 0.07);
+  ctx.fillStyle = ORANGE;
+  ctx.fillRect(-0.55, 1.57, 0.8, 0.04);
+  /* Rotation : la couronne. */
+  ctx.fillStyle = '#15181b';
+  ctx.fillRect(-0.4, -0.02, 0.8, 0.04);
+}
+
+function dessinerEquipement() {
+  const ch = chaine();
+  const { p0, p1, p2, p3, b, a, k } = ch;
+  /* Vérin de flèche : du châssis au tiers de la flèche. */
+  const vf = [p0[0] + 0.48 * (p1[0] - p0[0]) - 0.12 * Math.sin(b), p0[1] + 0.48 * (p1[1] - p0[1]) + 0.12 * Math.cos(b)];
+  bras(p0, p1, 0.12, 0.085, 0.14, ORANGE, ORANGE_SOMBRE);
+  verin([0.25, 0.08], vf, 0.42, 0.045, 0.02, ORANGE_SOMBRE);
+  /* Balancier + vérin sur le dos de la flèche. */
+  const vb0 = [p0[0] + 0.62 * (p1[0] - p0[0]) - 0.16 * Math.sin(b), p0[1] + 0.62 * (p1[1] - p0[1]) + 0.16 * Math.cos(b)];
+  const vb1 = [p1[0] - 0.2 * Math.cos(a) - 0.1 * Math.sin(a), p1[1] - 0.2 * Math.sin(a) + 0.1 * Math.cos(a)];
+  bras([p1[0] - 0.2 * Math.cos(a), p1[1] - 0.2 * Math.sin(a)], p2, 0.085, 0.055, 0, ORANGE, ORANGE_SOMBRE);
+  verin(vb0, vb1, 0.36, 0.04, 0.018, ORANGE_SOMBRE);
+  /* Vérin de godet, le long du balancier, avec sa biellette. */
+  const vg0 = [p1[0] + 0.12 * Math.cos(a) - 0.09 * Math.sin(a), p1[1] + 0.12 * Math.sin(a) + 0.09 * Math.cos(a)];
+  const biel = [p2[0] - 0.12 * Math.cos(k) - 0.14 * Math.sin(k), p2[1] - 0.12 * Math.sin(k) + 0.14 * Math.cos(k)];
+  const bielA = [p2[0] - 0.16 * Math.cos(a), p2[1] - 0.16 * Math.sin(a)];
+  verin(vg0, biel, 0.3, 0.035, 0.016, ORANGE_SOMBRE);
+  ctx.strokeStyle = '#2b2f33';
+  ctx.lineWidth = 0.035;
+  ctx.beginPath(); ctx.moveTo(biel[0], biel[1]); ctx.lineTo(bielA[0], bielA[1]); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(biel[0], biel[1]); ctx.lineTo(p2[0] + 0.06 * Math.cos(k) - 0.07 * Math.sin(k), p2[1] + 0.06 * Math.sin(k) + 0.07 * Math.cos(k)); ctx.stroke();
+
+  dessinerGodet(p2, k);
+  articulation(p0, 0.055);
+  articulation(p1, 0.045);
+  articulation(p2, 0.04);
+  void p3;
+}
+
+/* Le godet, dans son repère : origine au pivot, +x vers les dents, intérieur en +y. */
+const GODET_POLY = [[0, 0], [0.02, 0.12], [0.12, 0.22], [0.29, 0.22], [0.40, 0.08], [0.42, 0]];
+function dessinerGodet(p2, k) {
+  ctx.save();
+  ctx.translate(p2[0], p2[1]);
+  ctx.rotate(k);
+  ctx.beginPath();
+  for (let i = 0; i < GODET_POLY.length; i++) {
+    const [x, y] = GODET_POLY[i];
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = '#c8ccd0';
+  ctx.fill();
+  ctx.strokeStyle = '#3a3f44';
+  ctx.lineWidth = 0.02;
+  ctx.stroke();
+  /* Terre dans le godet. */
+  const f = etat.charge / M.capacite;
+  if (f > 0.01) {
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = '#9a6d3f';
+    ctx.fillRect(-0.05, 0.22 - 0.25 * f, 0.5, 0.3);
+    ctx.fillStyle = 'rgba(255,255,255,.12)';
+    ctx.fillRect(-0.05, 0.22 - 0.25 * f, 0.5, 0.03);
+    ctx.restore();
+  }
+  /* Bande d'usure et dents. */
+  ctx.fillStyle = '#5b6167';
+  ctx.fillRect(0.3, 0.14, 0.13, 0.04);
+  ctx.fillStyle = '#4a4f55';
+  for (const [x, y] of [[0.41, 0.03], [0.37, 0.12]]) {
+    ctx.beginPath();
+    ctx.moveTo(x, y - 0.025); ctx.lineTo(x + 0.085, y + 0.01); ctx.lineTo(x - 0.01, y + 0.04);
+    ctx.closePath();
+    ctx.fill();
+  }
+  /* Oreilles d'attache. */
+  ctx.fillStyle = '#a5aaae';
+  ctx.fillRect(-0.03, -0.1, 0.16, 0.12);
+  ctx.restore();
+}
+
+function dessinerParticules() {
+  for (const p of particules) {
+    if (p.type === 'poussiere') {
+      ctx.fillStyle = `rgba(190,150,100,${0.35 * clamp(p.vie, 0, 1)})`;
+    } else {
+      ctx.fillStyle = '#8a6440';
+    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+/* ---------- Interface ---------- */
+
+const ui = {};
+for (const id of ['chantier', 'btnReset', 'btnAide', 'aide', 'titreChantier', 'consigne', 'valAvancement', 'barreAvancement',
+  'valChrono', 'valRecord', 'valGodet', 'barreGodet', 'pisteGodet', 'valProfondeur', 'valPortee', 'valVolume',
+  'banniere', 'banniereTexte', 'btnBanniere']) {
+  ui[id] = document.getElementById(id);
+}
+
+function fmtChrono(s) {
+  const m = Math.floor(s / 60), r = Math.floor(s % 60);
+  return `${m}:${r < 10 ? '0' : ''}${r}`;
+}
+
+function rafraichirHud() {
+  const c = CHANTIERS[chantier];
+  const p = avancement();
+  ui.valAvancement.textContent = p === null ? '—' : `${etat.termine ? 100 : Math.min(99, Math.floor(p * 100))} %`;
+  ui.barreAvancement.style.width = p === null ? '0%' : `${(etat.termine ? 1 : p) * 100}%`;
+  ui.valChrono.textContent = c.zone ? fmtChrono(etat.chrono) : '—';
+  ui.valRecord.textContent = records[chantier] ? fmtChrono(records[chantier]) : '—';
+
+  const f = etat.charge / M.capacite;
+  ui.valGodet.textContent = `${Math.round(etat.charge * 1000)} L`;
+  ui.barreGodet.style.width = `${f * 100}%`;
+  ui.pisteGodet.classList.toggle('plein', f > 0.97);
+  const ch = chaine();
+  const [tx, ty] = ptTourelle(ch.p3[0], ch.p3[1]);
+  const prof = ty - etat.y;
+  ui.valProfondeur.textContent = `${prof < 0 ? '−' : '+'}${fmt(Math.abs(prof))} m`;
+  ui.valProfondeur.classList.toggle('alerte', prof < -0.2);
+  ui.valPortee.textContent = `${fmt(Math.abs(tx - etat.x))} m`;
+  ui.valVolume.textContent = `${fmt(etat.volume)} m³`;
+}
+
+function afficherChantier() {
+  const c = CHANTIERS[chantier];
+  ui.titreChantier.textContent = c.nom;
+  ui.consigne.innerHTML = c.consigne;
+  ui.chantier.value = chantier;
+}
+
+/* ---------- Commandes ---------- */
+
+const TOUCHES = {
+  ArrowLeft: 'reculer', ArrowRight: 'avancer', KeyA: 'reculer', KeyD: 'avancer',
+  ArrowUp: 'flecheHaut', ArrowDown: 'flecheBas', KeyW: 'flecheHaut', KeyS: 'flecheBas',
+  KeyQ: 'balancierRentre', KeyE: 'balancierSort',
+  KeyZ: 'godetFerme', KeyX: 'godetOuvre',
+  KeyF: 'lameDescend', KeyV: 'lameMonte',
+};
+
+function pivoter() {
+  etat.pivotCible = -etat.pivotCible;
+  etat.chronoActif = !etat.termine;
+}
+
+function brancherCommandes() {
+  window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || ui.aide.open) return;
+    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = true; return; }
+    if (e.code === 'KeyR') { if (!e.repeat) pivoter(); e.preventDefault(); return; }
+    if (e.code === 'KeyH' || e.key === '?') { ui.aide.showModal(); return; }
+    const a = TOUCHES[e.code];
+    if (!a) return;
+    e.preventDefault();
+    actions.add(a);
+    leviers[a]?.classList.add('actif');
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') { lent = false; return; }
+    const a = TOUCHES[e.code];
+    if (!a) return;
+    actions.delete(a);
+    leviers[a]?.classList.remove('actif');
+  });
+  window.addEventListener('blur', () => {
+    actions.clear();
+    for (const b of Object.values(leviers)) b.classList.remove('actif');
+  });
+
+  for (const b of document.querySelectorAll('.levier')) {
+    const a = b.dataset.action;
+    leviers[a] = b;
+    if (a === 'pivoter') {
+      b.addEventListener('click', pivoter);
+      continue;
+    }
+    const debut = (e) => { e.preventDefault(); b.setPointerCapture?.(e.pointerId); actions.add(a); b.classList.add('actif'); };
+    const fin = () => { actions.delete(a); b.classList.remove('actif'); };
+    b.addEventListener('pointerdown', debut);
+    b.addEventListener('pointerup', fin);
+    b.addEventListener('pointercancel', fin);
+    b.addEventListener('lostpointercapture', fin);
+    b.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); actions.add(a); b.classList.add('actif'); } });
+    b.addEventListener('keyup', (e) => { if (e.code === 'Space' || e.code === 'Enter') fin(); });
+  }
+
+  ui.chantier.addEventListener('change', () => { demarrerChantier(ui.chantier.value); ui.chantier.blur(); });
+  ui.btnReset.addEventListener('click', () => { demarrerChantier(chantier); ui.btnReset.blur(); });
+  ui.btnAide.addEventListener('click', () => ui.aide.showModal());
+  ui.btnBanniere.addEventListener('click', () => { ui.banniere.hidden = true; });
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    cam.cible = clamp(cam.cible * (e.deltaY > 0 ? 0.9 : 1.1), 34, 150);
+  }, { passive: false });
+}
+const leviers = {};
+
+/* ---------- Persistance ---------- */
+
+function marquerDirty() { sauvegardeEnAttente = true; }
+
+function sauver() {
+  sauvegardeEnAttente = false;
+  try {
+    const arr = (t) => Array.from(t, (v) => Math.round(v * 1000) / 1000);
+    localStorage.setItem(LS_ETAT, JSON.stringify({
+      chantier, sol: arr(sol), meuble: arr(meuble), vierge: Array.from(vierge),
+      machine: { x: etat.x, fleche: etat.fleche, balancier: etat.balancier, godet: etat.godet, lame: etat.lame, pivot: etat.pivotCible },
+      charge: etat.charge, volume: etat.volume, chrono: etat.chrono, termine: etat.termine,
+    }));
+  } catch (err) { /* stockage indisponible : on continue sans sauvegarde */ }
+}
+function sauverRecords() {
+  try { localStorage.setItem(LS_RECORDS, JSON.stringify(records)); } catch (err) { /* idem */ }
+}
+
+function charger() {
+  try {
+    const r = JSON.parse(localStorage.getItem(LS_RECORDS) || '{}');
+    if (r && typeof r === 'object') {
+      for (const [k, v] of Object.entries(r)) if (CHANTIERS[k] && Number.isFinite(v) && v > 0) records[k] = v;
+    }
+  } catch (err) { records = {}; }
+  try {
+    const d = JSON.parse(localStorage.getItem(LS_ETAT) || 'null');
+    if (!d || !CHANTIERS[d.chantier] || !Array.isArray(d.sol) || d.sol.length !== NB
+      || !Array.isArray(d.meuble) || d.meuble.length !== NB) return false;
+    chantier = d.chantier;
+    for (let i = 0; i < NB; i++) {
+      const s = Number(d.sol[i]), m = Number(d.meuble[i]);
+      if (!Number.isFinite(s) || !Number.isFinite(m)) return false;
+      sol[i] = clamp(s, ROC, 6);
+      meuble[i] = clamp(m, 0, Math.max(0, sol[i] - ROC));
+      vierge[i] = Array.isArray(d.vierge) && d.vierge[i] ? 1 : 0;
+    }
+    const m = d.machine || {};
+    const num = (v, def, a, b) => (Number.isFinite(v) ? clamp(v, a, b) : def);
+    etat.x = num(m.x, CHANTIERS[chantier].depart, 1.3, LARGEUR - 1.3);
+    etat.fleche = num(m.fleche, 0.45, LIM.fleche[0], LIM.fleche[1]);
+    etat.balancier = num(m.balancier, -1.6, LIM.balancier[0], LIM.balancier[1]);
+    etat.godet = num(m.godet, -1.4, LIM.godet[0], LIM.godet[1]);
+    etat.lame = num(m.lame, 0.3, LIM.lame[0], LIM.lame[1]);
+    etat.pivot = etat.pivotCible = m.pivot === -1 ? -1 : 1;
+    etat.charge = num(d.charge, 0, 0, M.capacite);
+    etat.volume = num(d.volume, 0, 0, 1e6);
+    etat.chrono = num(d.chrono, 0, 0, 1e7);
+    etat.termine = !!d.termine;
+    etat.chronoActif = false;
+    etat.y = hauteurEn(etat.x);
+    return true;
+  } catch (err) {
+    console.warn('Chantier sauvegardé illisible, chantier par défaut utilisé.', err);
+    return false;
+  }
+}
+
+/* ---------- Chantier ---------- */
+
+function demarrerChantier(cle) {
+  chantier = cle;
+  genererTerrain(cle);
+  particules.length = 0;
+  Object.assign(etat, {
+    x: CHANTIERS[cle].depart, tangage: 0,
+    fleche: 0.45, balancier: -1.6, godet: -1.4, lame: 0.30,
+    pivot: 1, pivotCible: 1,
+    charge: 0, volume: 0, chrono: 0, chronoActif: false, termine: false,
+  });
+  etat.y = hauteurEn(etat.x);
+  cam.x = etat.x; cam.y = etat.y + 1;
+  ui.banniere.hidden = true;
+  afficherChantier();
+  rafraichirHud();
+  sauver();
+}
+
+/* ---------- Boucle ---------- */
+
+let derniere = performance.now();
+let accHud = 0, accSauvegarde = 0;
+
+function boucle(t) {
+  const dt = Math.min(0.05, (t - derniere) / 1000);
+  derniere = t;
+
+  actionner(dt);
+  asseoir();
+  creuser();
+  vidanger(dt);
+  animerParticules(dt);
+  tasser(3);
+  if (etat.chronoActif) etat.chrono += dt;
+
+  camera();
+  dessiner();
+
+  accHud += dt;
+  if (accHud > 0.1) { accHud = 0; rafraichirHud(); verifierFin(); }
+  accSauvegarde += dt;
+  if (accSauvegarde > 2 && sauvegardeEnAttente) { accSauvegarde = 0; sauver(); }
+
+  requestAnimationFrame(boucle);
+}
+
+/* ---------- Démarrage ---------- */
+
+function init() {
+  redimensionner();
+  new ResizeObserver(redimensionner).observe(canvas.parentElement);
+  brancherCommandes();
+  if (!charger()) demarrerChantier('bac');
+  else { afficherChantier(); cam.x = etat.x; cam.y = etat.y + 1; }
+  rafraichirHud();
+  window.addEventListener('pagehide', sauver);
+  requestAnimationFrame(boucle);
+}
+
+init();
+</script>
+</body>
+</html>
