@@ -22,15 +22,14 @@ test.describe("Simulateur de pelle mécanique", () => {
     await page.selectOption("#chantier", "tranchee");
     await expect(page.locator("#titreChantier")).toHaveText("Tranchée de service");
 
+    // Le rendu logiciel des tests peut être lent : on tient la touche jusqu'à l'effet attendu.
     const avant = await page.getByTestId("profondeur").textContent();
     await page.keyboard.down("ArrowDown");
-    await page.waitForTimeout(600);
-    await page.keyboard.up("ArrowDown");
-
     await expect
-      .poll(() => page.getByTestId("profondeur").textContent())
+      .poll(() => page.getByTestId("profondeur").textContent(), { timeout: 20000 })
       .not.toBe(avant);
-    await expect(page.getByTestId("chrono")).not.toHaveText("0:00");
+    await page.keyboard.up("ArrowDown");
+    await expect(page.getByTestId("chrono")).not.toHaveText("0:00", { timeout: 15000 });
   });
 
   test("dragging the bucket through the ground loads it and moves soil", async ({ page }) => {
@@ -38,18 +37,18 @@ test.describe("Simulateur de pelle mécanique", () => {
     await page.selectOption("#chantier", "bac");
     await page.click("#btnReset");
 
-    // Bring the teeth into the ground: boom down while the arm stays out.
+    // Bring the teeth into the ground: boom down until the depth reads negative.
     await page.keyboard.down("ArrowDown");
-    await page.waitForTimeout(1400);
-    await page.keyboard.up("ArrowDown");
-    // Curl the bucket back to scoop.
-    await page.keyboard.down("KeyZ");
-    await page.waitForTimeout(700);
-    await page.keyboard.up("KeyZ");
-
     await expect
-      .poll(async () => parseInt((await page.locator("#valGodet").textContent()) || "0", 10), { timeout: 5000 })
+      .poll(() => page.getByTestId("profondeur").textContent(), { timeout: 20000 })
+      .toMatch(/^−0,[2-9]/);
+    await page.keyboard.up("ArrowDown");
+    // Curl the bucket back to scoop until it holds something.
+    await page.keyboard.down("KeyZ");
+    await expect
+      .poll(async () => parseInt((await page.locator("#valGodet").textContent()) || "0", 10), { timeout: 20000 })
       .toBeGreaterThan(0);
+    await page.keyboard.up("KeyZ");
   });
 
   test("the terrain survives a reload", async ({ page }) => {

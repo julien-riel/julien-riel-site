@@ -1,0 +1,481 @@
+---
+permalink: /projets/simulateur-pelle-3d/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Simulateur de pelle 3D</title>
+<meta name="description" content="Aux commandes d'une mini-pelle en 3D, vue depuis la cabine : deux manettes comme sur la vraie machine, un terrain qui se creuse et s'écroule. Conçu pour le téléphone.">
+<meta name="theme-color" content="#0d0f11">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%9A%9C%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 700; font-display: swap;
+    src: url('/assets/fonts/outfit-700.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+  }
+
+  :root {
+    --noir: #0d0f11;
+    --graphite: #16191d;
+    --acier: #212932;
+    --acier-clair: #2c3742;
+    --bord: #3a4652;
+    --orange: #ff7a18;
+    --orange-sombre: #c85405;
+    --jaune: #ffc233;
+    --texte: #e8eef4;
+    --sourdine: #8896a4;
+    --vert: #55cf7c;
+    --rouge: #ff5f4d;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --sb: env(safe-area-inset-bottom, 0px);
+    --st: env(safe-area-inset-top, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 500 14px/1.4 var(--ui);
+    color: var(--texte);
+    background: var(--noir);
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+  }
+
+  #scene {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* ---------- Barre haute : fine, en surimpression ---------- */
+
+  .barre {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: calc(6px + var(--st)) 10px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(180deg, rgba(13,15,17,.92), rgba(13,15,17,.55) 80%, transparent);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .barre > * { pointer-events: auto; }
+  .barre::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 3px;
+    background: repeating-linear-gradient(115deg, var(--jaune) 0 12px, #14181c 12px 24px);
+    opacity: .8;
+  }
+  .retour {
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .retour:hover { color: var(--orange); }
+  .barre h1 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .pastille {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .08em;
+    background: var(--orange);
+    color: #17110a;
+    padding: 4px 6px 3px;
+    border-radius: 3px;
+  }
+  .cmdes { margin-left: auto; display: flex; gap: 6px; }
+  select, .bouton {
+    font: 500 12.5px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--acier-clair), var(--acier));
+    border: 1px solid var(--bord);
+    border-radius: 5px;
+    padding: 7px 9px;
+    cursor: pointer;
+    min-height: 32px;
+  }
+  select:hover, .bouton:hover { border-color: var(--orange); }
+  select:focus-visible, .bouton:focus-visible, a:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+
+  /* ---------- Afficheur de cabine ---------- */
+
+  .hud {
+    position: fixed;
+    top: calc(46px + var(--st));
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .hud-gauche { left: 10px; }
+  .hud-droite { right: 10px; align-items: flex-end; }
+  .puce {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 9px;
+    border-radius: 5px;
+    background: rgba(13,15,17,.72);
+    border: 1px solid rgba(58,70,82,.75);
+    backdrop-filter: blur(6px);
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .puce b {
+    font: 600 12.5px/1 var(--mono);
+    letter-spacing: .02em;
+    color: var(--texte);
+    font-variant-numeric: tabular-nums;
+  }
+  .puce b.alerte { color: var(--jaune); }
+  .puce.titre { color: var(--orange); }
+  .piste {
+    width: 120px;
+    height: 6px;
+    border-radius: 3px;
+    background: #0a0c0e;
+    border: 1px solid #2a333c;
+    overflow: hidden;
+    align-self: stretch;
+  }
+  .piste > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--orange-sombre), var(--orange)); }
+  .piste.mission > i { background: linear-gradient(90deg, #2f8f52, var(--vert)); }
+  .piste.plein > i { background: linear-gradient(90deg, #b0301f, var(--rouge)); }
+  #consigne {
+    display: block;
+    max-width: 44vw;
+    font: 500 12px/1.35 var(--ui);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--texte);
+    white-space: normal;
+  }
+  #consigne b { color: var(--jaune); }
+
+  /* ---------- Manettes ---------- */
+
+  .manette {
+    position: fixed;
+    bottom: calc(18px + var(--sb));
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, rgba(44,55,66,.55), rgba(13,15,17,.7) 70%);
+    border: 1px solid rgba(58,70,82,.9);
+    box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 6px rgba(13,15,17,.35);
+    touch-action: none;
+    z-index: 6;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .manette.gauche { left: 18px; }
+  .manette.droite { right: 18px; }
+  .manette .croix::before, .manette .croix::after {
+    content: "";
+    position: absolute;
+    background: rgba(136,150,164,.25);
+  }
+  .manette .croix::before { left: 50%; top: 14px; bottom: 14px; width: 1px; }
+  .manette .croix::after { top: 50%; left: 14px; right: 14px; height: 1px; }
+  .manette .pouce {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 54px; height: 54px;
+    margin: -27px 0 0 -27px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #3b4855, #1c2228);
+    border: 2px solid var(--bord);
+    box-shadow: 0 4px 10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
+    transition: transform .06s linear;
+  }
+  .manette.active .pouce { border-color: var(--orange); box-shadow: 0 4px 10px rgba(0,0,0,.6), 0 0 14px rgba(255,122,24,.45); }
+  .manette .etiq {
+    position: absolute;
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    pointer-events: none;
+  }
+  .manette .etiq.h { top: 6px; left: 50%; transform: translateX(-50%); }
+  .manette .etiq.b { bottom: 6px; left: 50%; transform: translateX(-50%); }
+  .manette .etiq.g { left: 5px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: center; }
+  .manette .etiq.d { right: 5px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+  .manette .nom {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    white-space: nowrap;
+  }
+
+  /* ---------- Chenilles ---------- */
+
+  .chenilles {
+    position: fixed;
+    bottom: calc(18px + var(--sb));
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 44px);
+    gap: 5px;
+    z-index: 6;
+  }
+  .chenilles .nom {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font: 600 8.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    white-space: nowrap;
+  }
+  .pedale {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: linear-gradient(180deg, var(--acier-clair), #1a2027);
+    border: 1px solid var(--bord);
+    color: var(--texte);
+    font-size: 16px;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .pedale.actif {
+    background: linear-gradient(180deg, var(--orange), var(--orange-sombre));
+    border-color: var(--jaune);
+    color: #1a0f04;
+  }
+  .pedale.recentrer { grid-column: 2; grid-row: 2; font-size: 14px; color: var(--sourdine); }
+  .pedale.recentrer.actif { color: #1a0f04; }
+  .pedale[data-action="avancer"] { grid-column: 2; grid-row: 1; }
+  .pedale[data-action="tournerG"] { grid-column: 1; grid-row: 2; }
+  .pedale[data-action="tournerD"] { grid-column: 3; grid-row: 2; }
+  .pedale[data-action="reculer"] { grid-column: 2; grid-row: 2; }
+  .pedale.recentrer { grid-column: 1; grid-row: 1; }
+  .pedale.aide { grid-column: 3; grid-row: 1; font: 700 15px var(--ui); }
+
+  #banniere {
+    position: fixed;
+    left: 50%;
+    top: 28%;
+    transform: translateX(-50%);
+    text-align: center;
+    padding: 16px 22px;
+    border-radius: 9px;
+    background: rgba(13,15,17,.92);
+    border: 1px solid var(--orange);
+    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+    z-index: 7;
+    max-width: calc(100% - 40px);
+  }
+  #banniere strong { display: block; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; color: var(--jaune); margin-bottom: 4px; }
+  #banniere span { font: 500 12.5px var(--mono); color: var(--sourdine); }
+  #banniere button { margin-top: 12px; }
+
+  #chargement {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--noir);
+    color: var(--sourdine);
+    font: 600 11px var(--mono);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    z-index: 9;
+  }
+
+  dialog {
+    border: 1px solid var(--bord);
+    border-radius: 9px;
+    background: var(--graphite);
+    color: var(--texte);
+    padding: 0;
+    max-width: 560px;
+    width: calc(100% - 32px);
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,.7);
+  }
+  dialog::backdrop { background: rgba(5,7,9,.72); }
+  .aide-corps { padding: 18px 20px 20px; outline: none; }
+  dialog h2 { font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+  dialog h3 { font: 600 10px/1 var(--mono); letter-spacing: .13em; text-transform: uppercase; color: var(--sourdine); margin: 16px 0 7px; }
+  dialog p, dialog li { font-size: 13px; color: #cbd5df; }
+  dialog ul { padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+  dialog a { color: var(--orange); }
+  kbd {
+    font: 600 11px/1 var(--mono);
+    background: var(--acier);
+    border: 1px solid var(--bord);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 3px 5px;
+    white-space: nowrap;
+  }
+  .fermer { margin-top: 16px; }
+
+  @media (max-width: 720px) {
+    .barre h1 .long { display: none; }
+    .retour .long { display: none; }
+    #consigne { display: none; }
+    .puce.titre { display: none; }
+  }
+  @media (max-height: 460px) {
+    .manette { width: 104px; height: 104px; bottom: calc(10px + var(--sb)); }
+    .manette .pouce { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+    .chenilles { bottom: calc(10px + var(--sb)); grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(2, 40px); }
+    .hud { top: calc(40px + var(--st)); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="scene" aria-label="Vue 3D depuis la cabine de la pelle" role="img"></canvas>
+
+<header class="barre">
+  <a class="retour" href="/projets/" title="Retour à mes projets">← <span class="long">julien-riel.com</span></a>
+  <h1><span class="pastille">3D</span> Pelle <span class="long">mécanique · vue cabine</span></h1>
+  <div class="cmdes">
+    <select id="chantier" aria-label="Chantier">
+      <option value="bac">Bac à sable</option>
+      <option value="fosse">Fosse</option>
+      <option value="remblai">Remblayage</option>
+    </select>
+    <button class="bouton" id="btnReset" title="Remettre le chantier à zéro">↺</button>
+  </div>
+</header>
+
+<section class="hud hud-gauche" aria-live="polite">
+  <span class="puce titre" id="titreChantier">Bac à sable</span>
+  <span class="puce" id="consigne"></span>
+  <span class="puce">Avancement <b id="valAvancement" data-testid="avancement">—</b></span>
+  <span class="piste mission"><i id="barreAvancement"></i></span>
+  <span class="puce">Chrono <b id="valChrono">—</b></span>
+</section>
+
+<section class="hud hud-droite">
+  <span class="puce">Godet <b id="valGodet" data-testid="godet">0 L</b></span>
+  <span class="piste" id="pisteGodet"><i id="barreGodet"></i></span>
+  <span class="puce">Dents <b id="valProfondeur" data-testid="profondeur">0,00 m</b></span>
+  <span class="puce">Déblai <b id="valVolume" data-testid="volume">0,00 m³</b></span>
+</section>
+
+<div class="manette gauche" id="manetteG" aria-label="Manette gauche : rotation et balancier">
+  <span class="nom">Rotation · balancier</span>
+  <span class="croix"></span>
+  <span class="etiq h">Sortir</span><span class="etiq b">Rentrer</span>
+  <span class="etiq g">Pivot ◀</span><span class="etiq d">Pivot ▶</span>
+  <span class="pouce"></span>
+</div>
+
+<div class="chenilles" aria-label="Chenilles">
+  <span class="nom">Chenilles</span>
+  <button class="pedale recentrer" id="btnRecentrer" title="Recentrer le regard" aria-label="Recentrer le regard">⌖</button>
+  <button class="pedale" data-action="avancer" aria-label="Avancer">▲</button>
+  <button class="pedale aide" id="btnAide" title="Commandes" aria-label="Commandes">?</button>
+  <button class="pedale" data-action="tournerG" aria-label="Tourner à gauche">↶</button>
+  <button class="pedale" data-action="reculer" aria-label="Reculer">▼</button>
+  <button class="pedale" data-action="tournerD" aria-label="Tourner à droite">↷</button>
+</div>
+
+<div class="manette droite" id="manetteD" aria-label="Manette droite : flèche et godet">
+  <span class="nom">Flèche · godet</span>
+  <span class="croix"></span>
+  <span class="etiq h">Baisser</span><span class="etiq b">Lever</span>
+  <span class="etiq g">Fermer</span><span class="etiq d">Vider</span>
+  <span class="pouce"></span>
+</div>
+
+<div id="banniere" hidden>
+  <strong id="banniereTitre">Chantier terminé</strong>
+  <span id="banniereTexte"></span><br>
+  <button class="bouton" id="btnBanniere">Continuer</button>
+</div>
+
+<div id="chargement">Démarrage de la machine…</div>
+
+<dialog id="aide">
+  <div class="aide-corps" tabindex="-1" autofocus>
+    <h2>Commandes</h2>
+    <p>Les deux manettes suivent la <b>norme ISO</b> des vraies pelles : à gauche, la rotation de la tourelle et le balancier ; à droite, la flèche et le godet. Glissez un doigt sur la vue pour tourner la tête, <kbd>⌖</kbd> pour la recentrer.</p>
+    <h3>Au clavier</h3>
+    <ul>
+      <li><kbd>A</kbd> <kbd>D</kbd> rotation de la tourelle · <kbd>W</kbd> <kbd>S</kbd> sortir et rentrer le balancier</li>
+      <li><kbd>I</kbd> <kbd>K</kbd> baisser et lever la flèche · <kbd>J</kbd> <kbd>L</kbd> fermer et vider le godet</li>
+      <li><kbd>↑</kbd> <kbd>↓</kbd> chenilles · <kbd>←</kbd> <kbd>→</kbd> tourner sur place · souris : regarder</li>
+    </ul>
+    <h3>Comment on charge un godet</h3>
+    <ul>
+      <li>Sortez le balancier, posez les dents au sol avec la flèche, puis <b>rentrez</b> le balancier en fermant progressivement le godet.</li>
+      <li>Le godet ne retient la terre que si son ouverture regarde vers le haut. Pivotez, puis videz-le au-dessus du tas.</li>
+      <li>Levez la flèche avant de déplacer la machine, sinon les dents labourent le terrain.</li>
+    </ul>
+    <h3>Ce qui est simulé</h3>
+    <ul>
+      <li>Un terrain de 19 m sur 19, échantillonné tous les 15 cm ; la lame des dents (42 cm de large) y découpe sa trajectoire.</li>
+      <li>La terre remuée foisonne de 25 % ; seule la terre meuble s'écroule, à 34° de talus. Le sol en place tient ses parois.</li>
+      <li>La machine s'assied sur le relief : tangage et roulis suivent le terrain sous les chenilles.</li>
+    </ul>
+    <p style="margin-top:14px"><small>Géométrie inspirée des mini-pelles <a href="https://www.kubota.ca/fr/products/0-2-Ton" target="_blank" rel="noopener">Kubota de la classe 0–2 tonnes</a>. La <a href="/projets/simulateur-pelle-mecanique/">version en coupe 2D</a> est aussi disponible.</small></p>
+    <form method="dialog"><button class="bouton fermer">Fermer</button></form>
+  </div>
+</dialog>
+
+<script type="module" src="/assets/js/pelle3d.js"></script>
+</body>
+</html>

@@ -22,5 +22,17 @@
     },
     "url": "/projets/simulateur-pelle-mecanique/",
     "emoji": "🚜"
+  },
+  {
+    "name": {
+      "fr": "Simulateur de pelle 3D · vue cabine",
+      "en": "3D excavator simulator, cab view"
+    },
+    "description": {
+      "fr": "La même mini-pelle, mais en 3D et vue depuis le siège de l'opérateur, pensée pour le téléphone : deux manettes ISO comme sur la vraie machine, un terrain en carte de hauteurs qui se creuse, foisonne et s'écroule. Trois chantiers chronométrés.",
+      "en": "The same mini-excavator, now in 3D from the operator's seat and designed for the phone: two ISO-pattern joysticks like the real machine, a heightmap terrain that digs, swells and slumps. Three timed job sites. French only."
+    },
+    "url": "/projets/simulateur-pelle-3d/",
+    "emoji": "🕹️"
   }
 ]
