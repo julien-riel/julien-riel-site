@@ -11,6 +11,7 @@ export default {
         "http://localhost/97-choses/",
         "http://localhost/tags/",
         "http://localhost/glossaire/",
+        "http://localhost/elections-quebec-2026/",
       ],
       numberOfRuns: 3,
       settings: {

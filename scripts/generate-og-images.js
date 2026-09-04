@@ -51,6 +51,7 @@ const SECTION_LABELS = {
   "case-studies": { fr: "ÉTUDE DE CAS", en: "CASE STUDY" },
   home: { fr: "PROGRAMMATION AGENTIQUE", en: "AGENTIC PROGRAMMING" },
   glossaire: { fr: "GLOSSAIRE", en: "GLOSSARY" },
+  elections: { fr: "ÉLECTIONS QUÉBEC 2026", en: "QUEBEC ELECTION 2026" },
 };
 
 const parseFrontmatter = (raw) => {
@@ -365,6 +366,13 @@ const STATIC_CARDS = [
     description: "Eighty-seven AI terms defined in English and French, each with a source to go deeper.",
     section: "glossaire",
     lang: "en",
+    slug: "_index",
+  },
+  {
+    title: "Élection du 5 octobre 2026",
+    description: "Programmes comparés par thème, sondages, et les candidats de Vachon et de Pierre-Laporte.",
+    section: "elections",
+    lang: "fr",
     slug: "_index",
   },
 ];

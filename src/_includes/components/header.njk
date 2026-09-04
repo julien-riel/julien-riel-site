@@ -29,7 +29,11 @@
         <a href="/tags/" role="menuitem"{% if page.url.includes('/tags/') %} aria-current="page"{% endif %}>{{ t.nav.tags }}</a>
       </li>
       <li class="nav-item" role="none">
-        {% if currentLang == "fr" %}
+        {% if noTranslation %}
+          {# Page with no counterpart in the other language — send readers to that
+             language's home page rather than to a URL that does not exist. #}
+          <a href="{{ '/en/' if currentLang == 'fr' else '/' }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">{{ t.post.langSwitch }}</a>
+        {% elif currentLang == "fr" %}
           <a href="/en{{ page.url | replace('/97-choses/', '/97-things/') | replace('/glossaire/', '/glossary/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">EN</a>
         {% else %}
           <a href="{{ page.url | replace('/en/', '/') | replace('/97-things/', '/97-choses/') | replace('/glossary/', '/glossaire/') }}" class="lang-switch" role="menuitem" aria-label="{{ t.post.langSwitchLabel }}">FR</a>

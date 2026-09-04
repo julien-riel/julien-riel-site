@@ -1,0 +1,463 @@
+{
+  "meta": {
+    "electionDate": "2026-10-05",
+    "electionDateLabel": "Lundi 5 octobre 2026",
+    "lastUpdated": "2026-09-04",
+    "voters": "6,4 millions",
+    "note": "Cette page est strictement informative. Elle n'exprime aucune recommandation de vote et ne remplace pas les documents officiels des partis ni ceux d'Élections Québec."
+  },
+  "keyFacts": [
+    { "label": "Scrutin", "value": "5 octobre 2026", "detail": "Date fixe : premier lundi d'octobre de la 4ᵉ année suivant la dernière élection." },
+    { "label": "Brefs délivrés", "value": "27 août 2026", "detail": "Par la lieutenante-gouverneure Manon Jeannotte, à la demande de la première ministre Christine Fréchette." },
+    { "label": "Électeurs inscrits", "value": "≈ 6,4 M", "detail": "Personnes inscrites sur la liste électorale permanente." },
+    { "label": "Mise en candidature", "value": "17 septembre 2026", "detail": "Fin de la période — la liste des candidats peut encore changer d'ici là." },
+    { "label": "Débat des chefs", "value": "23 septembre 2026", "detail": "Annoncé pour cette date au moment de la rédaction." },
+    { "label": "Vote par anticipation", "value": "27-28 septembre 2026", "detail": "Deux jours, avant le scrutin du 5 octobre." }
+  ],
+  "parties": [
+    {
+      "id": "caq",
+      "short": "CAQ",
+      "name": "Coalition Avenir Québec",
+      "color": "#00A9E0",
+      "chipColor": "#006E8C",
+      "leader": "Christine Fréchette",
+      "leaderNote": "Cheffe depuis le 12 avril 2026 (57,9 % contre Bernard Drainville, environ 2 500 voix d'avance, congrès de Drummondville). Première ministre. François Legault avait annoncé son départ le 14 janvier 2026.",
+      "platform": "Cadre financier dévoilé le 30 août 2026, engagements égrenés en campagne. 8 G$ sur 9,7 G$ d'engagements restaient à détailler.",
+      "platformState": "partiel",
+      "url": "https://coalitionavenirquebec.org/",
+      "candidatesUrl": "https://coalitionavenirquebec.org/fr/nos-candidats/"
+    },
+    {
+      "id": "plq",
+      "short": "PLQ",
+      "name": "Parti libéral du Québec",
+      "color": "#ED1B2E",
+      "chipColor": "#CE1524",
+      "leader": "Charles Milliard",
+      "leaderNote": "Couronné sans opposition le 13 février 2026, après la démission de Pablo Rodriguez en décembre 2025 sur fond de crise et de scandale.",
+      "platform": "Engagements dévoilés en campagne. Des candidats et organisateurs ont exprimé publiquement leur inquiétude quant au manque de contenu en début de campagne.",
+      "platformState": "partiel",
+      "url": "https://plq.org/",
+      "candidatesUrl": "https://plq.org/equipe/"
+    },
+    {
+      "id": "pq",
+      "short": "PQ",
+      "name": "Parti Québécois",
+      "color": "#004C9D",
+      "chipColor": "#004C9D",
+      "leader": "Paul St-Pierre Plamondon",
+      "leaderNote": "Chef depuis 2020. Le PQ mène les intentions de vote depuis plusieurs mois.",
+      "platform": "Engagements dévoilés progressivement en campagne et sur le site du parti, sous forme de plans thématiques (immigration, langue, environnement 2026-2034).",
+      "platformState": "partiel",
+      "url": "https://pq.org/",
+      "candidatesUrl": "https://pq.org/nos-candidats/"
+    },
+    {
+      "id": "qs",
+      "short": "QS",
+      "name": "Québec solidaire",
+      "color": "#FF5605",
+      "chipColor": "#C24000",
+      "leader": "Ruba Ghazal et Sol Zanetti",
+      "leaderNote": "Co-porte-parole du parti.",
+      "platform": "Adoptée en congrès les 9 et 10 mai 2026 à Montréal, devant environ 300 délégués.",
+      "platformState": "complet",
+      "url": "https://quebecsolidaire.net/",
+      "candidatesUrl": "https://quebecsolidaire.net/"
+    },
+    {
+      "id": "pcq",
+      "short": "PCQ",
+      "name": "Parti conservateur du Québec",
+      "color": "#1B2A4A",
+      "chipColor": "#1B2A4A",
+      "leader": "Éric Duhaime",
+      "leaderNote": "Chef depuis 2021. Appuis concentrés dans la région de Québec et en Chaudière-Appalaches.",
+      "platform": "Dévoilée en annonces échelonnées du 13 au 20 août 2026, sous le slogan « Oser pour vrai ». Cadre financier détaillé annoncé pour plus tard à l'automne.",
+      "platformState": "complet",
+      "url": "https://conservateur.quebec/",
+      "candidatesUrl": "https://conservateur.quebec/"
+    }
+  ],
+  "polls": [
+    {
+      "firm": "Léger",
+      "field": "28-31 août 2026",
+      "sample": "n = 1 008",
+      "margin": "marge ±3,09 %",
+      "deltaNote": "Variation en points depuis le sondage précédent de la même maison.",
+      "results": [
+        { "party": "pq", "value": 29, "delta": -1 },
+        { "party": "caq", "value": 24, "delta": 1 },
+        { "party": "plq", "value": 22, "delta": -1 },
+        { "party": "pcq", "value": 15, "delta": -1 },
+        { "party": "qs", "value": 10, "delta": 3 }
+      ]
+    },
+    {
+      "firm": "Pallas Data — Qc125 / L'actualité",
+      "field": "29 août 2026",
+      "sample": "n = 1 108",
+      "margin": "marge ±2,9 %",
+      "results": [
+        { "party": "pq", "value": 29 },
+        { "party": "caq", "value": 24 },
+        { "party": "plq", "value": 22 },
+        { "party": "pcq", "value": 16 },
+        { "party": "qs", "value": 9 }
+      ]
+    }
+  ],
+  "volatility": "Selon Léger (28-31 août), 42 % des électeurs décidés affirment que leur choix n'est pas définitif — une proportion qui atteint 58 % chez l'électorat de Québec solidaire et 54 % chez celui de la CAQ. Le PCQ, malgré 15-16 % d'appuis, reste concentré dans la région de Québec et en Chaudière-Appalaches, ce qui pourrait limiter le nombre de sièges qu'il remporte.",
+  "themes": [
+    {
+      "id": "economie",
+      "title": "Économie et finances publiques",
+      "intro": "L'écart le plus large de la campagne : de la taxe sur les grandes fortunes de QS aux coupes de 47 G$ du PCQ, en passant par un retour à l'équilibre en 2029-2030 pour la CAQ.",
+      "positions": [
+        { "party": "caq", "text": "Équilibre budgétaire en 2029-2030, aucune baisse d'impôt avant l'équilibre. Déficits projetés de 7,7 G$ (2026-27), 5,7 G$ (2027-28), 1,5 G$ (2028-29), puis un surplus de 89 M$ (2029-30). Engagements totalisant 9,7 G$ sur cinq ans, dont environ 500 M$ de service de la dette. Plan québécois des infrastructures de 180 G$, dont 75 % au maintien des actifs (contre 65 %). Seule économie chiffrée : 308 M$ sur les contrats de services professionnels." },
+        { "party": "plq", "text": "Baisses d'impôt, allègement bureaucratique et protection des emplois face aux tarifs américains. Remboursement accru de la TVQ pour la construction résidentielle. Approche économique axée sur les relations Canada–États-Unis et sur de nouvelles alliances commerciales." },
+        { "party": "pq", "text": "Abolition du Fonds de développement économique. Impôt des sociétés ramené de 11,5 % à 9,5 % sur un mandat — une baisse de près de 20 % pour les PME, présentée à « coûts nuls ». Réduction des coûts de rémunération du secteur public de 2,5 % sur trois ans (1,6 G$ par an, 4,7 G$ par mandat) par attrition. Ratio gestionnaires/employés porté de 1:17 à 1:25. Création d'un directeur parlementaire du budget." },
+        { "party": "qs", "text": "Taxe progressive sur les grandes fortunes visant les ménages dont les avoirs dépassent 25 M$ (environ 0,1 % des plus riches), pour récupérer près de 5 G$ réinjectés en partie dans l'éducation. Refus de l'austérité. Une proposition plus large — 1 % des plus riches, seuil de 5 M$ — a été rejetée de peu en congrès." },
+        { "party": "pcq", "text": "« La plus importante baisse d'impôt des particuliers et de taxes à la consommation de l'histoire du Québec », après un déficit zéro en quatre ans. Seuil de revenu non imposable porté d'environ 19 000 $ à plus de 35 000 $ (économie annoncée de 8 726 $ par ménage sur cinq ans). Baisse d'environ 50 % de l'impôt des sociétés. Coupes de 47 G$ sur cinq ans, dont la suppression d'environ 20 000 postes de fonctionnaires, et réduction des subventions aux entreprises." }
+      ]
+    },
+    {
+      "id": "sante",
+      "title": "Santé et services sociaux",
+      "intro": "Trois voies distinctes : élargir la place du privé (CAQ, PCQ), démanteler la structure administrative (PQ), ou renforcer le réseau public et la protection des aînés (QS).",
+      "positions": [
+        { "party": "caq", "text": "Autoriser la pratique mixte public-privé pour les médecins sans désaffiliation de la RAMQ — un revirement par rapport à la loi adoptée en avril 2025 sous Christian Dubé. Former plus de médecins de famille en région, élargir les rôles des infirmières, paramédics et pharmaciens, réduire de 2 % les dépenses administratives de Santé Québec. Plan Aînés : 1 G$ pour les soins à domicile, crédit d'impôt de 7 500 $ pour adapter une résidence à un proche aîné, 241 M$ pour loger les aînés." },
+        { "party": "plq", "text": "Créer une plateforme numérique de télésanté sans rendez-vous accessible partout au Québec. Défense des aînés en résidences privées." },
+        { "party": "pq", "text": "Abolir Santé Québec, décrit comme un « monstre de bureaucratie », et recentrer l'État sur ses missions fondamentales : soigner, éduquer, protéger." },
+        { "party": "qs", "text": "Renforcer la « loi Françoise David » pour mieux protéger les aînés et investir dans les services publics." },
+        { "party": "pcq", "text": "Universalité maintenue, mais grande place au privé : un patient qui n'obtient pas de traitement dans un délai « médicalement raisonnable » pourrait se tourner vers le privé avec sa carte d'assurance maladie, sans frais supplémentaires. Financer chaque enfant plutôt que seulement les places en garderie reconnues." }
+      ]
+    },
+    {
+      "id": "education",
+      "title": "Éducation",
+      "intro": "Le PQ en fait un enjeu linguistique, QS un enjeu de financement, le PCQ un enjeu de libre choix.",
+      "positions": [
+        { "party": "caq", "text": "Priorité à la réussite scolaire et maintien des actifs, notamment la rénovation d'écoles." },
+        { "party": "plq", "text": "Faire de l'éducation une « priorité nationale »." },
+        { "party": "pq", "text": "Étendre la loi 101 au cégep. Éducation en français obligatoire pour les enfants d'immigrants temporaires présents depuis plus de douze mois. Pondération de 10 % de la note pour la qualité du français dans tous les travaux. Liste de lectures de classiques québécois obligatoire." },
+        { "party": "qs", "text": "Injecter dans l'éducation publique une part des sommes récupérées par la taxe sur les grandes fortunes." },
+        { "party": "pcq", "text": "Déréglementation, place accrue au privé et au libre choix des familles." }
+      ]
+    },
+    {
+      "id": "environnement",
+      "title": "Environnement, énergie et transition",
+      "intro": "Les cibles de réduction des GES ont été revues à la baisse à gauche comme au centre; le PCQ propose à l'inverse de relancer le gaz de schiste.",
+      "positions": [
+        { "party": "caq", "text": "Défense du bilan, investissements en infrastructures et maintien des actifs." },
+        { "party": "plq", "text": "Transition liée au développement économique." },
+        { "party": "pq", "text": "Cible GES de -42,5 % en 2034 par rapport à 1990. Avantages fiscaux pour les thermopompes, rabais de 2 000 $ (dégressif sur quatre ans) pour les véhicules électriques, 85 % de ventes de véhicules zéro émission en 2034. Pas de « mesures moralisatrices » ni de taxes aux consommateurs." },
+        { "party": "qs", "text": "Cible GES ajustée à -37,5 % en 2030 (et -45 % si possible), après avoir renoncé à la cible antérieure de -55 %. Investissements « historiques » en transport collectif." },
+        { "party": "pcq", "text": "Relancer l'exploitation du gaz de schiste, libéraliser la construction, réviser le régime forestier dès la première année et augmenter les redevances versées aux territoires qui exploitent les ressources." }
+      ]
+    },
+    {
+      "id": "transport",
+      "title": "Transports et mobilité",
+      "intro": "Deux dossiers structurants pour la Rive-Sud et pour Québec : l'élargissement de l'autoroute 30 et le sort du troisième lien.",
+      "positions": [
+        { "party": "caq", "text": "Élargissement de l'autoroute 30 entre Boucherville et Brossard — enjeu de Rive-Sud mis de l'avant par Ian Lafrenière. Troisième lien Québec-Lévis mis sur pause depuis février 2026." },
+        { "party": "plq", "text": "Poursuivre les études sur le troisième lien Québec-Lévis, position restée vague. Transformation du Port de Québec et renforcement du statut de capitale nationale." },
+        { "party": "pq", "text": "Troisième lien Québec-Lévis réservé au transport en commun, en renonçant à un lien autoroutier. « Passe mobilité » à 95 $ par mois valable pour tous les réseaux de transport collectif du Québec. Hausse des investissements en transport collectif dans le PQI." },
+        { "party": "qs", "text": "Réparer et développer le réseau de transport en commun, et réduire les tarifs." },
+        { "party": "pcq", "text": "Priorité aux régions et déréglementation." }
+      ]
+    },
+    {
+      "id": "immigration",
+      "title": "Immigration, langue française et identité",
+      "intro": "Tous les partis sauf QS proposent de réduire les seuils; QS propose au contraire de rétablir le PEQ.",
+      "positions": [
+        { "party": "caq", "text": "Cible d'immigration permanente réduite à 45 000 par an pour 2026-2029, suspension de certaines demandes à Montréal et Laval, exigence de français rehaussée au niveau 4. Demande à Ottawa de réduire le nombre de résidents non permanents à 200 000." },
+        { "party": "plq", "text": "Approche fédéraliste et position autonomiste plus modérée." },
+        { "party": "pq", "text": "Réduire les résidents temporaires de plus de 500 000 à 200 000-250 000. Moratoire sur l'immigration économique internationale. Immigration permanente ramenée à 35 000 par an. Cérémonie d'intégration obligatoire. Rehaussement des critères de français pour les permis de travail, le secteur agricole étant exempté." },
+        { "party": "qs", "text": "Retour du Programme de l'expérience québécoise (PEQ) tel qu'il existait auparavant, et nouveau volet de régionalisation de l'immigration." },
+        { "party": "pcq", "text": "Réduire de plus de moitié le nombre de résidents temporaires, immigration permanente à environ 35 000, accents natalistes." }
+      ]
+    },
+    {
+      "id": "national",
+      "title": "Question nationale et constitution",
+      "intro": "Le clivage classique reste structurant : deux partis souverainistes, un fédéraliste, deux autonomistes.",
+      "positions": [
+        { "party": "caq", "text": "Nationaliste-autonomiste : « ni chicane ni référendum »." },
+        { "party": "plq", "text": "Fédéraliste. Renforcer l'influence du Québec dans le Canada par une approche « ferme et pragmatique », déclinée en quatre engagements." },
+        { "party": "pq", "text": "Référendum sur la souveraineté dans un premier mandat, mais pas avant le 20 janvier 2029, soit la fin du mandat de Donald Trump. Selon un sondage Léger, « faire du Québec un pays » figure au bas des promesses préférées, avec près de 60 % d'opposition." },
+        { "party": "qs", "text": "Indépendantiste. Participation à la consultation OUI Québec." },
+        { "party": "pcq", "text": "Autonomiste. « Loi-bouclier québécoise » contre les intrusions fédérales et adoption d'une constitution québécoise : ni séparation radicale, ni « soumission tranquille » au fédéralisme." }
+      ]
+    },
+    {
+      "id": "logement",
+      "title": "Logement et habitation",
+      "intro": "Le PLQ chiffre une cible de construction, QS en fait sa « priorité des priorités », le PQ lie le dossier aux seuils d'immigration.",
+      "positions": [
+        { "party": "caq", "text": "241 M$ pour loger les aînés et maintien des actifs." },
+        { "party": "plq", "text": "100 000 unités de logement par an et remboursement accru de la TVQ pour la construction neuve." },
+        { "party": "pq", "text": "Lier les seuils d'immigration à la capacité d'accueil en logement." },
+        { "party": "qs", "text": "Logement présenté comme la « priorité des priorités ». Contrôle des hausses de loyer, sans « s'attaquer aux petits propriétaires ». Logement social et communautaire porté à 20 % du parc locatif d'ici 2050. Sanctions renforcées contre les propriétaires abusifs multirécidivistes." },
+        { "party": "pcq", "text": "Libéraliser la construction, réviser la surréglementation et favoriser les maisons unifamiliales." }
+      ]
+    },
+    {
+      "id": "gouvernance",
+      "title": "Gouvernance, éthique et régions",
+      "intro": "Une réforme du mode de scrutin ne ressort pas comme engagement phare de la campagne 2026 dans les sources consultées.",
+      "positions": [
+        { "party": "caq", "text": "304 M$ pour les régions ressources et gains d'efficacité recherchés par l'intelligence artificielle." },
+        { "party": "pq", "text": "Secrétariat à l'efficacité gouvernementale et à l'allègement réglementaire relevant du Conseil du trésor, recours à l'IA, directeur parlementaire du budget et abolition de Santé Québec." },
+        { "party": "pcq", "text": "Sommet du monde municipal, hausse des redevances aux régions ressources et réduction de la taille de l'État." }
+      ]
+    }
+  ],
+  "factChecks": [
+    {
+      "target": "caq",
+      "title": "Le cadre financier de la CAQ",
+      "text": "Luc Godbout, de la Chaire en fiscalité et en finances publiques de l'Université de Sherbrooke, a relevé sur Radio-Canada le 30 août que la CAQ « prévoit de puiser 5 milliards $ en 5 ans dans la provision pour éventualités […] pour se donner davantage de marge de manœuvre ». Huit des 9,7 G$ d'engagements restaient non ventilés et 4,4 G$ de transferts fédéraux escomptés demeuraient incertains, faute de renouvellement. L'ex-ministre Pierre Fitzgibbon a par ailleurs mis en doute la promesse de « moins d'interventionnisme »."
+    },
+    {
+      "target": "pcq",
+      "title": "Les coupes de 47 G$ du PCQ",
+      "text": "Christine Fréchette a qualifié le plan de 47 G$ — présenté le 13 août par Éric Duhaime et le porte-parole Adrien Pouliot — de démantèlement de l'État : « Ce n'est pas couper dans les dépenses […] 47 milliards, ça n'a aucun sens ». Le cadre financier détaillant ces coupes et les baisses d'impôt n'avait pas été publié au moment de la rédaction."
+    }
+  ],
+  "ridings": [
+    {
+      "id": "vachon",
+      "name": "Vachon",
+      "region": "Saint-Hubert (Longueuil), Montérégie",
+      "lede": "Circonscription de banlieue majoritairement francophone, détenue par la CAQ depuis 2018 avec près de 45 % des voix — et que les projections donnent aujourd'hui au PQ.",
+      "profile": [
+        { "label": "Territoire", "value": "Arrondissement de Saint-Hubert, à Longueuil" },
+        { "label": "Langue au foyer (2021)", "value": "Français 79,9 %, anglais 8,6 %, espagnol 3,0 %" },
+        { "label": "Enjeux locaux", "value": "Accès aux soins, circulation et transport, coût de la vie, élargissement de l'autoroute 30" },
+        { "label": "Historique", "value": "Union nationale (1936-1973), Parti Québécois (1973-2018), CAQ depuis 2018" }
+      ],
+      "incumbent": "Ian Lafrenière (CAQ), élu en 2018 et réélu en 2022, vice-premier ministre depuis avril 2026.",
+      "turnout": "68,37 %",
+      "results2022": [
+        { "party": "caq", "candidate": "Ian Lafrenière", "votes": "15 984", "pct": 44.91, "elected": true },
+        { "party": "plq", "candidate": "Yves Mbattang", "votes": "5 718", "pct": 16.07 },
+        { "party": "qs", "candidate": "Jean-Philippe Samson", "votes": "5 343", "pct": 15.01 },
+        { "party": "pq", "candidate": "Adam Wrzesien", "votes": "4 757", "pct": 13.37 },
+        { "party": "pcq", "candidate": "Martine Boucher", "votes": "3 166", "pct": 8.90 },
+        { "party": "autre", "candidate": "Juan Carlos Nino Caita (Parti vert)", "votes": "404", "pct": 1.14 },
+        { "party": "autre", "candidate": "Jean-Pierre Lacombe (Climat Québec)", "votes": "217", "pct": 0.61 }
+      ],
+      "projection": {
+        "source": "Qc125",
+        "date": "3 septembre 2026",
+        "rating": "PQ probable",
+        "bars": [
+          { "party": "pq", "pct": 35, "range": "±7" },
+          { "party": "caq", "pct": 27, "range": "±6" },
+          { "party": "plq", "pct": 20, "range": "±5" },
+          { "party": "pcq", "pct": 10, "range": "±4" },
+          { "party": "qs", "pct": 8, "range": "±3" }
+        ],
+        "odds": [
+          { "party": "pq", "pct": 94 },
+          { "party": "caq", "pct": 6 }
+        ],
+        "note": "Un renversement spectaculaire de la marge d'environ 29 points obtenue par la CAQ en 2022."
+      },
+      "candidates": [
+        {
+          "name": "Ian Lafrenière",
+          "party": "caq",
+          "role": "Député sortant, vice-premier ministre",
+          "summary": "Né en 1972 à Granby. Plus de 28 ans de service policier, dont 26 ans au SPVM où il a été porte-parole pendant près de vingt ans; aussi policier militaire et pompier.",
+          "points": [
+            "Député de Vachon depuis 2018, il sollicite un troisième mandat",
+            "Ministre responsable des Relations avec les Premières Nations et les Inuit depuis 2020",
+            "Ministre de la Sécurité publique depuis septembre 2025, vice-premier ministre depuis avril 2026"
+          ],
+          "link": { "label": "Fiche du parti", "url": "https://coalitionavenirquebec.org/fr/blog/equipe/ian-lafreniere/" }
+        },
+        {
+          "name": "Stephan Fogaing",
+          "party": "pq",
+          "role": "Première candidature provinciale",
+          "summary": "Baccalauréat et maîtrise en génie aérospatial de Polytechnique Montréal, administrateur de sociétés certifié (ASC).",
+          "points": [
+            "Près de dix ans au gouvernement du Québec comme expert en développement économique d'industries stratégiques",
+            "Deux ans comme conseiller stratégique au Centre de recherche en aérospatiale du CNRC",
+            "Co-porte-parole du PQ en matière de diversité et citoyenneté (2023-2026)"
+          ],
+          "link": { "label": "Candidats du PQ", "url": "https://pq.org/nos-candidats/" }
+        },
+        {
+          "name": "Affine Lwalalika",
+          "party": "plq",
+          "role": "Conseillère municipale de Longueuil",
+          "summary": "Diplômée en droit de l'Université de Montréal. A travaillé en finance et occupé des postes en politique à Longueuil, Brossard et au ministère de la Justice.",
+          "points": [
+            "Conseillère municipale de Longueuil (district 16, Parc-de-la-Cité) depuis 2021, réélue par acclamation en 2025",
+            "Présidente du conseil de ville; siège comme indépendante au municipal pendant la campagne",
+            "Réside dans la circonscription, mère de deux enfants"
+          ],
+          "link": { "label": "LinkedIn", "url": "https://www.linkedin.com/in/affine-lwalalika-297b38107/" }
+        },
+        {
+          "name": "Magdouda Oudjit",
+          "party": "qs",
+          "role": "Candidate",
+          "summary": "Candidate présentée à l'investiture de Québec solidaire dans Vachon en mai 2026.",
+          "points": [],
+          "note": "Peu d'information biographique publique disponible au moment de la rédaction."
+        },
+        {
+          "name": "Martine Boucher",
+          "party": "pcq",
+          "role": "Candidate, déjà en lice en 2022",
+          "summary": "Éducatrice en petite enfance depuis environ 25 ans, résidente de Saint-Hubert, mère de trois enfants.",
+          "points": [
+            "Candidate du PCQ dans Vachon en 2022, où elle a obtenu 8,90 % des voix",
+            "Priorités : accès aux soins de santé, allègement fiscal et réglementaire des familles, accès à la propriété"
+          ],
+          "note": "Âge et formation académique non disponibles publiquement. À ne pas confondre avec une candidate homonyme du Parti conservateur du Canada dans Longueuil—Saint-Hubert en 2025 : rien ne confirme qu'il s'agisse de la même personne."
+        }
+      ]
+    },
+    {
+      "id": "pierre-laporte",
+      "name": "Pierre-Laporte",
+      "region": "Saint-Lambert, Longueuil et Brossard, Montérégie",
+      "lede": "L'ancienne circonscription de Laporte, renommée en 2025, est un château fort libéral que la CAQ avait ravi en 2022. La députée sortante ne se représente pas.",
+      "profile": [
+        { "label": "Territoire", "value": "Toute la ville de Saint-Lambert, plus des portions de Longueuil et de Brossard" },
+        { "label": "Langue au foyer (2021)", "value": "Français 68,6 %, anglais 17,9 %, espagnol 3,7 %" },
+        { "label": "Enjeux locaux", "value": "Logement, transport collectif, infrastructures vieillissantes" },
+        { "label": "Historique", "value": "Créée en 1972. PLQ de façon quasi continue depuis 1981 (PQ de 1976 à 1981), dont Nicole Ménard de 2007 à 2022" }
+      ],
+      "incumbent": "Isabelle Poulet, élue sous la bannière de la CAQ en 2022, expulsée du caucus en novembre 2025 et redevenue indépendante. Elle ne se représente pas.",
+      "renameNote": "La circonscription de Laporte a été renommée Pierre-Laporte par le projet de loi 795 de la députée Isabelle Poulet, sanctionné en juin 2025 et applicable à partir de l'élection de 2026. Ce processus inhabituel — un renommage par projet de loi d'une députée plutôt que par la Commission de la représentation électorale — a préoccupé les autorités électorales. La circonscription existe donc toujours, sous un nouveau nom.",
+      "turnout": "64,04 %",
+      "results2022": [
+        { "party": "caq", "candidate": "Isabelle Poulet", "votes": "10 361", "pct": 30.76, "elected": true },
+        { "party": "plq", "candidate": "Mathieu Gratton", "votes": "9 707", "pct": 28.82 },
+        { "party": "qs", "candidate": "Claude Lefrançois", "votes": "5 968", "pct": 17.72 },
+        { "party": "pq", "candidate": "Soledad Orihuela-Bouchard", "votes": "4 108", "pct": 12.19 },
+        { "party": "pcq", "candidate": "Evelyne Latreille", "votes": "2 488", "pct": 7.39 },
+        { "party": "autre", "candidate": "Jean-Philippe Charest (Parti vert)", "votes": "497", "pct": 1.48 },
+        { "party": "autre", "candidate": "Herby Fremont (Parti canadien)", "votes": "445", "pct": 1.32 },
+        { "party": "autre", "candidate": "Ian Parent (Climat Québec)", "votes": "113", "pct": 0.34 }
+      ],
+      "projection": {
+        "source": "Qc125",
+        "date": "1er septembre 2026",
+        "rating": "PLQ solide",
+        "bars": [
+          { "party": "plq", "pct": 39, "range": "±7" },
+          { "party": "caq", "pct": 24, "range": "±6" },
+          { "party": "pq", "pct": 21, "range": "±5" },
+          { "party": "qs", "pct": 8, "range": "±3" },
+          { "party": "pcq", "pct": 7, "range": "±3" }
+        ],
+        "odds": [
+          { "party": "plq", "pct": 99 }
+        ],
+        "note": "Un retour probable au bercail libéral. La variable clé reste la division du vote fédéraliste entre le PLQ et la CAQ."
+      },
+      "candidates": [
+        {
+          "name": "David Bowles",
+          "party": "plq",
+          "role": "Directeur général du Collège Charles-Lemoyne",
+          "summary": "Leader du milieu de l'éducation depuis plus de 25 ans. Dirige un collège d'environ 3 200 élèves réparti entre les campus Longueuil–Saint-Lambert et Sainte-Catherine.",
+          "points": [
+            "Ancien président de la Fédération des établissements d'enseignement privés pendant huit ans; a débuté comme enseignant au secondaire",
+            "Conseiller municipal à Saint-Lambert (district 7) de 2013 à 2021",
+            "Maîtrise en administration publique (ENAP), diplôme de 2ᵉ cycle en leadership de l'éducation (McGill), baccalauréat en enseignement, formations à Harvard et en Finlande",
+            "Ordre de l'excellence en éducation du Québec (2021); a contribué à fonder le Centre de pédiatrie sociale en communauté de Longueuil",
+            "Père de quatre enfants, auteur de l'essai « Réflexions d'un directeur d'école »"
+          ],
+          "link": { "label": "Fiche du parti", "url": "https://plq.org/en/equipe/david-bowles/" }
+        },
+        {
+          "name": "Mélanie Martin",
+          "party": "caq",
+          "role": "Présidente de la Commission politique de la CAQ",
+          "summary": "Baccalauréat en enseignement et DESS en administration scolaire. A enseigné la musique pendant vingt ans avant de devenir gestionnaire scolaire.",
+          "points": [
+            "Directrice adjointe au Centre de services scolaire de Saint-Hyacinthe",
+            "A dirigé des cadets au sein des Forces armées canadiennes",
+            "Présidente de la Commission politique de la CAQ depuis 2025; bénévole en politique depuis quatre ans"
+          ],
+          "link": { "label": "Fiche du parti", "url": "https://coalitionavenirquebec.org/fr/blog/equipe/melanie-martin/" }
+        },
+        {
+          "name": "Anne-Sophie Maguire Armand",
+          "party": "pq",
+          "role": "Directrice d'école et comédienne",
+          "summary": "Vingt ans d'expérience comme directrice d'écoles publiques, dont l'école Louis-Hippolyte-Lafontaine depuis 2016. Enseignante de français langue seconde de 1998 à 2006.",
+          "points": [
+            "Diplômée de l'UQAM et de l'Université de Montréal",
+            "Également comédienne au cinéma, au théâtre et à la télévision",
+            "Née dans la circonscription",
+            "Priorités : système d'éducation public, soutien aux artistes par un « filet social adapté », langue française, indépendance"
+          ],
+          "link": { "label": "Fiche du parti", "url": "https://pq.org/nos-candidats/anne-sophie-maguire-armand/" }
+        },
+        {
+          "name": "Claude Lefrançois",
+          "party": "qs",
+          "role": "Médecin vétérinaire, candidate en 2018 et 2022",
+          "summary": "Médecin vétérinaire en pratique depuis 1980, native de Joliette, formée à la Faculté de médecine vétérinaire de Saint-Hyacinthe (Université de Montréal).",
+          "points": [
+            "Fondatrice de « Vétérinaire à vélo », services vétérinaires à domicile à Saint-Lambert, Longueuil et Brossard",
+            "Résidente de Saint-Lambert depuis environ 36 ans, membre de QS depuis une dizaine d'années, impliquée avec Amnistie internationale depuis le début des années 1980",
+            "Ancienne présidente du CA de la prématernelle La Soleillerie et du conseil d'établissement de l'école des Saints-Anges",
+            "Priorités : environnement, logement, transport en commun (réduction de 40 % des tarifs), aînés"
+          ],
+          "link": { "label": "Fiche 2022", "url": "https://2022.quebecsolidaire.net/equipe/laporte" }
+        },
+        {
+          "name": "Mi Jie",
+          "party": "pcq",
+          "role": "Candidate",
+          "summary": "Diplômée en sciences politiques, avec une expérience en administration et en gestion de PME. Établie sur la Rive-Sud.",
+          "points": [
+            "Priorités : accès à la propriété, pouvoir d'achat, réduction de la bureaucratie, accès aux soins"
+          ],
+          "note": "Âge et détails du parcours non disponibles publiquement.",
+          "link": { "label": "Fiche du parti", "url": "https://conservateur.quebec/candidat/laporte-2/" }
+        }
+      ]
+    }
+  ],
+  "voterSteps": [
+    "Vérifier son inscription et sa circonscription sur electionsquebec.qc.ca, et confirmer selon la carte 2026 si votre adresse relève de Vachon ou de Pierre-Laporte : les limites traversent Saint-Hubert, Saint-Lambert, Longueuil et Brossard.",
+    "Consulter les plateformes complètes déjà publiées (PCQ et QS) et suivre les annonces restantes de la CAQ, du PLQ et du PQ — notamment les 8 G$ non ventilés par la CAQ et le cadre financier détaillé du PCQ attendu à l'automne.",
+    "Comparer avec des outils neutres : l'outil interactif du Devoir, les projections de Qc125, les boussoles électorales.",
+    "Suivre le débat des chefs du 23 septembre et, au besoin, voter par anticipation les 27 et 28 septembre.",
+    "Garder en tête les repères locaux : dans Vachon, la lutte CAQ-PQ est la plus incertaine (marge projetée d'environ 8 points); dans Pierre-Laporte, le PLQ est fortement favori, mais la division du vote fédéraliste reste la variable clé."
+  ],
+  "caveats": [
+    "Engagements non chiffrés ou contestés : la CAQ n'avait pas ventilé 8 G$ de ses 9,7 G$ d'engagements et le PCQ n'avait pas publié le cadre financier détaillant ses baisses d'impôt et ses coupes de 47 G$. Ces chiffres peuvent évoluer.",
+    "Résultats de 2022 : les totaux présentés ici sont les résultats officiels finaux d'Élections Québec. Certains médias locaux avaient rapporté des chiffres partiels de soirée légèrement différents — par exemple Poulet 9 758 et Gratton 9 193 dans Laporte.",
+    "Candidats : la période de mise en candidature se terminant le 17 septembre 2026, la liste peut encore changer. Les candidats indépendants et ceux de petits partis ne sont pas recensés ici.",
+    "Profils incomplets : faute de sources publiques détaillées, les fiches de Magdouda Oudjit (QS, Vachon), Martine Boucher (PCQ, Vachon) et Mi Jie (PCQ, Pierre-Laporte) restent partielles.",
+    "Sondages et projections reflètent l'état de la course au début de septembre 2026, avant le débat des chefs, et ne préjugent pas du résultat du 5 octobre. Avec 42 % des électeurs décidés qui se disent susceptibles de changer d'avis, la prudence s'impose."
+  ],
+  "sources": [
+    { "label": "Élections Québec", "url": "https://www.electionsquebec.qc.ca/", "note": "Inscription, carte électorale, résultats officiels" },
+    { "label": "Projections Qc125", "url": "https://qc125.com/", "note": "Projections par circonscription" },
+    { "label": "Comparateur de promesses — Le Devoir", "url": "https://www.ledevoir.com/interactif/2026-08-28/promesses-elections-quebec/index.html", "note": "Outil interactif" },
+    { "label": "Coalition Avenir Québec", "url": "https://coalitionavenirquebec.org/", "note": "Site officiel" },
+    { "label": "Parti libéral du Québec", "url": "https://plq.org/", "note": "Site officiel" },
+    { "label": "Parti Québécois", "url": "https://pq.org/", "note": "Site officiel" },
+    { "label": "Québec solidaire", "url": "https://quebecsolidaire.net/", "note": "Site officiel" },
+    { "label": "Parti conservateur du Québec", "url": "https://conservateur.quebec/", "note": "Site officiel" }
+  ]
+}

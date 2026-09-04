@@ -1,0 +1,301 @@
+---
+layout: page
+title: Élection québécoise du 5 octobre 2026
+description: Repère de campagne — programmes des cinq principaux partis comparés par thème, sondages, et les candidats des circonscriptions de Vachon et de Pierre-Laporte, sur la Rive-Sud.
+image: /assets/og/fr-elections-_index.png
+permalink: /elections-quebec-2026/
+lang: fr
+noTranslation: true
+eleventyExcludeFromCollections: true
+---
+
+{# Party chip: colour swatch + short name, resolved from src/_data/elections2026.json.
+   `autre` is the catch-all for small parties in the 2022 result tables. #}
+{% macro chip(partyId, parties) %}
+  {%- set p = parties | byId(partyId) -%}
+  {%- if p -%}
+    <span class="elec-chip" style="--party: {{ p.color }}"><span class="elec-chip-dot" aria-hidden="true"></span>{{ p.short }}</span>
+  {%- else -%}
+    <span class="elec-chip elec-chip--other" style="--party: #8A8580"><span class="elec-chip-dot" aria-hidden="true"></span>Autre</span>
+  {%- endif -%}
+{% endmacro %}
+
+{% macro bar(partyId, parties, value, max, label) %}
+  {%- set p = parties | byId(partyId) -%}
+  {%- set color = p.color if p else "#8A8580" -%}
+  <span class="elec-bar-track">
+    <span class="elec-bar-fill" style="--party: {{ color }}; width: {{ (value / max * 100) | round(1) }}%"></span>
+  </span>
+  <span class="elec-bar-value">{{ label }}</span>
+{% endmacro %}
+
+{% set parties = elections2026.parties %}
+
+<div class="section-intro elec-intro">
+  <p>Le 5 octobre 2026, le Québec vote. Cette page rassemble ce qu'il faut savoir pour comparer les programmes sans avoir à lire cinq plateformes en entier — et, parce que j'habite Longueuil, un regard plus détaillé sur les deux circonscriptions voisines de <a href="#vachon">Vachon</a> et de <a href="#pierre-laporte">Pierre-Laporte</a>.</p>
+  <p>{{ elections2026.meta.note }} Les données présentées reflètent l'état de la campagne au <strong>{{ elections2026.meta.lastUpdated | dateFormat("long", "fr") }}</strong>.</p>
+</div>
+
+<nav class="elec-nav" aria-label="Sections de la page">
+  <ul>
+    <li><a href="#essentiel">L'essentiel</a></li>
+    <li><a href="#partis">Les partis</a></li>
+    <li><a href="#sondages">Sondages</a></li>
+    <li><a href="#comparateur">Comparateur</a></li>
+    <li><a href="#verification">Vérification</a></li>
+    <li><a href="#vachon">Vachon</a></li>
+    <li><a href="#pierre-laporte">Pierre-Laporte</a></li>
+    <li><a href="#demarches">Démarches</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
+
+<section class="elec-section" id="essentiel" aria-labelledby="essentiel-h">
+  <h2 id="essentiel-h" class="elec-h2">L'essentiel</h2>
+  <p class="elec-section-desc">L'élection générale est fixée par la loi sur les élections à date fixe. Les brefs ont été délivrés le 27 août 2026 à la demande de la première ministre Christine Fréchette, pour quelque {{ elections2026.meta.voters }} d'électrices et d'électeurs inscrits.</p>
+
+  <dl class="elec-facts">
+    {%- for fact in elections2026.keyFacts %}
+    <div class="elec-fact">
+      <dt>{{ fact.label }}</dt>
+      <dd class="elec-fact-value">{{ fact.value }}</dd>
+      <dd class="elec-fact-detail">{{ fact.detail }}</dd>
+    </div>
+    {%- endfor %}
+  </dl>
+</section>
+
+<section class="elec-section" id="partis" aria-labelledby="partis-h">
+  <h2 id="partis-h" class="elec-h2">Les cinq principaux partis</h2>
+  <p class="elec-section-desc">Deux changements de chef depuis 2022 : François Legault a annoncé son départ le 14 janvier 2026, Pablo Rodriguez a démissionné en décembre 2025. Aucun nouveau parti n'a percé comme force significative en 2026.</p>
+
+  <div class="elec-parties">
+    {%- for p in parties %}
+    <article class="elec-party" style="--party: {{ p.color }}; --party-ink: {{ p.chipColor }}">
+      <header class="elec-party-head">
+        <span class="elec-party-short">{{ p.short }}</span>
+        <h3 class="elec-party-name">{{ p.name }}</h3>
+      </header>
+      <p class="elec-party-leader"><span class="elec-label">Direction</span> {{ p.leader }}</p>
+      <p class="elec-party-note">{{ p.leaderNote }}</p>
+      <p class="elec-badge-line">
+        <span class="elec-badge elec-badge--{{ p.platformState }}">{{ "Plateforme complète" if p.platformState == "complet" else "Plateforme partielle" }}</span>
+      </p>
+      <p class="elec-party-platform">{{ p.platform }}</p>
+      <p class="elec-party-links">
+        <a href="{{ p.url }}" target="_blank" rel="noopener noreferrer">Site officiel</a>
+        {%- if p.candidatesUrl %} · <a href="{{ p.candidatesUrl }}" target="_blank" rel="noopener noreferrer">Candidats</a>{% endif %}
+      </p>
+    </article>
+    {%- endfor %}
+  </div>
+</section>
+
+<section class="elec-section" id="sondages" aria-labelledby="sondages-h">
+  <h2 id="sondages-h" class="elec-h2">Sondages de fin août</h2>
+  <p class="elec-section-desc">Le PQ mène, mais la course reste ouverte. Les deux maisons de sondage les plus récentes convergent à un point près.</p>
+
+  <div class="elec-polls">
+    {%- for poll in elections2026.polls %}
+    {%- set maxv = poll.results | maxOf("value") %}
+    <figure class="elec-poll">
+      <figcaption class="elec-poll-head">
+        <span class="elec-poll-firm">{{ poll.firm }}</span>
+        <span class="elec-poll-meta">{{ poll.field }} · {{ poll.sample }} · {{ poll.margin }}</span>
+      </figcaption>
+      <ul class="elec-bars">
+        {%- for r in poll.results %}
+        <li class="elec-bar-row">
+          <span class="elec-bar-label">{{ chip(r.party, parties) }}</span>
+          {{ bar(r.party, parties, r.value, maxv, r.value ~ " %") }}
+          {%- if r.delta %}
+          <span class="elec-bar-delta {{ 'is-up' if r.delta > 0 else 'is-down' }}">{{ "+" if r.delta > 0 }}{{ r.delta }}</span>
+          {%- endif %}
+        </li>
+        {%- endfor %}
+      </ul>
+      {%- if poll.deltaNote %}
+      <p class="elec-poll-note">{{ poll.deltaNote }}</p>
+      {%- endif %}
+    </figure>
+    {%- endfor %}
+  </div>
+
+  <p class="elec-callout elec-callout--muted"><strong>Volatilité.</strong> {{ elections2026.volatility }}</p>
+</section>
+
+<section class="elec-section" id="comparateur" aria-labelledby="comparateur-h">
+  <h2 id="comparateur-h" class="elec-h2">Comparateur par thème</h2>
+  <p class="elec-section-desc">Neuf axes, cinq partis. Les engagements sont rapportés tels qu'annoncés par les partis; les chiffres non ventilés sont signalés dans la section <a href="#verification">Vérification</a>.</p>
+
+  <ul class="elec-theme-nav">
+    {%- for theme in elections2026.themes %}
+    <li><a href="#theme-{{ theme.id }}">{{ theme.title }}</a></li>
+    {%- endfor %}
+  </ul>
+
+  {%- for theme in elections2026.themes %}
+  <section class="elec-theme" id="theme-{{ theme.id }}">
+    <h3 class="elec-theme-title">{{ theme.title }}</h3>
+    <p class="elec-theme-intro">{{ theme.intro }}</p>
+    <div class="elec-positions">
+      {%- for pos in theme.positions %}
+      {%- set p = parties | byId(pos.party) %}
+      <div class="elec-position" style="--party: {{ p.color }}; --party-ink: {{ p.chipColor }}">
+        <h4 class="elec-position-party">
+          <span class="elec-position-short">{{ p.short }}</span>
+          <span class="visually-hidden">{{ p.name }}</span>
+        </h4>
+        <p class="elec-position-text">{{ pos.text }}</p>
+      </div>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endfor %}
+</section>
+
+<section class="elec-section" id="verification" aria-labelledby="verification-h">
+  <h2 id="verification-h" class="elec-h2">Ce qui est contesté</h2>
+  <p class="elec-section-desc">Deux cadres financiers ont fait l'objet de contestations publiques documentées pendant la campagne.</p>
+
+  <div class="elec-checks">
+    {%- for check in elections2026.factChecks %}
+    {%- set p = parties | byId(check.target) %}
+    <article class="elec-check" style="--party: {{ p.color }}">
+      <h3 class="elec-check-title">{{ check.title }}</h3>
+      <p>{{ check.text }}</p>
+    </article>
+    {%- endfor %}
+  </div>
+</section>
+
+{%- for riding in elections2026.ridings %}
+<section class="elec-section elec-riding" id="{{ riding.id }}" aria-labelledby="{{ riding.id }}-h">
+  <header class="elec-riding-head">
+    <p class="elec-kicker">Circonscription · {{ riding.region }}</p>
+    <h2 id="{{ riding.id }}-h" class="elec-h2">{{ riding.name }}</h2>
+    <p class="elec-riding-lede">{{ riding.lede }}</p>
+  </header>
+
+  {%- if riding.renameNote %}
+  <p class="elec-callout elec-callout--muted"><strong>Changement de nom.</strong> {{ riding.renameNote }}</p>
+  {%- endif %}
+
+  <dl class="elec-profile">
+    {%- for row in riding.profile %}
+    <div class="elec-profile-row">
+      <dt>{{ row.label }}</dt>
+      <dd>{{ row.value }}</dd>
+    </div>
+    {%- endfor %}
+    <div class="elec-profile-row">
+      <dt>Siège sortant</dt>
+      <dd>{{ riding.incumbent }}</dd>
+    </div>
+  </dl>
+
+  <div class="elec-results-grid">
+    <figure class="elec-result-block">
+      <figcaption class="elec-result-head">
+        <h3>Résultats de 2022</h3>
+        <p>Résultats officiels d'Élections Québec · participation {{ riding.turnout }}</p>
+      </figcaption>
+      {%- set max22 = riding.results2022 | maxOf("pct") %}
+      <ul class="elec-bars">
+        {%- for r in riding.results2022 %}
+        <li class="elec-bar-row elec-bar-row--named">
+          <span class="elec-bar-label">
+            {{ chip(r.party, parties) }}
+            <span class="elec-bar-name">{{ r.candidate }}{% if r.elected %} <span class="elec-elected" title="Élu en 2022">élu</span>{% endif %}</span>
+          </span>
+          {{ bar(r.party, parties, r.pct, max22, (r.pct | pctFr) ~ " %") }}
+          <span class="elec-bar-votes">{{ r.votes }}</span>
+        </li>
+        {%- endfor %}
+      </ul>
+    </figure>
+
+    <figure class="elec-result-block">
+      <figcaption class="elec-result-head">
+        <h3>Projection {{ riding.projection.source }}</h3>
+        <p>Au {{ riding.projection.date }} · classé « {{ riding.projection.rating }} »</p>
+      </figcaption>
+      {%- set maxProj = riding.projection.bars | maxOf("pct") %}
+      <ul class="elec-bars">
+        {%- for r in riding.projection.bars %}
+        <li class="elec-bar-row">
+          <span class="elec-bar-label">{{ chip(r.party, parties) }}</span>
+          {{ bar(r.party, parties, r.pct, maxProj, r.pct ~ " %") }}
+          <span class="elec-bar-votes">{{ r.range }}</span>
+        </li>
+        {%- endfor %}
+      </ul>
+      <p class="elec-odds">
+        <span class="elec-label">Probabilité de victoire</span>
+        {%- for o in riding.projection.odds %}
+        {%- set p = parties | byId(o.party) %}
+        <span class="elec-odd" style="--party: {{ p.color }}">{{ p.short }} {{ o.pct }}{{ " %" if o.pct < 99 else " % et plus" }}</span>
+        {%- endfor %}
+      </p>
+      <p class="elec-result-note">{{ riding.projection.note }}</p>
+    </figure>
+  </div>
+
+  <h3 class="elec-h3">Candidats en 2026</h3>
+  <div class="elec-candidates">
+    {%- for c in riding.candidates %}
+    {%- set p = parties | byId(c.party) %}
+    <article class="elec-candidate" style="--party: {{ p.color }}">
+      <header class="elec-candidate-head">
+        <h4 class="elec-candidate-name">{{ c.name }}</h4>
+        {{ chip(c.party, parties) }}
+      </header>
+      <p class="elec-candidate-role">{{ c.role }}</p>
+      <p class="elec-candidate-summary">{{ c.summary }}</p>
+      {%- if c.points.length %}
+      <ul class="elec-candidate-points">
+        {%- for point in c.points %}
+        <li>{{ point }}</li>
+        {%- endfor %}
+      </ul>
+      {%- endif %}
+      {%- if c.note %}
+      <p class="elec-candidate-note">{{ c.note }}</p>
+      {%- endif %}
+      {%- if c.link %}
+      <p class="elec-candidate-link"><a href="{{ c.link.url }}" target="_blank" rel="noopener noreferrer">{{ c.link.label }}</a></p>
+      {%- endif %}
+    </article>
+    {%- endfor %}
+  </div>
+</section>
+{%- endfor %}
+
+<section class="elec-section" id="demarches" aria-labelledby="demarches-h">
+  <h2 id="demarches-h" class="elec-h2">Démarches pour l'électeur</h2>
+  <ol class="elec-steps">
+    {%- for step in elections2026.voterSteps %}
+    <li>{{ step }}</li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="elec-section" id="sources" aria-labelledby="sources-h">
+  <h2 id="sources-h" class="elec-h2">Mises en garde et sources</h2>
+
+  <ul class="elec-caveats">
+    {%- for caveat in elections2026.caveats %}
+    <li>{{ caveat }}</li>
+    {%- endfor %}
+  </ul>
+
+  <h3 class="elec-h3">Aller aux sources</h3>
+  <ul class="elec-sources">
+    {%- for source in elections2026.sources %}
+    <li>
+      <a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>
+      <span class="elec-source-note">{{ source.note }}</span>
+    </li>
+    {%- endfor %}
+  </ul>
+</section>

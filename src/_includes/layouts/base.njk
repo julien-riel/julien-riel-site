@@ -33,8 +33,9 @@
   <link rel="canonical" href="{{ metadata.url }}{{ page.url }}">
 
   {# hreflang alternates — tells Google which URL to serve per locale.
-     Skipped for pages without a translated counterpart (tags are shared). #}
-  {% if "/tags/" not in page.url %}
+     Skipped for pages without a translated counterpart (tags are shared, and
+     pages can opt out with `noTranslation` in their front matter). #}
+  {% if "/tags/" not in page.url and not noTranslation %}
     {% if currentLang == "en" %}
       {% set frUrl = page.url | replace("/en/", "/") | replace("/97-things/", "/97-choses/") | replace("/glossary/", "/glossaire/") %}
       {% set enUrl = page.url %}

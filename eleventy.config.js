@@ -358,6 +358,28 @@ export default function(eleventyConfig) {
     return terms.filter((term) => term.category === category);
   });
 
+  // Filter: find an object in a list by its `id` — used by the election page to
+  // resolve a party reference ("pq") to its name and colour.
+  eleventyConfig.addFilter("byId", (list, id) => {
+    if (!list || !id) return undefined;
+    return list.find((item) => item.id === id);
+  });
+
+  // Filter: French percentage — fixed decimals and a decimal comma, so 8.9
+  // prints as "8,90" rather than losing the trailing zero JSON dropped.
+  eleventyConfig.addFilter("pctFr", (value, decimals = 2) => {
+    const n = Number(value);
+    if (Number.isNaN(n)) return "";
+    return n.toFixed(decimals).replace(".", ",");
+  });
+
+  // Filter: largest numeric value of `key` across a list, so bar charts can be
+  // scaled to their own leader rather than to an arbitrary 100 %.
+  eleventyConfig.addFilter("maxOf", (list, key) => {
+    if (!list || !key) return 0;
+    return list.reduce((max, item) => Math.max(max, Number(item[key]) || 0), 0);
+  });
+
   // Filter: strip HTML tags from content
   eleventyConfig.addFilter("striptags", (content) => {
     if (!content) return "";
