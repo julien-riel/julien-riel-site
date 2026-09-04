@@ -46,5 +46,17 @@
     },
     "url": "/projets/fourmiliere/",
     "emoji": "🐜"
+  },
+  {
+    "name": {
+      "fr": "Du cep à la bouteille",
+      "en": "From vine to bottle"
+    },
+    "description": {
+      "fr": "Une page interactive qui suit le vin de la plantation de la vigne jusqu’à la bouteille : cycle annuel du cep, choix de la date de vendange, simulateur de fermentation heure par heure (avec la cuve qui s’emballe si l’on coupe le froid), malolactique, élevage, bouchage et vieillissement. Rouge, blanc ou rosé : l’ordre des opérations change.",
+      "en": "An interactive walk from planting a vine to the finished bottle: the vine’s yearly cycle, picking the harvest date, an hour-by-hour fermentation simulator (watch the tank run away if you cut the cooling), malolactic, ageing, closures and bottle age. Red, white or rosé, each with its own order of operations. French only."
+    },
+    "url": "/projets/du-cep-a-la-bouteille/",
+    "emoji": "🍇"
   }
 ]

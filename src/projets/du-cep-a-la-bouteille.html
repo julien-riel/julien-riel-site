@@ -1,0 +1,540 @@
+---
+permalink: /projets/du-cep-a-la-bouteille/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Du cep à la bouteille — comment on fabrique le vin</title>
+<meta name="description" content="Une page interactive qui suit le vin de la plantation de la vigne jusqu'à la bouteille : cycle annuel du cep, maturité du raisin, vendanges, fermentation alcoolique simulée, fermentation malolactique, élevage, mise en bouteille et vieillissement. Rouge, blanc ou rosé.">
+<meta name="theme-color" content="#160f11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%87%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'DM Serif Display';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/dm-serif-display-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/outfit-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/outfit-600.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+  }
+
+  :root {
+    --fond: #160f11;
+    --panneau: #1f1518;
+    --panneau-2: #2a1d21;
+    --bord: #3b2a30;
+    --bord-clair: #55414a;
+    --texte: #f3ebe4;
+    --sourdine: #a89a95;
+    --accent: #d4577a;
+    --accent-sombre: #9b2f4c;
+    --accent-doux: #f0a3b8;
+    --or: #d9b25f;
+    --vert: #8fbf6a;
+    --rouge: #e0705d;
+    --bleu: #86b7d9;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
+  html[data-style="blanc"] { --accent: #d9b25f; --accent-sombre: #9c7a2c; --accent-doux: #f1dca0; }
+  html[data-style="rose"]  { --accent: #f08aa0; --accent-sombre: #b8506b; --accent-doux: #ffc4d1; }
+
+  * { box-sizing: border-box; margin: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font: 400 15px/1.55 var(--ui);
+    color: var(--texte);
+    background: var(--fond);
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* ---------- Bandeau ---------- */
+
+  .bandeau {
+    display: flex;
+    align-items: center;
+    gap: 10px 20px;
+    padding: 9px 16px 10px;
+    background: linear-gradient(180deg, #24181c, #1a1114);
+    border-bottom: 1px solid #0a0607;
+    box-shadow: 0 1px 0 var(--bord) inset;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .retour {
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12.5px;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  .retour:hover { color: var(--accent); }
+  .bandeau h1 {
+    font: 400 21px/1 var(--serif);
+    letter-spacing: .01em;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .bandeau h1 .etiquette {
+    font: 500 11px/1 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 4px 7px 3px;
+    border: 1px solid var(--accent-sombre);
+    border-radius: 3px;
+    transition: color .3s, border-color .3s;
+  }
+  .cmdes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+  .cmdes .legende-style {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .segment { display: inline-flex; border: 1px solid var(--bord-clair); border-radius: 6px; overflow: hidden; }
+  .segment button {
+    font: 500 13px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 0;
+    border-right: 1px solid var(--bord-clair);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .segment button:last-child { border-right: 0; }
+  .segment button:hover { color: var(--accent-doux); }
+  .segment button[aria-pressed="true"] { background: var(--accent); color: #1c0a10; font-weight: 600; }
+  select, .bouton, input[type="number"] {
+    font: 500 13px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 1px solid var(--bord-clair);
+    border-radius: 5px;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  input[type="number"] { cursor: text; width: 84px; font-family: var(--mono); }
+  select:hover, .bouton:hover { border-color: var(--accent); }
+  select:focus-visible, .bouton:focus-visible, a:focus-visible, input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .bouton:active { transform: translateY(1px); }
+  .bouton.principal { background: var(--accent); color: #1c0a10; border-color: var(--accent); font-weight: 600; }
+  .bouton.principal:hover { filter: brightness(1.08); }
+  .bouton:disabled { opacity: .45; cursor: default; }
+
+  /* ---------- Parcours (étapes) ---------- */
+
+  .parcours {
+    position: sticky;
+    top: var(--bandeau-h, 52px);
+    z-index: 4;
+    background: rgba(22, 15, 17, .94);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--bord);
+  }
+  .parcours ol {
+    list-style: none;
+    padding: 0 16px;
+    margin: 0 auto;
+    max-width: 1080px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .parcours ol::-webkit-scrollbar { display: none; }
+  .parcours li { flex: 0 0 auto; }
+  .parcours a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 9px 9px;
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12.5px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .15s, border-color .15s;
+  }
+  .parcours a .n {
+    font: 600 10px/1 var(--mono);
+    color: var(--accent);
+    letter-spacing: .05em;
+  }
+  .parcours a:hover { color: var(--texte); }
+  .parcours a.actif { color: var(--texte); border-bottom-color: var(--accent); }
+
+  /* ---------- Page ---------- */
+
+  main { max-width: 1080px; margin: 0 auto; padding: 0 16px 80px; }
+
+  .ouverture {
+    padding: 44px 0 26px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr);
+    gap: 28px 40px;
+    align-items: end;
+  }
+  .ouverture h2 {
+    font: 400 clamp(32px, 5vw, 52px)/1.05 var(--serif);
+    letter-spacing: -.005em;
+    max-width: 16ch;
+  }
+  .ouverture h2 em { font-style: normal; color: var(--accent); transition: color .3s; }
+  .ouverture .chapeau { color: var(--sourdine); font-size: 16px; line-height: 1.6; margin-top: 16px; max-width: 58ch; }
+  .ouverture .resume {
+    background: var(--panneau);
+    border: 1px solid var(--bord);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+  }
+  .ouverture .resume h3 {
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .ouverture .resume dl { display: grid; grid-template-columns: 1fr auto; gap: 5px 14px; }
+  .ouverture .resume dt { color: var(--sourdine); }
+  .ouverture .resume dd { font: 500 13px/1.5 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ---------- Stades ---------- */
+
+  .stade {
+    padding: 40px 0 8px;
+    border-top: 1px solid var(--bord);
+    scroll-margin-top: calc(var(--bandeau-h, 52px) + 52px);
+  }
+  .stade-tete {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .stade-tete .num {
+    font: 500 12px/1 var(--mono);
+    color: var(--accent);
+    letter-spacing: .1em;
+    transition: color .3s;
+  }
+  .stade-tete h2 { font: 400 clamp(24px, 3.4vw, 32px)/1.15 var(--serif); }
+  .stade-tete .duree {
+    font: 500 11px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    padding: 5px 8px 4px;
+    border: 1px solid var(--bord-clair);
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .stade-corps {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 22px 36px;
+    align-items: start;
+  }
+  .stade-corps.large { grid-template-columns: minmax(0, 1fr); }
+  .stade .intro { font-size: 16px; line-height: 1.62; }
+  .stade .intro + .intro { margin-top: 10px; }
+  .reperes { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-direction: column; gap: 8px; }
+  .reperes li { font-size: 13.5px; line-height: 1.5; color: #dccfc9; padding-left: 12px; border-left: 2px solid var(--bord-clair); }
+  .reperes li b { color: var(--accent-doux); font-weight: 600; }
+  .texte b { color: var(--accent-doux); font-weight: 600; }
+
+  /* ---------- Ateliers ---------- */
+
+  .atelier {
+    background: var(--panneau);
+    border: 1px solid var(--bord);
+    border-radius: 10px;
+    padding: 14px 16px 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+  }
+  .atelier-tete {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .atelier-tete .marque {
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .atelier-tete h3 { font: 400 17px/1.2 var(--serif); }
+  .atelier canvas { display: block; width: 100%; height: auto; border-radius: 6px; background: #120c0e; }
+  .reglages { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 12px 0 4px; }
+  .reglages.une { grid-template-columns: 1fr; }
+  .reglage { display: flex; flex-direction: column; gap: 4px; }
+  .reglage > span, .reglage label span:first-child {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    display: flex;
+    justify-content: space-between;
+  }
+  .reglage output { font: 500 11px/1 var(--mono); color: var(--texte); text-transform: none; letter-spacing: 0; }
+  .reglage select { width: 100%; }
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    height: 24px;
+    cursor: pointer;
+    background: transparent;
+  }
+  .case { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+  .case input { accent-color: var(--accent); width: 16px; height: 16px; }
+  .boutons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .mesures { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; margin-top: 12px; }
+  .mesures dt { font-size: 12.5px; color: var(--sourdine); line-height: 1.55; }
+  .mesures dd { font: 500 12.5px/1.55 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .mesures dd.alerte { color: var(--rouge); }
+  .mesures dd.bon { color: var(--vert); }
+  .mesures dd.grand { font-size: 15px; font-weight: 600; }
+  .lecture {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--panneau-2);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .lecture b { color: var(--accent-doux); font-weight: 600; }
+  .lecture.alerte { border-left-color: var(--rouge); }
+  .lecture.bon { border-left-color: var(--vert); }
+  .jauges { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .jauge { display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; align-items: center; font-size: 12.5px; }
+  .jauge .piste { height: 7px; border-radius: 4px; background: #0f0a0b; overflow: hidden; }
+  .jauge .piste i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-sombre), var(--accent)); transition: width .3s; border-radius: 4px; }
+  .jauge .piste i.or { background: linear-gradient(90deg, #9c7a2c, var(--or)); }
+  .jauge .piste i.vert { background: linear-gradient(90deg, #4f7a3a, var(--vert)); }
+  .jauge .piste i.bleu { background: linear-gradient(90deg, #3f6f8f, var(--bleu)); }
+  .jauge .piste i.rougeb { background: linear-gradient(90deg, #8a3a2c, var(--rouge)); }
+  .jauge output { font: 500 11.5px/1 var(--mono); min-width: 48px; text-align: right; }
+  .echantillon {
+    width: 100%;
+    height: 54px;
+    border-radius: 6px;
+    border: 1px solid var(--bord-clair);
+    margin-top: 12px;
+    transition: background .4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 500 11px/1 var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .8);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+  }
+  .double { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .etat-ferm {
+    font: 500 12px/1.4 var(--mono);
+    color: var(--accent-doux);
+    letter-spacing: .02em;
+    margin-top: 10px;
+    min-height: 34px;
+  }
+  .etat-ferm.alerte { color: var(--rouge); }
+  .etat-ferm.bon { color: var(--vert); }
+  .phases { display: flex; gap: 4px; margin-top: 10px; }
+  .phases span {
+    flex: 1;
+    text-align: center;
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    padding: 6px 2px;
+    border-radius: 4px;
+    background: #120c0e;
+    border: 1px solid var(--bord);
+  }
+  .phases span.actif { color: #1c0a10; background: var(--accent); border-color: var(--accent); }
+
+  /* ---------- Fin ---------- */
+
+  .fin {
+    margin-top: 48px;
+    padding: 24px 0 0;
+    border-top: 1px solid var(--bord);
+    color: var(--sourdine);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .fin b { color: var(--texte); font-weight: 500; }
+  .fin a { color: var(--bleu); }
+
+  /* ---------- Aide ---------- */
+
+  #aide { border: 0; padding: 0; background: transparent; max-width: min(760px, 94vw); width: 100%; max-height: 92vh; }
+  #aide::backdrop { background: rgba(8, 4, 5, .75); backdrop-filter: blur(3px); }
+  .aide-corps {
+    background: var(--panneau);
+    border: 1px solid var(--bord-clair);
+    border-radius: 12px;
+    padding: 26px 30px 24px;
+    color: var(--texte);
+    max-height: 92vh;
+    overflow-y: auto;
+    line-height: 1.55;
+  }
+  .aide-corps h2 { font: 400 26px/1.1 var(--serif); margin-bottom: 6px; }
+  .aide-corps .sous { color: var(--sourdine); margin-bottom: 18px; }
+  .aide-corps h3 { font: 400 18px/1.2 var(--serif); color: var(--accent); margin: 22px 0 8px; }
+  .aide-corps p + p { margin-top: 8px; }
+  .aide-corps ul { padding-left: 20px; margin: 6px 0; }
+  .aide-corps li { margin: 5px 0; }
+  .aide-corps b { color: var(--accent-doux); font-weight: 600; }
+  .aide-corps small { color: var(--sourdine); }
+  .aide-corps form { margin-top: 20px; text-align: right; }
+
+  @media (max-width: 900px) {
+    .ouverture { grid-template-columns: 1fr; padding-top: 30px; }
+    .stade-corps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .bandeau { padding: 8px 12px; gap: 8px 12px; }
+    .bandeau h1 { font-size: 18px; }
+    .cmdes { margin-left: 0; width: 100%; }
+    .cmdes .legende-style { display: none; }
+    main { padding: 0 12px 60px; }
+    .reglages { grid-template-columns: 1fr; }
+    .double { grid-template-columns: 1fr; }
+    .jauge { grid-template-columns: 110px 1fr auto; }
+    .aide-corps { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <a class="retour" href="/projets/" title="Retour à mes projets">← julien-riel.com</a>
+  <h1><span class="etiquette" id="etiquetteStyle" data-testid="etiquette">Rouge</span> Du cep à la bouteille</h1>
+  <div class="cmdes">
+    <span class="legende-style">Je fais du</span>
+    <div class="segment" role="group" aria-label="Type de vin" id="choixStyle">
+      <button type="button" data-style="rouge" aria-pressed="true">Rouge</button>
+      <button type="button" data-style="blanc" aria-pressed="false">Blanc</button>
+      <button type="button" data-style="rose" aria-pressed="false">Rosé</button>
+    </div>
+    <button class="bouton" id="btnAide" title="Ce que cette page simplifie, et où aller plus loin (H)">? En savoir plus</button>
+  </div>
+</header>
+
+<nav class="parcours" aria-label="Étapes de la fabrication">
+  <ol id="etapes"></ol>
+</nav>
+
+<main>
+  <section class="ouverture">
+    <div>
+      <h2>Comment un cep de vigne devient <em id="titreStyle">un vin rouge</em></h2>
+      <p class="chapeau">De la plantation à la bouteille, il faut au moins quatre ans, une douzaine d'étapes et beaucoup de décisions. Cette page les suit une à une. Choisissez rouge, blanc ou rosé en haut de page : l'ordre des opérations change, et chaque atelier interactif s'ajuste. Rien à gagner, tout à comprendre.</p>
+    </div>
+    <aside class="resume" aria-label="Repères">
+      <h3>Repères</h3>
+      <dl>
+        <dt>Première vendange</dt><dd>3<sup>e</sup> année</dd>
+        <dt>Pleine production</dt><dd>5 à 7 ans</dd>
+        <dt>Floraison → vendange</dt><dd>≈ 100 jours</dd>
+        <dt>Raisin pour une bouteille</dt><dd>≈ 1,1 kg</dd>
+        <dt>Sucre → alcool</dt><dd>≈ 17 g/L pour 1 %</dd>
+        <dt>Vigne → première gorgée</dt><dd id="resumeDuree">4 à 6 ans</dd>
+      </dl>
+    </aside>
+  </section>
+
+  <div id="stades"></div>
+
+  <footer class="fin">
+    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Page construite en paire avec Claude. Le bouton « En savoir plus » liste les sources.</p>
+  </footer>
+</main>
+
+<dialog id="aide" aria-labelledby="aideTitre">
+  <div class="aide-corps" tabindex="-1" autofocus>
+    <h2 id="aideTitre">Ce que vous regardez</h2>
+    <p class="sous">Un parcours pédagogique, pas un manuel de vinification. Chaque étape a un atelier où l'on peut tourner un bouton et voir ce que ça change.</p>
+
+    <h3>Trois vins, trois ordres d'opérations</h3>
+    <p>La grande différence entre un <b>rouge</b> et un <b>blanc</b> n'est pas la couleur du raisin, c'est le moment du pressurage. Pour un rouge, le jus fermente <i>avec</i> les peaux (macération) et on presse à la fin : la couleur et les tanins sont dans les peaux. Pour un blanc, on presse <i>avant</i> de fermenter, et le jus seul fermente au frais. Un <b>rosé</b> est un vin de raisins noirs traité presque comme un blanc, après un contact de quelques heures avec les peaux. On peut donc faire un blanc avec des raisins noirs (les « blancs de noirs » de Champagne), mais jamais un rouge avec des raisins blancs.</p>
+
+    <h3>Le simulateur de fermentation</h3>
+    <p>Il suit cinq variables heure par heure : le sucre, l'alcool, la population de levures, la température et, pour les rouges, l'extraction de la couleur et des tanins. Les règles sont volontairement simples :</p>
+    <ul>
+      <li>Les levures se multiplient d'abord (phase de latence, 1 à 2 jours), puis consomment le sucre d'autant plus vite qu'il fait chaud, jusqu'à 30 °C environ ; au-delà de 35 à 37 °C, elles meurent.</li>
+      <li>Chaque gramme de sucre transformé dégage de la chaleur : environ <b>0,13 °C par g/L</b> dans une cuve isolée. Sur 220 g/L, cela ferait presque 30 °C d'échauffement. Sans refroidissement, une grande cuve s'emballe.</li>
+      <li>L'alcool finit par inhiber les levures : les souches indigènes s'arrêtent vers 14 à 15 %, les souches sélectionnées vers 16 %. Si le sucre n'est pas épuisé à ce moment, la fermentation est « arrêtée » et le vin garde des sucres résiduels.</li>
+      <li>Pour un rouge, la couleur (anthocyanes) s'extrait vite, dans les premiers jours ; les tanins, plus lentement, aidés par l'alcool. Remontages et pigeages accélèrent les deux.</li>
+    </ul>
+
+    <h3>Ce que la page ne montre pas</h3>
+    <ul>
+      <li>Les effervescents (seconde fermentation en bouteille), les vins doux, mutés, oxydatifs ou orange : ce sont d'autres parcours.</li>
+      <li>La nutrition des levures (azote assimilable), les bactéries d'altération, la microbiologie en général, réduite à un seul indicateur de risque.</li>
+      <li>La réglementation (appellations, rendements autorisés, doses maximales de SO<sub>2</sub>), qui varie selon les pays.</li>
+    </ul>
+
+    <h3>Commandes</h3>
+    <ul>
+      <li>Boutons <b>Rouge / Blanc / Rosé</b> en haut : changent le parcours et les réglages par défaut. Le choix est mémorisé dans votre navigateur.</li>
+      <li>La barre des étapes suit votre lecture ; un clic y saute à l'étape.</li>
+      <li>Dans le simulateur : <b>Lancer</b>, <b>Pause</b>, <b>Recommencer</b>, et la vitesse ×1 (un jour toutes les deux secondes) à ×20.</li>
+      <li><kbd>H</kbd> ouvre cette aide.</li>
+    </ul>
+
+    <h3>Pour aller plus loin</h3>
+    <p><small>P. Ribéreau-Gayon et al., <i>Traité d'œnologie</i> (Dunod) ; J. Robinson et J. Harding, <i>The Oxford Companion to Wine</i> ; A. Reynier, <i>Manuel de viticulture</i> (Lavoisier) ; Conseil des vins du Québec, guides de viticulture nordique ; les fiches techniques de l'IFV (Institut français de la vigne et du vin).</small></p>
+
+    <form method="dialog"><button class="bouton fermer">Fermer</button></form>
+  </div>
+</dialog>
+
+<script type="module" src="/assets/js/vin.js"></script>
+</body>
+</html>
