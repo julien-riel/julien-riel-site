@@ -34,5 +34,17 @@
     },
     "url": "/projets/simulateur-pelle-3d/",
     "emoji": "🕹️"
+  },
+  {
+    "name": {
+      "fr": "Fourmilière",
+      "en": "Ant colony"
+    },
+    "description": {
+      "fr": "Un simulateur, pas un jeu : une colonie de Lasius niger vue en coupe, avec sa reine, ses nourrices, ses fourrageuses, son couvain, ses pistes de phéromone et ses saisons. Cliquez sur une fourmi pour savoir qui elle est, ce qu’elle fait et pourquoi. Le but est d’apprendre comment vit une fourmilière.",
+      "en": "A simulator, not a game: a Lasius niger colony in cross-section, with its queen, nurses, foragers, brood, pheromone trails and seasons. Click on any ant to learn who she is, what she is doing and why. The point is to learn how an ant colony lives. French only."
+    },
+    "url": "/projets/fourmiliere/",
+    "emoji": "🐜"
   }
 ]

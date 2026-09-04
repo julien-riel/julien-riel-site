@@ -1,0 +1,511 @@
+---
+permalink: /projets/fourmiliere/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fourmilière — simulateur d'une colonie de Lasius niger</title>
+<meta name="description" content="Un simulateur 2D d'une colonie de fourmis noires des jardins (Lasius niger) vue en coupe : reine, nourrices, fourrageuses, couvain, pistes de phéromone, saisons. Cliquez sur une fourmi pour comprendre ce qu'elle fait et pourquoi.">
+<meta name="theme-color" content="#17120e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%90%9C%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'DM Serif Display';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/dm-serif-display-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/outfit-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/outfit-600.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+  }
+
+  :root {
+    --fond: #17120e;
+    --panneau: #1f1813;
+    --panneau-2: #2a2019;
+    --bord: #3b2e24;
+    --bord-clair: #55443a;
+    --texte: #f2e9dc;
+    --sourdine: #a4968a;
+    --ambre: #e5a54b;
+    --ambre-sombre: #b47b2a;
+    --vert: #8fbf6a;
+    --rouge: #e0705d;
+    --bleu: #86b7d9;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 400 14px/1.45 var(--ui);
+    color: var(--texte);
+    background: var(--fond);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---------- Bandeau ---------- */
+
+  .bandeau {
+    display: flex;
+    align-items: center;
+    gap: 10px 20px;
+    padding: 9px 16px 10px;
+    background: linear-gradient(180deg, #241c16, #1a1410);
+    border-bottom: 1px solid #0a0806;
+    box-shadow: 0 1px 0 var(--bord) inset;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 3;
+  }
+  .retour {
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12.5px;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  .retour:hover { color: var(--ambre); }
+  .bandeau h1 {
+    font: 400 21px/1 var(--serif);
+    letter-spacing: .01em;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .bandeau h1 .espece {
+    font: 500 11px/1 var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ambre);
+    font-style: normal;
+    padding: 4px 7px 3px;
+    border: 1px solid var(--ambre-sombre);
+    border-radius: 3px;
+  }
+  .cmdes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+  .cmdes label {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  select, .bouton {
+    font: 500 13px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 1px solid var(--bord-clair);
+    border-radius: 5px;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  select:hover, .bouton:hover { border-color: var(--ambre); }
+  select:focus-visible, .bouton:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--ambre);
+    outline-offset: 2px;
+  }
+  .bouton:active { transform: translateY(1px); }
+  .bouton.actif { background: var(--ambre); color: #1c1207; border-color: var(--ambre); font-weight: 600; }
+
+  /* ---------- Cadre à trois colonnes ---------- */
+
+  #cadre {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 272px minmax(0, 1fr) 318px;
+  }
+  .panneau {
+    background: var(--panneau);
+    overflow-y: auto;
+    padding: 14px 14px 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bord-clair) transparent;
+  }
+  #colonie { border-right: 1px solid #0a0806; box-shadow: -1px 0 0 var(--bord) inset; }
+  #fiche { border-left: 1px solid #0a0806; box-shadow: 1px 0 0 var(--bord) inset; }
+
+  .panneau h2 {
+    font: 400 17px/1.1 var(--serif);
+    color: var(--texte);
+    margin-bottom: 10px;
+  }
+  .panneau h3 {
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ambre);
+    margin: 16px 0 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--bord);
+  }
+  .panneau h3:first-of-type { border-top: 0; padding-top: 0; margin-top: 4px; }
+
+  .mesures { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+  .mesures dt { font-size: 12.5px; color: var(--sourdine); line-height: 1.55; }
+  .mesures dd { font: 500 12.5px/1.55 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .mesures dd.alerte { color: var(--rouge); }
+  .mesures dd.grand { font-size: 15px; font-weight: 600; }
+  .mesures .retrait dt { padding-left: 12px; }
+
+  .segments { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: #0f0b08; margin: 6px 0 4px; }
+  .segments i { display: block; height: 100%; transition: width .3s; }
+  #segNourrices { background: #d9a0c1; }
+  #segEntretien { background: var(--ambre); }
+  #segFourrageuses { background: var(--bleu); }
+  .legende { display: flex; gap: 10px; font-size: 11px; color: var(--sourdine); flex-wrap: wrap; }
+  .legende i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; vertical-align: 0; }
+
+  .piste { height: 6px; border-radius: 3px; background: #0f0b08; overflow: hidden; margin: 4px 0 8px; }
+  .piste i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ambre-sombre), var(--ambre)); transition: width .3s; }
+
+  #journal { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  #journal li { font-size: 12.5px; line-height: 1.4; color: #d8cdbf; padding-left: 10px; border-left: 2px solid var(--bord-clair); }
+  #journal li:first-child { border-left-color: var(--ambre); color: var(--texte); }
+  #journal time { display: block; font: 500 10px/1.4 var(--mono); color: var(--sourdine); letter-spacing: .04em; }
+
+  /* ---------- Vue ---------- */
+
+  #vue { position: relative; min-width: 0; min-height: 0; background: #0e0b09; }
+  #scene {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+    -webkit-user-select: none; user-select: none;
+  }
+  #scene:active { cursor: grabbing; }
+  #scene.depot { cursor: crosshair; }
+
+  #astuce {
+    position: absolute; left: 50%; top: 12px; transform: translateX(-50%);
+    padding: 7px 12px;
+    font-size: 12.5px;
+    color: var(--texte);
+    background: rgba(23, 18, 14, .85);
+    border: 1px solid var(--bord-clair);
+    border-radius: 6px;
+    pointer-events: none;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+  }
+  #astuce b { color: var(--ambre); font-weight: 600; }
+
+  .outils {
+    position: absolute; left: 10px; right: 10px; bottom: 10px;
+    display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap;
+    padding: 8px 10px;
+    background: rgba(23, 18, 14, .88);
+    border: 1px solid var(--bord-clair);
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
+  }
+  .groupe { display: flex; align-items: center; gap: 4px; }
+  .groupe .lib {
+    font: 600 9.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); margin-right: 4px;
+  }
+  .outils .bouton { padding: 6px 9px; font-size: 12.5px; }
+  .outils .bouton.icone { min-width: 32px; text-align: center; font-family: var(--mono); }
+  #etatVitesse { font: 500 11px/1 var(--mono); color: var(--sourdine); min-width: 84px; }
+  .outils label.coche { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--texte); cursor: pointer; }
+  .outils input[type=checkbox] { accent-color: var(--ambre); width: 14px; height: 14px; margin: 0; }
+  .espace { flex: 1; }
+
+  /* ---------- Fiche d'une fourmi ---------- */
+
+  #ficheVide { color: var(--sourdine); font-size: 13px; line-height: 1.55; }
+  #ficheVide p + p { margin-top: 10px; }
+  #ficheVide kbd {
+    font: 500 11px var(--mono); padding: 1px 5px; border: 1px solid var(--bord-clair); border-bottom-width: 2px; border-radius: 4px; color: var(--texte);
+  }
+  .fiche-tete { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  #fTitre { font: 400 21px/1.1 var(--serif); }
+  .fermer-fiche { background: none; border: 0; color: var(--sourdine); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
+  .fermer-fiche:hover { color: var(--texte); }
+  #fBadges { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 12px; }
+  #fBadges span {
+    font: 600 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    color: #1c1207; background: var(--ambre); padding: 4px 6px 3px; border-radius: 3px;
+  }
+  #fBadges span:not(:first-child) { background: var(--panneau-2); color: var(--texte); border: 1px solid var(--bord-clair); }
+  .etat-carte {
+    background: var(--panneau-2); border: 1px solid var(--bord); border-radius: 7px; padding: 10px 12px; margin-bottom: 12px;
+  }
+  #fEtat { font: 600 13.5px/1.3 var(--ui); color: var(--ambre); margin-bottom: 5px; }
+  #fExplication { font-size: 12.5px; line-height: 1.5; color: #e0d6c8; }
+  #fTable { display: grid; gap: 4px 0; }
+  #fTable > div { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 4px 0; border-bottom: 1px dotted var(--bord); }
+  #fTable dt { font-size: 12px; color: var(--sourdine); }
+  #fTable dd { font: 500 12px/1.4 var(--mono); text-align: right; }
+  .saviez { margin-top: 14px; padding: 10px 12px; border-left: 3px solid var(--vert); background: rgba(143, 191, 106, .07); border-radius: 0 6px 6px 0; }
+  .saviez strong { display: block; font: 600 9.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--vert); margin-bottom: 6px; }
+  .saviez p { font-size: 12.5px; line-height: 1.5; }
+  .fiche-actions { display: flex; gap: 6px; margin-top: 12px; }
+
+  /* ---------- Aide ---------- */
+
+  #aide { border: 0; padding: 0; background: transparent; max-width: min(760px, 94vw); width: 100%; max-height: 92vh; }
+  #aide::backdrop { background: rgba(8, 6, 4, .75); backdrop-filter: blur(3px); }
+  .aide-corps {
+    background: var(--panneau); color: var(--texte);
+    border: 1px solid var(--bord-clair); border-radius: 10px;
+    padding: 26px 30px 24px; max-height: 92vh; overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,.7);
+    font-size: 14px; line-height: 1.55;
+  }
+  .aide-corps h2 { font: 400 26px/1.1 var(--serif); margin-bottom: 6px; }
+  .aide-corps .sous { color: var(--sourdine); margin-bottom: 18px; }
+  .aide-corps h3 { font: 400 18px/1.2 var(--serif); color: var(--ambre); margin: 22px 0 8px; }
+  .aide-corps p + p { margin-top: 8px; }
+  .aide-corps ul { padding-left: 20px; margin: 6px 0; }
+  .aide-corps li { margin: 5px 0; }
+  .aide-corps b { color: #ffd591; font-weight: 600; }
+  .aide-corps kbd { font: 500 12px var(--mono); padding: 1px 6px; border: 1px solid var(--bord-clair); border-bottom-width: 2px; border-radius: 4px; }
+  .aide-corps a { color: var(--bleu); }
+  .aide-corps small { color: var(--sourdine); }
+  .aide-corps form { margin-top: 20px; text-align: right; }
+  .cycle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 4px; }
+  .cycle div { background: var(--panneau-2); border: 1px solid var(--bord); border-radius: 6px; padding: 8px 10px; font-size: 12.5px; }
+  .cycle strong { display: block; color: var(--texte); font-weight: 600; margin-bottom: 2px; }
+  .cycle small { display: block; color: var(--sourdine); font-family: var(--mono); font-size: 10.5px; margin-top: 3px; }
+
+  /* ---------- Petits écrans ---------- */
+
+  @media (max-width: 960px) {
+    body { overflow: auto; height: auto; min-height: 100%; }
+    .bandeau h1 { font-size: 18px; }
+    #cadre {
+      grid-template-columns: 1fr;
+      grid-template-rows: 60vh auto auto;
+    }
+    #vue { order: 0; min-height: 360px; }
+    #fiche { order: 1; border-left: 0; box-shadow: none; border-top: 1px solid var(--bord); }
+    #colonie { order: 2; border-right: 0; box-shadow: none; border-top: 1px solid var(--bord); }
+    .panneau { overflow: visible; }
+    #astuce { white-space: normal; text-align: center; max-width: 88%; }
+    .outils { gap: 6px 10px; padding: 6px 8px; }
+    #etatVitesse { display: none; }
+  }
+  @media (max-width: 560px) {
+    .cycle { grid-template-columns: 1fr 1fr; }
+    .aide-corps { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <a class="retour" href="/projets/" title="Retour à mes projets">← julien-riel.com</a>
+  <h1><span class="espece">Lasius niger</span> Fourmilière</h1>
+  <div class="cmdes">
+    <label for="scenario"><span>Scénario</span>
+      <select id="scenario">
+        <option value="etablie">Colonie établie, 3e printemps</option>
+        <option value="fondation">Fondation par une reine seule</option>
+      </select>
+    </label>
+    <button class="bouton" id="btnReset" title="Repartir de zéro avec le scénario choisi">↺ Recommencer</button>
+    <button class="bouton" id="btnAide" title="Ce qui est simulé, et ce qu'il faut savoir sur les fourmis (H)">? En savoir plus</button>
+  </div>
+</header>
+
+<main id="cadre">
+  <aside class="panneau" id="colonie" aria-label="État de la colonie">
+    <h2>La colonie</h2>
+
+    <h3>Calendrier</h3>
+    <dl class="mesures">
+      <dt>Date</dt><dd id="valDate" data-testid="date">—</dd>
+      <dt>Heure</dt><dd id="valHeure" data-testid="heure">—</dd>
+      <dt>Saison</dt><dd id="valSaison">—</dd>
+      <dt>Air en surface</dt><dd id="valTAir">—</dd>
+      <dt>Sol, chambre royale</dt><dd id="valTNid">—</dd>
+      <dt>Régime</dt><dd id="valPhase">—</dd>
+    </dl>
+
+    <h3>Effectifs</h3>
+    <dl class="mesures">
+      <dt>Reine</dt><dd id="valReine" data-testid="reine">—</dd>
+      <dt>Ouvrières</dt><dd id="valOuvrieres" class="grand" data-testid="ouvrieres">—</dd>
+      <div class="retrait" style="display:contents"><dt>nourrices</dt><dd id="valNourrices">—</dd></div>
+      <div class="retrait" style="display:contents"><dt>entretien et fouille</dt><dd id="valEntretien">—</dd></div>
+      <div class="retrait" style="display:contents"><dt>fourrageuses</dt><dd id="valFourrageuses">—</dd></div>
+    </dl>
+    <div class="segments" aria-hidden="true"><i id="segNourrices"></i><i id="segEntretien"></i><i id="segFourrageuses"></i></div>
+    <div class="legende" aria-hidden="true"><span><i style="background:#d9a0c1"></i>nourrices</span><span><i style="background:#e5a54b"></i>entretien</span><span><i style="background:#86b7d9"></i>fourrageuses</span></div>
+    <dl class="mesures" style="margin-top:10px">
+      <dt>Œufs</dt><dd id="valOeufs">—</dd>
+      <dt>Larves</dt><dd id="valLarves">—</dd>
+      <dt>Nymphes (cocons)</dt><dd id="valNymphes">—</dd>
+      <div id="ligneSexues" style="display:contents" hidden><dt>Sexués ailés</dt><dd id="valSexues">—</dd></div>
+      <dt>Éclosions depuis le début</dt><dd id="valEclosions">—</dd>
+      <dt>Décès</dt><dd id="valMorts">—</dd>
+    </dl>
+
+    <h3>Ressources</h3>
+    <dl class="mesures">
+      <dt>Jabots des ouvrières</dt><dd id="valSucre">—</dd>
+    </dl>
+    <div class="piste"><i id="barreSucre"></i></div>
+    <dl class="mesures">
+      <dt>Proies dans le nid</dt><dd id="valProies">—</dd>
+      <dt>Piste de phéromone</dt><dd id="valPiste">—</dd>
+    </dl>
+
+    <h3>Journal</h3>
+    <ul id="journal" data-testid="journal"></ul>
+  </aside>
+
+  <section id="vue" aria-label="Coupe de la fourmilière">
+    <canvas id="scene" role="img" aria-label="Coupe verticale d'une fourmilière de Lasius niger : la surface avec une plante à pucerons, la butte, les galeries et les chambres où s'affairent les fourmis"></canvas>
+    <div id="astuce"><b>Cliquez sur une fourmi</b> pour l'observer · molette ou pincement pour zoomer · glisser pour déplacer</div>
+    <div class="outils" role="toolbar" aria-label="Commandes">
+      <div class="groupe">
+        <span class="lib">Temps</span>
+        <button class="bouton icone" data-vitesse="0" title="Pause (espace)">❚❚</button>
+        <button class="bouton icone" data-vitesse="1" title="Vitesse 1 (touche 1)">×1</button>
+        <button class="bouton icone" data-vitesse="2" title="Vitesse 8 (touche 2)">×8</button>
+        <button class="bouton icone" data-vitesse="3" title="Vitesse 32 (touche 3)">×32</button>
+        <span id="etatVitesse"></span>
+      </div>
+      <div class="groupe">
+        <span class="lib">Voir</span>
+        <label class="coche"><input type="checkbox" id="chkPheromone" checked> Phéromones</label>
+        <label class="coche"><input type="checkbox" id="chkPlan"> Plan du nid</label>
+        <label class="coche"><input type="checkbox" id="chkTemp"> Températures</label>
+      </div>
+      <div class="groupe">
+        <span class="lib">Clic</span>
+        <button class="bouton" data-mode="observer" title="Cliquer sur une fourmi pour l'observer">Observer</button>
+        <button class="bouton" data-mode="sucre" title="Déposer une goutte d'eau sucrée en surface">+ Sucre</button>
+        <button class="bouton" data-mode="insecte" title="Déposer un insecte mort en surface">+ Insecte</button>
+      </div>
+      <span class="espace"></span>
+      <div class="groupe">
+        <button class="bouton icone" id="btnZoomMoins" title="Dézoomer (−)">−</button>
+        <button class="bouton icone" id="btnZoomPlus" title="Zoomer (+)">+</button>
+        <button class="bouton" id="btnRecentrer" title="Revenir sur l'entrée du nid">Recentrer</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panneau" id="fiche" aria-label="Fourmi observée" aria-live="polite">
+    <div id="ficheVide">
+      <h2>Observer une fourmi</h2>
+      <p>Cliquez sur n'importe quelle fourmi, dans le nid ou en surface, pour savoir qui elle est, ce qu'elle fait à cet instant et pourquoi.</p>
+      <p>Chaque ouvrière change de métier en vieillissant : nourrice au nid d'abord, puis fouilleuse et manutentionnaire, enfin fourrageuse dehors. La reine, plus grande, se trouve dans la chambre royale.</p>
+      <p><kbd>espace</kbd> pause · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> vitesse · <kbd>F</kbd> suivre la fourmi choisie · <kbd>H</kbd> en savoir plus</p>
+    </div>
+    <div id="ficheContenu" hidden>
+      <div class="fiche-tete">
+        <h2 id="fTitre" data-testid="titre-fourmi">—</h2>
+        <button class="fermer-fiche" id="btnFermerFiche" aria-label="Fermer la fiche">×</button>
+      </div>
+      <div id="fBadges"></div>
+      <div class="etat-carte">
+        <div id="fEtat" data-testid="etat-fourmi">—</div>
+        <p id="fExplication"></p>
+      </div>
+      <dl id="fTable"></dl>
+      <div class="saviez"><strong>Le saviez-vous ?</strong><p id="fSaviez"></p></div>
+      <div class="fiche-actions">
+        <button class="bouton" id="btnSuivre">◎ Suivre à la caméra</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<dialog id="aide" aria-labelledby="aideTitre">
+  <div class="aide-corps" tabindex="-1" autofocus>
+    <h2 id="aideTitre">Ce que vous regardez</h2>
+    <p class="sous">Une colonie de <i>Lasius niger</i>, la fourmi noire des jardins, la plus commune d'Europe et bien installée au Québec. Vue en coupe, comme dans une fourmilière entre deux vitres. Ce n'est pas un jeu : rien à gagner, tout à observer.</p>
+
+    <h3>Une seule mère, des milliers de sœurs</h3>
+    <p>Toute la colonie descend d'une <b>reine</b> unique, fécondée une seule fois lors de son vol nuptial. Elle garde le sperme toute sa vie dans sa spermathèque et ne fait plus que pondre. Les <b>ouvrières</b> sont toutes ses filles, stériles. Un œuf fécondé donne une femelle ; un œuf non fécondé donne un mâle, qui n'a donc pas de père. Dans la nature, une colonie de <i>Lasius niger</i> compte de quelques milliers à plus de dix mille ouvrières ; le simulateur plafonne vers 1 500 pour rester fluide.</p>
+
+    <h3>Le cycle de vie</h3>
+    <div class="cycle">
+      <div><strong>Œuf</strong>Minuscule, blanc, léché sans cesse par les nourrices.<small>≈ 10 jours à 25 °C</small></div>
+      <div><strong>Larve</strong>Un asticot blanc, seul stade qui mange et grandit. Nourrie de miellat et de proies.<small>≈ 12 jours</small></div>
+      <div><strong>Nymphe</strong>Enfermée dans un cocon de soie. Les ouvrières l'ouvrent à l'éclosion.<small>≈ 12 jours</small></div>
+      <div><strong>Adulte</strong>Pâle et molle le premier jour (« imago fraîche »), puis noire. Ne grandit plus jamais.<small>1 à 2 ans</small></div>
+    </div>
+    <p>Le froid ralentit tout : sous 10 °C, le développement s'arrête. La reine, elle, peut vivre plus de vingt ans ; une <i>Lasius niger</i> a tenu 28 ans et 9 mois en laboratoire.</p>
+
+    <h3>Qui fait quoi</h3>
+    <ul>
+      <li><b>Nourrices</b> : les plus jeunes. Elles lèchent les œufs, nourrissent les larves et la reine, ouvrent les cocons et déplacent le couvain vers la chambre la mieux tempérée, plusieurs fois par jour.</li>
+      <li><b>Ouvrières d'entretien</b> : d'âge moyen. Elles creusent et évacuent la terre, emportent les mortes au dépotoir et relaient la nourriture des fourrageuses vers les nourrices.</li>
+      <li><b>Fourrageuses</b> : les plus âgées. Elles sortent, traient les pucerons, découpent les proies, et recrutent avec une piste de phéromone. C'est le métier le plus dangereux, réservé à celles qui ont le moins à perdre.</li>
+    </ul>
+    <p>Cette répartition par âge, le <b>polyéthisme d'âge</b>, n'est pas rigide : si le couvain grossit, davantage d'ouvrières restent nourrices ; si les jabots se vident, davantage sortent. Le simulateur réévalue les effectifs chaque heure.</p>
+
+    <h3>La nourriture voyage de bouche en bouche</h3>
+    <p>Une fourrageuse rentre avec le <b>jabot social</b> plein de miellat ; elle en régurgite une goutte à une ouvrière d'intérieur, qui en donnera aux nourrices, qui en donneront aux larves et à la reine. Cette <b>trophallaxie</b> répartit la nourriture et l'odeur commune dans toute la colonie. Les adultes ne mangent que du liquide : ce sont les larves qui digèrent les proies, et une colonie sans protéines voit ses larves stagner et sa reine ralentir. Déposez un insecte mort en surface pour voir le recrutement se mettre en place.</p>
+
+    <h3>Le nid</h3>
+    <p>Chaque boulette de terre creusée est portée dehors, d'où la butte, ou le cratère, autour de l'entrée. Le nid s'agrandit avec la population : chaque nouvelle chambre n'est entreprise que lorsque la colonie est assez nombreuse (cochez « Plan du nid »). Les chambres profondes ont une température stable ; près de la surface, la butte chauffe au soleil l'après-midi. Les nourrices en profitent pour déménager le couvain là où il fait environ 25 °C (cochez « Températures »).</p>
+
+    <h3>Les saisons</h3>
+    <p>Quand le sol du nid passe sous 8 °C, la colonie entre en <b>diapause</b> : tout le monde descend se serrer au fond, plus de sorties ni de ponte, et les larves attendent le printemps. Une colonie forte élève au printemps des <b>sexués ailés</b>, gynes et mâles, qui s'envolent tous ensemble par une fin d'après-midi lourde de juillet ou d'août. Les mâles meurent aussitôt ; les femelles fécondées arrachent leurs ailes et fondent seules une colonie, enfermées dans une loge, sans manger, jusqu'à l'éclosion de leurs premières ouvrières, les <b>nanitiques</b>. C'est le scénario « Fondation ».</p>
+
+    <h3>Commandes</h3>
+    <ul>
+      <li><kbd>Clic</kbd> sur une fourmi : sa fiche. <kbd>F</kbd> pour la suivre à la caméra.</li>
+      <li><kbd>Molette</kbd>, pincement ou <kbd>+</kbd> <kbd>−</kbd> : zoom. Glisser : déplacer la vue.</li>
+      <li><kbd>espace</kbd> : pause. <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> : ×1, ×8, ×32.</li>
+      <li>« + Sucre » et « + Insecte » puis clic en surface : déposer une source de nourriture.</li>
+    </ul>
+
+    <h3>Ce que le simulateur simplifie</h3>
+    <ul>
+      <li>À ×1, une seconde réelle vaut cinq minutes simulées. Au-delà de ×4, les déplacements ne sont plus accélérés (ils deviendraient illisibles) ; seul le temps biologique file, et chaque voyage de fourrageuse compte alors pour plusieurs.</li>
+      <li>Le monde fait 60 cm de large sur 30 cm de sol. Un vrai nid descend souvent à plus d'un mètre.</li>
+      <li>Les durées de développement, les tailles (ouvrières 3 à 5 mm, reine 8 à 9 mm) et les températures sont des ordres de grandeur réalistes, pas des mesures. Pas de pluie, pas de prédateur visible, pas de colonie voisine.</li>
+      <li>La colonie se sauvegarde dans votre navigateur et reprend là où vous l'avez laissée.</li>
+    </ul>
+    <p><small>Pour aller plus loin : B. Hölldobler et E. O. Wilson, <i>The Ants</i> (1990) ; L. Keller et M. Genoud, « Extraordinary lifespans in ants », <i>Nature</i> (1997) ; les moulages de nids de W. R. Tschinkel. Page construite en paire avec Claude.</small></p>
+
+    <form method="dialog"><button class="bouton fermer">Fermer</button></form>
+  </div>
+</dialog>
+
+<script type="module" src="/assets/js/fourmiliere.js"></script>
+</body>
+</html>
