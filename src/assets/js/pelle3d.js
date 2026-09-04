@@ -21,7 +21,7 @@ const M = {
   capacite: 0.045,                       // m³ foisonnés : un godet de 45 L
   tourelle: new THREE.Vector3(-0.05, 0.52, 0),
   pivot: new THREE.Vector3(0.42, 0.30, 0.22),   // pied de flèche, à droite de la cabine
-  oeil: new THREE.Vector3(-0.30, 1.14, -0.24),  // l'opérateur, assis à gauche
+  oeil: new THREE.Vector3(-0.18, 1.24, -0.24),  // l'opérateur, assis à gauche, le buste penché vers l'avant
 };
 const LIM = { fleche: [-0.75, 1.15], balancier: [-2.75, -0.30], godet: [-2.75, 0.20] };
 const VIT = { fleche: 0.70, balancier: 1.00, godet: 1.40, rotation: 0.95, chenille: 0.9, virage: 0.7 };
@@ -79,7 +79,7 @@ const etat = {
   x: 0, z: 0, y: 0, cap: 0, tangage: 0, roulis: 0,
   rotation: 0, fleche: 0.45, balancier: -1.6, godet: -1.4,
   charge: 0, volume: 0, chrono: 0, chronoActif: false, termine: false,
-  regardLacet: 0, regardTangage: -0.12,
+  regardLacet: 0, regardTangage: -0.30,
 };
 const axes = { rotation: 0, balancier: 0, fleche: 0, godet: 0, chenille: 0, virage: 0 };
 const clavier = {};
@@ -354,17 +354,18 @@ tourelle.position.copy(M.tourelle);
 assiette.add(tourelle);
 boite(0.8, 0.08, 0.8, matNoir, 0, 0.0, 0, tourelle);                 // couronne
 boite(0.62, 0.5, 1.0, matOrange, -0.42, 0.28, 0, tourelle);          // caisson moteur, contrepoids
-boite(0.55, 0.5, 0.5, matOrange, 0.16, 0.28, 0.25, tourelle);        // côté droit, réservoir
+boite(0.55, 0.3, 0.5, matOrange, 0.16, 0.18, 0.25, tourelle);        // côté droit, réservoir, bas pour dégager la vue
 boite(0.06, 0.16, 0.06, matSombre, -0.45, 0.6, 0.35, tourelle);      // échappement
 /* Cabine, à gauche. */
-boite(0.75, 0.06, 0.62, matNoir, -0.17, 0.53, -0.18, tourelle);      // plancher
+boite(1.0, 0.06, 0.62, matNoir, -0.05, 0.53, -0.18, tourelle);       // plancher
 boite(0.3, 0.1, 0.42, matSombre, -0.28, 0.63, -0.18, tourelle);      // assise
 boite(0.08, 0.5, 0.42, matSombre, -0.46, 0.9, -0.18, tourelle);      // dossier
-boite(0.32, 0.16, 0.5, matNoir, 0.1, 0.72, -0.18, tourelle);         // console
-for (const dz of [-0.12, 0.12]) boite(0.03, 0.26, 0.03, matGris, 0.02, 0.9, -0.18 + dz, tourelle);  // manettes
-for (const [dx, dz] of [[-0.52, -0.5], [-0.52, 0.12], [0.2, -0.5], [0.2, 0.12]]) boite(0.05, 1.1, 0.05, matNoir, dx, 1.08, dz, tourelle);
-boite(0.85, 0.06, 0.7, matNoir, -0.16, 1.63, -0.19, tourelle);       // toit
-boite(0.85, 0.03, 0.7, matOrange, -0.16, 1.68, -0.19, tourelle);
+boite(0.22, 0.05, 0.5, matNoir, 0.14, 0.59, -0.18, tourelle);        // tablier bas : le sol reste visible jusqu'aux chenilles
+for (const dz of [-0.12, 0.12]) boite(0.03, 0.2, 0.03, matGris, -0.04, 0.72, -0.18 + dz, tourelle);  // manettes, au bout des accoudoirs
+for (const [dx, dz] of [[-0.52, -0.5], [-0.52, 0.12]]) boite(0.05, 1.1, 0.05, matNoir, dx, 1.08, dz, tourelle);       // montants arrière
+for (const [dx, dz] of [[0.5, -0.5], [0.5, 0.14]]) boite(0.035, 1.1, 0.035, matNoir, dx, 1.08, dz, tourelle);       // montants avant, fins et loin de l'œil
+boite(1.1, 0.06, 0.7, matNoir, -0.01, 1.63, -0.19, tourelle);        // toit
+boite(1.1, 0.03, 0.7, matOrange, -0.01, 1.68, -0.19, tourelle);
 
 /* Équipement. */
 const fleche = new THREE.Group();
@@ -715,7 +716,7 @@ function brancherCommandes() {
   const finRegard = (e) => { if (e.pointerId === regardId) regardId = null; };
   canvas.addEventListener('pointerup', finRegard);
   canvas.addEventListener('pointercancel', finRegard);
-  ui.btnRecentrer.addEventListener('click', () => { etat.regardLacet = 0; etat.regardTangage = -0.12; });
+  ui.btnRecentrer.addEventListener('click', () => { etat.regardLacet = 0; etat.regardTangage = -0.30; });
 
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'SELECT' || ui.aide.open) return;
@@ -798,7 +799,7 @@ function demarrerChantier(cle) {
     x: dep.x, z: dep.z, cap: dep.cap, tangage: 0, roulis: 0,
     rotation: 0, fleche: 0.45, balancier: -1.6, godet: -1.4,
     charge: 0, volume: 0, chrono: 0, chronoActif: false, termine: false,
-    regardLacet: 0, regardTangage: -0.12,
+    regardLacet: 0, regardTangage: -0.30,
   });
   etat.y = hauteurEn(etat.x, etat.z);
   dernierAvancement = null;
