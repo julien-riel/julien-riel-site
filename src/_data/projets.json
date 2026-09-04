@@ -21,7 +21,9 @@
       "en": "A 0–2 t mini-excavator in a cross-section of a job site: dig, carry and backfill soil with the keyboard or touch. The ground swells, slumps at its angle of repose and persists between visits. A single dependency-free HTML page. French only."
     },
     "url": "/projets/simulateur-pelle-mecanique/",
-    "emoji": "🚜"
+    "emoji": "🚜",
+    "modele": "Claude Fable 5.1",
+    "date": "2026-09-04"
   },
   {
     "name": {
@@ -33,7 +35,9 @@
       "en": "The same mini-excavator, now in 3D from the operator's seat and designed for the phone: two ISO-pattern joysticks like the real machine, a heightmap terrain that digs, swells and slumps. Three timed job sites. French only."
     },
     "url": "/projets/simulateur-pelle-3d/",
-    "emoji": "🕹️"
+    "emoji": "🕹️",
+    "modele": "Claude Fable 5.1",
+    "date": "2026-09-04"
   },
   {
     "name": {
@@ -45,7 +49,9 @@
       "en": "A simulator, not a game: a Lasius niger colony in cross-section, with its queen, nurses, foragers, brood, pheromone trails and seasons. Click on any ant to learn who she is, what she is doing and why. The point is to learn how an ant colony lives. French only."
     },
     "url": "/projets/fourmiliere/",
-    "emoji": "🐜"
+    "emoji": "🐜",
+    "modele": "Claude Fable 5.1",
+    "date": "2026-09-04"
   },
   {
     "name": {
@@ -57,6 +63,8 @@
       "en": "An interactive walk from planting a vine to the finished bottle: the vine’s yearly cycle, picking the harvest date, an hour-by-hour fermentation simulator (watch the tank run away if you cut the cooling), malolactic, ageing, closures and bottle age. Red, white or rosé, each with its own order of operations. French only."
     },
     "url": "/projets/du-cep-a-la-bouteille/",
-    "emoji": "🍇"
+    "emoji": "🍇",
+    "modele": "Claude Fable 5.1",
+    "date": "2026-09-04"
   }
 ]
