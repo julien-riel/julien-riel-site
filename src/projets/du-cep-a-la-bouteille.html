@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Du cep à la bouteille — comment on fabrique le vin</title>
-<meta name="description" content="Une page interactive qui suit le vin du choix du lieu jusqu'à la bouteille : climat, géographie, type de sol et vie microbienne du sol, cycle annuel du cep, maturité du raisin, vendanges, fermentation alcoolique simulée, fermentation malolactique, élevage, mise en bouteille et vieillissement. Rouge, blanc ou rosé.">
+<meta name="description" content="Une page interactive qui suit le vin du choix du lieu jusqu'à la bouteille : climat, réchauffement climatique, géographie, sol et vie microbienne, cycle annuel du cep, effet de l'eau et de la chaleur sur le sucre, l'acidité et les tanins, maturité du raisin, vendanges, fermentation alcoolique simulée, malolactique, élevage, assemblage de la cuvée, mise en bouteille et vieillissement. Rouge, blanc ou rosé.">
 <meta name="theme-color" content="#160f11">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%87%3C/text%3E%3C/svg%3E">
 <style>
@@ -474,7 +474,7 @@ eleventyExcludeFromCollections: true
   <section class="ouverture">
     <div>
       <h2>Comment un cep de vigne devient <em id="titreStyle">un vin rouge</em></h2>
-      <p class="chapeau">Du choix du lieu à la bouteille, il faut au moins quatre ans, près d'une vingtaine d'étapes et beaucoup de décisions. Cette page les suit une à une, à commencer par ce qu'on appelle le terroir : le climat, la géographie, le sol et ce qui vit dedans. Choisissez rouge, blanc ou rosé en haut de page : l'ordre des opérations change, et chaque atelier interactif s'ajuste. Rien à gagner, tout à comprendre.</p>
+      <p class="chapeau">Du choix du lieu à la bouteille, il faut au moins quatre ans, une vingtaine d'étapes et beaucoup de décisions. Cette page les suit une à une, à commencer par ce qu'on appelle le terroir : le climat, la géographie, le sol et ce qui vit dedans — puis le climat qui change, l'eau et la chaleur qui font le goût, et l'assemblage qui compose la cuvée. Choisissez rouge, blanc ou rosé en haut de page : l'ordre des opérations change, et chaque atelier interactif s'ajuste. Rien à gagner, tout à comprendre.</p>
     </div>
     <aside class="resume" aria-label="Repères">
       <h3>Repères</h3>
@@ -492,7 +492,7 @@ eleventyExcludeFromCollections: true
   <div id="stades"></div>
 
   <footer class="fin">
-    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Page construite en paire avec Claude. Le bouton « En savoir plus » liste les sources.</p>
+    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Les ateliers de l'eau et de la chaleur, du réchauffement climatique et de l'assemblage sont du même genre : les relations vont dans le bon sens et les ordres de grandeur sont plausibles, mais aucun ne prédit un millésime. Page construite en paire avec Claude. Le bouton « En savoir plus » liste les sources.</p>
   </footer>
 </main>
 
@@ -507,6 +507,15 @@ eleventyExcludeFromCollections: true
     <h3>Le terroir : quatre étapes avant de planter</h3>
     <p>Le mot désigne tout ce que le lieu impose au vin avant l'intervention humaine : le <b>climat</b> (résumé ici par les degrés-jours de Winkler, la somme des températures au-dessus de 10 °C d'avril à octobre), la <b>géographie</b> (latitude, altitude, pente et exposition, présence d'eau), le <b>sol</b> (surtout son régime hydrique, bien plus que sa composition chimique) et les <b>micro-organismes</b> qui vivent autour des racines. Les quatre ateliers sont des modèles à une ou deux formules : l'énergie reçue par un coteau est calculée pour le soleil direct seulement, la réserve en eau d'un sol à partir de valeurs moyennes par texture, et les indicateurs de vie du sol sont des ordres de grandeur tirés d'essais agronomiques, pas des mesures.</p>
 
+    <h3>L'eau, la chaleur et le goût</h3>
+    <p>L'atelier de l'étape « L'eau et la chaleur » est un modèle jouet, mais ses relations sont celles qu'on observe : l'eau reçue fixe le poids de la baie, le poids de la baie fixe le rapport peau/jus (la surface varie comme le carré du rayon, le volume comme son cube), et ce rapport commande la couleur, les tanins et la concentration. La chaleur ajoute du sucre et fait respirer l'acide malique ; au-delà d'une moyenne de 24 °C, elle dégrade aussi les anthocyanes et les arômes. La <b>contrainte hydrique modérée</b> est traitée comme un optimum étroit — c'est ce que montrent les mesures de potentiel hydrique foliaire — et le blocage de maturité apparaît quand la vigne ferme ses stomates. Les valeurs sont des ordres de grandeur, pas des prédictions : aucun modèle à cinq curseurs ne remplace un millésime.</p>
+
+    <h3>Le réchauffement climatique</h3>
+    <p>L'atelier « Réchauffer un vignoble » applique des sensibilités moyennes tirées de la littérature : environ <b>200 degrés-jours</b>, <b>six à sept jours de vendange</b> et <b>un demi-degré d'alcool</b> par degré de réchauffement, une acidité qui baisse et un pH qui monte. Il fait aussi apparaître deux effets contre-intuitifs : le risque de <b>gel de printemps augmente</b> (le débourrement avance plus vite que la date des dernières gelées ne recule), et monter en altitude rafraîchit mais expose davantage au gel. Les trois adaptations proposées — cépage tardif, altitude ou exposition, conduite retardée — sont celles que les vignobles testent réellement ; leurs effets chiffrés ici sont des ordres de grandeur. Le modèle ignore la grêle, les incendies, le goût de fumée, la disponibilité de l'eau d'irrigation et l'économie, qui décideront pourtant d'une partie de la carte viticole.</p>
+
+    <h3>L'assemblage</h3>
+    <p>L'atelier d'assemblage traite chaque cuve comme un vecteur de six paramètres mesurables (degré, acidité, pH, tanins, couleur, bois) et calcule la cuvée comme leur moyenne pondérée. C'est faux et utile : faux parce qu'un assemblage n'est <i>pas</i> une moyenne — deux vins mélangés peuvent donner mieux que chacun d'eux, ce que la dégustation constate et qu'aucune analyse ne prédit ; utile parce que les contraintes, elles, sont exactes. La <b>contrainte de volume</b> notamment : demander 40 % d'un lot qui ne représente que 20 % du chai limite la cuvée, et le reste part au second vin. Le bouton « Chercher le meilleur assemblage » essaie les 1 771 combinaisons par pas de 5 % et retient la meilleure <i>selon l'objectif choisi</i> : changez l'objectif, l'optimum change.</p>
+
     <h3>Le simulateur de fermentation</h3>
     <p>Il suit cinq variables heure par heure : le sucre, l'alcool, la population de levures, la température et, pour les rouges, l'extraction de la couleur et des tanins. Les règles sont volontairement simples :</p>
     <ul>
@@ -520,7 +529,8 @@ eleventyExcludeFromCollections: true
     <ul>
       <li>Les effervescents (seconde fermentation en bouteille), les vins doux, mutés, oxydatifs ou orange : ce sont d'autres parcours.</li>
       <li>La microbiologie du chai : la nutrition des levures, les bactéries d'altération, les <i>Brettanomyces</i>, réduite à un seul indicateur de risque. Le lien entre le microbiote du sol et le goût du vin, réel dans les analyses génétiques, reste mal quantifié : la page le dit, elle ne le simule pas.</li>
-      <li>La réglementation (appellations, rendements autorisés, doses maximales de SO<sub>2</sub>), qui varie selon les pays.</li>
+      <li>La réglementation (appellations, rendements autorisés, doses maximales de SO<sub>2</sub>, cépages permis, droit d'irriguer ou d'acidifier), qui varie selon les pays et qui décide pourtant d'une bonne partie des adaptations possibles.</li>
+      <li>L'économie : le prix du raisin, le coût d'une plantation, celui d'un filet d'ombrage ou d'un forage. Beaucoup de choix présentés ici comme techniques sont d'abord des choix comptables.</li>
     </ul>
 
     <h3>Commandes</h3>
@@ -528,11 +538,12 @@ eleventyExcludeFromCollections: true
       <li>Boutons <b>Rouge / Blanc / Rosé</b> en haut : changent le parcours et les réglages par défaut. Le choix est mémorisé dans votre navigateur.</li>
       <li>La barre des étapes suit votre lecture ; un clic y saute à l'étape.</li>
       <li>Dans le simulateur : <b>Lancer</b>, <b>Pause</b>, <b>Recommencer</b>, et la vitesse ×1 (un jour toutes les deux secondes) à ×20.</li>
+      <li>Dans l'atelier d'assemblage : <b>Chercher le meilleur assemblage</b> optimise les proportions pour l'objectif choisi, <b>Proportions du chai</b> revient aux volumes disponibles.</li>
       <li><kbd>H</kbd> ouvre cette aide.</li>
     </ul>
 
     <h3>Pour aller plus loin</h3>
-    <p><small>P. Ribéreau-Gayon et al., <i>Traité d'œnologie</i> (Dunod) ; J. Robinson et J. Harding, <i>The Oxford Companion to Wine</i> ; A. Reynier, <i>Manuel de viticulture</i> (Lavoisier) ; Conseil des vins du Québec, guides de viticulture nordique ; les fiches techniques de l'IFV (Institut français de la vigne et du vin) ; C. van Leeuwen et G. Seguin, « The concept of terroir in viticulture », <i>Journal of Wine Research</i>, 2006 ; A. J. Winkler et al., <i>General Viticulture</i> (University of California Press) ; N. Bokulich et al., « Microbial biogeography of wine grapes », <i>PNAS</i>, 2014 ; R. Trouvelot et al., « Arbuscular mycorrhiza symbiosis in viticulture », <i>Agronomy for Sustainable Development</i>, 2015.</small></p>
+    <p><small>P. Ribéreau-Gayon et al., <i>Traité d'œnologie</i> (Dunod) ; J. Robinson et J. Harding, <i>The Oxford Companion to Wine</i> ; A. Reynier, <i>Manuel de viticulture</i> (Lavoisier) ; Conseil des vins du Québec, guides de viticulture nordique ; les fiches techniques de l'IFV (Institut français de la vigne et du vin) ; C. van Leeuwen et G. Seguin, « The concept of terroir in viticulture », <i>Journal of Wine Research</i>, 2006 ; A. J. Winkler et al., <i>General Viticulture</i> (University of California Press) ; N. Bokulich et al., « Microbial biogeography of wine grapes », <i>PNAS</i>, 2014 ; R. Trouvelot et al., « Arbuscular mycorrhiza symbiosis in viticulture », <i>Agronomy for Sustainable Development</i>, 2015 ; É. Peynaud et J. Blouin, <i>Le goût du vin</i> (Dunod) ; A. Carbonneau, A. Deloire et B. Jaillard, <i>La vigne : physiologie, terroir, culture</i> (Dunod) ; C. van Leeuwen et P. Darriet, « The impact of climate change on viticulture and wine quality », <i>Journal of Wine Economics</i>, 2016 ; G. Jones et al., « Climate change and global wine quality », <i>Climatic Change</i>, 2005 ; N. Ollat et J.-M. Touzard, projet LACCAVE (INRAE), <i>Vignes et vins face au changement climatique</i>, 2021 ; GIEC, sixième rapport d'évaluation, 2021-2023.</small></p>
 
     <form method="dialog"><button class="bouton fermer">Fermer</button></form>
   </div>

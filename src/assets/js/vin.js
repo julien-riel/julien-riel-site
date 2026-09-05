@@ -114,6 +114,20 @@ const STADES = [
     atelier: 'vieDuSol',
   },
   {
+    id: 'rechauffement',
+    titre: 'Le climat qui change',
+    duree: "L'horizon d'une plantation : 40 ans",
+    intro: "Une vigne plantée aujourd'hui produira jusque vers 2065. La question n'est donc pas quel climat il fait ici, mais quel climat il y fera. Depuis les années 1980, la saison végétative s'est réchauffée d'environ <b>1,5 °C</b> dans les vignobles européens, et cela se lit dans les vins : vendanges avancées de <b>deux à trois semaines</b>, degré alcoolique en hausse de <b>1 à 2 % vol.</b>, acidité en baisse, pH en hausse. Le sucre s'accumule désormais plus vite que les tanins et les arômes ne mûrissent : on parle de <b>découplage</b> entre maturité technologique et maturité phénolique, et c'est le problème central de la décennie. Chaque région monte d'un cran sur l'échelle de Winkler, ce qui déplace la carte : l'Angleterre et le sud du Québec deviennent viables, le Sud méditerranéen approche de sa limite.",
+    reperes: [
+      "<b>+1 °C de moyenne</b> sur la saison, c'est environ <b>200 degrés-jours</b> de plus, une vendange avancée de six ou sept jours et un demi-degré d'alcool en plus à maturité égale.",
+      "<b>Le paradoxe du gel</b> : le débourrement avance de cinq jours par degré, la date des dernières gelées ne recule que de deux ou trois. Le risque de gel de printemps <i>augmente</i> avec le réchauffement — 2021 en France : 2 milliards d'euros de pertes.",
+      "<b>Acidité et pH</b> : l'acide malique est respiré par la baie d'autant plus vite qu'il fait chaud. Un pH qui passe de 3,4 à 3,8 rend le soufre deux fois moins efficace et ouvre la porte aux bactéries d'altération. D'où l'acidification tartrique, autorisée dans les régions chaudes.",
+      "<b>Adaptations</b> : cépages tardifs ou méridionaux (Bordeaux a autorisé en 2021 six variétés dont le touriga nacional et le marselan, plafonnées à 5 % de l'assemblage), altitude et expositions fraîches, taille tardive qui retarde le débourrement, canopée haute, ombrage, porte-greffes résistants à la sécheresse, irrigation là où elle est permise.",
+      "<b>Nouveaux vignobles</b> : l'Angleterre est passée de quelques hectares à plus de 4 000, le Québec de 30 à plus de 150 producteurs, et la Scandinavie plante. La vigne remonte vers le nord d'environ <b>50 km par décennie</b>.",
+    ],
+    atelier: 'rechauffement',
+  },
+  {
     id: 'plantation',
     titre: 'Planter la vigne',
     duree: 'Année 0',
@@ -151,6 +165,20 @@ const STADES = [
     ],
     atelier: 'cycle',
     large: true,
+  },
+  {
+    id: 'eau-chaleur',
+    titre: "L'eau et la chaleur",
+    duree: 'Juin → septembre',
+    intro: "Entre la floraison et la vendange, deux variables décident du goût du vin bien avant le chai : <b>ce que la vigne boit</b> et <b>la chaleur qu'elle reçoit</b>. L'eau règle la taille de la baie, et la taille de la baie règle tout le reste : une petite baie a proportionnellement plus de peau que de jus, donc plus de couleur, plus de tanins et plus d'arômes par litre. Une <b>contrainte hydrique modérée</b>, installée après la véraison, arrête la pousse des rameaux, envoie les sucres vers les grappes et déclenche la synthèse des anthocyanes : c'est l'idéal, et c'est étroit. Trop d'eau et la baie gonfle, la vigne continue de pousser, le vin est dilué ; trop peu et la photosynthèse s'arrête, la maturité se bloque, le raisin reste vert et acide malgré le soleil. La chaleur, elle, fait monter le sucre et brûle l'acide malique — la baie le respire d'autant plus vite qu'il fait chaud. Au-delà de <b>30 à 35 °C</b>, la machine s'inverse : les anthocyanes se dégradent, les arômes fins s'évaporent, les grappes exposées s'échaudent.",
+    reperes: [
+      "<b>Une baie</b>, c'est 75 à 80 % d'eau. Les tanins sont dans la peau (un tiers) et dans les pépins (deux tiers) ; la couleur, uniquement dans la peau ; la pulpe n'apporte que le sucre et les acides.",
+      "<b>La bonne contrainte</b> se mesure : potentiel hydrique de base entre −0,4 et −0,6 MPa, lu à la chambre à pression avant le lever du jour. Au-delà de −0,8 MPa, la vigne ferme ses stomates et cesse de fabriquer du sucre.",
+      "<b>Consommation</b> : 3 à 5 mm d'eau par jour en juillet, soit 30 à 50 m³ par hectare. Un sol à 150 mm de réserve utile tient donc un mois de sec, un sol caillouteux superficiel, dix jours.",
+      "<b>Acide malique</b> : sa respiration double environ à chaque +10 °C. C'est pourquoi les nuits fraîches conservent l'acidité, et pourquoi un été caniculaire donne des vins mous à pH élevé.",
+      "<b>Les leviers du vigneron</b> : charge laissée à la taille et vendange verte, hauteur de la canopée (il faut de 1,2 à 1,5 m² de feuilles par kilo de raisin pour mûrir), effeuillage (côté levant pour aérer sans brûler), enherbement qui concurrence l'eau, paillage, filets d'ombrage, et irrigation là où elle est autorisée.",
+    ],
+    atelier: 'equilibre',
   },
   {
     id: 'maturite',
@@ -298,14 +326,19 @@ const STADES = [
     titre: "L'assemblage",
     duree: 'Quelques jours de dégustation',
     intro: {
-      rouge: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par date de vendange, puis des barriques neuves et d'autres usagées, du vin de goutte et du vin de presse. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final. À Bordeaux, c'est le mariage du merlot et du cabernet ; en Bourgogne, un seul cépage, mais on décide quelle barrique entre dans la cuvée et laquelle part dans le second vin.",
-      blanc: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par pressée, en inox et en barrique. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final : la cuve inox pour la fraîcheur, la barrique pour le gras, le jus de presse ou pas. C'est un exercice de dégustation à l'aveugle, avec des éprouvettes et des proportions.",
-      rose: "Même pour un rosé, on assemble : la cuvée de saignée avec celle de pressurage direct, le grenache avec le cinsault, une cuve plus colorée avec une plus pâle, pour arriver à la teinte et à l'équilibre voulus. L'<b>assemblage</b> se fait à la dégustation, avec des éprouvettes et des proportions.",
+      rouge: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par date de vendange, puis des barriques neuves et d'autres usagées, du vin de goutte et du vin de presse. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final. Ce n'est pas un mélange, c'est un calcul : chaque lot apporte une caractéristique mesurable — degré, acidité totale, pH, indice de tanins, intensité colorante, marque du bois — et le vigneron cherche la combinaison qui approche le mieux le vin qu'il a en tête. À Bordeaux, c'est le mariage du merlot (chair, alcool, rondeur) et du cabernet sauvignon (structure, couleur, garde), corrigé au cabernet franc ; en Bourgogne, un seul cépage, mais on décide quelle barrique entre dans la cuvée et laquelle part dans le second vin.",
+      blanc: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par pressée, en inox et en barrique. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final. Ce n'est pas un mélange, c'est un calcul : chaque lot apporte une caractéristique mesurable — degré, acidité totale, pH, gras, amertume de peau, marque du bois — et le vigneron cherche la combinaison qui approche le mieux le vin qu'il a en tête. La cuve inox pour la tension, la barrique pour le gras, les lies pour le volume, le jus de presse pour la matière ou pas du tout : c'est un exercice de dégustation, avec des éprouvettes, des proportions et une calculatrice.",
+      rose: "Même pour un rosé, on assemble, et c'est même là que la couleur se décide. La cuvée de saignée, sombre et structurée, corrige la cuvée de pressurage direct, pâle et fruitée ; le grenache donne le gras, le cinsault la fraîcheur, une pointe de syrah la couleur. L'<b>assemblage</b> vise une teinte précise — souvent mesurée au spectrophotomètre, tant la couleur fait vendre — et un équilibre entre le fruit et l'acidité. Il se fait à la dégustation, avec des éprouvettes et des proportions.",
     },
     reperes: [
-      "Les proportions se testent en <b>éprouvette</b> avant de toucher aux cuves ; une cuvée se compose à 1 % près.",
-      "Le <b>second vin</b> d'un château, c'est ce qui n'est pas entré dans le premier : jeunes vignes, barriques moins réussies.",
+      "<b>Pourquoi assembler</b> : la complémentarité (ce qui manque à l'un, l'autre l'a), la régularité (offrir le même vin chaque année malgré les millésimes), la correction (remonter une acidité, diluer un excès de bois) et la sélection (ce qui n'entre pas dans la cuvée fait le second vin).",
+      "<b>Les paramètres qu'on ajuste</b> : le degré, l'acidité totale et le pH, l'indice de tanins, l'intensité et la teinte de la couleur, la part de bois neuf, la part de vin de presse, et l'équilibre entre les cépages — souvent encadré par l'appellation.",
+      "<b>La technique</b> : on prépare des essais en éprouvette de 100 mL, on les goûte à l'aveugle et en équipe, on ajuste au pourcent près, puis on refait analyser le mélange retenu. Une cuvée se compose <b>à 1 % près</b>, et l'ordre des essais compte : le palais s'habitue.",
+      "<b>Le vin de presse</b> : plus tannique, plus coloré, plus riche en potassium que le vin de goutte. On en remet 5 à 15 % pour la structure, rarement plus, et souvent après l'avoir élevé à part.",
+      "<b>Assembler tôt ou tard</b> : avant l'élevage, les lots se fondent ensemble pendant des mois mais on juge des vins encore fermés ; après l'élevage, on juge sur pièces mais il faut laisser <b>trois à quatre semaines de mariage</b> en cuve avant la mise, sinon le vin est dissocié.",
+      "<b>Ailleurs</b> : le champagne non millésimé assemble jusqu'à cinquante vins clairs et 30 à 40 % de vins de réserve des années précédentes ; le porto et le xérès assemblent des âges différents ; le rioja assemble des durées de fût. À l'inverse, un vin de parcelle unique revendique de n'être assemblé avec rien.",
     ],
+    atelier: 'assemblage',
   },
   {
     id: 'mise',
@@ -683,6 +716,141 @@ ATELIERS.climat = (boite) => {
   }
   [temp, ampl, pluie].forEach((c) => c.addEventListener('input', maj));
   automne.addEventListener('change', maj);
+  maj();
+  return { maj };
+};
+
+/* ---------- Réchauffement : faire vieillir un vignoble ---------- */
+
+const REGIONS_CLIMAT = {
+  quebec: { nom: 'Sud du Québec', dj: 1020, cepage: 'hybrides rustiques (frontenac, marquette, vidal)', alcool: 11.6, acidite: 5.4, ph: 3.1, vendange: [10, 2], gel: 45, sec: 8 },
+  champagne: { nom: 'Champagne', dj: 1110, cepage: 'pinot noir, meunier, chardonnay', alcool: 10.4, acidite: 5.6, ph: 3.02, vendange: [9, 24], gel: 40, sec: 12 },
+  bourgogne: { nom: 'Bourgogne', dj: 1340, cepage: 'pinot noir, chardonnay', alcool: 12.4, acidite: 4.4, ph: 3.28, vendange: [9, 22], gel: 35, sec: 18 },
+  niagara: { nom: 'Niagara-on-the-Lake', dj: 1420, cepage: 'riesling, chardonnay, cabernet franc', alcool: 12.2, acidite: 4.6, ph: 3.22, vendange: [10, 5], gel: 30, sec: 15 },
+  bordeaux: { nom: 'Bordelais', dj: 1640, cepage: 'merlot, cabernet sauvignon', alcool: 12.9, acidite: 3.9, ph: 3.42, vendange: [9, 28], gel: 25, sec: 25 },
+  rhone: { nom: 'Rhône sud', dj: 2020, cepage: 'grenache, syrah, mourvèdre', alcool: 14.2, acidite: 3.3, ph: 3.62, vendange: [9, 12], gel: 12, sec: 55 },
+};
+const EQUIVALENTS = [[1020, 'du sud du Québec'], [1110, 'de la Champagne'], [1340, 'de la Bourgogne'], [1640, 'du Bordelais'], [1900, 'de la Napa'], [2100, 'du Languedoc'], [2350, 'de Jerez']];
+
+ATELIERS.rechauffement = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Réchauffer un vignoble, degré par degré');
+  const canvas = h('canvas', { 'aria-label': 'Déplacement d’un vignoble sur l’échelle de Winkler sous l’effet du réchauffement' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const region = selection(reglages, { id: 'wRegion', label: 'Vignoble', valeur: 'bourgogne', options: Object.entries(REGIONS_CLIMAT).map(([k, r]) => [k, r.nom]) });
+  const hausse = curseur(reglages, { id: 'wHausse', label: 'Réchauffement depuis 1980', min: 0, max: 4, step: 0.1, valeur: 1.5, affiche: (v) => `+${fmt(v, 1)} °C` });
+  const cepage = h('input', { type: 'checkbox', id: 'wCepage' });
+  const altitude = h('input', { type: 'checkbox', id: 'wAltitude' });
+  const conduite = h('input', { type: 'checkbox', id: 'wConduite' });
+  boite.append(h('div', { class: 'reglages une' },
+    h('div', { class: 'reglage' },
+      h('span', {}, 'Adaptations'),
+      h('label', { class: 'case' }, cepage, 'Cépage plus tardif ou méridional'),
+      h('label', { class: 'case' }, altitude, 'Monter de 200 m, ou exposition fraîche'),
+      h('label', { class: 'case' }, conduite, 'Taille tardive, canopée haute, ombrage'))));
+  const mesures = h('dl', { class: 'mesures' });
+  const dDj = h('dd', { class: 'grand', 'data-testid': 'dj-rechauffe' });
+  const dEquiv = h('dd', { 'data-testid': 'equivalent' });
+  const dVendange = h('dd', { 'data-testid': 'avance-vendange' });
+  const dAlcool = h('dd', { 'data-testid': 'alcool-rechauffe' });
+  const dAcide = h('dd');
+  const dPh = h('dd');
+  mesures.append(
+    h('dt', {}, 'Degrés-jours de la saison'), dDj,
+    h('dt', {}, 'Climat des années 1980 équivalent'), dEquiv,
+    h('dt', {}, 'Date de vendange'), dVendange,
+    h('dt', {}, 'Alcool à maturité égale'), dAlcool,
+    h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcide,
+    h('dt', {}, 'pH'), dPh);
+  boite.append(mesures);
+  const jauges = h('div', { class: 'jauges' });
+  const jAdeq = jauge(jauges, 'Cépage encore adapté', 'vert');
+  const jFrais = jauge(jauges, 'Fraîcheur aromatique', 'bleu');
+  const jGel = jauge(jauges, 'Risque de gel de printemps', 'rougeb');
+  const jSec = jauge(jauges, 'Stress hydrique estival', 'or');
+  boite.append(jauges);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-rechauffement' });
+  boite.append(lecture);
+
+  function dessiner(djBase, dj) {
+    const L = 520, H = 112, g = 14, d = 14, y0 = 52, eh = 22;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
+    const X = (v) => g + clamp((v - 800) / 1800, 0, 1) * (L - g - d);
+    let debut = 800;
+    WINKLER.forEach((r, i) => {
+      const fin = Math.min(r.max, 2600);
+      ctx.fillStyle = COULEURS_WINKLER[i]; ctx.globalAlpha = .85;
+      ctx.fillRect(X(debut), y0, X(fin) - X(debut), eh);
+      ctx.globalAlpha = 1; ctx.fillStyle = '#120c0e'; ctx.font = '600 10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(r.nom, (X(debut) + X(fin)) / 2, y0 + 15);
+      debut = fin;
+    });
+    ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.fillStyle = '#a89a95'; ctx.textAlign = 'center';
+    for (let v = 800; v <= 2600; v += 300) { ctx.fillText(fmt(v), X(v), H - 6); ctx.fillRect(X(v) - .5, y0 + eh, 1, 4); }
+    // flèche du climat de 1980 vers le climat actuel
+    const x0 = X(djBase), x1 = X(dj), y = 28;
+    ctx.strokeStyle = '#55414a'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x0, y + 6); ctx.lineTo(x0, y0 - 2); ctx.stroke();
+    ctx.fillStyle = '#a89a95'; ctx.font = '500 9px Outfit, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('1980', x0, y - 10);
+    if (Math.abs(x1 - x0) > 2) {
+      ctx.strokeStyle = '#f3ebe4'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+      const s = Math.sign(x1 - x0);
+      ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x1 - 6 * s, y - 4); ctx.lineTo(x1 - 6 * s, y + 4); ctx.closePath();
+      ctx.fillStyle = '#f3ebe4'; ctx.fill();
+    }
+    ctx.fillStyle = '#f3ebe4'; ctx.textAlign = 'center'; ctx.font = '600 9px Outfit, sans-serif';
+    ctx.fillText('aujourd’hui', x1, y - 10);
+    ctx.beginPath(); ctx.moveTo(x1, y0 - 2); ctx.lineTo(x1 - 6, y0 - 11); ctx.lineTo(x1 + 6, y0 - 11); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x1, y0 + eh + 2); ctx.lineTo(x1 - 6, y0 + eh + 11); ctx.lineTo(x1 + 6, y0 + eh + 11); ctx.closePath(); ctx.fill();
+  }
+
+  function maj() {
+    const base = REGIONS_CLIMAT[region.value];
+    const dT = +hausse.value;
+    const dTeff = dT - (altitude.checked ? 1.2 : 0);
+    const dj = Math.round(base.dj + 195 * dTeff);
+    const r = regionWinkler(dj);
+    const avance = 6.5 * dTeff - (cepage.checked ? 8 : 0) - (conduite.checked ? 10 : 0);
+    const jour = clamp(D(base.vendange[0], base.vendange[1]) - Math.round(avance), 200, 320);
+    const alcool = base.alcool + 0.55 * dTeff - (cepage.checked ? 0.5 : 0) - (conduite.checked ? 0.6 : 0);
+    const acidite = Math.max(1.8, base.acidite - 0.3 * dTeff + (cepage.checked ? 0.2 : 0) + (conduite.checked ? 0.25 : 0));
+    const ph = base.ph + 0.055 * dTeff - (cepage.checked ? 0.03 : 0) - (conduite.checked ? 0.03 : 0);
+    const cible = base.dj + (cepage.checked ? 330 : 0);
+    const adeq = clamp(100 - Math.abs(dj - cible) / 7, 0, 100);
+    const frais = clamp(100 - 15 * dTeff + (conduite.checked ? 12 : 0) + (cepage.checked ? 6 : 0), 0, 100);
+    const gel = clamp(base.gel + 11 * dT - (conduite.checked ? 12 : 0) + (altitude.checked ? 10 : 0), 0, 100);
+    const sec = clamp(base.sec + 17 * dT - (altitude.checked ? 6 : 0) - (cepage.checked ? 8 : 0) + (conduite.checked ? 4 : 0), 0, 100);
+    const equiv = EQUIVALENTS.reduce((a, b) => Math.abs(b[0] - dj) < Math.abs(a[0] - dj) ? b : a);
+
+    dDj.textContent = `${fmt(dj)} °C·j · ${r.nom}`;
+    dEquiv.textContent = `celui ${equiv[1]}`;
+    dVendange.textContent = `${dateDuJour(jour)} · ${avance >= 0 ? `${fmt(avance)} j plus tôt` : `${fmt(-avance)} j plus tard`}`;
+    dAlcool.textContent = `${fmt(alcool, 1)} % vol.`;
+    dAlcool.className = alcool > 14.5 ? 'alerte' : '';
+    dAcide.textContent = `${fmt(acidite, 1)} g/L`;
+    dPh.textContent = fmt(ph, 2);
+    dPh.className = ph > 3.75 ? 'alerte' : '';
+    jAdeq(adeq); jFrais(frais); jGel(gel); jSec(sec);
+
+    let l, cls = '';
+    if (dT < 0.4) { l = `<b>Le climat de départ.</b> ${base.nom} des années 1980 : ${fmt(base.dj)} degrés-jours, ${base.cepage}, vendange vers le ${dateDuJour(D(base.vendange[0], base.vendange[1]))}. C'est la référence dont sont issues les appellations, les cépages autorisés et les dates de vendange qu'on croit immuables.`; }
+    else if (adeq > 70) { l = `<b>Le vignoble tient.</b> Avec ${fmt(dj)} degrés-jours, ${base.nom} reste dans la fenêtre de ${cepage.checked ? 'ce cépage plus tardif' : 'ses cépages historiques'} ; le vin est un peu plus alcoolique, un peu moins acide, mais reconnaissable. C'est la situation de la plupart des régions aujourd'hui — et le moment d'agir, pas de conclure.`; cls = 'bon'; }
+    else if (dj > 2200) { l = `<b>Au-delà de la vigne de qualité.</b> ${fmt(dj)} degrés-jours, c'est le climat ${equiv[1]} : région V de Winkler, celle des vins mutés et des gros volumes irrigués. Les cépages fins y perdent leurs arômes et leur acidité avant d'avoir des tanins mûrs. Il faudrait changer de métier, de lieu, ou de définition du vin.`; cls = 'alerte'; }
+    else { l = `<b>Le vignoble a changé de région.</b> ${fmt(dj)} degrés-jours : ${base.nom} cultive désormais sous le climat ${equiv[1]} des années 1980. ${cepage.checked ? "Le cépage tardif rattrape une partie du décalage" : "Les cépages historiques mûrissent trop vite"} : la vendange tombe ${fmt(Math.abs(avance))} jours ${avance >= 0 ? 'plus tôt' : 'plus tard'}, en pleine chaleur, et il faut vendanger de nuit pour rentrer un raisin frais.`; cls = 'alerte'; }
+    if (alcool > 14.5) l += ` À ${fmt(alcool, 1)} % vol., le vin sort de l'équilibre attendu : on désalcoolise, on vendange plus tôt au risque de tanins verts, ou on assume un autre style.`;
+    if (ph > 3.75) l += ` À pH ${fmt(ph, 2)}, le soufre perd son efficacité et les bactéries d'altération prospèrent : l'acidification tartrique devient une routine de chai.`;
+    if (gel > 55) l += ` Et le paradoxe reste entier : ${fmt(gel)} % de risque de gel de printemps, parce que la vigne débourre plus tôt sans que les gelées tardives aient reculé d'autant.`;
+    lecture.innerHTML = l;
+    lecture.className = `lecture ${cls}`;
+    dessiner(base.dj, dj);
+  }
+  region.addEventListener('change', maj);
+  hausse.addEventListener('input', maj);
+  [cepage, altitude, conduite].forEach((c) => c.addEventListener('change', maj));
   maj();
   return { maj };
 };
@@ -1229,6 +1397,163 @@ ATELIERS.cycle = (boite) => {
   return { maj, phase: () => phaseNom.textContent, jour, quebec, arreter: () => { if (anim) derouler(); } };
 };
 
+/* ---------- Eau et chaleur : ce qui fait le goût ---------- */
+
+const EXPOSITIONS = {
+  ombre: { nom: 'Canopée dense, grappes à l’ombre', soleil: 0.25 },
+  levant: { nom: 'Effeuillé côté levant', soleil: 0.6 },
+  double: { nom: 'Effeuillé des deux côtés', soleil: 1 },
+};
+
+/* Modèle jouet : l'eau règle la taille de la baie, la taille de la baie règle
+   le rapport peau/jus, et ce rapport commande couleur, tanins et concentration.
+   La chaleur ajoute du sucre et brûle l'acide malique ; au-delà de 24 °C de
+   moyenne, elle dégrade aussi la couleur et les arômes. */
+function equilibreBaie({ eau, temp, ampl, charge, soleil }) {
+  const contrainte = clamp((300 - eau) / 190, 0, 1);          // 0 : la vigne boit à sa faim ; 1 : stress sévère
+  const exces = clamp((eau - 330) / 170, 0, 1);               // sol saturé, vigne qui pousse encore
+  const bloque = Math.max(0, contrainte - 0.72) / 0.28;       // stomates fermés, maturité en panne
+  const poids = clamp(1 + 1.2 * ((eau - 100) / 400) ** 0.85 + 0.15 * (charge - 2) / 2, 0.8, 2.4);
+  const peau = (1.55 / poids) ** (1 / 3);                     // indice peau/jus, 1 = baie de référence
+  const optimum = Math.exp(-((contrainte - 0.45) ** 2) / 0.12);  // la contrainte modérée, l'idéal étroit
+  const echaudage = clamp((temp - 22) / 4 * (0.35 + 0.65 * soleil) * (0.4 + 0.6 * contrainte), 0, 1);
+  const sucre = clamp(196 + 8.5 * (temp - 19) - 15 * (charge - 2) + 55 * (peau - 1) - 20 * exces - 50 * bloque, 120, 285);
+  const malique = clamp(6.2 - 0.4 * (temp - 14) + 0.11 * (ampl - 10) + 0.5 * (charge - 2) / 2, 0.5, 7.5);
+  const tartrique = clamp(5.6 - 0.06 * (temp - 19) + 0.05 * (ampl - 10), 4.4, 6.4);
+  const acidite = clamp((malique + tartrique) * 0.653 * 0.68 * (1 + 0.08 * (peau - 1)), 1.5, 6.5);
+  const ph = clamp(4.55 - 0.115 * (malique + tartrique) + 0.03 * (temp - 19), 2.9, 4.1);
+  const tanins = clamp(46 * peau + 18 * (soleil - 0.6) + 7 * (temp - 19) + 22 * optimum - 8 * (charge - 2) - 35 * bloque - 15 * echaudage, 5, 100);
+  const couleur = clamp(50 * peau + 14 * (soleil - 0.4) + 20 * (ampl - 6) / 12 + 20 * optimum - 9 * (charge - 2) - 18 * Math.max(0, temp - 24) - 25 * echaudage - 30 * bloque, 5, 100);
+  const aromes = clamp(96 - 7 * (temp - 18) + 2.6 * (ampl - 8) - 25 * bloque - 14 * exces - 22 * echaudage - 25 * Math.max(0, soleil - 0.6), 0, 100);
+  return { contrainte, exces, bloque, poids, peau, echaudage, sucre, malique, tartrique, acidite, ph, tanins, couleur, aromes, alcool: sucre / 16.83 };
+}
+
+ATELIERS.equilibre = (boite) => {
+  const rouge = ETAT.style !== 'blanc';
+  atelierEntete(boite, 'Atelier', 'Les boutons de l’eau et de la chaleur');
+  const canvas = h('canvas', { 'aria-label': 'Une grappe et une baie en coupe : taille, épaisseur de peau et couleur selon les réglages' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const eau = curseur(reglages, { id: 'qEau', label: 'Eau reçue, floraison → vendange', min: 100, max: 500, step: 10, valeur: 280, affiche: (v) => `${fmt(v)} mm` });
+  const temp = curseur(reglages, { id: 'qTemp', label: 'Température moyenne, juillet → septembre', min: 14, max: 28, step: 0.5, valeur: 20, affiche: (v) => `${fmt(v, 1)} °C` });
+  const ampl = curseur(reglages, { id: 'qAmpl', label: 'Écart jour / nuit', min: 4, max: 20, valeur: 12, affiche: (v) => `${v} °C` });
+  const charge = curseur(reglages, { id: 'qCharge', label: 'Charge laissée sur le cep', min: 0.5, max: 4, step: 0.1, valeur: 2, affiche: (v) => `${fmt(v, 1)} kg/cep` });
+  const expo = selection(reglages, { id: 'qExpo', label: 'Exposition des grappes', valeur: 'levant', options: Object.entries(EXPOSITIONS).map(([k, e]) => [k, e.nom]) });
+  const mesures = h('dl', { class: 'mesures' });
+  const dPoids = h('dd', { 'data-testid': 'poids-baie' }), dPeau = h('dd'), dSucre = h('dd', { 'data-testid': 'sucre-baie' }),
+    dAlc = h('dd', { class: 'grand' }), dAcide = h('dd', { 'data-testid': 'acidite-baie' }), dMal = h('dd'), dPh = h('dd');
+  mesures.append(
+    h('dt', {}, 'Poids d’une baie'), dPoids,
+    h('dt', {}, 'Rapport peau / jus'), dPeau,
+    h('dt', {}, 'Sucre'), dSucre,
+    h('dt', {}, 'Alcool potentiel'), dAlc,
+    h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcide,
+    h('dt', {}, 'dont acide malique (éq. tartrique)'), dMal,
+    h('dt', {}, 'pH'), dPh);
+  boite.append(mesures);
+  const jauges = h('div', { class: 'jauges' });
+  const jTan = jauge(jauges, rouge ? 'Tanins de peau et de pépins' : 'Structure, amers de peau', 'or');
+  const jCoul = jauge(jauges, ETAT.style === 'blanc' ? 'Matière colorante et gras' : 'Couleur (anthocyanes)', 'rougeb');
+  const jArom = jauge(jauges, 'Arômes fins et fraîcheur', 'vert');
+  const jAcid = jauge(jauges, 'Acidité perçue', 'bleu');
+  boite.append(jauges);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-equilibre' });
+  boite.append(lecture);
+  const btn = h('button', { class: 'bouton', type: 'button', id: 'qReporter' }, 'Reporter ce millésime sur la maturité →');
+  boite.append(h('div', { class: 'boutons' }, btn));
+
+  function couleurBaie(r) {
+    const c = r.couleur / 100;
+    if (ETAT.style === 'blanc') return `rgb(${Math.round(lerp(205, 232, c))},${Math.round(lerp(200, 210, c))},${Math.round(lerp(120, 90, c))})`;
+    if (ETAT.style === 'rose') return `rgb(${Math.round(lerp(190, 150, c))},${Math.round(lerp(90, 40, c))},${Math.round(lerp(110, 80, c))})`;
+    return `rgb(${Math.round(lerp(96, 44, c))},${Math.round(lerp(40, 12, c))},${Math.round(lerp(70, 44, c))})`;
+  }
+  function dessiner(r) {
+    const L = 520, H = 190;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
+    const teinte = couleurBaie(r);
+    // la grappe, à l'échelle : le rayon suit le poids de la baie
+    const rayon = 9 + 11 * (r.poids - 0.8) / 1.6;
+    const rnd = alea(7);
+    ctx.save();
+    ctx.translate(150, 26);
+    ctx.strokeStyle = '#5a4a2c'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(0, 6); ctx.stroke();
+    for (let i = 0; i < 6; i++) {
+      const n = 4 - Math.floor(i / 2);
+      for (let k = 0; k < n; k++) {
+        const x = (k - (n - 1) / 2) * (rayon * 1.85) + (rnd() - 0.5) * 4;
+        const y = 12 + i * rayon * 1.5 + (rnd() - 0.5) * 3;
+        if (y + rayon > H - 16) continue;
+        ctx.beginPath(); ctx.arc(x, y, rayon, 0, Math.PI * 2);
+        ctx.fillStyle = teinte; ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.16)';
+        ctx.beginPath(); ctx.arc(x - rayon * 0.3, y - rayon * 0.35, rayon * 0.28, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    ctx.restore();
+    // la baie en coupe, à droite : épaisseur de peau proportionnelle au rapport peau/jus
+    const cx = 400, cy = 96, R = 62;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = teinte; ctx.fill();
+    const ep = clamp(6 + 16 * (r.peau - 0.85), 4, 22);
+    ctx.beginPath(); ctx.arc(cx, cy, R - ep, 0, Math.PI * 2);
+    ctx.fillStyle = ETAT.style === 'blanc' ? '#d9d0a8' : '#e8dcc6'; ctx.globalAlpha = .9; ctx.fill(); ctx.globalAlpha = 1;
+    const brun = clamp((r.tanins - 20) / 70, 0, 1);
+    for (const [dx, dy] of [[-13, -6], [12, -8], [-2, 12]]) {
+      ctx.save(); ctx.translate(cx + dx, cy + dy); ctx.rotate(dx * 0.06);
+      ctx.beginPath(); ctx.ellipse(0, 0, 6, 9, 0, 0, Math.PI * 2);
+      ctx.fillStyle = `rgb(${Math.round(lerp(150, 92, brun))},${Math.round(lerp(160, 58, brun))},${Math.round(lerp(90, 26, brun))})`;
+      ctx.fill(); ctx.restore();
+    }
+    ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.fillStyle = '#a89a95'; ctx.textAlign = 'center';
+    ctx.fillText(`${fmt(r.poids, 2)} g par baie`, 150, H - 6);
+    ctx.fillText(`peau ${r.peau >= 1.06 ? 'épaisse' : r.peau <= 0.94 ? 'mince' : 'moyenne'} · pépins ${brun > 0.6 ? 'bruns' : brun > 0.3 ? 'jaunes' : 'verts'}`, cx, H - 6);
+  }
+
+  function maj() {
+    const r = equilibreBaie({ eau: +eau.value, temp: +temp.value, ampl: +ampl.value, charge: +charge.value, soleil: EXPOSITIONS[expo.value].soleil });
+    dPoids.textContent = `${fmt(r.poids, 2)} g`;
+    dPeau.textContent = `${fmt(r.peau * 100)} % de la référence`;
+    dSucre.textContent = `${fmt(r.sucre)} g/L`;
+    dAlc.textContent = `${fmt(r.alcool, 1)} % vol.`;
+    dAcide.textContent = `${fmt(r.acidite, 1)} g/L`;
+    dAcide.className = r.acidite < 2.6 ? 'alerte' : r.acidite > 5 ? 'alerte' : 'bon';
+    dMal.textContent = `${fmt(r.malique, 1)} g/L`;
+    dPh.textContent = fmt(r.ph, 2);
+    dPh.className = r.ph > 3.75 ? 'alerte' : '';
+    jTan(r.tanins); jCoul(r.couleur); jArom(r.aromes);
+    jAcid(clamp((r.acidite - 1.5) / 4 * 100, 0, 100), `${fmt(r.acidite, 1)} g/L`);
+    let l, cls = '';
+    if (r.bloque > 0.35) { l = "<b>Blocage de maturité.</b> La vigne a fermé ses stomates pour ne pas se dessécher : elle ne photosynthétise plus, donc le sucre n'entre plus. Les feuilles jaunissent et tombent, les baies se flétrissent sans mûrir, les tanins restent verts et astringents. C'est le millésime de sécheresse extrême, où l'irrigation de sauvetage — quand elle est permise — sauve la récolte."; cls = 'alerte'; }
+    else if (r.exces > 0.6) { l = "<b>Trop d'eau.</b> Les baies gonflent, la vigne continue de pousser au lieu de mûrir ses raisins, la canopée s'épaissit et ombrage les grappes. Le jus est dilué : moins de sucre, moins de couleur, moins de tout, par litre. Et l'humidité dans les grappes appelle le mildiou et la pourriture grise."; cls = 'alerte'; }
+    else if (r.echaudage > 0.5) { l = `<b>Coup de chaleur.</b> À ${fmt(+temp.value, 1)} °C de moyenne, avec des grappes exposées et un sol sec, la peau au soleil dépasse 45 °C : elle brunit, se dessèche et perd ses anthocyanes ; les arômes fins partent avec. On revient à l'effeuillage minimal, côté levant seulement, et on pose des filets d'ombrage.`; cls = 'alerte'; }
+    else if (+temp.value >= 24 && r.acidite < 3) { l = `<b>Millésime solaire.</b> Beaucoup de sucre (${fmt(r.sucre)} g/L, soit ${fmt(r.alcool, 1)} % d'alcool potentiel), peu d'acidité (${fmt(r.acidite, 1)} g/L) et un pH de ${fmt(r.ph, 2)} : le vin sera chaleureux, rond, un peu mou, et fragile en cave parce que le soufre y travaille mal. On vendange plus tôt, de nuit, et on acidifie si la loi locale le permet.`; cls = 'alerte'; }
+    else if (+temp.value <= 17 && r.sucre < 185) { l = `<b>Millésime frais.</b> ${fmt(r.sucre)} g/L de sucre, soit ${fmt(r.alcool, 1)} % d'alcool potentiel, et ${fmt(r.acidite, 1)} g/L d'acidité : c'est vif, tendu, parfois maigre. ${rouge ? "Les tanins n'ont pas fini de mûrir : le vin sera herbacé si l'on extrait trop." : 'Le profil des blancs de climat froid et des bases d’effervescents, qui cherchent justement cette acidité.'}`; cls = rouge ? 'alerte' : ''; }
+    else if (r.contrainte > 0.28 && r.contrainte < 0.62 && r.aromes > 55) { l = `<b>La contrainte modérée, l'idéal étroit.</b> La vigne a juste assez soif pour arrêter de pousser sans cesser de mûrir : baies de ${fmt(r.poids, 2)} g, peau proportionnellement épaisse, ${fmt(r.sucre)} g/L de sucre, ${fmt(r.acidite, 1)} g/L d'acidité. ${rouge ? 'La couleur et les tanins se concentrent' : 'Les arômes se concentrent'} sans que rien ne se dégrade. C'est ce que les grands terroirs offrent naturellement : un sol qui donne l'eau au compte-gouttes.`; cls = 'bon'; }
+    else { l = `<b>Équilibre correct.</b> ${fmt(r.sucre)} g/L de sucre pour ${fmt(r.acidite, 1)} g/L d'acidité et un pH de ${fmt(r.ph, 2)} : rien ne cloche, rien ne brille. Essayez de descendre l'eau vers 220 mm ou la charge sous 1,5 kg par cep pour voir la concentration monter — et poussez la température au-delà de 25 °C pour voir l'acidité fondre.`; }
+    if (+charge.value > 3.2) l += ` Avec ${fmt(+charge.value, 1)} kg par cep, la charge dépasse ce que la canopée peut mûrir : il faudrait 1,2 à 1,5 m² de feuilles par kilo de raisin.`;
+    if (EXPOSITIONS[expo.value].soleil >= 1 && +temp.value >= 22) l += " L'effeuillage des deux côtés est un pari : il fait mûrir les tanins, mais il expose la face ouest au soleil de l'après-midi, le plus brûlant.";
+    if (EXPOSITIONS[expo.value].soleil <= 0.25) l += ' À l’ombre d’une canopée dense, les pépins restent verts et les peaux pauvres en couleur : la maturité phénolique a besoin de lumière, pas seulement de chaleur.';
+    lecture.innerHTML = l;
+    lecture.className = `lecture ${cls}`;
+    dessiner(r);
+  }
+  [eau, temp, ampl, charge].forEach((c) => c.addEventListener('input', maj));
+  expo.addEventListener('change', maj);
+  btn.addEventListener('click', () => {
+    const T = +temp.value, E = +eau.value;
+    const m = API.ateliers.maturite;
+    if (!m) return;
+    m.reglerClimat(T >= 22 && E < 300 ? '1.25' : T <= 17 || E > 380 ? '0.8' : '1');
+    document.getElementById('s-maturite')?.scrollIntoView({ behavior: 'smooth' });
+  });
+  maj();
+  return { maj };
+};
+
 /* ---------- Maturité ---------- */
 
 function maturite(jours, climat) {
@@ -1312,7 +1637,7 @@ ATELIERS.maturite = (boite) => {
     if (f) { f.reglerSucre(ETAT.sucre); document.getElementById('s-fermentation')?.scrollIntoView({ behavior: 'smooth' }); }
   });
   maj();
-  return { maj };
+  return { maj, reglerClimat: (v) => { climat.value = v; maj(); } };
 };
 
 /* ---------- Vendanges : rendement ---------- */
@@ -1766,6 +2091,232 @@ ATELIERS.elevage = (boite) => {
   [contenant, chauffe, duree, lies].forEach((el) => el.addEventListener(el.type === 'range' ? 'input' : 'change', maj));
   maj();
   return { maj };
+};
+
+/* ---------- Assemblage : composer la cuvée ---------- */
+
+/* Chaque lot est une cuve du chai, avec son volume et son profil mesuré :
+   degré, acidité totale, pH, indice de tanins, couleur, fruit, marque du bois. */
+const LOTS = {
+  rouge: [
+    { nom: 'Merlot, argile, barrique de 1 vin', court: 'Merlot', hl: 420, alcool: 14.2, acidite: 3.3, ph: 3.7, tanin: 45, couleur: 60, fruit: 80, bois: 35, presse: 0, mot: 'la chair et le volume, mais du degré et peu d’acidité' },
+    { nom: 'Cabernet sauvignon, graves, barrique neuve', court: 'Cabernet sauvignon', hl: 260, alcool: 13.2, acidite: 3.9, ph: 3.5, tanin: 85, couleur: 85, fruit: 55, bois: 75, presse: 0, mot: 'la structure, la couleur et la garde' },
+    { nom: 'Cabernet franc, jeunes vignes, cuve inox', court: 'Cabernet franc', hl: 190, alcool: 12.4, acidite: 4.2, ph: 3.4, tanin: 55, couleur: 50, fruit: 85, bois: 0, presse: 0, mot: 'la fraîcheur et le fruit, sans bois' },
+    { nom: 'Vin de presse, élevé à part', court: 'Presse', hl: 90, alcool: 13, acidite: 4, ph: 3.6, tanin: 95, couleur: 95, fruit: 30, bois: 10, presse: 1, mot: 'de la matière brute, vite astringente au-delà de 15 %' },
+  ],
+  blanc: [
+    { nom: 'Chardonnay, cuve inox, vendange précoce', court: 'Inox', hl: 380, alcool: 12.6, acidite: 4.6, ph: 3.15, tanin: 20, couleur: 25, fruit: 90, bois: 0, presse: 0, mot: 'la tension et les agrumes' },
+    { nom: 'Chardonnay, barrique neuve, bâtonné', court: 'Barrique', hl: 170, alcool: 13.4, acidite: 3.6, ph: 3.4, tanin: 38, couleur: 55, fruit: 45, bois: 80, presse: 0, mot: 'le gras, la vanille et le toasté' },
+    { nom: 'Vieilles vignes, foudre, sur lies', court: 'Foudre', hl: 220, alcool: 13, acidite: 4, ph: 3.3, tanin: 30, couleur: 40, fruit: 65, bois: 25, presse: 0, mot: 'le volume et la longueur, sans marquer le bois' },
+    { nom: 'Jus de presse, débourbé serré', court: 'Presse', hl: 110, alcool: 12.2, acidite: 3.8, ph: 3.5, tanin: 62, couleur: 60, fruit: 40, bois: 0, presse: 1, mot: 'de la matière et de l’amertume de peau' },
+  ],
+  rose: [
+    { nom: 'Grenache, pressurage direct', court: 'Grenache', hl: 400, alcool: 12.8, acidite: 3.7, ph: 3.4, tanin: 15, couleur: 20, fruit: 88, bois: 0, presse: 0, mot: 'la pâleur, le gras et le fruit blanc' },
+    { nom: 'Syrah de saignée', court: 'Saignée', hl: 150, alcool: 13.2, acidite: 3.5, ph: 3.5, tanin: 42, couleur: 72, fruit: 70, bois: 0, presse: 0, mot: 'la couleur et un peu de structure' },
+    { nom: 'Cinsault vendangé de nuit', court: 'Cinsault', hl: 230, alcool: 12.2, acidite: 4.5, ph: 3.2, tanin: 12, couleur: 25, fruit: 92, bois: 0, presse: 0, mot: 'l’acidité et la fraîcheur' },
+    { nom: 'Cuvée élevée en barrique', court: 'Barrique', hl: 90, alcool: 13.5, acidite: 3.4, ph: 3.5, tanin: 36, couleur: 45, fruit: 45, bois: 70, presse: 0, mot: 'du gras et du bois, à doser au pourcent' },
+  ],
+};
+const DEFAUTS_ASSEMBLAGE = { rouge: [40, 28, 22, 10], blanc: [45, 15, 30, 10], rose: [45, 15, 32, 8] };
+const COULEURS_LOTS = ['#9b2f4c', '#d9b25f', '#8fbf6a', '#86b7d9'];
+
+function butsAssemblage(style) {
+  if (style === 'blanc') return {
+    garde: { nom: 'Un blanc de garde, ample et boisé', cible: { alcool: 13.2, acidite: 4.2, tanin: 32, couleur: 50, bois: 45, fruit: 55 }, prime: 6 },
+    fruit: { nom: 'Un blanc de soif, vif et fruité', cible: { alcool: 12.5, acidite: 4.5, tanin: 20, couleur: 28, bois: 5, fruit: 90 }, prime: 3 },
+    regularite: { nom: 'La cuvée de marque, la même chaque année', cible: { alcool: 12.8, acidite: 4.3, tanin: 25, couleur: 38, bois: 20, fruit: 75 }, prime: 10 },
+  };
+  if (style === 'rose') return {
+    garde: { nom: 'Un rosé de gastronomie, vineux', cible: { alcool: 13.2, acidite: 3.8, tanin: 32, couleur: 55, bois: 35, fruit: 60 }, prime: 6 },
+    fruit: { nom: 'Un rosé de terrasse, pâle et fruité', cible: { alcool: 12.5, acidite: 4.3, tanin: 15, couleur: 24, bois: 3, fruit: 90 }, prime: 3 },
+    regularite: { nom: 'La cuvée de marque, la même chaque année', cible: { alcool: 12.8, acidite: 4.1, tanin: 22, couleur: 35, bois: 12, fruit: 80 }, prime: 10 },
+  };
+  return {
+    garde: { nom: 'Le grand vin, fait pour dix ans', cible: { alcool: 13.5, acidite: 3.9, tanin: 75, couleur: 80, bois: 45, fruit: 60 }, prime: 6 },
+    fruit: { nom: 'Une cuvée de plaisir immédiat', cible: { alcool: 12.8, acidite: 4.1, tanin: 38, couleur: 58, bois: 8, fruit: 88 }, prime: 3 },
+    regularite: { nom: 'La cuvée de marque, la même chaque année', cible: { alcool: 13.2, acidite: 4, tanin: 55, couleur: 65, bois: 25, fruit: 72 }, prime: 10 },
+  };
+}
+
+const AXES = ['alcool', 'acidite', 'ph', 'tanin', 'couleur', 'fruit', 'bois'];
+
+/* Mélange pondéré des lots + volume réalisable : la cuvée ne peut pas dépasser
+   ce que le plus sollicité des lots permet de tirer. */
+function melanger(lots, parts) {
+  const somme = parts.reduce((a, b) => a + b, 0) || 1;
+  const p = parts.map((v) => v / somme);
+  const mix = {};
+  for (const a of AXES) mix[a] = lots.reduce((s, l, i) => s + p[i] * l[a], 0);
+  mix.parts = p;
+  mix.presse = lots.reduce((s, l, i) => s + p[i] * l.presse * 100, 0);
+  mix.complexite = clamp((1 - p.reduce((s, v) => s + v * v, 0)) / 0.75 * 100, 0, 100);
+  mix.total = lots.reduce((s, l) => s + l.hl, 0);
+  mix.volume = Math.min(...lots.map((l, i) => p[i] > 0.001 ? l.hl / p[i] : Infinity), mix.total);
+  return mix;
+}
+
+function noterAssemblage(mix, but) {
+  const c = but.cible;
+  const ecart = 0.9 * Math.abs(mix.tanin - c.tanin) + 0.9 * Math.abs(mix.couleur - c.couleur)
+    + 0.7 * Math.abs(mix.bois - c.bois) + 0.8 * Math.abs(mix.fruit - c.fruit)
+    + 12 * Math.abs(mix.alcool - c.alcool) + 15 * Math.abs(mix.acidite - c.acidite);
+  let note = 100 - ecart / 1.6 + mix.complexite / 100 * but.prime;
+  if (mix.presse > 15) note -= (mix.presse - 15) * 1.2;
+  note -= Math.max(0, 55 - mix.volume / mix.total * 100) * (but.prime >= 10 ? 0.35 : 0.12);
+  return clamp(note, 0, 100);
+}
+
+ATELIERS.assemblage = (boite) => {
+  const lots = LOTS[ETAT.style];
+  const buts = butsAssemblage(ETAT.style);
+  atelierEntete(boite, 'Atelier', 'Composer la cuvée à l’éprouvette');
+  const canvas = h('canvas', { 'aria-label': 'Proportions de l’assemblage et volumes disponibles dans la cave' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const parts = lots.map((l, i) => curseur(reglages, {
+    id: `asLot${i}`, label: `${l.court} · ${fmt(l.hl)} hL`, min: 0, max: 100, valeur: DEFAUTS_ASSEMBLAGE[ETAT.style][i], affiche: (v) => `${v} %`,
+  }));
+  const sorties = lots.map((l, i) => boite.querySelector(`output[for="asLot${i}"]`));
+  const but = selection(reglages, { id: 'asBut', label: 'Ce que l’on cherche', valeur: 'garde', options: Object.entries(buts).map(([k, b]) => [k, b.nom]) });
+  const echantillon = h('div', { class: 'echantillon', 'data-testid': 'robe-assemblage' });
+  boite.append(echantillon);
+  const jauges = h('div', { class: 'jauges' });
+  const jTan = jauge(jauges, ETAT.style === 'rouge' ? 'Tanins' : 'Structure', 'or');
+  const jCoul = jauge(jauges, 'Couleur', 'rougeb');
+  const jFruit = jauge(jauges, 'Fruit', 'vert');
+  const jBois = jauge(jauges, 'Marque du bois');
+  boite.append(jauges);
+  const mesures = h('dl', { class: 'mesures' });
+  const dAlc = h('dd', { 'data-testid': 'assemblage-alcool' }), dAcide = h('dd'), dPh = h('dd'),
+    dPresse = h('dd'), dCplx = h('dd'), dVol = h('dd', { 'data-testid': 'volume-cuvee' }), dSecond = h('dd'),
+    dNote = h('dd', { class: 'grand', 'data-testid': 'assemblage-note' });
+  mesures.append(
+    h('dt', {}, 'Degré de la cuvée'), dAlc,
+    h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcide,
+    h('dt', {}, 'pH'), dPh,
+    h('dt', {}, 'Part de vin de presse'), dPresse,
+    h('dt', {}, 'Complexité (répartition entre les lots)'), dCplx,
+    h('dt', {}, 'Volume réalisable'), dVol,
+    h('dt', {}, 'Ce qui part au second vin'), dSecond,
+    h('dt', {}, 'Proximité de l’objectif'), dNote);
+  boite.append(mesures);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-assemblage' });
+  boite.append(lecture);
+  const btnAuto = h('button', { class: 'bouton principal', type: 'button', id: 'asAuto' }, 'Chercher le meilleur assemblage');
+  const btnRaz = h('button', { class: 'bouton', type: 'button', id: 'asRaz' }, 'Proportions du chai');
+  boite.append(h('div', { class: 'boutons' }, btnAuto, btnRaz));
+
+  function robe(mix) {
+    const c = mix.couleur / 100;
+    if (ETAT.style === 'blanc') return `rgb(${Math.round(lerp(238, 214, c))},${Math.round(lerp(232, 186, c))},${Math.round(lerp(178, 96, c))})`;
+    if (ETAT.style === 'rose') return `rgb(${Math.round(lerp(247, 214, c))},${Math.round(lerp(196, 96, c))},${Math.round(lerp(190, 112, c))})`;
+    return `rgb(${Math.round(lerp(150, 80, c))},${Math.round(lerp(60, 14, c))},${Math.round(lerp(90, 46, c))})`;
+  }
+
+  function dessiner(mix) {
+    const L = 520, H = 150, g = 12, d = 12, l0 = L - g - d;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
+    ctx.font = '600 9.5px JetBrains Mono, monospace'; ctx.fillStyle = '#a89a95'; ctx.textAlign = 'left';
+    ctx.fillText('LA CUVÉE', g, 14);
+    let x = g;
+    mix.parts.forEach((p, i) => {
+      const w = p * l0;
+      ctx.fillStyle = COULEURS_LOTS[i];
+      ctx.fillRect(x, 20, Math.max(0, w - 1), 30);
+      if (w > 42) {
+        ctx.fillStyle = '#120c0e'; ctx.font = '600 10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+        ctx.fillText(`${fmt(p * 100)} %`, x + w / 2, 39);
+      }
+      x += w;
+    });
+    ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.fillStyle = '#a89a95'; ctx.textAlign = 'left';
+    ctx.fillText('LA CAVE — CE QUI RESTE APRÈS AVOIR TIRÉ LA CUVÉE', g, 74);
+    const bh = 13, ecart = 18;
+    lots.forEach((l, i) => {
+      const y = 82 + i * ecart;
+      const w = (l.hl / mix.total) * (l0 - 160);
+      const pris = clamp(mix.parts[i] * mix.volume / l.hl, 0, 1);
+      ctx.fillStyle = '#241a1d'; ctx.fillRect(g + 148, y, w, bh);
+      ctx.fillStyle = COULEURS_LOTS[i]; ctx.fillRect(g + 148, y, w * pris, bh);
+      ctx.fillStyle = '#dccfc9'; ctx.font = '500 9.5px Outfit, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(l.court, g + 142, y + 10);
+      ctx.fillStyle = '#a89a95'; ctx.font = '500 9px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`${fmt(l.hl * (1 - pris))} hL`, g + 152 + w, y + 10);
+    });
+  }
+
+  function maj() {
+    const valeurs = parts.map((p) => +p.value);
+    const mix = melanger(lots, valeurs);
+    const b = buts[but.value];
+    const note = noterAssemblage(mix, b);
+    mix.parts.forEach((p, i) => { sorties[i].textContent = `${fmt(p * 100)} %`; });
+    jTan(mix.tanin); jCoul(mix.couleur); jFruit(mix.fruit); jBois(mix.bois);
+    dAlc.textContent = `${fmt(mix.alcool, 1)} % vol.`;
+    dAcide.textContent = `${fmt(mix.acidite, 2)} g/L`;
+    dPh.textContent = fmt(mix.ph, 2);
+    dPresse.textContent = `${fmt(mix.presse, 1)} %`;
+    dPresse.className = mix.presse > 15 ? 'alerte' : '';
+    dCplx.textContent = `${fmt(mix.complexite)} / 100`;
+    dVol.textContent = `${fmt(mix.volume)} hL · ${fmt(mix.volume / 0.75 * 100)} bouteilles`;
+    dSecond.textContent = `${fmt(100 - mix.volume / mix.total * 100)} % du chai`;
+    dNote.textContent = `${fmt(note)} / 100`;
+    dNote.className = `grand ${note >= 80 ? 'bon' : note < 55 ? 'alerte' : ''}`;
+    echantillon.style.background = robe(mix);
+    echantillon.textContent = `${fmt(mix.alcool, 1)} % vol. · ${fmt(mix.acidite, 2)} g/L · pH ${fmt(mix.ph, 2)}`;
+
+    // Le plus gros écart à l'objectif, et le lot qui le corrigerait.
+    const axes = [['tanin', 'de tanins', 0.9], ['couleur', 'de couleur', 0.9], ['bois', 'de bois', 0.7], ['fruit', 'de fruit', 0.8]];
+    let pire = null;
+    for (const [a, mot, poids] of axes) {
+      const e = (mix[a] - b.cible[a]) * poids;
+      if (!pire || Math.abs(e) > Math.abs(pire.e)) pire = { a, mot, e };
+    }
+    const trie = lots.map((l, i) => ({ l, i })).sort((x, y) => y.l[pire.a] - x.l[pire.a]);
+    const conseil = pire.e < 0
+      ? `il manque ${pire.mot} : montez <b>${trie[0].l.court}</b> (${fmt(trie[0].l[pire.a])} sur cet axe) ou baissez <b>${trie[trie.length - 1].l.court}</b>`
+      : `il y a trop ${pire.mot} : baissez <b>${trie[0].l.court}</b> au profit de <b>${trie[trie.length - 1].l.court}</b>`;
+    let l, cls = '';
+    if (note >= 82) { l = `<b>Cet assemblage y est.</b> ${fmt(mix.alcool, 1)} % vol., ${fmt(mix.acidite, 2)} g/L d'acidité, un profil qui colle à l'objectif « ${b.nom.toLowerCase()} ». On refait analyser le mélange, on le monte en cuve et on le laisse se marier trois à quatre semaines avant la mise : un assemblage frais est toujours dissocié, chaque lot se goûte encore séparément.`; cls = 'bon'; }
+    else if (note >= 60) { l = `<b>On approche.</b> Sur les six paramètres, ${conseil}. En cave, on ne bouge pas la cuve pour autant : on refait deux ou trois éprouvettes de 100 mL à 5 % près, on les goûte à l'aveugle avec l'équipe, et on ne tranche qu'ensuite.`; }
+    else { l = `<b>Pas encore la cuvée.</b> ${conseil[0].toUpperCase()}${conseil.slice(1)}. Rappel : un assemblage n'est pas une moyenne, c'est un choix — ce qui n'entre pas ici fera le second vin, vendu moins cher mais vendu quand même.`; cls = 'alerte'; }
+    if (mix.presse > 15) l += ` Avec ${fmt(mix.presse, 1)} % de vin de presse, la cuvée devient sèche et amère en finale : au-delà de 15 %, on assèche plus qu'on ne structure.`;
+    if (mix.complexite < 35) l += ` Un seul lot domine : c'est un vin de parcelle, pas un assemblage. Défendable — la Bourgogne fait cela — mais on perd le filet de sécurité qui fait qu'un assemblage est plus régulier que chacune de ses parties.`;
+    if (mix.volume / mix.total < 0.55) l += ` Et la contrainte de cave mord : la proportion demandée d'un petit lot limite la cuvée à ${fmt(mix.volume)} hL, soit ${fmt(100 - mix.volume / mix.total * 100)} % du chai qui part au second vin.`;
+    lecture.innerHTML = l;
+    lecture.className = `lecture ${cls}`;
+    dessiner(mix);
+  }
+
+  /* Recherche exhaustive par pas de 5 % : 1 771 assemblages, de quoi trancher. */
+  function chercher() {
+    const b = buts[but.value];
+    let meilleur = null;
+    for (let a = 0; a <= 100; a += 5) {
+      for (let c = 0; a + c <= 100; c += 5) {
+        for (let d = 0; a + c + d <= 100; d += 5) {
+          const e = 100 - a - c - d;
+          const mix = melanger(lots, [a, c, d, e]);
+          const n = noterAssemblage(mix, b);
+          if (!meilleur || n > meilleur.n) meilleur = { n, v: [a, c, d, e] };
+        }
+      }
+    }
+    parts.forEach((p, i) => { p.value = meilleur.v[i]; p.majSortie(); });
+    maj();
+  }
+
+  parts.forEach((p) => p.addEventListener('input', maj));
+  but.addEventListener('change', maj);
+  btnAuto.addEventListener('click', chercher);
+  btnRaz.addEventListener('click', () => {
+    parts.forEach((p, i) => { p.value = DEFAUTS_ASSEMBLAGE[ETAT.style][i]; p.majSortie(); });
+    maj();
+  });
+  maj();
+  return { maj, chercher };
 };
 
 /* ---------- Bouchage et SO2 ---------- */

@@ -16,13 +16,15 @@ test.describe("Du cep à la bouteille", () => {
     await expect(page.getByTestId("etiquette")).toHaveText("Rouge");
     const stades = await page.evaluate(() => window.vin.stades());
     expect(stades[0]).toBe("climat");
-    expect(stades.slice(0, 5)).toEqual(["climat", "geographie", "sol", "vie-du-sol", "plantation"]);
+    expect(stades.slice(0, 6)).toEqual(["climat", "geographie", "sol", "vie-du-sol", "rechauffement", "plantation"]);
+    expect(stades.indexOf("eau-chaleur")).toBe(stades.indexOf("maturite") - 1);
+    expect(stades.indexOf("assemblage")).toBeLessThan(stades.indexOf("mise"));
     expect(stades[stades.length - 1]).toBe("bouteille");
     expect(stades).toContain("eraflage");
     expect(stades).toContain("pressurage-rouge");
     expect(stades).not.toContain("debourbage");
     await expect(page.locator("#etapes li")).toHaveCount(stades.length);
-    await expect(page.locator(".atelier")).toHaveCount(14);
+    await expect(page.locator(".atelier")).toHaveCount(17);
     expect(erreurs).toEqual([]);
   });
 
@@ -74,6 +76,74 @@ test.describe("Du cep à la bouteille", () => {
     const yanCouvert = parseInt((await page.getByTestId("azote-mout").textContent()).replace(/\D/g, ""), 10);
     expect(yanCouvert).toBeGreaterThan(yanNu);
     await expect(page.getByTestId("lecture-vie")).toContainText("légumineuses");
+  });
+
+  test("warming a vineyard shifts its Winkler region, its harvest date and its alcohol", async ({ page }) => {
+    await page.goto(URL);
+    await attendrePage(page);
+    const dj = async () => parseInt((await page.getByTestId("dj-rechauffe").textContent()).replace(/\D/g, "").slice(0, 4), 10);
+    const alcool = async () => parseFloat((await page.getByTestId("alcool-rechauffe").textContent()).replace(",", "."));
+    await page.locator("#wHausse").fill("0");
+    expect(await dj()).toBe(1340);
+    await expect(page.getByTestId("dj-rechauffe")).toContainText("Ib");
+    const alcoolFroid = await alcool();
+    // +3 °C : la Bourgogne prend les degrés-jours du Bordelais, vendange plus tôt, plus d'alcool
+    await page.locator("#wHausse").fill("3");
+    expect(await dj()).toBeGreaterThan(1850);
+    await expect(page.getByTestId("equivalent")).toContainText("Napa");
+    await expect(page.getByTestId("avance-vendange")).toContainText("plus tôt");
+    expect(await alcool()).toBeGreaterThan(alcoolFroid + 1);
+    await expect(page.getByTestId("lecture-rechauffement")).toContainText("gel de printemps");
+    // monter en altitude rend une partie du chemin
+    await page.check("#wAltitude");
+    expect(await dj()).toBeLessThan(1850);
+  });
+
+  test("water and heat drive sugar, acidity and tannins", async ({ page }) => {
+    await page.goto(URL);
+    await attendrePage(page);
+    const nombre = async (id) => parseFloat((await page.getByTestId(id).textContent()).replace(",", ".").replace(/[^\d.]/g, ""));
+    const poidsSec = await (async () => { await page.locator("#qEau").fill("150"); return nombre("poids-baie"); })();
+    const sucreSec = await nombre("sucre-baie");
+    await page.locator("#qEau").fill("480");
+    // une baie gorgée d'eau est plus grosse et son jus plus dilué
+    expect(await nombre("poids-baie")).toBeGreaterThan(poidsSec);
+    expect(await nombre("sucre-baie")).toBeLessThan(sucreSec);
+    await expect(page.getByTestId("lecture-equilibre")).toContainText("Trop d'eau");
+    // la chaleur brûle l'acidité
+    await page.locator("#qEau").fill("280");
+    await page.locator("#qTemp").fill("16");
+    const acideFrais = await nombre("acidite-baie");
+    await page.locator("#qTemp").fill("26");
+    expect(await nombre("acidite-baie")).toBeLessThan(acideFrais);
+    // une sécheresse sévère bloque la maturité
+    await page.locator("#qEau").fill("110");
+    await page.locator("#qTemp").fill("20");
+    await expect(page.getByTestId("lecture-equilibre")).toContainText("Blocage de maturité");
+  });
+
+  test("the blending bench mixes lots, scores them and respects cellar volumes", async ({ page }) => {
+    await page.goto(URL);
+    await attendrePage(page);
+    const note = async () => parseFloat((await page.getByTestId("assemblage-note").textContent()).replace(",", "."));
+    // tout sur le merlot : un vin plus alcoolique, moins bien noté pour un vin de garde
+    await page.locator("#asLot0").fill("100");
+    for (const i of [1, 2, 3]) await page.locator(`#asLot${i}`).fill("0");
+    const alcoolMerlot = parseFloat((await page.getByTestId("assemblage-alcool").textContent()).replace(",", "."));
+    expect(alcoolMerlot).toBeCloseTo(14.2, 1);
+    await expect(page.getByTestId("lecture-assemblage")).toContainText("vin de parcelle");
+    const noteMono = await note();
+    // l'optimiseur trouve mieux, et la cuvée reste réalisable
+    await page.click("#asAuto");
+    expect(await note()).toBeGreaterThan(noteMono);
+    const volume = parseInt((await page.getByTestId("volume-cuvee").textContent()).split("hL")[0].replace(/\D/g, ""), 10);
+    expect(volume).toBeGreaterThan(0);
+    expect(volume).toBeLessThanOrEqual(960);
+    // changer d'objectif change l'optimum
+    const optimumGarde = await page.locator("#asLot1").inputValue();
+    await page.selectOption("#asBut", "fruit");
+    await page.click("#asAuto");
+    expect(await page.locator("#asLot1").inputValue()).not.toBe(optimumGarde);
   });
 
   test("the maturity workshop feeds the fermentation sugar", async ({ page }) => {
