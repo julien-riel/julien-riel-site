@@ -59,6 +59,61 @@ const t = (v) => (v && typeof v === 'object' && !Array.isArray(v)) ? (v[ETAT.sty
 
 const STADES = [
   {
+    id: 'climat',
+    titre: 'Le climat',
+    duree: 'Avant tout',
+    intro: "Avant le cep, il y a le ciel. La vigne cultivée pousse pour l'essentiel entre le 30<sup>e</sup> et le 50<sup>e</sup> parallèle, là où la saison est assez longue et chaude pour mûrir le raisin, et l'hiver assez marqué pour la mettre au repos. Le climat décide de ce qu'on peut planter et du vin qu'on en tirera : on le résume par la <b>somme des températures</b> de la saison (les degrés-jours d'avril à octobre, l'indice de Winkler), par la pluie et son calendrier, et par l'<b>amplitude entre le jour et la nuit</b>. Chaud le jour, le raisin fait du sucre ; frais la nuit, il garde son acidité et ses arômes.",
+    reperes: [
+      "<b>Degrés-jours</b> : on additionne, chaque jour d'avril à octobre, ce que la température moyenne dépasse 10 °C. Champagne ≈ 1 100, Bourgogne ≈ 1 350, Bordeaux ≈ 1 650, Napa ≈ 1 900, Jerez > 2 200. Chaque cépage a sa fenêtre.",
+      "<b>Pluie</b> : 500 à 800 mm par an suffisent. Le pire n'est pas la quantité mais le moment : de la pluie à la vendange dilue le jus et fait pourrir les grappes.",
+      "<b>Continental, océanique, méditerranéen</b> : hivers rudes et étés chauds ; doux et humide ; sec et ensoleillé. Chacun a ses maladies, ses cépages et son style.",
+      "<b>Au Québec</b>, la saison compte moins de 1 200 degrés-jours et l'hiver descend à −30 °C : d'où les hybrides rustiques, le buttage et les toiles géotextiles.",
+      "<b>Réchauffement</b> : +1 à +2 °C en quarante ans dans la plupart des vignobles. Les vendanges avancent, l'alcool monte, et la vigne gagne l'Angleterre, la Scandinavie et l'altitude.",
+    ],
+    atelier: 'climat',
+  },
+  {
+    id: 'geographie',
+    titre: 'La géographie : latitude, altitude, coteau',
+    duree: 'Le lieu',
+    intro: "À climat régional égal, le lieu précis change tout. La <b>latitude</b> règle la hauteur du soleil et la longueur des jours. L'<b>altitude</b> refroidit d'environ 0,6 °C tous les 100 mètres : monter de 300 m revient à reculer de deux degrés de latitude, c'est ainsi que Mendoza fait du vin frais à 1 500 m. La <b>pente et l'exposition</b> décident de l'énergie reçue par mètre carré et de l'écoulement de l'air froid, qui glisse vers le bas et épargne le coteau des gelées. Enfin l'<b>eau</b> à proximité, fleuve, lac ou mer, tamponne les températures et réfléchit la lumière. Ce n'est pas un hasard si les grands vignobles historiques sont des coteaux au bord d'un fleuve : Mosel, Rhin, Douro, Rhône, Loire, Côte d'Or.",
+    reperes: [
+      "<b>Trois échelles</b> : le macroclimat (la région), le mésoclimat (le coteau, la parcelle) et le microclimat (la grappe dans son feuillage). Le vigneron agit surtout sur les deux dernières.",
+      "<b>Le tiers supérieur du coteau</b> : en Bourgogne, les grands crus sont à mi-pente, exposés est ou sud-est. Soleil du matin, sol drainé et mince, à l'abri de la poche d'air froid du bas et des sols trop riches de la plaine.",
+      "<b>Les plans d'eau</b> : le lac Léman, le Rhin ou le lac Ontario retardent les gelées d'automne et adoucissent le printemps ; les brouillards matinaux du Ciron fabriquent la pourriture noble de Sauternes.",
+      "<b>Le vent</b> : le mistral assèche le feuillage et limite les maladies, mais casse les rameaux ; les brises marines rafraîchissent la Californie côtière et la vallée de Casablanca au Chili.",
+    ],
+    atelier: 'coteau',
+  },
+  {
+    id: 'sol',
+    titre: 'Le type de sol',
+    duree: 'Sous les racines',
+    intro: "Le sol nourrit peu la vigne, mais il la gouverne. Ce qui compte d'abord, c'est le <b>régime hydrique</b> : un bon sol viticole est drainant, plutôt pauvre, assez profond pour que les racines trouvent l'eau en été, mais assez contraignant pour que la plante cesse de pousser à la véraison et consacre ses forces au raisin. Viennent ensuite la <b>texture</b> (argile, limon, sable, cailloux), la <b>roche-mère</b> (calcaire, schiste, granite, graves), le pH, la couleur et la pierrosité, qui règlent la température du sol. Le vin n'a pas le goût du caillou : la vigne absorbe des ions dissous, pas de la roche. Le sol agit par l'eau, l'azote, la chaleur et la vigueur qu'il impose.",
+    reperes: [
+      "<b>Argile</b> : retient l'eau et les éléments nutritifs, sols froids et lents à réchauffer, vins puissants et charnus (merlot de Pomerol). <b>Sable</b> : drainant, pauvre, vins légers et parfumés ; le phylloxéra n'y survit pas.",
+      "<b>Calcaire</b> : drainant en surface, mais la roche fissurée garde une réserve d'eau en profondeur. Son pH élevé bloque le fer et provoque la <b>chlorose</b> (feuilles jaunes) : on choisit un porte-greffe qui le tolère. Craie de Champagne, marnes de Bourgogne, kimméridgien de Chablis.",
+      "<b>Graves et galets</b> : cailloux roulés qui drainent et rendent la chaleur la nuit. Cabernet sauvignon du Médoc, grenache de Châteauneuf-du-Pape.",
+      "<b>Schiste et ardoise</b> : pauvres, sombres, chauds ; les racines descendent dans les fissures. Riesling de la Mosel, syrah de Côte-Rôtie, Priorat, Douro. <b>Granite</b> : acide, se délite en sable ; gamay du Beaujolais, Muscadet.",
+      "<b>Le porte-greffe se choisit pour le sol</b> : Fercal ou 41 B pour le calcaire actif, Riparia pour freiner la vigueur, 110 R ou 140 Ru pour résister à la sécheresse.",
+    ],
+    atelier: 'sol',
+  },
+  {
+    id: 'vie-du-sol',
+    titre: 'Les micro-organismes du sol',
+    duree: 'Invisible, permanent',
+    intro: "Un gramme de sol vivant contient environ un milliard de bactéries et plusieurs kilomètres de filaments de champignons. Autour des racines, dans la <b>rhizosphère</b>, ils font le travail que la vigne ne sait pas faire. Les <b>mycorhizes</b>, des champignons qui pénètrent les racines fines, prolongent le système racinaire de plusieurs mètres, vont chercher le phosphore, le zinc et l'eau dans des pores trop fins pour les racines, et se paient en sucres : jusqu'à 20 % de la photosynthèse. Les <b>bactéries</b> décomposent la matière organique et libèrent l'azote sous une forme que la plante absorbe ; celles des légumineuses semées entre les rangs le fixent depuis l'air. D'autres champignons (<i>Trichoderma</i>) tiennent en respect les parasites du bois. Les vers de terre creusent, aèrent, enfouissent. De cette vie dépendent la vigueur du cep, sa résistance à la sécheresse et l'azote du moût, dont les levures auront besoin au chai.",
+    reperes: [
+      "<b>Mycorhization</b> : dans un sol vivant, 80 à 90 % des racines fines de vigne sont colonisées. Le labour profond, les engrais phosphatés et les sols nus la font chuter.",
+      "<b>Azote</b> : la minéralisation fournit de 20 à 60 kg par hectare et par an selon la matière organique. Trop d'azote, c'est la vigueur et la pourriture ; pas assez, c'est un moût carencé (moins de 140 mg/L d'azote assimilable), une fermentation languissante et des odeurs de soufre.",
+      "<b>Cuivre</b> : la bouillie bordelaise protège du mildiou depuis 1885, mais le cuivre ne se dégrade pas. Les vieux vignobles en accumulent 100 à 500 mg par kilo de sol, toxiques pour les vers de terre et les microbes ; l'Union européenne le plafonne à 4 kg par hectare et par an.",
+      "<b>Vers de terre</b> : de 50 à 400 par mètre carré selon les pratiques. Enherbement, compost et couverts semés les multiplient ; désherbage chimique et sols nus les font disparaître.",
+      "<b>Le terroir microbien</b> : le séquençage montre des communautés de bactéries et de champignons propres à chaque région, voire à chaque parcelle. Mais la levure du vin, <i>Saccharomyces cerevisiae</i>, est rare sur les baies saines : c'est au chai qu'elle abonde. L'effet du microbiote du sol sur le goût reste un sujet de recherche, pas une certitude.",
+    ],
+    atelier: 'vieDuSol',
+  },
+  {
     id: 'plantation',
     titre: 'Planter la vigne',
     duree: 'Année 0',
@@ -523,6 +578,448 @@ ATELIERS.age = (boite) => {
     dessiner();
   }
   age.addEventListener('input', maj);
+  maj();
+  return { maj };
+};
+
+/* ======================================================================
+   Terroir : climat, coteau, sol, vie du sol
+   ====================================================================== */
+
+/* Petit générateur pseudo-aléatoire déterministe pour des dessins stables. */
+function alea(graine) {
+  let s = graine >>> 0;
+  return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+}
+
+const WINKLER = [
+  { max: 1111, nom: 'Ia', qualif: 'très frais', cepages: 'hybrides rustiques, müller-thurgau, riesling à la limite', style: 'effervescents, blancs vifs, rouges légers et pâles', lieux: 'sud du Québec, Angleterre, Mosel' },
+  { max: 1389, nom: 'Ib', qualif: 'frais', cepages: 'pinot noir, chardonnay, riesling, gamay, chenin', style: 'blancs tendus, rouges fins et peu colorés, bases d’effervescents', lieux: 'Champagne, Bourgogne, Alsace, Loire, Willamette' },
+  { max: 1667, nom: 'II', qualif: 'tempéré', cepages: 'merlot, cabernet franc, sauvignon, syrah, nebbiolo', style: 'rouges équilibrés à 12,5–13,5 %, blancs secs amples', lieux: 'Bordeaux, Rhône nord, Rioja, Piémont' },
+  { max: 1944, nom: 'III', qualif: 'chaud', cepages: 'cabernet sauvignon, syrah, sangiovese, grenache', style: 'rouges corsés et colorés, blancs ronds', lieux: 'Napa, Toscane, Rhône sud, Stellenbosch' },
+  { max: 2222, nom: 'IV', qualif: 'très chaud', cepages: 'grenache, mourvèdre, zinfandel, carignan', style: 'rouges chaleureux à 14 % et plus, rosés de soif', lieux: 'Languedoc, Barossa, Mendoza' },
+  { max: Infinity, nom: 'V', qualif: 'torride', cepages: 'palomino, muscat, raisins de table', style: 'vins mutés et doux, gros volumes irrigués', lieux: 'Jerez, Vallée centrale de Californie, intérieur de l’Australie' },
+];
+const regionWinkler = (dj) => WINKLER.find((r) => dj < r.max);
+const COULEURS_WINKLER = ['#3f6f8f', '#5f8fa8', '#8fbf6a', '#d9b25f', '#e0705d', '#9b2f4c'];
+const JOURS_SAISON = 214;   // du 1er avril au 31 octobre
+
+/* ---------- Climat : l'échelle de Winkler ---------- */
+
+ATELIERS.climat = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Situer un vignoble sur l’échelle de Winkler');
+  const canvas = h('canvas', { 'aria-label': 'Échelle des degrés-jours de Winkler, avec quelques vignobles repères' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const temp = curseur(reglages, { id: 'kTemp', label: 'Température moyenne, avril → octobre', min: 12, max: 22, step: 0.5, valeur: 16.5, affiche: (v) => `${fmt(v, 1)} °C` });
+  const ampl = curseur(reglages, { id: 'kAmpl', label: 'Écart jour / nuit en été', min: 5, max: 18, valeur: 10, affiche: (v) => `${v} °C` });
+  const pluie = curseur(reglages, { id: 'kPluie', label: 'Pluie annuelle', min: 300, max: 1200, step: 50, valeur: 700, affiche: (v) => `${fmt(v)} mm` });
+  const automne = h('input', { type: 'checkbox', id: 'kAutomne' });
+  reglages.append(h('div', { class: 'reglage' }, h('span', {}, 'Vendanges'), h('label', { class: 'case' }, automne, 'Automnes souvent pluvieux')));
+  const mesures = h('dl', { class: 'mesures' });
+  const dDj = h('dd', { class: 'grand', 'data-testid': 'degres-jours' }), dRegion = h('dd', { 'data-testid': 'winkler' }), dCepages = h('dd', { style: 'text-align:left;grid-column:1 / -1;font-family:var(--ui)' });
+  mesures.append(h('dt', {}, 'Degrés-jours (base 10 °C)'), dDj, h('dt', {}, 'Région de Winkler'), dRegion, h('dt', { style: 'grid-column:1 / -1' }, 'Cépages qui y mûrissent'), dCepages);
+  boite.append(mesures);
+  const jauges = h('div', { class: 'jauges' });
+  boite.append(jauges);
+  const jTardif = jauge(jauges, 'Mûrir un cépage tardif', 'or');
+  const jAcide = jauge(jauges, 'Garder l’acidité', 'vert');
+  const jPourri = jauge(jauges, 'Pression des pourritures', 'rougeb');
+  const jSec = jauge(jauges, 'Manque d’eau en été', 'bleu');
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-climat' });
+  boite.append(lecture);
+
+  const REPERES = [[1050, 'Québec'], [1100, 'Champagne'], [1350, 'Bourgogne'], [1650, 'Bordeaux'], [1900, 'Napa'], [2100, 'Languedoc'], [2350, 'Jerez']];
+  function dessiner(dj) {
+    const L = 520, H = 118, g = 14, d = 14, y0 = 46, eh = 22;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
+    const X = (v) => g + clamp((v - 800) / 1800, 0, 1) * (L - g - d);
+    let debut = 800;
+    WINKLER.forEach((r, i) => {
+      const fin = Math.min(r.max, 2600);
+      ctx.fillStyle = COULEURS_WINKLER[i]; ctx.globalAlpha = .85;
+      ctx.fillRect(X(debut), y0, X(fin) - X(debut), eh);
+      ctx.globalAlpha = 1; ctx.fillStyle = '#120c0e'; ctx.font = '600 10px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+      ctx.fillText(r.nom, (X(debut) + X(fin)) / 2, y0 + 15);
+      debut = fin;
+    });
+    ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.fillStyle = '#a89a95'; ctx.textAlign = 'center';
+    for (let v = 800; v <= 2600; v += 300) { ctx.fillText(fmt(v), X(v), H - 6); ctx.fillRect(X(v) - .5, y0 + eh, 1, 4); }
+    REPERES.forEach(([v, nom], i) => {
+      const x = X(v), yy = i % 2 ? 22 : 10;
+      ctx.fillStyle = '#55414a'; ctx.fillRect(x - .5, yy + 3, 1, y0 - yy - 3);
+      ctx.fillStyle = '#dccfc9'; ctx.font = '500 9px Outfit, sans-serif'; ctx.fillText(nom, x, yy);
+    });
+    const x = X(dj);
+    ctx.fillStyle = '#f3ebe4'; ctx.beginPath(); ctx.moveTo(x, y0 - 2); ctx.lineTo(x - 6, y0 - 10); ctx.lineTo(x + 6, y0 - 10); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x, y0 + eh + 2); ctx.lineTo(x - 6, y0 + eh + 10); ctx.lineTo(x + 6, y0 + eh + 10); ctx.closePath(); ctx.fill();
+  }
+  function maj() {
+    const T = +temp.value, A = +ampl.value, P = +pluie.value, aut = automne.checked;
+    const dj = Math.round((T - 10) * JOURS_SAISON);
+    const r = regionWinkler(dj);
+    dDj.textContent = `${fmt(dj)} °C·j`;
+    dRegion.textContent = `${r.nom} · ${r.qualif}`;
+    dCepages.textContent = r.cepages;
+    jTardif(clamp((dj - 1150) / 9, 0, 100));
+    const acide = clamp(55 + (A - 10) * 4 - (T - 16) * 9, 0, 100);
+    jAcide(acide);
+    const pourri = clamp(P / 15 - 15 + (aut ? 35 : 0) - (A - 10) * 1.5, 0, 100);
+    jPourri(pourri);
+    const sec = clamp((750 - P) / 4.5 + (T - 16) * 5, 0, 100);
+    jSec(sec);
+    let l = `<b>Région ${r.nom}, climat ${r.qualif}.</b> ${r.style[0].toUpperCase()}${r.style.slice(1)} ; on est dans les conditions de ${r.lieux}. `;
+    if (A >= 13) l += "Les <b>nuits fraîches</b> font le reste : l'acide malique et les arômes tiennent jusqu'à la vendange, les rouges gardent leur couleur. ";
+    else if (A <= 7) l += "Les <b>nuits restent chaudes</b> : la vigne respire son acide malique, les vins sont mous et il faudra vendanger tôt, souvent de nuit. ";
+    if (P < 450) l += "Avec si peu de pluie, la vigne ne survit qu'<b>irriguée</b> ou sur un sol qui garde l'eau, comme en Espagne intérieure ou à Mendoza.";
+    else if (P > 900) l += "Beaucoup de pluie : le <b>mildiou</b> et la pourriture grise imposent des traitements répétés et un feuillage aéré ; c'est le lot des climats océaniques.";
+    else if (aut) l += "Les <b>automnes pluvieux</b> forcent la main : on vendange dès que le sucre y est, avant que la pourriture s'installe, quitte à perdre en maturité.";
+    else l += "La pluie est suffisante et bien placée : la contrainte hydrique estivale est modérée, ce que la vigne préfère.";
+    lecture.innerHTML = l;
+    lecture.className = `lecture ${dj < 1000 || dj > 2300 ? 'alerte' : dj >= 1250 && dj <= 1950 ? 'bon' : ''}`;
+    dessiner(dj);
+  }
+  [temp, ampl, pluie].forEach((c) => c.addEventListener('input', maj));
+  automne.addEventListener('change', maj);
+  maj();
+  return { maj };
+};
+
+/* ---------- Géographie : le coteau ---------- */
+
+const EXPOS = { N: 0, NE: 45, E: 90, SE: 135, S: 180, SO: 225, O: 270, NO: 315 };
+const rad = (d) => d * Math.PI / 180;
+
+/* Énergie solaire directe reçue sur la saison par une pente, rapportée au terrain plat. */
+function energieRelative(lat, pente, expo) {
+  const nx = Math.sin(rad(pente)) * Math.sin(rad(expo));   // composante est de la normale
+  const ny = Math.sin(rad(pente)) * Math.cos(rad(expo));   // composante nord
+  const nz = Math.cos(rad(pente));
+  let sPente = 0, sPlat = 0;
+  for (const dec of [4, 12, 20, 23, 19, 10, 0]) {           // déclinaison type d'avril à octobre
+    for (let H = -180; H <= 180; H += 5) {
+      const sinEl = Math.sin(rad(lat)) * Math.sin(rad(dec)) + Math.cos(rad(lat)) * Math.cos(rad(dec)) * Math.cos(rad(H));
+      if (sinEl <= 0) continue;
+      const el = Math.asin(sinEl), cosEl = Math.cos(el);
+      let cosA = (Math.sin(rad(dec)) - sinEl * Math.sin(rad(lat))) / (cosEl * Math.cos(rad(lat)));
+      cosA = clamp(cosA, -1, 1);
+      const A = H < 0 ? Math.acos(cosA) : 2 * Math.PI - Math.acos(cosA);   // azimut depuis le nord, matin à l'est
+      const sx = cosEl * Math.sin(A), sy = cosEl * Math.cos(A), sz = sinEl;
+      sPlat += sz;
+      sPente += Math.max(0, sx * nx + sy * ny + sz * nz);
+    }
+  }
+  return sPlat ? sPente / sPlat : 1;
+}
+
+ATELIERS.coteau = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Incliner et orienter un coteau');
+  const canvas = h('canvas', { 'aria-label': 'Coupe d’un coteau planté de vignes, avec le soleil et la poche d’air froid du bas' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const lat = curseur(reglages, { id: 'gLat', label: 'Latitude (hémisphère Nord)', min: 30, max: 52, step: 0.5, valeur: 47, affiche: (v) => `${fmt(v, 1)}°` });
+  const alt = curseur(reglages, { id: 'gAlt', label: 'Altitude', min: 0, max: 1500, step: 25, valeur: 250, affiche: (v) => `${fmt(v)} m` });
+  const pente = curseur(reglages, { id: 'gPente', label: 'Pente', min: 0, max: 35, valeur: 12, affiche: (v) => v === 0 ? 'plat' : `${v}° (${fmt(Math.tan(rad(v)) * 100)} %)` });
+  const expo = selection(reglages, { id: 'gExpo', label: 'Exposition', valeur: 'SE', options: Object.keys(EXPOS).map((k) => [k, k === 'N' ? 'Nord' : k === 'S' ? 'Sud' : k === 'E' ? 'Est' : k === 'O' ? 'Ouest' : k.replace('N', 'Nord-').replace('S', 'Sud-').replace('E', 'est').replace('O', 'ouest')]) });
+  const eau = h('input', { type: 'checkbox', id: 'gEau' });
+  reglages.append(h('div', { class: 'reglage' }, h('span', {}, 'Environnement'), h('label', { class: 'case' }, eau, 'Fleuve ou lac en contrebas')));
+  const mesures = h('dl', { class: 'mesures' });
+  const dSoleil = h('dd'), dEnergie = h('dd', { class: 'grand', 'data-testid': 'energie' }), dTemp = h('dd'), dDj = h('dd', { 'data-testid': 'dj-coteau' }), dGel = h('dd', { 'data-testid': 'gel' });
+  mesures.append(h('dt', {}, 'Hauteur du soleil à midi, mi-septembre'), dSoleil, h('dt', {}, 'Énergie reçue, par rapport au plat'), dEnergie, h('dt', {}, 'Température moyenne de la saison'), dTemp, h('dt', {}, 'Degrés-jours → région de Winkler'), dDj, h('dt', {}, 'Risque de gel de printemps'), dGel);
+  boite.append(mesures);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-coteau' });
+  boite.append(lecture);
+
+  function dessiner(p, elSoleil, gel, exp) {
+    const L = 520, H = 210;
+    const ctx = contexte(canvas, L, H);
+    const ciel = ctx.createLinearGradient(0, 0, 0, H);
+    ciel.addColorStop(0, '#1b2333'); ciel.addColorStop(1, '#2a1d21');
+    ctx.fillStyle = ciel; ctx.fillRect(0, 0, L, H);
+    // le coteau monte vers la droite ; le soleil vient de la gauche si l'exposition est plutôt sud/est... on simplifie : il éclaire depuis la gauche.
+    const xBas = 70, yBas = H - 40, longueur = L - xBas - 20;
+    const yHaut = yBas - Math.tan(rad(p)) * longueur * 0.9;
+    // soleil
+    const sx = 60, sy = clamp(H - 40 - Math.tan(rad(Math.min(elSoleil, 70))) * 160, 18, H - 60);
+    ctx.fillStyle = '#d9b25f'; ctx.beginPath(); ctx.arc(sx, sy, 13, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(217,178,95,.25)'; ctx.lineWidth = 1;
+    for (let i = 0; i < 6; i++) {
+      const t0 = i / 5, x1 = xBas + t0 * longueur, y1 = yBas + (yHaut - yBas) * t0;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(x1, y1); ctx.stroke();
+    }
+    // eau
+    if (eau.checked) { ctx.fillStyle = '#3f6f8f'; ctx.fillRect(0, yBas + 8, xBas + 10, H - yBas - 8); }
+    // terre
+    ctx.fillStyle = '#4a2f27'; ctx.beginPath(); ctx.moveTo(0, yBas + 8); ctx.lineTo(xBas, yBas); ctx.lineTo(xBas + longueur, yHaut); ctx.lineTo(L, yHaut); ctx.lineTo(L, H); ctx.lineTo(0, H); ctx.closePath(); ctx.fill();
+    // ceps
+    ctx.strokeStyle = '#8fbf6a'; ctx.lineWidth = 2;
+    for (let i = 1; i < 18; i++) {
+      const t0 = i / 18, x = xBas + t0 * longueur, y = yBas + (yHaut - yBas) * t0;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 12); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y - 15, 4, 0, Math.PI * 2); ctx.stroke();
+    }
+    // poche d'air froid
+    const eps = gel / 100;
+    const froid = ctx.createLinearGradient(0, yBas - 40, 0, yBas + 8);
+    froid.addColorStop(0, 'rgba(134,183,217,0)'); froid.addColorStop(1, `rgba(134,183,217,${(.55 * eps).toFixed(2)})`);
+    ctx.fillStyle = froid; ctx.beginPath(); ctx.moveTo(0, yBas - 40); ctx.lineTo(xBas + longueur * .35, yBas - 40); ctx.lineTo(xBas + longueur * .35, yBas + (yHaut - yBas) * .35); ctx.lineTo(xBas, yBas); ctx.lineTo(0, yBas + 8); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#a89a95'; ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+    ctx.fillText(`pente ${p}°, exposée ${exp}`, 12, 16);
+    ctx.fillText(`soleil à ${fmt(elSoleil)}°`, 12, 28);
+    if (gel > 25) { ctx.fillStyle = '#86b7d9'; ctx.fillText('air froid', 8, yBas - 6); }
+  }
+  function maj() {
+    const la = +lat.value, al = +alt.value, p = +pente.value, ex = expo.value, ea = eau.checked;
+    const r = energieRelative(la, p, EXPOS[ex]);
+    const elSoleil = 90 - la + 3;
+    const T = 24.5 - 0.45 * (la - 30) - 0.0065 * al + 1.6 * (r - 1) + (ea ? 0.3 : 0);
+    const dj = Math.round((T - 10) * JOURS_SAISON);
+    const reg = regionWinkler(Math.max(dj, 0));
+    const gel = Math.round(clamp(6 + (la - 38) * 3 + al * 0.02 - p * 1.3 - (ea ? 14 : 0), 2, 95));
+    dSoleil.textContent = `${fmt(elSoleil)}°`;
+    dEnergie.textContent = `${fmt(r * 100)} %`;
+    dEnergie.className = `grand ${r > 1.05 ? 'bon' : r < 0.9 ? 'alerte' : ''}`;
+    dTemp.textContent = `${fmt(T, 1)} °C`;
+    dDj.textContent = dj < 900 ? `${fmt(Math.max(dj, 0))} · trop froid` : `${fmt(dj)} · ${reg.nom}`;
+    dGel.textContent = `${gel} %`;
+    dGel.className = gel > 35 ? 'alerte' : gel < 15 ? 'bon' : '';
+    let l, cls = '';
+    if (dj < 900) { l = "<b>Trop froid pour la vigne.</b> Entre la latitude et l'altitude, la saison ne suffit pas à mûrir quoi que ce soit ; il faudrait descendre ou se rapprocher de l'équateur."; cls = 'alerte'; }
+    else if (p === 0) { l = "<b>Terrain plat.</b> Facile à travailler et à mécaniser, mais l'air froid y stagne au printemps, les sols sont souvent profonds et fertiles, et chaque mètre carré reçoit le soleil qu'on lui doit, sans bonus. C'est la géographie des vins de volume."; }
+    else if (r >= 1.08) { l = `<b>Le coteau qui fait les grands crus.</b> Exposé ${ex}, il reçoit ${fmt((r - 1) * 100)} % d'énergie de plus qu'un terrain plat, ce qui vaut ${fmt(1.6 * (r - 1), 1)} °C de plus sur la saison, et l'air froid s'écoule vers le bas au lieu de geler les bourgeons. Contrepartie : le sol est mince, l'érosion menace, et tout se fait à la main ou au treuil.`; cls = 'bon'; }
+    else if (r < 0.9) { l = `<b>Versant à l'ombre.</b> Exposé ${ex}, il reçoit ${fmt((1 - r) * 100)} % d'énergie de moins que le plat. En climat chaud, c'est un refuge de fraîcheur recherché pour les blancs ; en climat frais, le raisin n'y mûrit pas.`; cls = la < 40 ? '' : 'alerte'; }
+    else { l = `<b>Pente modérée.</b> Un peu plus d'énergie que le plat (${fmt(r * 100)} %), un bon drainage de l'eau et de l'air froid, et une mécanisation encore possible. La majorité des vignobles de qualité ressemblent à ça.`; cls = 'bon'; }
+    if (al >= 800) l += ` À ${fmt(al)} m, la fraîcheur nocturne conserve l'acidité et le rayonnement ultraviolet épaissit les peaux : c'est la recette des Andes et de l'Etna.`;
+    if (ea) l += " Le plan d'eau retarde les gelées d'automne, adoucit le printemps et renvoie de la lumière sur le feuillage.";
+    lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
+    dessiner(p, elSoleil, gel, ex);
+  }
+  [lat, alt, pente].forEach((c) => c.addEventListener('input', maj));
+  expo.addEventListener('change', maj);
+  eau.addEventListener('change', maj);
+  maj();
+  return { maj, energieRelative };
+};
+
+/* ---------- Sol : composer un profil ---------- */
+
+const SOLS = {
+  'argilo-calcaire': { nom: 'Argilo-calcaire', ru: 1.5, drainage: .55, fertilite: .55, chaleur: .5, ph: 8.1, calcaire: 1, reserveRoche: 30, cailloux: 20, couleur: '#8a7a5a', roche: '#c9c0a2', vins: 'des rouges structurés et des blancs amples ; c’est le sol de la Côte d’Or, de Saint-Émilion et d’une bonne partie de la Rioja', pg: '41 B ou Fercal, qui tolèrent le calcaire actif' },
+  craie: { nom: 'Craie', ru: 1.1, drainage: .8, fertilite: .3, chaleur: .5, ph: 8.3, calcaire: 2, reserveRoche: 60, cailloux: 10, couleur: '#b6ad94', roche: '#e5e0cf', vins: 'des blancs tendus et des bases d’effervescents ; la craie de Champagne rend l’eau lentement et garde les racines au frais', pg: '41 B, le seul qui supporte vraiment autant de calcaire actif' },
+  graves: { nom: 'Graves et galets', ru: .7, drainage: .95, fertilite: .25, chaleur: .9, ph: 6.6, calcaire: 0, reserveRoche: 0, cailloux: 55, couleur: '#6f5a48', roche: '#8a7a6a', vins: 'des rouges mûrs et charpentés ; les galets emmagasinent la chaleur du jour et la rendent la nuit, ce qui mûrit le cabernet sauvignon du Médoc et le grenache de Châteauneuf', pg: '101-14 ou 3309 C ; 110 R si l’été est très sec' },
+  schiste: { nom: 'Schiste', ru: .9, drainage: .85, fertilite: .2, chaleur: .85, ph: 6.0, calcaire: 0, reserveRoche: 25, cailloux: 40, couleur: '#4d4a55', roche: '#2f2d38', vins: 'des vins profonds et concentrés, à petits rendements ; les racines descendent dans les feuillets fissurés : Mosel, Côte-Rôtie, Priorat, Douro', pg: '110 R ou 140 Ru pour affronter la sécheresse' },
+  granite: { nom: 'Granite', ru: .8, drainage: .85, fertilite: .3, chaleur: .6, ph: 5.6, calcaire: 0, reserveRoche: 10, cailloux: 25, couleur: '#7d6c62', roche: '#a09a94', vins: 'des vins fins, parfumés, plutôt légers ; le granite se délite en sable grossier acide : Beaujolais, Muscadet, Rhône nord', pg: 'Riparia Gloire ou 3309 C ; attention aux carences en magnésium' },
+  sable: { nom: 'Sable', ru: .7, drainage: .95, fertilite: .15, chaleur: .7, ph: 6.5, calcaire: 0, reserveRoche: 0, cailloux: 5, couleur: '#a08a62', roche: '#8f7a55', vins: 'des vins légers, souples et aromatiques, peu colorés ; le phylloxéra ne s’y déplace pas, ce qui permet encore des vignes franches de pied', pg: 'souvent aucun : vignes franches, ou 110 R contre la sécheresse' },
+  argile: { nom: 'Argile lourde', ru: 1.7, drainage: .25, fertilite: .8, chaleur: .3, ph: 7.0, calcaire: 0, reserveRoche: 0, cailloux: 5, couleur: '#5a3f3a', roche: '#4a3530', vins: 'des rouges puissants, charnus, tanniques ; l’argile retient l’eau et les nutriments, mais reste froide au printemps : merlot de Pomerol, malbec de Cahors', pg: 'SO 4 ou 3309 C, qui tolèrent l’humidité' },
+  limon: { nom: 'Limon profond de plaine', ru: 2.0, drainage: .45, fertilite: .95, chaleur: .4, ph: 6.9, calcaire: 0, reserveRoche: 0, cailloux: 0, couleur: '#6b5340', roche: '#5a4535', vins: 'des vins de volume : le cep n’a jamais soif, pousse sans arrêt, et donne beaucoup de raisin dilué. Excellent pour les céréales, médiocre pour les grands vins', pg: 'Riparia Gloire pour freiner la vigueur, ou pas de vigne du tout' },
+};
+
+ATELIERS.sol = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Composer un profil de sol');
+  const canvas = h('canvas', { 'aria-label': 'Coupe verticale du sol avec les racines de la vigne' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const type = selection(reglages, { id: 'sType', label: 'Roche-mère et texture', valeur: 'argilo-calcaire', options: Object.entries(SOLS).map(([k, s]) => [k, s.nom]) });
+  const prof = curseur(reglages, { id: 'sProf', label: 'Profondeur explorée par les racines', min: 30, max: 200, step: 10, valeur: 90, affiche: (v) => `${v} cm` });
+  const cailloux = curseur(reglages, { id: 'sCailloux', label: 'Pierrosité', min: 0, max: 70, step: 5, valeur: 20, affiche: (v) => `${v} %` });
+  const jauges = h('div', { class: 'jauges' });
+  boite.append(jauges);
+  const jEau = jauge(jauges, 'Réserve d’eau utile', 'bleu');
+  const jDrain = jauge(jauges, 'Drainage', 'vert');
+  const jFert = jauge(jauges, 'Fertilité', 'or');
+  const jChaud = jauge(jauges, 'Chaleur du sol', 'rougeb');
+  const jVig = jauge(jauges, 'Vigueur attendue');
+  const mesures = h('dl', { class: 'mesures' });
+  const dPh = h('dd'), dRu = h('dd', { 'data-testid': 'reserve-eau' }), dContr = h('dd', { class: 'grand', 'data-testid': 'contrainte' });
+  mesures.append(h('dt', {}, 'pH du sol'), dPh, h('dt', {}, 'Réserve utile'), dRu, h('dt', {}, 'Contrainte hydrique en août'), dContr);
+  boite.append(mesures);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-sol' });
+  boite.append(lecture);
+
+  function dessiner(s, p, c, ru) {
+    const L = 520, H = 220, ySurf = 26;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#1b2333'; ctx.fillRect(0, 0, L, ySurf);
+    const Y = (cm) => ySurf + (cm / 220) * (H - ySurf);
+    // horizon de surface (humifère), sous-sol, roche
+    ctx.fillStyle = '#3a2a22'; ctx.fillRect(0, ySurf, L, Y(25) - ySurf);
+    ctx.fillStyle = s.couleur; ctx.fillRect(0, Y(25), L, Y(p + 20) - Y(25));
+    ctx.fillStyle = s.roche; ctx.fillRect(0, Y(p + 20), L, H - Y(p + 20));
+    if (s.calcaire || s.roche === '#2f2d38') {   // fissures dans la roche
+      ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.lineWidth = 1;
+      for (let x = 20; x < L; x += 34) { ctx.beginPath(); ctx.moveTo(x, Y(p + 20)); ctx.lineTo(x + 8, H); ctx.stroke(); }
+    }
+    // cailloux
+    const r = alea(7);
+    const n = Math.round(c * 1.6);
+    ctx.fillStyle = 'rgba(255,255,255,.28)';
+    for (let i = 0; i < n; i++) {
+      const x = r() * L, y = Y(25) + r() * (Y(p + 20) - Y(25)), w = 3 + r() * 7;
+      ctx.beginPath(); ctx.ellipse(x, y, w, w * .6, r() * Math.PI, 0, Math.PI * 2); ctx.fill();
+    }
+    // herbe et cep
+    ctx.strokeStyle = '#8fbf6a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(L / 2, ySurf); ctx.lineTo(L / 2, 4); ctx.stroke();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = '#a89a95';
+    // racines : un pivot et des latérales, jusqu'à la profondeur choisie (un peu dans la roche si elle est fissurée)
+    const fond = Y(p + (s.reserveRoche ? 25 : 0));
+    ctx.beginPath(); ctx.moveTo(L / 2, ySurf); ctx.quadraticCurveTo(L / 2 + 8, (ySurf + fond) / 2, L / 2 - 4, fond); ctx.stroke();
+    const rr = alea(3);
+    for (let i = 0; i < 14; i++) {
+      const y0 = ySurf + 6 + (i / 14) * (fond - ySurf - 10);
+      const portee = (60 + rr() * 90) * (1 - (i / 14) * .6);
+      const dir = i % 2 ? 1 : -1;
+      ctx.beginPath(); ctx.moveTo(L / 2, y0); ctx.quadraticCurveTo(L / 2 + dir * portee * .6, y0 + 10 + rr() * 14, L / 2 + dir * portee, y0 + 18 + rr() * 22); ctx.stroke();
+    }
+    // eau
+    ctx.fillStyle = 'rgba(134,183,217,.16)'; ctx.fillRect(0, Y(25), L, (Y(p + 20) - Y(25)) * clamp(ru / 250, .1, 1));
+    ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.textAlign = 'right';
+    ctx.fillStyle = '#a89a95'; ctx.fillText('0 cm', L - 8, ySurf + 11);
+    ctx.fillStyle = 'rgba(18,12,14,.7)'; ctx.fillRect(L - 58, Y(p) - 8, 52, 15);
+    ctx.fillStyle = '#f3ebe4'; ctx.fillText(`${p} cm`, L - 8, Y(p) + 3);
+    ctx.textAlign = 'left'; ctx.fillStyle = '#dccfc9'; ctx.fillText(s.nom, 8, ySurf + 13);
+  }
+  function maj() {
+    const s = SOLS[type.value], p = +prof.value, c = +cailloux.value;
+    const ru = Math.round(s.ru * p * (1 - c / 100) + s.reserveRoche);
+    const deficit = 260;   // ce que l'été (juin → septembre) évapore de plus qu'il ne pleut, en climat tempéré
+    const manque = deficit - ru;
+    const drainage = clamp(s.drainage + c / 250, 0, 1);
+    const chaleur = clamp(s.chaleur + c / 300 - (ru > 200 ? .15 : 0), 0, 1);
+    const vigueur = clamp(s.fertilite * .55 + clamp(ru / 320, 0, 1) * .45, 0, 1);
+    jEau(clamp(ru / 3.5, 0, 100), `${fmt(ru)} mm`);
+    jDrain(drainage * 100); jFert(s.fertilite * 100); jChaud(chaleur * 100); jVig(vigueur * 100);
+    dPh.textContent = fmt(s.ph, 1);
+    dRu.textContent = `${fmt(ru)} mm`;
+    let contr, cls;
+    if (manque <= 0) { contr = 'aucune'; cls = 'alerte'; }
+    else if (manque < 90) { contr = 'faible'; cls = ''; }
+    else if (manque < 170) { contr = 'modérée'; cls = 'bon'; }
+    else if (manque < 230) { contr = 'forte'; cls = ''; }
+    else { contr = 'sévère'; cls = 'alerte'; }
+    dContr.textContent = contr; dContr.className = `grand ${cls}`;
+    let l = `<b>${s.nom}.</b> Ce sol donne ${s.vins}. `;
+    if (manque <= 0) l += "Avec une telle réserve d'eau, la vigne <b>ne connaît jamais la soif</b> : elle pousse jusqu'aux vendanges, ombrage ses grappes et dilue son jus. Il faudra enherber, limiter la charge, et accepter un vin simple.";
+    else if (manque < 90) l += "La contrainte hydrique est <b>légère</b> : bon pour les rendements et les blancs frais, un peu court pour concentrer un grand rouge.";
+    else if (manque < 170) l += "La contrainte est <b>modérée et arrive au bon moment</b>, vers la véraison : la vigne cesse de pousser, ses baies restent petites et se concentrent. C'est l'équilibre que cherchent tous les grands terroirs.";
+    else if (manque < 230) l += "La contrainte est <b>forte</b> : de petits rendements très concentrés les bonnes années, mais un blocage de maturité et des feuilles grillées lors des étés caniculaires. On y plante des cépages méditerranéens et des porte-greffes résistants.";
+    else l += "La réserve est <b>trop faible</b> : sans irrigation ou sans racines qui trouvent la roche fissurée, la vigne se bloque en août, perd ses feuilles et ne mûrit pas.";
+    l += ` Porte-greffe : ${s.pg}.`;
+    if (s.calcaire === 2) l += " Le calcaire actif est si élevé qu'un mauvais porte-greffe donnerait des ceps <b>chlorotiques</b>, aux feuilles jaunes, incapables de mûrir.";
+    else if (s.calcaire === 1) l += " Surveiller la <b>chlorose</b> sur les parcelles les plus calcaires.";
+    lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
+    dessiner(s, p, c, ru);
+  }
+  type.addEventListener('change', () => { cailloux.value = SOLS[type.value].cailloux; cailloux.majSortie(); maj(); });
+  prof.addEventListener('input', maj);
+  cailloux.addEventListener('input', maj);
+  maj();
+  return { maj };
+};
+
+/* ---------- Vie du sol : la rhizosphère ---------- */
+
+const COUVERTS = {
+  nu: { nom: 'Sol nu, désherbé chimiquement', f: .15 },
+  travail: { nom: 'Sol travaillé (labour, griffage)', f: .4 },
+  partiel: { nom: 'Enherbement un rang sur deux', f: .75 },
+  total: { nom: 'Couvert semé, avec légumineuses', f: 1 },
+};
+
+ATELIERS.vieDuSol = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Faire vivre le sol');
+  const canvas = h('canvas', { 'aria-label': 'Vue rapprochée d’une racine de vigne, de ses mycorhizes et de la vie du sol' });
+  boite.append(canvas);
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const mo = curseur(reglages, { id: 'vMO', label: 'Matière organique du sol', min: 0.5, max: 5, step: 0.1, valeur: 1.8, affiche: (v) => `${fmt(v, 1)} %` });
+  const couvert = selection(reglages, { id: 'vCouvert', label: 'Entretien du sol', valeur: 'travail', options: Object.entries(COUVERTS).map(([k, c]) => [k, c.nom]) });
+  const cuivre = curseur(reglages, { id: 'vCuivre', label: 'Cuivre épandu (mildiou)', min: 0, max: 8, step: 0.5, valeur: 3, affiche: (v) => `${fmt(v, 1)} kg/ha/an` });
+  const compost = h('input', { type: 'checkbox', id: 'vCompost' });
+  reglages.append(h('div', { class: 'reglage' }, h('span', {}, 'Apports'), h('label', { class: 'case' }, compost, 'Compost ou marc composté chaque hiver')));
+  const jauges = h('div', { class: 'jauges' });
+  boite.append(jauges);
+  const jMicro = jauge(jauges, 'Activité microbienne');
+  const jMyco = jauge(jauges, 'Racines mycorhizées', 'or');
+  const jVers = jauge(jauges, 'Vers de terre', 'vert');
+  const jSec = jauge(jauges, 'Tenue à la sécheresse', 'bleu');
+  const jEro = jauge(jauges, 'Risque d’érosion', 'rougeb');
+  const mesures = h('dl', { class: 'mesures' });
+  const dN = h('dd'), dYan = h('dd', { class: 'grand', 'data-testid': 'azote-mout' }), dCu = h('dd');
+  mesures.append(h('dt', {}, 'Azote libéré par le sol'), dN, h('dt', {}, 'Azote assimilable attendu dans le moût'), dYan, h('dt', {}, 'Cuivre accumulé en 30 ans'), dCu);
+  boite.append(mesures);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-vie' });
+  boite.append(lecture);
+
+  function dessiner(micro, myco, vers) {
+    const L = 520, H = 190;
+    const ctx = contexte(canvas, L, H);
+    ctx.fillStyle = '#2a1b16'; ctx.fillRect(0, 0, L, H);
+    const r = alea(11);
+    // bactéries : des points
+    ctx.fillStyle = 'rgba(212,87,122,.7)';
+    for (let i = 0; i < micro * 4; i++) { ctx.beginPath(); ctx.arc(r() * L, r() * H, 1 + r() * 1.2, 0, Math.PI * 2); ctx.fill(); }
+    // vers de terre
+    ctx.strokeStyle = '#c98a7a'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    for (let i = 0; i < Math.round(vers / 60); i++) {
+      const x = 30 + r() * (L - 60), y = 20 + r() * (H - 40);
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x + 15, y - 12, x + 30, y + 12, x + 45, y - 4); ctx.stroke();
+    }
+    // racine principale et latérales
+    ctx.strokeStyle = '#e8d9c8'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(L / 2, 0); ctx.quadraticCurveTo(L / 2 + 10, H / 2, L / 2 - 6, H); ctx.stroke();
+    ctx.lineWidth = 2.5;
+    const lat = [];
+    for (let i = 0; i < 7; i++) {
+      const y0 = 14 + i * 24, dir = i % 2 ? 1 : -1, portee = 70 + r() * 80;
+      const x1 = L / 2 + dir * portee, y1 = y0 + 12 + r() * 16;
+      ctx.beginPath(); ctx.moveTo(L / 2, y0); ctx.quadraticCurveTo(L / 2 + dir * portee * .5, y0 + 4, x1, y1); ctx.stroke();
+      lat.push([x1, y1, dir, y0]);
+    }
+    // hyphes mycorhiziens : filaments fins depuis les racines latérales
+    ctx.strokeStyle = 'rgba(217,178,95,.75)'; ctx.lineWidth = .8;
+    const nH = Math.round(myco / 100 * 120);
+    for (let i = 0; i < nH; i++) {
+      const [x1, y1, dir, y0] = lat[i % lat.length];
+      const t0 = r(), x = L / 2 + (x1 - L / 2) * t0, y = y0 + (y1 - y0) * t0;
+      const a = r() * Math.PI * 2, len = 12 + r() * 40;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x + Math.cos(a) * len * .4, y + Math.sin(a) * len * .4 + 6, x + Math.cos(a) * len * .8 + dir * 4, y + Math.sin(a) * len * .8, x + Math.cos(a) * len, y + Math.sin(a) * len); ctx.stroke();
+    }
+    ctx.fillStyle = '#a89a95'; ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+    ctx.fillText('— racines   - hyphes mycorhiziens   · bactéries', 8, H - 8);
+  }
+  function maj() {
+    const M = +mo.value, c = COUVERTS[couvert.value], f = c.f, Cu = +cuivre.value, comp = compost.checked;
+    const micro = clamp((12 + 15 * M) * (0.5 + 0.5 * f) * (1 - 0.06 * Cu) + (comp ? 10 : 0), 0, 100);
+    const myco = clamp(28 + 42 * f + 5 * M - 4 * Cu - (couvert.value === 'travail' ? 8 : 0), 5, 95);
+    const vers = Math.round(clamp((20 + 55 * M) * (0.25 + f) * (1 - 0.08 * Cu) + (comp ? 40 : 0), 0, 500));
+    const nMin = M * 14 * (0.7 + 0.3 * f) + (couvert.value === 'total' ? 22 : 0) + (comp ? 15 : 0);
+    const nDispo = nMin - (couvert.value === 'total' ? 14 : couvert.value === 'partiel' ? 7 : 0);
+    const yan = Math.round(clamp(70 + 3.5 * nDispo, 40, 380));
+    const sec = clamp(15 + 0.5 * myco + 6 * M - (couvert.value === 'total' ? 10 : 0), 0, 100);
+    const ero = clamp(82 - 72 * f - 5 * M, 0, 100);
+    const cuMgKg = Cu * 30 / 3;   // 30 ans, 3 000 t de terre par hectare sur 20 cm
+    jMicro(micro); jMyco(myco); jVers(clamp(vers / 4.5, 0, 100), `${fmt(vers)} /m²`); jSec(sec); jEro(ero);
+    dN.textContent = `${fmt(nMin)} kg/ha/an`;
+    dYan.textContent = `${fmt(yan)} mg/L`;
+    dYan.className = `grand ${yan < 140 ? 'alerte' : yan > 260 ? '' : 'bon'}`;
+    dCu.textContent = cuMgKg ? `+${fmt(cuMgKg)} mg/kg` : 'aucun';
+    let l, cls = '';
+    if (couvert.value === 'nu') { l = "<b>Sol nu et désherbé.</b> Sans racines vivantes entre les rangs, les champignons mycorhiziens n'ont plus d'hôte hors de la vigne, la matière organique se consume sans être renouvelée, les vers de terre partent et la pluie ruisselle en emportant la terre. C'était la norme des années 1970 ; c'est aujourd'hui l'exception."; cls = 'alerte'; }
+    else if (couvert.value === 'travail') { l = "<b>Sol travaillé.</b> Le labour tue l'herbe, aère et libère un peu d'azote, mais il casse les réseaux d'hyphes et expose la matière organique à l'air, qui la brûle. Bon compromis en climat sec, où l'herbe concurrencerait la vigne pour l'eau."; }
+    else if (couvert.value === 'partiel') { l = "<b>Un rang sur deux enherbé.</b> Le compromis le plus répandu : l'herbe nourrit la vie du sol, porte le tracteur et freine l'érosion, tandis que le rang travaillé limite la concurrence pour l'eau et l'azote."; cls = 'bon'; }
+    else { l = "<b>Couvert semé avec légumineuses.</b> Trèfle, féverole ou vesce fixent l'azote de l'air grâce à leurs bactéries symbiotiques, leurs racines nourrissent les mycorhizes, le sol reste couvert toute l'année. En climat frais et humide, c'est le meilleur sol vivant possible ; en climat sec, on le détruit au printemps pour rendre l'eau à la vigne."; cls = 'bon'; }
+    if (yan < 140) l += ` Avec ${fmt(yan)} mg/L d'azote assimilable, le moût sera <b>carencé</b> : fermentation languissante et odeurs de soufre au chai, à moins d'ajouter des nutriments aux levures.`;
+    else if (yan > 260) l += " Le sol libère beaucoup d'azote : ceps vigoureux, grappes serrées, plus de pourriture et des vins dilués. On sème un couvert pour en consommer une partie.";
+    if (Cu >= 5) l += ` À ${fmt(Cu, 1)} kg de cuivre par hectare et par an, au-delà du plafond européen, le sol en accumule ${fmt(cuMgKg)} mg/kg en trente ans : les vers de terre et une partie des microbes ne s'en remettent pas.`;
+    lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
+    dessiner(micro, myco, vers);
+  }
+  [mo, cuivre].forEach((c) => c.addEventListener('input', maj));
+  couvert.addEventListener('change', maj);
+  compost.addEventListener('change', maj);
   maj();
   return { maj };
 };
