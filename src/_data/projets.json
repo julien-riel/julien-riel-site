@@ -66,5 +66,18 @@
     "emoji": "🍇",
     "modele": "Claude Fable 5.1",
     "date": "2026-09-04"
+  },
+  {
+    "name": {
+      "fr": "Vignobles de Niagara-on-the-Lake",
+      "en": "Niagara-on-the-Lake vineyards"
+    },
+    "description": {
+      "fr": "Une carte MapLibre du damier viticole de Niagara-on-the-Lake : 293 blocs de vigne d’OpenStreetMap avec leur superficie et leurs cépages, les 40 vignobles de la région, la trame des concessions de l’arpentage d’origine et le relevé pédologique de l’Ontario. Colorez les lots par vignoble, par surface ou par cépage.",
+      "en": "A MapLibre map of the vineyard patchwork of Niagara-on-the-Lake: 293 vine blocks from OpenStreetMap with their area and grape varieties, the region’s 40 wineries, the concession grid of the original survey, and Ontario’s soil survey. Colour the lots by winery, by area or by grape. French only."
+    },
+    "url": "/projets/vignobles-niagara/",
+    "emoji": "🗺️",
+    "date": "2026-09-05"
   }
 ]

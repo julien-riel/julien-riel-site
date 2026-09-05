@@ -22,3 +22,17 @@ Les articles sont rédigés en markdown. Les triple backticks peuvent afficher d
 Sur la page d'un article, il y a une table des matières qui permet de naviguer vers une section. On retrouve aussi "articles connexes" qui contient des liens vers des articles avec des tags en commun
 
 Tu peux utiliser le skill frontend-design pour concevoir le UI. 
+
+## Carte des vignobles de Niagara-on-the-Lake
+
+La page `/projets/vignobles-niagara/` s'appuie sur des GeoJSON versionnés dans
+`src/assets/data/`. Pour les régénérer à partir des sources ouvertes
+(OpenStreetMap, Niagara Open Data, Ontario GeoHub) :
+
+```
+node scripts/build-notl-data.js
+```
+
+Les réponses d'Overpass sont mises en cache sous `.cache/overpass/` : les
+serveurs publics limitent le débit, et le cache évite de les solliciter deux
+fois pour la même requête. Supprimez ce dossier pour forcer un rafraîchissement.

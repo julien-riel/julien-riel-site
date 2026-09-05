@@ -1,0 +1,711 @@
+---
+permalink: /projets/vignobles-niagara/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Les vignobles de Niagara-on-the-Lake — la carte des lots</title>
+<meta name="description" content="Une carte interactive des lots de vigne de Niagara-on-the-Lake : près de 300 parcelles, 40 vignobles, la trame des concessions de l'arpentage d'origine et les sols du relevé pédologique de l'Ontario. Données ouvertes, MapLibre.">
+<meta name="theme-color" content="#160f11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%97%BA%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'DM Serif Display';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/dm-serif-display-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/outfit-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/outfit-600.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+  }
+
+  :root {
+    --fond: #160f11;
+    --panneau: #1f1518;
+    --panneau-2: #2a1d21;
+    --bord: #3b2a30;
+    --bord-clair: #55414a;
+    --texte: #f3ebe4;
+    --sourdine: #a89a95;
+    --accent: #d4577a;
+    --accent-sombre: #9b2f4c;
+    --accent-doux: #f0a3b8;
+    --or: #d9b25f;
+    --vert: #8fbf6a;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+    --bandeau-h: 54px;
+    --volet-l: 336px;
+    --avis-h: 34px;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 400 15px/1.55 var(--ui);
+    color: var(--texte);
+    background: var(--fond);
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Bandeau ---------- */
+
+  .bandeau {
+    height: var(--bandeau-h);
+    display: flex;
+    align-items: center;
+    gap: 10px 18px;
+    padding: 0 14px;
+    background: linear-gradient(180deg, #24181c, #1a1114);
+    border-bottom: 1px solid #0a0607;
+    box-shadow: 0 1px 0 var(--bord) inset;
+    position: relative;
+    z-index: 6;
+  }
+  .retour {
+    color: var(--sourdine);
+    text-decoration: none;
+    font-size: 12.5px;
+    letter-spacing: .03em;
+    white-space: nowrap;
+    transition: color .15s;
+  }
+  .retour:hover { color: var(--accent); }
+  .bandeau h1 {
+    font: 400 20px/1 var(--serif);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .chiffres {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+    align-items: baseline;
+  }
+  .chiffre { display: flex; align-items: baseline; gap: 5px; white-space: nowrap; }
+  .chiffre b { font: 600 15px/1 var(--mono); color: var(--accent-doux); }
+  .chiffre span {
+    font: 500 10px/1 var(--mono);
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .bandeau .aide-btn {
+    font: 600 13px/1 var(--mono);
+    color: var(--sourdine);
+    background: transparent;
+    border: 1px solid var(--bord-clair);
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .bandeau .aide-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ---------- Grille ---------- */
+
+  .plan {
+    display: grid;
+    grid-template-columns: var(--volet-l) 1fr;
+    height: calc(100% - var(--bandeau-h));
+  }
+
+  /* ---------- Volet ---------- */
+
+  .volet {
+    background: var(--panneau);
+    border-right: 1px solid var(--bord);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .volet-section { padding: 12px 14px; border-bottom: 1px solid var(--bord); }
+  /* Le bandeau n'a pas la place d'afficher les chiffres sur un écran étroit. */
+  .resume { display: none; }
+  .volet-titre {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+    margin-bottom: 9px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .segment { display: flex; border: 1px solid var(--bord-clair); border-radius: 6px; overflow: hidden; }
+  .segment button {
+    flex: 1;
+    font: 500 12.5px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 0;
+    border-right: 1px solid var(--bord-clair);
+    padding: 8px 6px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .segment button:last-child { border-right: 0; }
+  .segment button:hover { color: var(--accent-doux); }
+  .segment button[aria-pressed="true"] { background: var(--accent); color: #1c0a10; font-weight: 600; }
+
+  .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .case {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font: 500 12.5px/1.2 var(--ui);
+    color: var(--sourdine);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 1px solid var(--bord);
+    border-radius: 5px;
+    padding: 8px 9px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color .15s, color .15s;
+  }
+  .case::before {
+    content: "";
+    width: 11px; height: 11px;
+    flex: 0 0 auto;
+    border: 1.5px solid var(--bord-clair);
+    border-radius: 3px;
+  }
+  .case[aria-pressed="true"] { color: var(--texte); border-color: var(--accent-sombre); }
+  .case[aria-pressed="true"]::before { background: var(--accent); border-color: var(--accent); }
+  .case.chargement { opacity: .6; cursor: progress; }
+  .case:hover { border-color: var(--accent); }
+
+  #recherche {
+    width: 100%;
+    font: 400 13.5px/1 var(--ui);
+    color: var(--texte);
+    background: var(--fond);
+    border: 1px solid var(--bord-clair);
+    border-radius: 5px;
+    padding: 9px 10px;
+  }
+  #recherche::placeholder { color: #7d6f6b; }
+
+  .volet-liste { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  #liste {
+    list-style: none;
+    padding: 0 8px 10px;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bord-clair) transparent;
+  }
+  #liste li.vide { padding: 14px 8px; color: var(--sourdine); font-size: 13px; }
+  .entree {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 8px;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    color: var(--texte);
+    font: 400 13.5px/1.3 var(--ui);
+    text-align: left;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .entree:hover { background: var(--panneau-2); }
+  .entree.choisi { background: var(--accent-sombre); }
+  .entree-nom { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .entree-chiffre { font-size: 11.5px; color: var(--sourdine); white-space: nowrap; }
+  .entree.choisi .entree-chiffre { color: var(--accent-doux); }
+
+  .pastille {
+    width: 11px; height: 11px;
+    flex: 0 0 auto;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .5) inset;
+    display: inline-block;
+    vertical-align: -1px;
+  }
+
+  #legende { list-style: none; padding: 0; margin: 0; display: grid; gap: 5px; }
+  #legende li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--sourdine); }
+  .bouton-plein {
+    width: 100%;
+    margin-top: 11px;
+    font: 500 12.5px/1 var(--ui);
+    color: var(--texte);
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 1px solid var(--bord-clair);
+    border-radius: 5px;
+    padding: 9px 10px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .bouton-plein:hover { border-color: var(--accent); color: var(--accent-doux); }
+
+  #legende li.legende-titre {
+    font: 600 10px/1 var(--mono);
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    margin-top: 7px;
+  }
+
+  /* ---------- Carte ---------- */
+
+  .zone-carte { position: relative; min-width: 0; }
+  #carte { position: absolute; inset: var(--decalage-avis, 0px) 0 0 0; background: #10171c; }
+  #etat-chargement {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 8px;
+    justify-items: center;
+    background: var(--fond);
+    color: var(--sourdine);
+    font-size: 13.5px;
+    z-index: 3;
+    text-align: center;
+    padding: 20px;
+  }
+  #etat-chargement.erreur { color: var(--accent-doux); }
+  #etat-chargement::before {
+    content: "";
+    width: 26px; height: 26px;
+    border: 2px solid var(--bord-clair);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: tourne 1s linear infinite;
+  }
+  #etat-chargement.erreur::before { display: none; }
+  @keyframes tourne { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #etat-chargement::before { animation: none; } }
+
+  .repere {
+    position: absolute;
+    left: 10px; bottom: 10px;
+    z-index: 2;
+    font: 500 10.5px/1 var(--mono);
+    letter-spacing: .07em;
+    color: var(--sourdine);
+    background: rgba(22, 15, 17, .78);
+    border: 1px solid var(--bord);
+    border-radius: 4px;
+    padding: 5px 8px;
+    pointer-events: none;
+  }
+
+  #avis {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+    height: var(--avis-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--or);
+    background: #241a12;
+    border-bottom: 1px solid #4a3a1e;
+    padding: 0 12px;
+    text-align: center;
+  }
+  #avis[hidden] { display: none; }
+  body.avis-visible { --decalage-avis: var(--avis-h); }
+
+  /* ---------- Fiche ---------- */
+
+  #fiche {
+    position: absolute;
+    top: calc(10px + var(--decalage-avis, 0px));
+    left: 10px;
+    width: 306px;
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+    overflow-y: auto;
+    z-index: 4;
+    background: rgba(31, 21, 24, .96);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--bord-clair);
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .45);
+    scrollbar-width: thin;
+  }
+  #fiche.vide { background: rgba(31, 21, 24, .82); border-style: dashed; }
+  #fiche .invite { padding: 13px 14px; font-size: 12.5px; color: var(--sourdine); }
+  .fiche-entete { padding: 13px 40px 11px 14px; border-bottom: 1px solid var(--bord); position: relative; }
+  .fiche-entete h2 { font: 400 19px/1.2 var(--serif); }
+  .fiche-genre {
+    font: 600 9.5px/1 var(--mono);
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 6px;
+  }
+  .fermer-fiche {
+    position: absolute;
+    top: 9px; right: 9px;
+    width: 26px; height: 26px;
+    font: 400 19px/1 var(--ui);
+    color: var(--sourdine);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .fermer-fiche:hover { color: var(--accent); border-color: var(--bord-clair); }
+  .fiche-corps { padding: 11px 14px 14px; display: grid; gap: 8px; }
+  .fiche-ligne { display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: baseline; }
+  .fiche-cle {
+    font: 500 10px/1.3 var(--mono);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--sourdine);
+  }
+  .fiche-valeur { font-size: 13.5px; }
+  .fiche-lien {
+    font-size: 13px;
+    color: var(--accent-doux);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-sombre);
+    justify-self: start;
+    margin-top: 2px;
+  }
+  .fiche-lien:hover { color: var(--accent); }
+  .fiche-renvoi {
+    font: 400 13.5px/1.3 var(--ui);
+    color: var(--accent-doux);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px dotted var(--accent-sombre);
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+  }
+  .fiche-renvoi:hover { color: var(--accent); }
+  .fiche-sol {
+    border-top: 1px solid var(--bord);
+    padding-top: 9px;
+    margin-top: 2px;
+    display: grid;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--sourdine);
+  }
+  .fiche-sol-titre { font: 400 14.5px/1.2 var(--serif); color: var(--texte); display: flex; align-items: center; gap: 8px; }
+  .fiche-lots { border-top: 1px solid var(--bord); padding-top: 9px; }
+  .fiche-lots summary {
+    font: 500 12px/1 var(--ui);
+    color: var(--accent-doux);
+    cursor: pointer;
+    padding: 2px 0;
+  }
+  .fiche-lots ul { list-style: none; padding: 6px 0 0; margin: 0; display: grid; gap: 2px; }
+  .fiche-lots button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 6px;
+    font: 400 12.5px/1.3 var(--ui);
+    color: var(--texte);
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .fiche-lots button:hover { background: var(--panneau-2); }
+  .fiche-lots button .mono { color: var(--sourdine); font-size: 11.5px; }
+
+  /* ---------- Bascule mobile ---------- */
+
+  #bascule-volet { display: none; }
+
+  /* ---------- MapLibre ---------- */
+
+  .maplibregl-ctrl-group {
+    background: rgba(31, 21, 24, .94) !important;
+    border: 1px solid var(--bord-clair) !important;
+    box-shadow: none !important;
+  }
+  .maplibregl-ctrl-group button + button { border-top: 1px solid var(--bord) !important; }
+  .maplibregl-ctrl-group button span { filter: invert(1) brightness(1.6); }
+  .maplibregl-ctrl-scale {
+    background: rgba(22, 15, 17, .78) !important;
+    border-color: var(--bord-clair) !important;
+    color: var(--sourdine) !important;
+    font: 500 10.5px/1.4 var(--mono) !important;
+  }
+  .maplibregl-ctrl-attrib {
+    background: rgba(22, 15, 17, .82) !important;
+    color: var(--sourdine) !important;
+    font-size: 10.5px !important;
+  }
+  .maplibregl-ctrl-attrib a { color: var(--accent-doux) !important; }
+  .maplibregl-ctrl-attrib-button { filter: invert(1) brightness(1.6); }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Aide ---------- */
+
+  dialog {
+    max-width: 620px;
+    width: calc(100% - 32px);
+    max-height: 82vh;
+    color: var(--texte);
+    background: var(--panneau);
+    border: 1px solid var(--bord-clair);
+    border-radius: 10px;
+    padding: 0;
+  }
+  dialog::backdrop { background: rgba(8, 5, 6, .68); }
+  .aide-corps { padding: 20px 22px 22px; overflow-y: auto; max-height: 82vh; }
+  .aide-corps h2 { font: 400 23px/1.2 var(--serif); margin-bottom: 4px; }
+  .aide-corps h3 {
+    font: 600 10.5px/1 var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 18px 0 7px;
+  }
+  .aide-corps p, .aide-corps li { font-size: 13.5px; color: var(--sourdine); }
+  .aide-corps p + p { margin-top: 8px; }
+  .aide-corps ul { padding-left: 18px; display: grid; gap: 5px; margin-top: 4px; }
+  .aide-corps b { color: var(--texte); font-weight: 600; }
+  .aide-corps a { color: var(--accent-doux); }
+  .aide-corps kbd {
+    font: 500 11px/1 var(--mono);
+    background: var(--panneau-2);
+    border: 1px solid var(--bord-clair);
+    border-radius: 3px;
+    padding: 3px 5px;
+  }
+  .aide-corps .bouton {
+    margin-top: 20px;
+    font: 500 13px/1 var(--ui);
+    color: #1c0a10;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    padding: 9px 14px;
+    cursor: pointer;
+  }
+
+  /* ---------- Écrans étroits ---------- */
+
+  @media (max-width: 1080px) {
+    .chiffre span { display: none; }
+    .chiffre::after {
+      content: attr(data-court);
+      font: 500 10px/1 var(--mono);
+      color: var(--sourdine);
+      letter-spacing: .06em;
+    }
+  }
+
+  @media (max-width: 860px) {
+    :root { --bandeau-h: 50px; }
+    .bandeau h1 { font-size: 16px; }
+    /* Les chiffres passent dans le volet : le bandeau garde le titre. */
+    .chiffres { display: none; }
+    .resume {
+      display: block;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--bord);
+      font: 500 12px/1 var(--mono);
+      letter-spacing: .05em;
+      color: var(--accent-doux);
+    }
+    .repere { display: none; }
+    #fiche.vide { display: none; }
+    .plan { grid-template-columns: 1fr; }
+    .volet {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 0;
+      top: auto;
+      max-height: 68%;
+      z-index: 5;
+      border-right: 0;
+      border-top: 1px solid var(--bord-clair);
+      border-radius: 12px 12px 0 0;
+      transform: translateY(calc(100% - 46px));
+      transition: transform .22s ease;
+    }
+    body.volet-ouvert .volet { transform: translateY(0); }
+    #bascule-volet {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 46px;
+      flex: 0 0 auto;
+      font: 500 12px/1 var(--mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--sourdine);
+      background: var(--panneau-2);
+      border: 0;
+      border-radius: 12px 12px 0 0;
+      cursor: pointer;
+    }
+    #bascule-volet::before {
+      content: "";
+      width: 32px; height: 3px;
+      border-radius: 2px;
+      background: var(--bord-clair);
+    }
+    .volet-defile { overflow-y: auto; flex: 1; min-height: 0; }
+    #liste { max-height: 40vh; }
+    #fiche { width: auto; right: 10px; max-height: 52%; }
+    .repere { bottom: 56px; }
+    .zone-carte { position: absolute; inset: var(--bandeau-h) 0 0; }
+    .plan { display: block; height: calc(100% - var(--bandeau-h)); position: relative; }
+  }
+  @media (prefers-reduced-motion: reduce) { .volet { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <a class="retour" href="/projets/">← Mes projets</a>
+  <h1>Vignobles de Niagara-on-the-Lake</h1>
+  <div class="chiffres">
+    <span class="chiffre" data-court="lots"><b id="chiffre-lots">—</b><span>lots</span></span>
+    <span class="chiffre" data-court="ha"><b id="chiffre-hectares">—</b><span>hectares</span></span>
+    <span class="chiffre" data-court="vign."><b id="chiffre-vignobles">—</b><span>vignobles</span></span>
+  </div>
+  <button type="button" class="aide-btn" id="ouvrir-aide" aria-label="À propos de cette carte">?</button>
+</header>
+
+<div class="plan">
+  <aside class="volet" aria-label="Commandes et liste des vignobles">
+    <button type="button" id="bascule-volet" aria-expanded="false" aria-controls="volet-contenu">Vignobles et couches</button>
+
+    <div class="volet-defile" id="volet-contenu">
+      <p id="resume" class="resume"></p>
+
+      <section class="volet-section">
+        <p class="volet-titre">Fond de carte</p>
+        <div class="segment" role="group" aria-label="Fond de carte">
+          <button type="button" data-fond="sombre" aria-pressed="true">Sombre</button>
+          <button type="button" data-fond="clair" aria-pressed="false">Clair</button>
+          <button type="button" data-fond="photo" aria-pressed="false">Photo</button>
+        </div>
+      </section>
+
+      <section class="volet-section">
+        <p class="volet-titre">Couleur des lots</p>
+        <div class="segment" role="group" aria-label="Couleur des lots">
+          <button type="button" data-teinte="vignoble" aria-pressed="true">Vignoble</button>
+          <button type="button" data-teinte="surface" aria-pressed="false">Surface</button>
+          <button type="button" data-teinte="cepage" aria-pressed="false">Cépage</button>
+        </div>
+      </section>
+
+      <section class="volet-section">
+        <p class="volet-titre">Couches</p>
+        <div class="cases">
+          <button type="button" class="case" data-couche="lots" aria-pressed="true">Lots de vigne</button>
+          <button type="button" class="case" data-couche="vignobles" aria-pressed="true">Vignobles</button>
+          <button type="button" class="case" data-couche="trame" aria-pressed="false">Concessions</button>
+          <button type="button" class="case" data-couche="sols" aria-pressed="false">Sols</button>
+        </div>
+      </section>
+
+      <section class="volet-section">
+        <p class="volet-titre">Légende</p>
+        <ul id="legende"></ul>
+        <button type="button" id="recadrer" class="bouton-plein">Recadrer sur la municipalité</button>
+      </section>
+
+      <section class="volet-section">
+        <label class="volet-titre" for="recherche">
+          <span>Vignobles</span><span id="compte-liste"></span>
+        </label>
+        <input type="search" id="recherche" placeholder="Chercher un vignoble…" autocomplete="off">
+      </section>
+
+      <div class="volet-liste">
+        <ul id="liste"></ul>
+      </div>
+    </div>
+  </aside>
+
+  <div class="zone-carte">
+    <div id="carte" role="application" aria-label="Carte des lots viticoles de Niagara-on-the-Lake"></div>
+    <p id="etat-chargement">Chargement des lots…</p>
+    <div id="fiche" class="vide" aria-live="polite"></div>
+    <p class="repere">zoom <span id="zoom">11.1</span></p>
+    <p id="avis" role="status" hidden></p>
+  </div>
+</div>
+
+<dialog id="aide">
+  <div class="aide-corps">
+    <h2>Ce que montre cette carte</h2>
+    <p>Niagara-on-the-Lake est la sous-région la plus plantée de la péninsule du Niagara : un damier de parcelles coincé entre le lac Ontario, la rivière Niagara et l'escarpement. Cette carte assemble quatre jeux de données ouvertes pour donner à voir ce damier.</p>
+
+    <h3>Les lots</h3>
+    <p>Les polygones sont les <b>blocs de vigne</b> cartographiés dans OpenStreetMap, pas les parcelles du registre foncier : le cadastre légal de l'Ontario (Teranet / MPAC) n'est pas une donnée ouverte. Un bloc correspond en général à un îlot de vigne d'un seul tenant. La superficie affichée est calculée à partir de la géométrie, pas déclarée.</p>
+
+    <h3>Les vignobles</h3>
+    <p>Les points viennent de la couche <i>Wineries</i> de <a href="https://niagaraopendata.ca/">Niagara Open Data</a>, filtrée sur Niagara-on-the-Lake. Un lot est rattaché à un vignoble quand OpenStreetMap nomme l'exploitant ; sinon, faute de mieux, au vignoble le plus proche à moins de 900 m. La fiche indique lequel des deux. Ce rattachement est un indice de voisinage, pas un titre de propriété.</p>
+
+    <h3>Les concessions</h3>
+    <p>La trame jaune reprend les routes qui portent encore les noms de l'arpentage d'origine — <i>Line 1</i> à <i>Line 9</i>, <i>Concession 1</i> à <i>Concession 7</i>. C'est le quadrillage sur lequel les lots du canton ont été découpés à la fin du XVIII<sup>e</sup> siècle, et il structure toujours le parcellaire viticole.</p>
+
+    <h3>Les sols</h3>
+    <p>La couche pédologique vient du relevé <i>Soil Survey Complex</i> du <a href="https://geohub.lio.gov.on.ca/">GeoHub de l'Ontario</a> : série, texture, drainage, pente et classe agricole. Elle est chargée à la demande. Quand vous ouvrez la fiche d'un lot, le sol lu est celui du polygone qui contient son centre.</p>
+
+    <h3>Commandes</h3>
+    <ul>
+      <li>Cliquez un lot ou un vignoble pour ouvrir sa fiche ; <kbd>Échap</kbd> la referme.</li>
+      <li>Les trois boutons <b>Vignoble / Surface / Cépage</b> changent la couleur des lots.</li>
+      <li>Sur ordinateur, le zoom à la molette demande <kbd>Ctrl</kbd> ; sur mobile, deux doigts. La page reste ainsi défilable.</li>
+      <li><kbd>H</kbd> ouvre cette fenêtre.</li>
+    </ul>
+
+    <h3>Sources</h3>
+    <p><small>Lots et trame des concessions : <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, sous licence ODbL. Vignobles et limite municipale : Niagara Open Data (région de Niagara). Sols : Ontario GeoHub, <i>Soil Survey Complex</i>, sous licence gouvernementale ouverte de l'Ontario. Fonds de carte : CARTO et OpenStreetMap ; imagerie Esri, Maxar, Earthstar Geographics. Rendu avec <a href="https://maplibre.org/">MapLibre GL JS</a>.</small></p>
+
+    <form method="dialog"><button class="bouton">Fermer</button></form>
+  </div>
+</dialog>
+
+<script type="module" src="/assets/js/vignobles-niagara.js"></script>
+</body>
+</html>
