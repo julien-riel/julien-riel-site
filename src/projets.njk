@@ -18,7 +18,7 @@ lang: fr
       <a href="{{ projet.url }}" class="site-link">
         <span class="site-name">{{ projet.emoji }} {{ projet.name.fr }}</span>
         <span class="site-description">{{ projet.description.fr }}</span>
-        {% if projet.modele %}<span class="site-url">Construit le {{ projet.date | dateFormat("long", "fr") }} avec {{ projet.modele }}</span>{% endif %}
+        {% if projet.date %}<span class="site-url">Construit le {{ projet.date | dateFormat("long", "fr") }}{% if projet.modele %} avec {{ projet.modele }}{% endif %}</span>{% endif %}
       </a>
     </li>
     {% endfor %}
