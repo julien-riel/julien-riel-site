@@ -393,8 +393,6 @@ export default function(eleventyConfig) {
   eleventyConfig.addPlugin(EleventyVitePlugin, {
     viteOptions: {
       clearScreen: false,
-      // MapLibre instancie son worker en module ES.
-      worker: { format: "es" },
       server: {
         mode: "development",
         middlewareMode: true,

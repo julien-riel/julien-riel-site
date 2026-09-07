@@ -69,15 +69,16 @@
   },
   {
     "name": {
-      "fr": "Vignobles de Niagara-on-the-Lake",
-      "en": "Niagara-on-the-Lake vineyards"
+      "fr": "Bird Banger",
+      "en": "Bird Banger"
     },
     "description": {
-      "fr": "Une carte MapLibre du damier viticole de Niagara-on-the-Lake : 293 blocs de vigne d’OpenStreetMap avec leur superficie et leurs cépages, les 40 vignobles de la région, la trame des concessions de l’arpentage d’origine et le relevé pédologique de l’Ontario. Colorez les lots par vignoble, par surface ou par cépage.",
-      "en": "A MapLibre map of the vineyard patchwork of Niagara-on-the-Lake: 293 vine blocks from OpenStreetMap with their area and grape varieties, the region’s 40 wineries, the concession grid of the original survey, and Ontario’s soil survey. Colour the lots by winery, by area or by grape. French only."
+      "fr": "Un jeu de stratégie en temps réel : vingt-quatre jours de septembre pour défendre un vignoble contre les merles, jaseurs, étourneaux, quiscales, corneilles et dindons avec quatre modèles de canons à propane et un pistolet lance-cartouches. Les oiseaux s’habituent aux canons qui ne bougent pas, les voisins se plaignent du bruit, et le raisin vaut plus cher chaque jour que vous attendez avant de vendanger.",
+      "en": "A real-time strategy game: twenty-four September days to defend a vineyard against robins, waxwings, starlings, grackles, crows and wild turkeys with four models of propane cannon and a pyrotechnic launcher. Birds habituate to cannons that never move, neighbours complain about the noise, and grapes are worth more every day you wait before picking. French only."
     },
-    "url": "/projets/vignobles-niagara/",
-    "emoji": "🗺️",
-    "date": "2026-09-05"
+    "url": "/projets/bird-banger/",
+    "emoji": "💥",
+    "modele": "Claude Fable 5.1",
+    "date": "2026-09-07"
   }
 ]
