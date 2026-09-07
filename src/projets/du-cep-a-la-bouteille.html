@@ -66,7 +66,7 @@ eleventyExcludeFromCollections: true
   html[data-style="rose"]  { --accent: #f08aa0; --accent-sombre: #b8506b; --accent-doux: #ffc4d1; }
 
   * { box-sizing: border-box; margin: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     font: 400 15px/1.55 var(--ui);
     color: var(--texte);
@@ -342,9 +342,9 @@ eleventyExcludeFromCollections: true
   }
   .atelier-tete h3 { font: 400 17px/1.2 var(--serif); }
   .atelier canvas { display: block; width: 100%; height: auto; border-radius: 6px; background: #120c0e; }
-  .reglages { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 12px 0 4px; }
+  .reglages { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 16px; margin: 12px 0 4px; }
   .reglages.une { grid-template-columns: 1fr; }
-  .reglage { display: flex; flex-direction: column; gap: 4px; }
+  .reglage { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .reglage > span, .reglage label span:first-child {
     font: 600 10px/1 var(--mono);
     letter-spacing: .12em;
@@ -365,7 +365,7 @@ eleventyExcludeFromCollections: true
   .case { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
   .case input { accent-color: var(--accent); width: 16px; height: 16px; }
   .boutons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-  .mesures { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; margin-top: 12px; }
+  .mesures { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; margin-top: 12px; }
   .mesures dt { font-size: 12.5px; color: var(--sourdine); line-height: 1.55; }
   .mesures dd { font: 500 12.5px/1.55 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
   .mesures dd.alerte { color: var(--rouge); }
@@ -384,7 +384,7 @@ eleventyExcludeFromCollections: true
   .lecture.alerte { border-left-color: var(--rouge); }
   .lecture.bon { border-left-color: var(--vert); }
   .jauges { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-  .jauge { display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; align-items: center; font-size: 12.5px; }
+  .jauge { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 12.5px; }
   .jauge .piste { height: 7px; border-radius: 4px; background: #0f0a0b; overflow: hidden; }
   .jauge .piste i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-sombre), var(--accent)); transition: width .3s; border-radius: 4px; }
   .jauge .piste i.or { background: linear-gradient(90deg, #9c7a2c, var(--or)); }
@@ -408,7 +408,7 @@ eleventyExcludeFromCollections: true
     color: rgba(255, 255, 255, .8);
     text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
   }
-  .double { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .double { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; min-width: 0; }
   .etat-ferm {
     font: 500 12px/1.4 var(--mono);
     color: var(--accent-doux);
@@ -418,9 +418,10 @@ eleventyExcludeFromCollections: true
   }
   .etat-ferm.alerte { color: var(--rouge); }
   .etat-ferm.bon { color: var(--vert); }
-  .phases { display: flex; gap: 4px; margin-top: 10px; }
+  .phases { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
   .phases span {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
     text-align: center;
     font: 600 9.5px/1 var(--mono);
     letter-spacing: .06em;
@@ -480,9 +481,9 @@ eleventyExcludeFromCollections: true
     .cmdes { margin-left: 0; width: 100%; }
     .cmdes .legende-style { display: none; }
     main { padding: 0 12px 60px; }
-    .reglages { grid-template-columns: 1fr; }
-    .double { grid-template-columns: 1fr; }
-    .jauge { grid-template-columns: 110px 1fr auto; }
+    .reglages { grid-template-columns: minmax(0, 1fr); }
+    .double { grid-template-columns: minmax(0, 1fr); }
+    .jauge { grid-template-columns: 110px minmax(0, 1fr) auto; }
     .aide-corps { padding: 18px 16px; }
   }
 </style>
