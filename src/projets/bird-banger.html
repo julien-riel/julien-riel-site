@@ -1,0 +1,490 @@
+---
+permalink: /projets/bird-banger/index.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bird Banger — protégez votre vignoble des oiseaux</title>
+<meta name="description" content="Un jeu de stratégie en temps réel : vingt-quatre jours de septembre pour défendre un vignoble contre les étourneaux, merles, jaseurs, quiscales, corneilles et dindons avec des canons à propane et un pistolet lance-cartouches. Les oiseaux s'habituent, les voisins se plaignent.">
+<meta name="theme-color" content="#0f1410">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%92%A5%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face {
+    font-family: 'DM Serif Display';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/dm-serif-display-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 400; font-display: swap;
+    src: url('/assets/fonts/outfit-400.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/outfit-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/outfit-600.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 500; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal; font-weight: 600; font-display: swap;
+    src: url('/assets/fonts/jetbrains-mono-600.woff2') format('woff2');
+  }
+
+  :root {
+    --fond: #0f1410;
+    --panneau: #161d16;
+    --panneau-2: #1f281e;
+    --bord: #2b382a;
+    --bord-clair: #3f513c;
+    --texte: #ecefe3;
+    --sourdine: #97a391;
+    --or: #e6b84c;
+    --or-sombre: #b48a2a;
+    --vert: #8fd08a;
+    --rouge: #e26a55;
+    --bleu: #7fb6d8;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --ui: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body {
+    font: 400 14px/1.45 var(--ui);
+    color: var(--texte);
+    background: var(--fond);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---------- Bandeau ---------- */
+
+  .bandeau {
+    display: flex;
+    align-items: center;
+    gap: 10px 20px;
+    padding: 9px 16px 10px;
+    background: linear-gradient(180deg, #1b241a, #131a12);
+    border-bottom: 1px solid #070a07;
+    box-shadow: 0 1px 0 var(--bord) inset;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 3;
+  }
+  .retour { color: var(--sourdine); text-decoration: none; font-size: 12.5px; letter-spacing: .03em; white-space: nowrap; transition: color .15s; }
+  .retour:hover { color: var(--or); }
+  .bandeau h1 { font: 400 21px/1 var(--serif); letter-spacing: .01em; display: flex; align-items: baseline; gap: 10px; white-space: nowrap; }
+  .bandeau h1 .etiquette {
+    font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--or);
+    padding: 4px 7px 3px; border: 1px solid var(--or-sombre); border-radius: 3px;
+  }
+  .cmdes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+  select, .bouton, input[type=range] { font: 500 13px/1 var(--ui); color: var(--texte); }
+  .bouton {
+    background: linear-gradient(180deg, var(--panneau-2), var(--panneau));
+    border: 1px solid var(--bord-clair); border-radius: 5px; padding: 7px 10px; cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+  }
+  .bouton:hover:not(:disabled) { border-color: var(--or); }
+  .bouton:disabled { opacity: .45; cursor: not-allowed; }
+  .bouton:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--or); outline-offset: 2px; }
+  .bouton:active:not(:disabled) { transform: translateY(1px); }
+  .bouton.actif { background: var(--or); color: #1c1407; border-color: var(--or); font-weight: 600; }
+  .bouton.vendange { border-color: var(--or-sombre); color: var(--or); }
+  .bouton.danger:hover { border-color: var(--rouge); color: var(--rouge); }
+
+  /* ---------- Cadre ---------- */
+
+  #cadre { flex: 1; min-height: 0; display: grid; grid-template-columns: 262px minmax(0, 1fr) 312px; }
+  .panneau { background: var(--panneau); overflow-y: auto; padding: 14px 14px 20px; scrollbar-width: thin; scrollbar-color: var(--bord-clair) transparent; }
+  #tableau { border-right: 1px solid #070a07; box-shadow: -1px 0 0 var(--bord) inset; }
+  #droite { border-left: 1px solid #070a07; box-shadow: 1px 0 0 var(--bord) inset; }
+  .panneau h2 { font: 400 17px/1.1 var(--serif); margin-bottom: 10px; }
+  .panneau h3 {
+    font: 600 9.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--or);
+    margin: 16px 0 8px; padding-top: 12px; border-top: 1px solid var(--bord);
+  }
+  .panneau h3:first-of-type { border-top: 0; padding-top: 0; margin-top: 4px; }
+  .panneau p.note { font-size: 12.5px; color: var(--sourdine); line-height: 1.5; }
+
+  .mesures { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+  .mesures dt { font-size: 12.5px; color: var(--sourdine); line-height: 1.55; }
+  .mesures dd { font: 500 12.5px/1.55 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .mesures dd.alerte { color: var(--rouge); }
+  .mesures dd.grand { font-size: 15px; font-weight: 600; }
+  .mesures dd.nuit { color: var(--bleu); }
+
+  .piste { height: 6px; border-radius: 3px; background: #0a0d0a; overflow: hidden; margin: 4px 0 8px; }
+  .piste i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #4f8a3c, var(--vert)); transition: width .3s; }
+  .piste.plaintes i { background: linear-gradient(90deg, var(--or-sombre), var(--rouge)); }
+
+  .especes { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .especes li { display: grid; grid-template-columns: 14px 1fr auto; align-items: center; gap: 8px; font-size: 12.5px; color: var(--sourdine); }
+  .especes li.present { color: var(--texte); }
+  .especes li i { width: 12px; height: 12px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: inline-block; border: 1px solid rgba(255,255,255,.15); }
+  .especes li b { font: 500 12.5px/1 var(--mono); }
+  .especes button { all: unset; cursor: pointer; text-align: left; }
+  .especes button:hover { color: var(--or); }
+
+  #journal { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  #journal li { font-size: 12.5px; line-height: 1.4; color: #cfd6c6; padding-left: 10px; border-left: 2px solid var(--bord-clair); }
+  #journal li:first-child { color: var(--texte); }
+  #journal li.alerte { border-left-color: var(--rouge); }
+  #journal li.bon { border-left-color: var(--vert); }
+  #journal time { display: block; font: 500 10px/1.4 var(--mono); color: var(--sourdine); letter-spacing: .04em; }
+
+  /* ---------- Vue ---------- */
+
+  #vue { position: relative; min-width: 0; min-height: 0; background: var(--fond); }
+  #scene { display: block; width: 100%; height: 100%; touch-action: none; }
+  #astuce {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    background: rgba(10,14,10,.82); border: 1px solid var(--bord-clair); border-radius: 6px;
+    padding: 7px 12px; font-size: 12.5px; color: var(--sourdine); white-space: nowrap; pointer-events: none;
+  }
+  #astuce b { color: var(--or); font-weight: 600; }
+  .outils {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap;
+    padding: 8px 12px; background: linear-gradient(0deg, rgba(10,14,10,.92), rgba(10,14,10,.7));
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .outils .groupe { display: flex; align-items: center; gap: 5px; }
+  .outils .lib { font: 600 9.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); margin-right: 4px; }
+  .outils .bouton { padding: 6px 9px; font-size: 12.5px; }
+  .outils .bouton.icone { min-width: 32px; text-align: center; font-family: var(--mono); }
+  .outils .espace { flex: 1; }
+  .outils label.coche { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; cursor: pointer; }
+  .outils input[type=checkbox] { accent-color: var(--or); width: 14px; height: 14px; margin: 0; }
+
+  /* ---------- Boutique et fiche ---------- */
+
+  .modele { border: 1px solid var(--bord); border-radius: 6px; padding: 10px 11px; margin-bottom: 8px; background: var(--panneau-2); }
+  .modele header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .modele h4 { font: 500 13.5px/1.2 var(--ui); }
+  .modele .prix { font: 600 12.5px/1 var(--mono); color: var(--or); white-space: nowrap; }
+  .modele .specs { font: 500 10.5px/1.5 var(--mono); color: var(--sourdine); letter-spacing: .02em; margin: 3px 0 5px; }
+  .modele p { font-size: 12px; color: #c6cebc; line-height: 1.45; margin-bottom: 8px; }
+  .modele .bouton { width: 100%; text-align: center; }
+
+  .reglage { margin: 10px 0; }
+  .reglage label { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--sourdine); margin-bottom: 4px; }
+  .reglage label b { font: 500 12px/1 var(--mono); color: var(--texte); }
+  .reglage input[type=range] { width: 100%; accent-color: var(--or); }
+  .reglage.coche label { justify-content: flex-start; gap: 8px; align-items: center; cursor: pointer; color: var(--texte); }
+  .reglage input[type=checkbox] { accent-color: var(--or); width: 14px; height: 14px; margin: 0; }
+  .hab { display: grid; grid-template-columns: 1fr 70px 38px; align-items: center; gap: 8px; font-size: 12px; color: var(--sourdine); margin: 3px 0; }
+  .hab i { height: 5px; border-radius: 3px; background: #0a0d0a; overflow: hidden; display: block; }
+  .hab i b { display: block; height: 100%; }
+  .hab em { font: 500 11px/1 var(--mono); font-style: normal; text-align: right; }
+  #ficheConseil { font-size: 12.5px; color: var(--or); margin-top: 8px; line-height: 1.45; }
+  .actions { display: flex; gap: 6px; margin-top: 12px; }
+  .actions .bouton { flex: 1; text-align: center; }
+
+  /* ---------- Dialogues ---------- */
+
+  dialog {
+    margin: auto;
+    background: var(--panneau); color: var(--texte); border: 1px solid var(--bord-clair); border-radius: 10px;
+    padding: 0; max-width: min(720px, 92vw); max-height: 88vh; box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  }
+  dialog::backdrop { background: rgba(5,8,5,.7); }
+  dialog .contenu { padding: 24px 28px 22px; overflow-y: auto; max-height: 88vh; }
+  dialog h2 { font: 400 26px/1.15 var(--serif); margin-bottom: 8px; }
+  dialog h3 { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--or); margin: 20px 0 8px; padding-top: 14px; border-top: 1px solid var(--bord); }
+  dialog p, dialog li { font-size: 14px; line-height: 1.55; color: #d9dfd0; }
+  dialog p { margin-bottom: 9px; }
+  dialog ul { padding-left: 18px; margin-bottom: 9px; }
+  dialog kbd { font: 500 11.5px/1 var(--mono); background: var(--panneau-2); border: 1px solid var(--bord-clair); border-radius: 3px; padding: 2px 5px; }
+  dialog .fermer { margin-top: 16px; }
+  dialog .mesures { margin: 8px 0 14px; }
+  .fiche-espece { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; margin-bottom: 10px; }
+  .fiche-espece i { width: 16px; height: 16px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: block; margin-top: 4px; border: 1px solid rgba(255,255,255,.15); }
+  .fiche-espece b { display: block; font-weight: 500; }
+  .fiche-espece small { color: var(--sourdine); font-style: italic; }
+  .fiche-espece p { margin: 2px 0 0; font-size: 13px; }
+  #bilanNote {
+    float: right; font: 400 54px/1 var(--serif); width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center;
+    border: 2px solid var(--or); color: var(--or); margin: 0 0 10px 16px;
+  }
+  #bilanNote[data-note="D"], #bilanNote[data-note="E"] { border-color: var(--rouge); color: var(--rouge); }
+  #bilanNote[data-note="C"] { border-color: var(--or-sombre); color: var(--or-sombre); }
+  #bilanMorale { color: var(--or); }
+
+  @media (max-width: 1080px) { #cadre { grid-template-columns: 236px minmax(0, 1fr) 280px; } }
+  @media (max-width: 960px) {
+    body { overflow: auto; height: auto; min-height: 100%; }
+    #cadre { display: flex; flex-direction: column; }
+    #vue { height: 62vh; min-height: 340px; order: -1; }
+    .panneau { max-height: none; overflow: visible; }
+    #tableau, #droite { border: 0; box-shadow: none; border-top: 1px solid var(--bord); }
+    #astuce { white-space: normal; text-align: center; max-width: 88%; }
+    .outils { gap: 6px 10px; padding: 6px 8px; }
+  }
+  @media (max-width: 560px) {
+    .bandeau { padding: 8px 12px; gap: 8px 12px; }
+    .bandeau h1 { font-size: 18px; }
+    .cmdes { margin-left: 0; width: 100%; }
+    .outils .lib { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <a class="retour" href="/projets/" title="Retour à mes projets">← julien-riel.com</a>
+  <h1><span class="etiquette">Jeu</span> Bird Banger</h1>
+  <div class="cmdes">
+    <button class="bouton vendange" id="btnVendanger" title="Rentrer la récolte maintenant et clore la saison">🍇 Vendanger</button>
+    <button class="bouton" id="btnReset" title="Recommencer la saison au 1er septembre">↺ Recommencer</button>
+    <button class="bouton" id="btnAide" title="Règles, modèles, oiseaux (H)">? En savoir plus</button>
+  </div>
+</header>
+
+<main id="cadre">
+  <aside class="panneau" id="tableau" aria-label="État du vignoble">
+    <h2>Le vignoble</h2>
+
+    <h3>Calendrier</h3>
+    <dl class="mesures">
+      <dt>Date</dt><dd id="valJour" data-testid="jour">—</dd>
+      <dt>Heure</dt><dd id="valHeure" data-testid="heure">—</dd>
+      <dt>Sucre des baies</dt><dd id="valBrix">—</dd>
+      <dt>Prix du raisin</dt><dd id="valPrix">—</dd>
+    </dl>
+
+    <h3>Récolte sur pied</h3>
+    <dl class="mesures">
+      <dt>Restant</dt><dd id="valRecolte" class="grand" data-testid="recolte">—</dd>
+      <dt>Part de la récolte</dt><dd id="valPart" data-testid="part">—</dd>
+    </dl>
+    <div class="piste"><i id="barreRecolte"></i></div>
+    <dl class="mesures">
+      <dt>Valeur estimée</dt><dd id="valValeur">—</dd>
+      <dt>Mangé par les oiseaux</dt><dd id="valMange" data-testid="mange">—</dd>
+    </dl>
+
+    <h3>Caisse</h3>
+    <dl class="mesures">
+      <dt>Budget</dt><dd id="valBudget" class="grand" data-testid="budget">—</dd>
+      <dt>Dépensé</dt><dd id="valDepenses">—</dd>
+      <dt>Cartouches</dt><dd id="valCartouches">—</dd>
+    </dl>
+
+    <h3>Oiseaux dans la vigne · <span id="valOiseaux" data-testid="oiseaux">0</span></h3>
+    <ul class="especes">
+      <li><i style="background:#4a4a52"></i><button data-espece-aide="merle">Merle d’Amérique</button><b id="nb-merle">0</b></li>
+      <li><i style="background:#b7925a"></i><button data-espece-aide="jaseur">Jaseur d’Amérique</button><b id="nb-jaseur">0</b></li>
+      <li><i style="background:#2a2733"></i><button data-espece-aide="etourneau">Étourneau sansonnet</button><b id="nb-etourneau">0</b></li>
+      <li><i style="background:#1c2436"></i><button data-espece-aide="quiscale">Quiscale bronzé</button><b id="nb-quiscale">0</b></li>
+      <li><i style="background:#141414"></i><button data-espece-aide="corneille">Corneille d’Amérique</button><b id="nb-corneille">0</b></li>
+      <li><i style="background:#5a3b26"></i><button data-espece-aide="dindon">Dindon sauvage</button><b id="nb-dindon">0</b></li>
+    </ul>
+    <p class="note" style="margin-top:8px">Cliquez sur une espèce pour savoir ce qui la fait fuir.</p>
+
+    <h3>Voisinage</h3>
+    <dl class="mesures"><dt>Humeur des voisins</dt><dd id="valPlaintes" data-testid="plaintes">—</dd></dl>
+    <div class="piste plaintes"><i id="barrePlaintes"></i></div>
+    <p class="note">Un bang à moins de 125 m d’une maison fait grimper la jauge. À 100, la municipalité vous inflige une amende.</p>
+
+    <h3>Effarouchement</h3>
+    <dl class="mesures">
+      <dt>Détonations</dt><dd id="valTirs" data-testid="tirs">0</dd>
+      <dt>Oiseaux effrayés</dt><dd id="valEffrayes">0</dd>
+    </dl>
+
+    <h3>Journal</h3>
+    <ul id="journal" data-testid="journal"></ul>
+  </aside>
+
+  <section id="vue" aria-label="Vue du vignoble">
+    <canvas id="scene" role="img" aria-label="Vue de dessus d’un vignoble bordé d’un bois au nord et à l’est, d’un chemin au sud, avec trois maisons voisines et le chai ; les oiseaux arrivent du bois et les canons posés dans les rangs les font fuir"></canvas>
+    <div id="astuce"><b>Choisissez un canon à droite</b>, puis cliquez dans la vigne pour le poser · glissez-le pour le déplacer</div>
+    <div class="outils" role="toolbar" aria-label="Commandes">
+      <div class="groupe">
+        <span class="lib">Temps</span>
+        <button class="bouton icone" data-vitesse="0" title="Pause (espace)">❚❚</button>
+        <button class="bouton icone" data-vitesse="1" title="Vitesse normale (touche 1)">×1</button>
+        <button class="bouton icone" data-vitesse="2" title="Vitesse double (touche 2)">×2</button>
+        <button class="bouton icone" data-vitesse="4" title="Vitesse quadruple (touche 3)">×4</button>
+      </div>
+      <div class="groupe">
+        <button class="bouton" id="btnPistolet" hidden title="Tirer une cartouche depuis le chai : cliquez où elle doit exploser (P)">🔫 Pistolet</button>
+      </div>
+      <span class="espace"></span>
+      <div class="groupe">
+        <label class="coche"><input type="checkbox" id="chkPortees" checked> Portées</label>
+        <button class="bouton actif" id="btnSon" title="Activer ou couper les détonations">🔊 Son</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panneau" id="droite" aria-label="Matériel">
+    <div id="boutique">
+      <h2>Le matériel</h2>
+      <p class="note" style="margin-bottom:10px">Un canon fait fuir les oiseaux dans sa portée, mais ils s’habituent : déplacez-le, variez son rythme, et gardez un pistolet pour les gros.</p>
+
+      <h3>Canons à propane</h3>
+      <article class="modele">
+        <header><h4>Canon à propane simple</h4><span class="prix">450 $</span></header>
+        <div class="specs">cône 180° · portée 85 m · force 1,0</div>
+        <p>Le classique : une bouteille, une chambre, un tube. Un bang à intervalle fixe dans la direction où on le pointe. Bon marché, mais les oiseaux apprennent vite son rythme.</p>
+        <button class="bouton" data-modele="simple" data-testid="placer-simple">Poser dans la vigne</button>
+      </article>
+      <article class="modele">
+        <header><h4>Canon sur trépied</h4><span class="prix">650 $</span></header>
+        <div class="specs">cône 180° · portée 120 m · force 1,0</div>
+        <p>Le même canon, juché à deux mètres : le son passe au-dessus du feuillage et porte loin. Idéal au centre d’un grand bloc.</p>
+        <button class="bouton" data-modele="trepied">Poser dans la vigne</button>
+      </article>
+      <article class="modele">
+        <header><h4>Canon rotatif</h4><span class="prix">750 $</span></header>
+        <div class="specs">360° · portée 90 m · force 1,0 · accoutumance lente</div>
+        <p>La tête pivote d’un cran à chaque tir. Le bang ne vient jamais tout à fait du même côté : les oiseaux s’y font moins vite.</p>
+        <button class="bouton" data-modele="rotatif">Poser dans la vigne</button>
+      </article>
+      <article class="modele">
+        <header><h4>Canon à double détonation</h4><span class="prix">900 $</span></header>
+        <div class="specs">cône 180° · portée 95 m · force 1,6</div>
+        <p>Deux détonations coup sur coup. Le seul canon fixe qui impressionne quiscales, corneilles et dindons. Bruyant pour le voisinage.</p>
+        <button class="bouton" data-modele="double">Poser dans la vigne</button>
+      </article>
+
+      <h3>Pistolet lance-cartouches</h3>
+      <article class="modele">
+        <header><h4>Cartouches « bird banger »</h4><span class="prix">75 $ puis 60 $ la boîte</span></header>
+        <div class="specs">tir depuis le chai · 100 m · rayon 45 m · force 2,0</div>
+        <p>Une cartouche pyrotechnique de 15 mm qui file une centaine de mètres avant d’éclater. Imprévisible, donc peu d’accoutumance, et assez forte pour un dindon. Mais il faut être là pour tirer.</p>
+        <button class="bouton" id="btnAcheterPistolet" data-testid="acheter-pistolet">Pistolet + 25 cartouches · 75 $</button>
+      </article>
+    </div>
+
+    <div id="ficheCanon" hidden>
+      <h2 id="ficheTitre" data-testid="fiche-titre">Canon</h2>
+      <p class="note" id="ficheModele"></p>
+      <dl class="mesures" style="margin-top:8px">
+        <dt>Détonations</dt><dd id="ficheTirs">0</dd>
+        <dt>Maison la plus proche</dt><dd id="ficheVoisin">—</dd>
+      </dl>
+
+      <h3>Réglages</h3>
+      <div class="reglage">
+        <label for="intervalle"><span>Intervalle entre les tirs</span><b id="valIntervalle">6 s</b></label>
+        <input type="range" id="intervalle" min="3" max="15" step="1" value="6">
+      </div>
+      <div class="reglage coche"><label><input type="checkbox" id="aleatoire"> Intervalle aléatoire (± 50 %)</label></div>
+      <div class="reglage" id="ligneDirection">
+        <label for="direction"><span>Direction du tube</span></label>
+        <input type="range" id="direction" min="0" max="359" step="1" value="270">
+      </div>
+
+      <h3>Accoutumance des oiseaux</h3>
+      <div id="habituation" data-testid="habituation"></div>
+      <p id="ficheConseil"></p>
+      <p class="note" style="margin-top:8px">Glissez le canon d’au moins 25 m pour que les oiseaux le redécouvrent.</p>
+
+      <div class="actions">
+        <button class="bouton danger" id="btnRetirer" title="Retirer ce canon et le revendre à moitié prix (Suppr)">Revendre (50 %)</button>
+        <button class="bouton" id="btnFermerFiche">Fermer</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<dialog id="confirmeVendange">
+  <div class="contenu">
+    <h2>Vendanger maintenant ?</h2>
+    <p>La saison s’arrête ici. Plus tôt, c’est moins de sucre et un raisin payé moins cher ; plus tard, c’est plus de sucre, mais les bandes d’étourneaux grossissent chaque jour.</p>
+    <form method="dialog" style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="bouton" value="cancel">Attendre encore</button>
+      <button class="bouton vendange" id="btnConfirmerVendange" type="button" data-testid="confirmer-vendange">Rentrer la récolte</button>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="bilan" data-testid="bilan">
+  <div class="contenu">
+    <div id="bilanNote" data-note="A">A</div>
+    <h2 id="bilanTitre">Vendange</h2>
+    <dl class="mesures" id="bilanTable"></dl>
+    <p id="bilanMorale"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <form method="dialog"><button class="bouton">Revoir le vignoble</button></form>
+      <button class="bouton vendange" id="btnRejouer">↺ Nouvelle saison</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="aide" aria-labelledby="aideTitre">
+  <div class="contenu">
+    <h2 id="aideTitre">Bird Banger</h2>
+    <p>Vous êtes vigneron. La véraison est passée, les baies se chargent en sucre, et tout ce qui vole dans la région l’a remarqué. Vous avez vingt-quatre jours de septembre, un budget de 3 000 $ et une trentaine de tonnes sur pied à rentrer au chai. Plus vous attendez, plus le raisin vaut cher, et plus les bandes sont grosses.</p>
+
+    <h3>Le principe</h3>
+    <p>Un <b>canon effaroucheur</b> (bird banger, canon à propane, canon à carbure) est un tube qui fait détoner un mélange de propane et d’air à intervalle régulier. Ça ne blesse personne ; c’est juste très fort. Posez-en dans la vigne : chaque bang fait fuir les oiseaux dans la portée du canon, avec une probabilité qui dépend de l’espèce, de la force de la détonation et de la distance.</p>
+    <p>Le problème, c’est l’<b>accoutumance</b>. Un canon qui tire toujours du même endroit, au même rythme, devient en quelques jours un bruit de fond que les oiseaux ignorent. Dans le jeu, chaque canon garde une jauge d’accoutumance par espèce. Pour la faire baisser : <b>déplacez le canon</b> d’au moins 25 m (glissez-le), passez son intervalle en <b>aléatoire</b>, ou choisissez un modèle rotatif. C’est exactement ce que recommandent les guides de vulgarisation agricole : un canon qui ne bouge pas ne sert plus à rien après une ou deux semaines.</p>
+
+    <h3>Les modèles</h3>
+    <ul>
+      <li><b>Canon simple</b> (450 $) : demi-cercle de 180°, 85 m. Le rapport prix-portée de base. Orientez le tube vers le bloc à couvrir.</li>
+      <li><b>Canon sur trépied</b> (650 $) : même force, mais 120 m de portée, parce que le son passe par-dessus le feuillage.</li>
+      <li><b>Canon rotatif</b> (750 $) : couvre 360°, tête qui pivote à chaque tir, accoutumance ralentie de 40 %.</li>
+      <li><b>Double détonation</b> (900 $) : force 1,6. Le seul canon fixe qui dépasse le seuil de peur des quiscales, corneilles et dindons, même en bout de portée. Bruyant.</li>
+      <li><b>Pistolet lance-cartouches</b> (75 $, puis 60 $ les 25) : vous tirez vous-même depuis le chai, jusqu’à 100 m, et la cartouche éclate avec une force de 2,0 sur 45 m de rayon. Presque pas d’accoutumance, puisque rien n’est prévisible. Mais chaque cartouche coûte, et il faut cliquer au bon moment.</li>
+    </ul>
+    <p>Chaque canon a un intervalle réglable de 3 à 15 secondes de jeu, une direction (sauf le rotatif) et une case « aléatoire ». Les canons se taisent la nuit : le règlement l’exige, et les oiseaux dorment de toute façon.</p>
+
+    <h3>Les oiseaux</h3>
+    <div class="fiche-espece" id="aide-merle"><i style="background:#4a4a52"></i><div><b>Merle d’Amérique</b> <small>Turdus migratorius</small><p>Seul ou à deux ou trois, il picore les baies une à une dès la véraison. Très craintif : presque n’importe quel bang le fait partir, mais il revient dès que le calme est revenu. Surtout en début de saison.</p></div></div>
+    <div class="fiche-espece" id="aide-jaseur"><i style="background:#b7925a"></i><div><b>Jaseur d’Amérique</b> <small>Bombycilla cedrorum</small><p>Arrive en petites bandes nomades et avale les baies entières. Peu impressionné par le bruit et s’y habitue très vite : c’est l’oiseau qui use le plus rapidement l’effet d’un canon. Pic de passage à la mi-septembre.</p></div></div>
+    <div class="fiche-espece" id="aide-etourneau"><i style="background:#2a2733"></i><div><b>Étourneau sansonnet</b> <small>Sturnus vulgaris</small><p>Le grand ravageur des vignobles du nord-est. Les bandes grossissent tout au long de septembre, quand les jeunes de l’année se rassemblent avant la migration. Sensible au bruit, mais c’est le nombre qui fait le dégât : la fin de saison est la sienne.</p></div></div>
+    <div class="fiche-espece" id="aide-quiscale"><i style="background:#1c2436"></i><div><b>Quiscale bronzé</b> <small>Quiscalus quiscula</small><p>Gros, hardi, avec un bec puissant qui ouvre les baies. Il ne bouge que pour une détonation proche et forte : un canon simple en bout de portée ne l’impressionne pas.</p></div></div>
+    <div class="fiche-espece" id="aide-corneille"><i style="background:#141414"></i><div><b>Corneille d’Amérique</b> <small>Corvus brachyrhynchos</small><p>Craintive au premier bang, mais elle apprend en quelques détonations qu’un canon qui tire toujours au même endroit et au même rythme ne fait rien. Déplacer les canons et varier les intervalles est la seule parade.</p></div></div>
+    <div class="fiche-espece" id="aide-dindon"><i style="background:#5a3b26"></i><div><b>Dindon sauvage</b> <small>Meleagris gallopavo</small><p>Arrive à pied par la lisière nord et vide les grappes du bas, lentement mais sûrement. Seule une détonation très proche ou très forte (double détonation, cartouche) le fait courir vers le bois.</p></div></div>
+
+    <h3>Le voisinage</h3>
+    <p>Les canons effaroucheurs sont le premier motif de plainte contre les vignobles. Les guides ontariens et les règlements municipaux demandent typiquement de les tenir à <b>125 m des habitations voisines</b>, de ne tirer qu’entre le lever et le coucher du soleil, et d’espacer les détonations. Dans le jeu, chaque bang à moins de 125 m d’une maison (les cercles rouges qui apparaissent quand vous posez un canon) fait monter l’humeur des voisins ; à 100, la municipalité vous inflige 750 $ d’amende. Les voisins se calment d’eux-mêmes avec le temps.</p>
+
+    <h3>Vendanger</h3>
+    <p>Le sucre monte de 17 à environ 24,5 °Brix au fil du mois, et le prix du raisin avec lui, de 900 à 1 650 $ la tonne. Vous pouvez vendanger quand vous voulez avec le bouton en haut : c’est le vrai dilemme de septembre. Le bilan compte ce qui est rentré, ce que ça vaut, ce que la protection a coûté, et donne une note de A à E.</p>
+
+    <h3>Commandes</h3>
+    <ul>
+      <li>Bouton « Poser dans la vigne » puis <kbd>clic</kbd> dans la vigne : poser un canon. <kbd>clic droit</kbd> ou <kbd>Échap</kbd> : annuler.</li>
+      <li><kbd>clic</kbd> sur un canon : sa fiche (intervalle, aléatoire, direction, accoutumance). Glisser : le déplacer. <kbd>Suppr</kbd> : le retirer, revendu à moitié prix.</li>
+      <li><kbd>P</kbd> ou bouton « Pistolet », puis <kbd>clic</kbd> : tirer une cartouche depuis le chai vers ce point (100 m maximum).</li>
+      <li><kbd>espace</kbd> : pause. <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> : ×1, ×2, ×4.</li>
+    </ul>
+
+    <h3>Ce que le jeu simplifie</h3>
+    <ul>
+      <li>Le temps est très compressé : une journée dure 36 secondes. Un canon réglé « toutes les 6 s » correspond à un canon qui tire quelques fois par heure sur une vraie parcelle.</li>
+      <li>Chaque oiseau du jeu représente une petite bande, et chaque espèce est réduite à quatre chiffres : sa sensibilité au bruit, le seuil de force sous lequel elle ne réagit plus, sa vitesse d’accoutumance et sa probabilité de revenir. Les ordres de grandeur suivent la littérature (les jaseurs et les corneilles s’habituent vite, les étourneaux font le gros des dégâts), pas des mesures.</li>
+      <li>Les portées, les prix et la règle des 125 m sont des ordres de grandeur inspirés du matériel et des lignes directrices courants en Ontario et au Québec, pas les chiffres d’un fabricant ou d’un règlement précis.</li>
+      <li>Les filets, la vraie solution quand la pression est forte, ne sont pas dans le jeu. Ni les effaroucheurs sonores à cris de détresse, ni les cerfs-volants rapaces, ni les faucons dressés.</li>
+    </ul>
+    <p><small>Pour aller plus loin : les fiches « Bird control in vineyards » des ministères de l’agriculture de l’Ontario (OMAFRA) et de l’État de New York ; Tracey et Saunders, « Bird damage to the wine grape industry », Bureau of Rural Sciences (2003). Page construite en paire avec Claude.</small></p>
+
+    <form method="dialog"><button class="bouton fermer">Fermer</button></form>
+  </div>
+</dialog>
+
+<script type="module" src="/assets/js/bird-banger.js"></script>
+</body>
+</html>
