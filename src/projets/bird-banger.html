@@ -265,7 +265,8 @@ eleventyExcludeFromCollections: true
     <dl class="mesures">
       <dt>Date</dt><dd id="valJour" data-testid="jour">—</dd>
       <dt>Heure</dt><dd id="valHeure" data-testid="heure">—</dd>
-      <dt>Sucre des baies</dt><dd id="valBrix">—</dd>
+      <dt>Sucre des baies</dt><dd id="valBrix" data-testid="brix">—</dd>
+      <dt>Prix du jour</dt><dd id="valPrix" data-testid="prix">—</dd>
       <dt>Prix du raisin</dt><dd id="valPrix">—</dd>
     </dl>
 
@@ -411,6 +412,7 @@ eleventyExcludeFromCollections: true
   <div class="contenu">
     <h2>Vendanger maintenant ?</h2>
     <p>La saison s’arrête ici. Plus tôt, c’est moins de sucre et un raisin payé moins cher ; plus tard, c’est plus de sucre, mais les bandes d’étourneaux grossissent chaque jour.</p>
+    <p class="note" id="confirmeVendangeDetail" data-testid="confirme-detail"></p>
     <form method="dialog" style="display:flex;gap:8px;justify-content:flex-end">
       <button class="bouton" value="cancel">Attendre encore</button>
       <button class="bouton vendange" id="btnConfirmerVendange" type="button" data-testid="confirmer-vendange">Rentrer la récolte</button>
@@ -462,7 +464,7 @@ eleventyExcludeFromCollections: true
     <p>Les canons effaroucheurs sont le premier motif de plainte contre les vignobles. Les guides ontariens et les règlements municipaux demandent typiquement de les tenir à <b>125 m des habitations voisines</b>, de ne tirer qu’entre le lever et le coucher du soleil, et d’espacer les détonations. Dans le jeu, chaque bang à moins de 125 m d’une maison (les cercles rouges qui apparaissent quand vous posez un canon) fait monter l’humeur des voisins ; à 100, la municipalité vous inflige 750 $ d’amende. Les voisins se calment d’eux-mêmes avec le temps.</p>
 
     <h3>Vendanger</h3>
-    <p>Le sucre monte de 17 à environ 24,5 °Brix au fil du mois, et le prix du raisin avec lui, de 900 à 1 650 $ la tonne. Vous pouvez vendanger quand vous voulez avec le bouton en haut : c’est le vrai dilemme de septembre. Le bilan compte ce qui est rentré, ce que ça vaut, ce que la protection a coûté, et donne une note de A à E.</p>
+    <p>Le sucre monte de 17 à environ 24,5 °Brix au fil du mois, et le prix du raisin avec lui. Sous <b>20 °Brix</b>, le raisin est vert : il ne fait pas de vin, il part en jus à 250 $ la tonne. Le seuil passé, vers le 11 septembre, le prix monte de 900 à 1 650 $ la tonne à pleine maturité. Vous pouvez vendanger quand vous voulez avec le bouton en haut : c’est le vrai dilemme de septembre. Le bilan compare ce que la récolte a rapporté, dépenses déduites, à ce qu’aurait valu une pleine vendange mûre sans un sou de protection, et en tire une note de A à E — une vendange verte ne dépasse jamais D.</p>
 
     <h3>Commandes</h3>
     <ul>

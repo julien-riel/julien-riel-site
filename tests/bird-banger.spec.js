@@ -130,6 +130,30 @@ test.describe("Bird Banger", () => {
     await expect(page.locator("#journal li").first()).toContainText("amende");
   });
 
+  test("green grapes are worth little and the price climbs once they ripen", async ({ page }) => {
+    await page.goto(URL);
+    await attendreJeu(page);
+    await expect(page.getByTestId("prix")).toHaveText("250 $/t");
+    await expect(page.getByTestId("brix")).toContainText("vert");
+    const r = await page.evaluate(() => {
+      const B = window.birdBanger;
+      B.etat.vitesse = 0;
+      const avant = { prix: B.prixTonne(), attente: B.joursAvantMaturite() };
+      B.avancer(B.DUREE_JOUR * 11);
+      const seuil = { brix: B.brix(), prix: B.prixTonne(), attente: B.joursAvantMaturite() };
+      B.avancer(B.DUREE_JOUR * 12);
+      return { avant, seuil, fin: { brix: B.brix(), prix: B.prixTonne() }, mur: B.prixPourBrix(24.5), vert: B.prixPourBrix(17) };
+    });
+    expect(r.avant.attente).toBeGreaterThanOrEqual(9);
+    expect(r.seuil.brix).toBeGreaterThanOrEqual(20);
+    expect(r.seuil.prix).toBeGreaterThanOrEqual(900);
+    expect(r.seuil.attente).toBe(0);
+    expect(r.fin.prix).toBeGreaterThan(r.seuil.prix);
+    expect(r.mur).toBe(1650);
+    expect(r.vert).toBe(250);
+    await expect(page.getByTestId("brix")).not.toContainText("vert");
+  });
+
   test("harvesting early ends the season with a report", async ({ page }) => {
     await page.goto(URL);
     await attendreJeu(page);
@@ -137,8 +161,11 @@ test.describe("Bird Banger", () => {
     await expect(page.locator("#confirmeVendange")).toBeVisible();
     await page.getByTestId("confirmer-vendange").click();
     await expect(page.getByTestId("bilan")).toBeVisible();
+    await expect(page.getByTestId("confirme-detail")).toContainText("raisin est vert");
     await expect(page.locator("#bilanTable")).toContainText("1 septembre");
-    await expect(page.locator("#bilanNote")).toHaveText("A");
+    await expect(page.locator("#bilanTitre")).toHaveText("Vendangé vert.");
+    await expect(page.locator("#bilanNote")).toHaveText("E");
+    await expect(page.locator("#bilanTable")).toContainText("raisin pas mûr");
     await page.click("#btnRejouer");
     await expect(page.getByTestId("bilan")).toBeHidden();
     await expect(page.getByTestId("part")).toHaveText("100 %");

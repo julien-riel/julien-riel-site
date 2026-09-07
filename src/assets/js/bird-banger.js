@@ -142,8 +142,18 @@ export function heure() {
   const hh = Math.floor(h) % 24, mm = Math.floor((h % 1) * 60);
   return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
-export const brix = () => Math.min(24.5, 17 + 7.5 * (jour() - 1 + fracJour()) / (NB_JOURS - 1));
-export const prixTonne = () => Math.round(900 + (brix() - 17) * 100);
+/* Le sucre monte de 17 à 24,5 °Brix au fil du mois. Sous 20 °Brix, le raisin est vert :
+   il part en jus, payé une misère ; au-dessus, le prix monte jusqu'à la pleine maturité. */
+const BRIX_DEPART = 17, BRIX_MUR = 24.5;
+export const BRIX_SEUIL = 20;
+const PRIX_VERT = 250, PRIX_SEUIL = 900, PRIX_MUR = 1650;   // $/t
+export const brix = () => Math.min(BRIX_MUR, BRIX_DEPART + (BRIX_MUR - BRIX_DEPART) * (jour() - 1 + fracJour()) / (NB_JOURS - 1));
+export const prixPourBrix = (b) => Math.round(b < BRIX_SEUIL
+  ? PRIX_VERT + (b - BRIX_DEPART) / (BRIX_SEUIL - BRIX_DEPART) * (PRIX_SEUIL - PRIX_VERT)
+  : PRIX_SEUIL + (b - BRIX_SEUIL) / (BRIX_MUR - BRIX_SEUIL) * (PRIX_MUR - PRIX_SEUIL));
+export const prixTonne = () => prixPourBrix(brix());
+/* Jours à attendre avant que le raisin passe le seuil de maturité. */
+export const joursAvantMaturite = () => Math.max(0, Math.ceil((BRIX_SEUIL - brix()) / ((BRIX_MUR - BRIX_DEPART) / (NB_JOURS - 1))));
 export const recolteKg = () => { let s = 0; for (let i = 0; i < NB_CELLULES; i++) s += S.raisins[i]; return s * KG_CELLULE; };
 
 function noter(texte, classe) {
@@ -404,7 +414,8 @@ function pas(dt) {
   const j = jour();
   if (j !== jAvant || S.t === dt) {
     if (S.t === dt) noter('1er septembre : la véraison est passée, les baies se colorent. Les premiers merles rôdent.', 'bon');
-    else noter(`${j} septembre. Sucre : ${brix().toFixed(1)} °Brix. Récolte sur pied : ${(recolteKg() / 1000).toFixed(1)} t.`);
+    else noter(`${j} septembre. Sucre : ${brix().toFixed(1)} °Brix, payé ${prixTonne()} $/t${brix() < BRIX_SEUIL ? ' (raisin vert)' : ''}. Récolte sur pied : ${(recolteKg() / 1000).toFixed(1)} t.`);
+    if (brix() >= BRIX_SEUIL && brix() - (BRIX_MUR - BRIX_DEPART) / (NB_JOURS - 1) < BRIX_SEUIL) noter(`${BRIX_SEUIL} °Brix : le raisin est mûr pour le vin. Chaque jour de plus vaut maintenant de l’argent — et des oiseaux.`, 'bon');
     planifierJour(j);
     for (const c of S.canons) for (const e of LISTE_ESPECES) c.hab[e] = Math.max(0, c.hab[e] - 0.03);
     if (j === 8) noter('Les bandes d’étourneaux grossissent : les jeunes de l’année se rassemblent.', 'alerte');
@@ -448,8 +459,15 @@ export function vendanger() {
   S.fini = true; S.vitesse = 0;
   const kg = recolteKg(), part = kg / RECOLTE_TOTALE, valeur = kg / 1000 * prixTonne();
   const dep = S.depenses.materiel + S.depenses.cartouches + S.depenses.amendes;
-  const note = part >= 0.88 && S.amendes === 0 ? 'A' : part >= 0.78 ? 'B' : part >= 0.65 ? 'C' : part >= 0.45 ? 'D' : 'E';
-  S.bilan = { jour: jour(), brix: brix(), kg, part, prixTonne: prixTonne(), valeur, depenses: dep, net: valeur - dep, note, amendes: S.amendes, tirs: S.stats.tirs, effrayes: S.stats.effrayes, mangeKg: S.stats.mangeKg, parEspece: { ...S.stats.parEspece } };
+  // La note compare le net à ce qu'aurait rapporté une pleine vendange, mûre, sans un sou de protection :
+  // rentrer tout le raisin ne vaut rien s'il est vert, et une saison de canons doit payer.
+  const ideal = RECOLTE_TOTALE / 1000 * PRIX_MUR;
+  const rendement = Math.max(0, valeur - dep) / ideal;
+  const vert = brix() < BRIX_SEUIL;
+  let note = rendement >= 0.85 && S.amendes === 0 ? 'A' : rendement >= 0.72 ? 'B' : rendement >= 0.58 ? 'C' : rendement >= 0.4 ? 'D' : 'E';
+  if (vert && note < 'D') note = 'D';
+  const immaturite = kg / 1000 * (PRIX_MUR - prixTonne());
+  S.bilan = { jour: jour(), brix: brix(), kg, part, prixTonne: prixTonne(), valeur, depenses: dep, net: valeur - dep, rendement, vert, immaturite, note, amendes: S.amendes, tirs: S.stats.tirs, effrayes: S.stats.effrayes, mangeKg: S.stats.mangeKg, parEspece: { ...S.stats.parEspece } };
   noter(`Vendange le ${jour()} septembre à ${brix().toFixed(1)} °Brix : ${(kg / 1000).toFixed(1)} t rentrées.`, 'bon');
   return S.bilan;
 }
@@ -711,7 +729,9 @@ const fmtDollars = (v) => `${Math.round(v).toLocaleString('fr-CA')} $`;
 function majInterface() {
   $('valJour').textContent = `${jour()} septembre`;
   $('valHeure').textContent = estJour() ? heure() : `${heure()} · nuit`;
-  $('valBrix').textContent = `${brix().toFixed(1)} °Brix`;
+  $('valBrix').textContent = `${brix().toFixed(1)} °Brix${brix() < BRIX_SEUIL ? ' · vert' : ''}`;
+  $('valPrix').textContent = `${prixTonne()} $/t`;
+  $('valPrix').className = brix() < BRIX_SEUIL ? 'alerte' : '';
   $('valPrix').textContent = `${prixTonne()} $/t`;
   const kg = recolteKg(), part = kg / RECOLTE_TOTALE;
   $('valRecolte').textContent = fmtKg(kg);
@@ -787,17 +807,20 @@ function majFiche() {
 function afficherBilan(b) {
   $('bilanNote').textContent = b.note;
   $('bilanNote').dataset.note = b.note;
-  $('bilanTitre').textContent = b.part >= 0.9 ? 'Belle vendange.' : b.part >= 0.65 ? 'Vendange honorable.' : b.part >= 0.45 ? 'Vendange amputée.' : 'Les oiseaux ont vendangé avant vous.';
+  $('bilanTitre').textContent = b.vert ? 'Vendangé vert.' : b.rendement >= 0.85 ? 'Belle vendange.' : b.rendement >= 0.58 ? 'Vendange honorable.' : b.part >= 0.45 ? 'Vendange amputée.' : 'Les oiseaux ont vendangé avant vous.';
   const pire = LISTE_ESPECES.slice().sort((a, z) => b.parEspece[z] - b.parEspece[a])[0];
   $('bilanTable').innerHTML = `
     <dt>Vendangé le</dt><dd>${b.jour} septembre à ${b.brix.toFixed(1)} °Brix</dd>
     <dt>Récolte rentrée</dt><dd class="grand">${fmtKg(b.kg)} · ${Math.round(b.part * 100)} %</dd>
     <dt>Mangée par les oiseaux</dt><dd>${fmtKg(b.mangeKg)}${b.mangeKg > 0 ? `, surtout par ${ESPECES[pire].nom.toLowerCase().replace(/^./, (s) => s)}s` : ''}</dd>
-    <dt>Valeur (${b.prixTonne} $/t)</dt><dd>${fmtDollars(b.valeur)}</dd>
+    <dt>Valeur (${b.prixTonne} $/t${b.vert ? ', prix du raisin de jus' : ''})</dt><dd>${fmtDollars(b.valeur)}</dd>
+    ${b.immaturite > 0 ? `<dt>Manque à gagner, raisin pas mûr</dt><dd>${fmtDollars(b.immaturite)}</dd>` : ''}
     <dt>Dépenses d’effarouchement</dt><dd>${fmtDollars(b.depenses)}${b.amendes ? ` dont ${b.amendes} amende${b.amendes > 1 ? 's' : ''}` : ''}</dd>
     <dt>Net</dt><dd class="grand">${fmtDollars(b.net)}</dd>
+    <dt>Par rapport à une pleine vendange mûre</dt><dd>${Math.round(b.rendement * 100)} %</dd>
     <dt>Détonations</dt><dd>${b.tirs}, ${b.effrayes} oiseaux effrayés</dd>`;
-  $('bilanMorale').textContent = b.note === 'A' ? 'Canons déplacés à temps, intervalles variés, voisins épargnés : c’est exactement ce que fait un bon vigneron.'
+  $('bilanMorale').textContent = b.vert ? `À ${b.brix.toFixed(1)} °Brix, ce raisin fait du jus, pas du vin : il est payé ${b.prixTonne} $ la tonne au lieu de ${PRIX_MUR}. Une saison de canons sert justement à pouvoir attendre les 20 °Brix.`
+    : b.note === 'A' ? 'Canons déplacés à temps, intervalles variés, voisins épargnés : c’est exactement ce que fait un bon vigneron.'
     : b.note === 'B' ? 'Bon travail. Pour faire mieux : déplacer les canons dès que l’accoutumance monte, et garder quelques cartouches pour les gros oiseaux.'
     : b.note === 'C' ? 'Les canons ont fait leur part, mais les oiseaux ont appris leur rythme. Un canon qui ne bouge jamais devient un bruit de fond.'
     : 'Dans la vraie vie, un vignoble aussi exposé se couvre de filets. Les canons ne suffisent pas seuls : ils gagnent du temps, pas la guerre.';
@@ -870,7 +893,13 @@ function brancher() {
   $('chkPortees').addEventListener('change', () => { afficherPortees = $('chkPortees').checked; });
   $('btnSon').addEventListener('click', () => { sonActif = !sonActif; $('btnSon').textContent = sonActif ? '🔊 Son' : '🔇 Muet'; $('btnSon').classList.toggle('actif', sonActif); });
   $('btnAide').addEventListener('click', () => $('aide').showModal());
-  $('btnVendanger').addEventListener('click', () => $('confirmeVendange').showModal());
+  $('btnVendanger').addEventListener('click', () => {
+    const j = joursAvantMaturite();
+    $('confirmeVendangeDetail').textContent = brix() < BRIX_SEUIL
+      ? `À ${brix().toFixed(1)} °Brix, votre raisin est vert : il partira en jus à ${prixTonne()} $ la tonne au lieu de ${PRIX_MUR} à maturité. Encore ${j} jour${j > 1 ? 's' : ''} avant les 20 °Brix qui font un vin.`
+      : `À ${brix().toFixed(1)} °Brix, le raisin est payé ${prixTonne()} $ la tonne ; il vaudra ${PRIX_MUR} $ le 24 septembre, si les oiseaux en laissent.`;
+    $('confirmeVendange').showModal();
+  });
   $('btnConfirmerVendange').addEventListener('click', () => { $('confirmeVendange').close(); afficherBilan(vendanger()); majInterface(); });
   $('btnReset').addEventListener('click', () => { recommencer(); majInterface(); });
   $('btnRejouer').addEventListener('click', () => { $('bilan').close(); recommencer(); majInterface(); });
@@ -908,7 +937,7 @@ function boucle(ts) {
 window.birdBanger = {
   get etat() { return S; }, set etat(v) { S = v; },
   avancer, apparaitre, placer, tirer, deplacer, retirer, vendanger, recommencer, tirerCartouche, acheterPistolet, acheterCartouches,
-  recolteKg, jour, heure, brix, ecran, MODELES, ESPECES, PISTOLET, MONDE, VIGNE, MAISONS, CHAI, RECOLTE_TOTALE, NB_JOURS, DUREE_JOUR,
+  recolteKg, jour, heure, brix, prixTonne, prixPourBrix, joursAvantMaturite, BRIX_SEUIL, ecran, MODELES, ESPECES, PISTOLET, MONDE, VIGNE, MAISONS, CHAI, RECOLTE_TOTALE, NB_JOURS, DUREE_JOUR,
 };
 
 S = etatInitial();
