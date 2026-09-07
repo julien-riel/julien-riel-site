@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Du cep à la bouteille — comment on fabrique le vin</title>
-<meta name="description" content="Une page interactive qui suit le vin du choix du lieu jusqu'à la bouteille : climat, réchauffement climatique, géographie, sol et vie microbienne, cycle annuel du cep, effet de l'eau et de la chaleur sur le sucre, l'acidité et les tanins, maturité du raisin, vendanges, fermentation alcoolique simulée, malolactique, élevage, assemblage de la cuvée, mise en bouteille et vieillissement. Rouge, blanc ou rosé.">
+<meta name="description" content="Une page interactive en sept chapitres qui suit le vin du choix du lieu jusqu'au verre : la coupe du raisin, le climat et son réchauffement, le lieu, le sol, le choix du cépage, le cycle annuel, l'eau et la chaleur, la vendange, la fermentation simulée heure par heure, la malolactique, l'élevage, l'assemblage puis la stabilisation, la mise en bouteille, le vieillissement, et un bilan sensoriel final. Rouge, blanc ou rosé, avec sources par sujet.">
 <meta name="theme-color" content="#160f11">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%87%3C/text%3E%3C/svg%3E">
 <style>
@@ -179,6 +179,11 @@ eleventyExcludeFromCollections: true
     overflow-x: auto;
     scrollbar-width: none;
   }
+  .parcours ol#etapes { border-top: 1px solid var(--bord); background: rgba(31, 21, 24, .6); }
+  .parcours ol#etapes a { font-size: 11.5px; padding: 7px 8px 6px; }
+  .parcours ol#etapes a .n { color: var(--sourdine); }
+  .parcours ol#etapes a.approfondissement { color: var(--sourdine); font-style: italic; }
+  .parcours ol#etapes a.approfondissement.actif { color: var(--texte); }
   .parcours ol::-webkit-scrollbar { display: none; }
   .parcours li { flex: 0 0 auto; }
   .parcours a {
@@ -237,13 +242,32 @@ eleventyExcludeFromCollections: true
   .ouverture .resume dt { color: var(--sourdine); }
   .ouverture .resume dd { font: 500 13px/1.5 var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
 
+  /* ---------- Chapitres ---------- */
+
+  .chapitre {
+    margin-top: 56px;
+    border-top: 2px solid var(--accent-sombre);
+    scroll-margin-top: calc(var(--bandeau-h, 52px) + 84px);
+  }
+  .chapitre-tete { padding: 30px 0 8px; }
+  .chapitre-tete .num {
+    font: 600 11px/1 var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .chapitre-tete h2 { font: 400 clamp(30px, 4.6vw, 44px)/1.1 var(--serif); margin-top: 8px; }
+  .chapitre-tete .chapeau { color: var(--sourdine); font-size: 15.5px; line-height: 1.6; margin-top: 10px; max-width: 72ch; }
+
   /* ---------- Stades ---------- */
 
   .stade {
-    padding: 40px 0 8px;
+    padding: 36px 0 8px;
     border-top: 1px solid var(--bord);
-    scroll-margin-top: calc(var(--bandeau-h, 52px) + 52px);
+    scroll-margin-top: calc(var(--bandeau-h, 52px) + 84px);
   }
+  .stade.approfondissement { padding-left: 18px; border-left: 2px solid var(--bord-clair); }
+  .stade.approfondissement .stade-tete h3 { font-size: clamp(20px, 2.8vw, 26px); }
   .stade-tete {
     display: flex;
     align-items: baseline;
@@ -257,7 +281,7 @@ eleventyExcludeFromCollections: true
     letter-spacing: .1em;
     transition: color .3s;
   }
-  .stade-tete h2 { font: 400 clamp(24px, 3.4vw, 32px)/1.15 var(--serif); }
+  .stade-tete h3 { font: 400 clamp(24px, 3.4vw, 32px)/1.15 var(--serif); }
   .stade-tete .duree {
     font: 500 11px/1 var(--mono);
     letter-spacing: .08em;
@@ -281,6 +305,19 @@ eleventyExcludeFromCollections: true
   .reperes li { font-size: 13.5px; line-height: 1.5; color: #dccfc9; padding-left: 12px; border-left: 2px solid var(--bord-clair); }
   .reperes li b { color: var(--accent-doux); font-weight: 600; }
   .texte b { color: var(--accent-doux); font-weight: 600; }
+  .texte a, .lecture a { color: var(--bleu); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .sources { margin-top: 14px; font-size: 12px; line-height: 1.6; color: var(--sourdine); }
+  .sources span { font: 600 9.5px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .sources a { color: var(--bleu); }
+  .limite {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--bord-clair);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--sourdine);
+  }
+  .limite b { color: var(--texte); font-weight: 500; }
 
   /* ---------- Ateliers ---------- */
 
@@ -466,15 +503,16 @@ eleventyExcludeFromCollections: true
   </div>
 </header>
 
-<nav class="parcours" aria-label="Étapes de la fabrication">
-  <ol id="etapes"></ol>
+<nav class="parcours" aria-label="Chapitres et étapes de la fabrication">
+  <ol id="chapitres" aria-label="Chapitres"></ol>
+  <ol id="etapes" aria-label="Étapes du chapitre en cours"></ol>
 </nav>
 
 <main>
   <section class="ouverture">
     <div>
       <h2>Comment un cep de vigne devient <em id="titreStyle">un vin rouge</em></h2>
-      <p class="chapeau">Du choix du lieu à la bouteille, il faut au moins quatre ans, une vingtaine d'étapes et beaucoup de décisions. Cette page les suit une à une, à commencer par ce qu'on appelle le terroir : le climat, la géographie, le sol et ce qui vit dedans — puis le climat qui change, l'eau et la chaleur qui font le goût, et l'assemblage qui compose la cuvée. Choisissez rouge, blanc ou rosé en haut de page : l'ordre des opérations change, et chaque atelier interactif s'ajuste. Rien à gagner, tout à comprendre.</p>
+      <p class="chapeau">Du choix du lieu au verre, il faut au moins quatre ans, une vingtaine d'étapes et beaucoup de décisions. Cette page les suit en sept chapitres : comprendre le parcours et le raisin, choisir où et quoi planter, accompagner une année de vigne, récolter, transformer le raisin en vin, construire la cuvée, puis la mettre en bouteille et la laisser évoluer — jusqu'à un bilan qui relit toutes vos décisions dans le verre. Choisissez rouge, blanc ou rosé en haut de page : l'ordre des opérations change, et chaque atelier interactif s'ajuste. Rien à gagner, tout à comprendre.</p>
     </div>
     <aside class="resume" aria-label="Repères">
       <h3>Repères</h3>
@@ -492,7 +530,7 @@ eleventyExcludeFromCollections: true
   <div id="stades"></div>
 
   <footer class="fin">
-    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Les ateliers de l'eau et de la chaleur, du réchauffement climatique et de l'assemblage sont du même genre : les relations vont dans le bon sens et les ordres de grandeur sont plausibles, mais aucun ne prédit un millésime. Page construite en paire avec Claude. Le bouton « En savoir plus » liste les sources.</p>
+    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Les autres ateliers sont du même genre : les relations vont dans le bon sens et les ordres de grandeur sont plausibles, mais aucun ne prédit un millésime, et chaque atelier dit ses limites sous son résultat. La page décrit le parcours principal des rouges, blancs et rosés secs ; les <b>effervescents</b> (seconde fermentation en bouteille), les <b>vins orange</b> (blancs macérés), les <b>vins doux</b> et les <b>vins mutés</b> sont d'autres parcours, qui partagent la vigne et divergent au chai. Page construite en paire avec Claude. Chaque étape cite ses sources ; le bouton « En savoir plus » ajoute les ouvrages de référence.</p>
   </footer>
 </main>
 
@@ -504,30 +542,36 @@ eleventyExcludeFromCollections: true
     <h3>Trois vins, trois ordres d'opérations</h3>
     <p>La grande différence entre un <b>rouge</b> et un <b>blanc</b> n'est pas la couleur du raisin, c'est le moment du pressurage. Pour un rouge, le jus fermente <i>avec</i> les peaux (macération) et on presse à la fin : la couleur et les tanins sont dans les peaux. Pour un blanc, on presse <i>avant</i> de fermenter, et le jus seul fermente au frais. Un <b>rosé</b> est un vin de raisins noirs traité presque comme un blanc, après un contact de quelques heures avec les peaux. On peut donc faire un blanc avec des raisins noirs (les « blancs de noirs » de Champagne), mais jamais un rouge avec des raisins blancs.</p>
 
-    <h3>Le terroir : quatre étapes avant de planter</h3>
-    <p>Le mot désigne tout ce que le lieu impose au vin avant l'intervention humaine : le <b>climat</b> (résumé ici par les degrés-jours de Winkler, la somme des températures au-dessus de 10 °C d'avril à octobre), la <b>géographie</b> (latitude, altitude, pente et exposition, présence d'eau), le <b>sol</b> (surtout son régime hydrique, bien plus que sa composition chimique) et les <b>micro-organismes</b> qui vivent autour des racines. Les quatre ateliers sont des modèles à une ou deux formules : l'énergie reçue par un coteau est calculée pour le soleil direct seulement, la réserve en eau d'un sol à partir de valeurs moyennes par texture, et les indicateurs de vie du sol sont des ordres de grandeur tirés d'essais agronomiques, pas des mesures.</p>
+    <h3>Sept chapitres</h3>
+    <p>La page suit l'ordre des décisions plutôt que celui de l'agronomie : <b>comprendre</b> (le raisin en coupe, les trois parcours, le vocabulaire de la dégustation), <b>choisir où et quoi planter</b> (climat, réchauffement, lieu, sol, cépage, plantation), <b>accompagner une année</b> (cycle, eau et chaleur), <b>récolter</b>, <b>transformer</b> (fermentations), <b>construire la cuvée</b> (élevage, assemblage, puis clarification et stabilisation) et <b>mettre en bouteille</b>, jusqu'au bilan dans le verre. La barre du haut donne les chapitres, celle du dessous les étapes du chapitre en cours ; l'étape sur les micro-organismes du sol est un approfondissement, qu'on peut sauter.</p>
+
+    <h3>Le terroir</h3>
+    <p>Au sens de l'OIV, le terroir est un espace où se construit un <b>savoir collectif</b> des interactions entre un milieu physique et biologique — climat, géographie, sol, vie du sol — et les <b>pratiques</b> qui s'y appliquent : le mot inclut le travail humain, et pas seulement ce que le lieu impose. Les ateliers du chapitre 2 en prennent la part physique : le <b>climat</b> (résumé par les degrés-jours de Winkler, la somme des températures au-dessus de 10 °C d'avril à octobre), la <b>géographie</b> (latitude, altitude, pente et exposition, présence d'eau), le <b>sol</b> (surtout son régime hydrique, bien plus que sa composition chimique), les <b>micro-organismes</b> autour des racines, et le <b>cépage</b> qu'on leur accorde. Ce sont des modèles à une ou deux formules : l'énergie reçue par un coteau est calculée pour le soleil direct seulement, la réserve en eau d'un sol à partir de valeurs moyennes par texture, la fenêtre de maturité d'un cépage à partir de seuils approximatifs de degrés-jours, et les indicateurs de vie du sol sont des ordres de grandeur tirés d'essais agronomiques, pas des mesures. Les associations entre un sol et un style de vin y sont présentées comme des exemples régionaux, pas comme des propriétés de la roche.</p>
 
     <h3>L'eau, la chaleur et le goût</h3>
-    <p>L'atelier de l'étape « L'eau et la chaleur » est un modèle jouet, mais ses relations sont celles qu'on observe : l'eau reçue fixe le poids de la baie, le poids de la baie fixe le rapport peau/jus (la surface varie comme le carré du rayon, le volume comme son cube), et ce rapport commande la couleur, les tanins et la concentration. La chaleur ajoute du sucre et fait respirer l'acide malique ; au-delà d'une moyenne de 24 °C, elle dégrade aussi les anthocyanes et les arômes. La <b>contrainte hydrique modérée</b> est traitée comme un optimum étroit — c'est ce que montrent les mesures de potentiel hydrique foliaire — et le blocage de maturité apparaît quand la vigne ferme ses stomates. Les valeurs sont des ordres de grandeur, pas des prédictions : aucun modèle à cinq curseurs ne remplace un millésime.</p>
+    <p>L'atelier de l'étape « L'eau et la chaleur » est un modèle jouet, mais ses relations sont celles qu'on observe : l'eau reçue fixe le poids de la baie, le poids de la baie fixe le rapport peau/jus (la surface varie comme le carré du rayon, le volume comme son cube), et ce rapport commande la couleur, les tanins et la concentration. La chaleur ajoute du sucre et fait respirer l'acide malique ; au-delà d'une moyenne de 24 °C, elle dégrade aussi les anthocyanes et les arômes. La <b>contrainte hydrique modérée</b> est traitée comme un optimum étroit — c'est ce que montrent les mesures de potentiel hydrique foliaire — pour un <i>rouge concentré</i> ; un blanc vif ou un rosé visent d'autres équilibres, et un rendement faible ou un sol pauvre ne sont pas des qualités en soi : ce qui compte, c'est le rapport entre la charge, le feuillage et le style recherché. Le blocage de maturité apparaît quand la vigne ferme ses stomates. Les valeurs sont des ordres de grandeur, pas des prédictions : aucun modèle à cinq curseurs ne remplace un millésime.</p>
 
     <h3>Le réchauffement climatique</h3>
-    <p>L'atelier « Réchauffer un vignoble » applique des sensibilités moyennes tirées de la littérature : environ <b>200 degrés-jours</b>, <b>six à sept jours de vendange</b> et <b>un demi-degré d'alcool</b> par degré de réchauffement, une acidité qui baisse et un pH qui monte. Il fait aussi apparaître deux effets contre-intuitifs : le risque de <b>gel de printemps augmente</b> (le débourrement avance plus vite que la date des dernières gelées ne recule), et monter en altitude rafraîchit mais expose davantage au gel. Les trois adaptations proposées — cépage tardif, altitude ou exposition, conduite retardée — sont celles que les vignobles testent réellement ; leurs effets chiffrés ici sont des ordres de grandeur. Le modèle ignore la grêle, les incendies, le goût de fumée, la disponibilité de l'eau d'irrigation et l'économie, qui décideront pourtant d'une partie de la carte viticole.</p>
+    <p>L'atelier « Réchauffer un vignoble » applique des sensibilités moyennes tirées de la littérature : environ <b>200 degrés-jours</b>, <b>six à sept jours de vendange</b> et <b>un demi-degré d'alcool</b> par degré de réchauffement, une acidité qui baisse et un pH qui monte. Il fait aussi apparaître deux effets contre-intuitifs : la vulnérabilité au <b>gel de printemps peut augmenter</b> quand le débourrement avance plus vite que la date des dernières gelées ne recule — INRAE l'observe dans plusieurs vignobles, mais le bilan dépend du lieu et du cépage, et l'atelier l'affiche comme une vulnérabilité, pas comme une certitude —, et monter en altitude rafraîchit mais expose davantage au gel. Les trois adaptations proposées — cépage tardif, altitude ou exposition, conduite retardée — sont celles que les vignobles testent réellement ; leurs effets chiffrés ici sont des ordres de grandeur. Le modèle ignore la grêle, les incendies, le goût de fumée, la disponibilité de l'eau d'irrigation et l'économie, qui décideront pourtant d'une partie de la carte viticole.</p>
 
-    <h3>L'assemblage</h3>
-    <p>L'atelier d'assemblage traite chaque cuve comme un vecteur de six paramètres mesurables (degré, acidité, pH, tanins, couleur, bois) et calcule la cuvée comme leur moyenne pondérée. C'est faux et utile : faux parce qu'un assemblage n'est <i>pas</i> une moyenne — deux vins mélangés peuvent donner mieux que chacun d'eux, ce que la dégustation constate et qu'aucune analyse ne prédit ; utile parce que les contraintes, elles, sont exactes. La <b>contrainte de volume</b> notamment : demander 40 % d'un lot qui ne représente que 20 % du chai limite la cuvée, et le reste part au second vin. Le bouton « Chercher le meilleur assemblage » essaie les 1 771 combinaisons par pas de 5 % et retient la meilleure <i>selon l'objectif choisi</i> : changez l'objectif, l'optimum change.</p>
+    <h3>L'assemblage, puis la stabilisation</h3>
+    <p>L'atelier d'assemblage traite chaque cuve comme un vecteur de paramètres mesurables (degré, acidité totale, tanins, couleur, fruit, bois) et calcule la cuvée comme leur moyenne pondérée. Le <b>pH n'en fait pas partie</b> : il ne se moyenne pas (échelle logarithmique, pouvoir tampon propre à chaque lot) et ne se déduit pas de l'acidité totale, on le mesure sur l'essai. La moyenne est fausse et utile : fausse parce qu'un assemblage n'est <i>pas</i> une moyenne — deux vins mélangés peuvent donner mieux que chacun d'eux, ce que la dégustation constate et qu'aucune analyse ne prédit ; utile parce que les contraintes, elles, sont exactes. La page place l'assemblage <i>avant</i> la clarification et la stabilisation, parce que mélanger des vins change leur stabilité (tartrique notamment) et impose de refaire les contrôles ; assembler avant l'élevage est l'autre pratique, mentionnée à l'étape de l'élevage. La <b>contrainte de volume</b> notamment : demander 40 % d'un lot qui ne représente que 20 % du chai limite la cuvée, et le reste part au second vin. Le bouton « Chercher le meilleur assemblage » essaie les 1 771 combinaisons par pas de 5 % et retient la meilleure <i>selon l'objectif choisi</i> : changez l'objectif, l'optimum change.</p>
 
     <h3>Le simulateur de fermentation</h3>
     <p>Il suit cinq variables heure par heure : le sucre, l'alcool, la population de levures, la température et, pour les rouges, l'extraction de la couleur et des tanins. Les règles sont volontairement simples :</p>
     <ul>
       <li>Les levures se multiplient d'abord (phase de latence, 1 à 2 jours), puis consomment le sucre d'autant plus vite qu'il fait chaud, jusqu'à 30 °C environ ; au-delà de 35 à 37 °C, elles meurent.</li>
       <li>Chaque gramme de sucre transformé dégage de la chaleur : environ <b>0,13 °C par g/L</b> dans une cuve isolée. Sur 220 g/L, cela ferait presque 30 °C d'échauffement. Sans refroidissement, une grande cuve s'emballe.</li>
-      <li>L'alcool finit par inhiber les levures : les souches indigènes s'arrêtent vers 14 à 15 %, les souches sélectionnées vers 16 %. Si le sucre n'est pas épuisé à ce moment, la fermentation est « arrêtée » et le vin garde des sucres résiduels.</li>
+      <li>L'alcool finit par inhiber les levures. Le modèle fixe deux plafonds, 14,5 % pour la flore indigène et 16 % pour la souche sélectionnée, mais ce sont des valeurs de démonstration : la tolérance réelle dépend de la souche, de l'azote du moût, de la température et de l'oxygène, pas de la catégorie. Si le sucre n'est pas épuisé à ce moment, la fermentation est « arrêtée » et le vin garde des sucres résiduels.</li>
       <li>Pour un rouge, la couleur (anthocyanes) s'extrait vite, dans les premiers jours ; les tanins, plus lentement, aidés par l'alcool. Remontages et pigeages accélèrent les deux.</li>
     </ul>
 
+    <h3>La malolactique, le soufre et le bouchon</h3>
+    <p>L'atelier de la malo suit le cas le plus fréquent, une malo après la fermentation alcoolique, mais dit aussi que les deux peuvent se chevaucher (co-inoculation), que le goût de beurre est une possibilité liée à la souche et au moment de l'ensemencement, pas un résultat obligatoire, et qu'une malo terminée ne dispense d'aucun contrôle avant la mise. L'atelier du bouchage distingue les deux rôles du soufre : la forme moléculaire, antimicrobienne, et la forme bisulfite, antioxydante. Il n'attribue le goût de bouchon qu'au bouchon, alors qu'un chai contaminé aux haloanisoles peut marquer un vin sous capsule.</p>
+
     <h3>Ce que la page ne montre pas</h3>
     <ul>
-      <li>Les effervescents (seconde fermentation en bouteille), les vins doux, mutés, oxydatifs ou orange : ce sont d'autres parcours.</li>
+      <li>Les effervescents (seconde fermentation en bouteille), les vins doux, mutés, oxydatifs ou orange : ce sont d'autres parcours, qui partagent la vigne et divergent au chai.</li>
       <li>La microbiologie du chai : la nutrition des levures, les bactéries d'altération, les <i>Brettanomyces</i>, réduite à un seul indicateur de risque. Le lien entre le microbiote du sol et le goût du vin, réel dans les analyses génétiques, reste mal quantifié : la page le dit, elle ne le simule pas.</li>
       <li>La réglementation (appellations, rendements autorisés, doses maximales de SO<sub>2</sub>, cépages permis, droit d'irriguer ou d'acidifier), qui varie selon les pays et qui décide pourtant d'une bonne partie des adaptations possibles.</li>
       <li>L'économie : le prix du raisin, le coût d'une plantation, celui d'un filet d'ombrage ou d'un forage. Beaucoup de choix présentés ici comme techniques sont d'abord des choix comptables.</li>
@@ -536,13 +580,15 @@ eleventyExcludeFromCollections: true
     <h3>Commandes</h3>
     <ul>
       <li>Boutons <b>Rouge / Blanc / Rosé</b> en haut : changent le parcours et les réglages par défaut. Le choix est mémorisé dans votre navigateur.</li>
-      <li>La barre des étapes suit votre lecture ; un clic y saute à l'étape.</li>
+      <li>La barre des chapitres et celle des étapes suivent votre lecture ; un clic y saute au chapitre ou à l'étape.</li>
+      <li>Le <b>bilan final</b> relit les réglages laissés dans chaque atelier : modifiez-en un, et revenez voir ce qui bouge.</li>
       <li>Dans le simulateur : <b>Lancer</b>, <b>Pause</b>, <b>Recommencer</b>, et la vitesse ×1 (un jour toutes les deux secondes) à ×20.</li>
       <li>Dans l'atelier d'assemblage : <b>Chercher le meilleur assemblage</b> optimise les proportions pour l'objectif choisi, <b>Proportions du chai</b> revient aux volumes disponibles.</li>
       <li><kbd>H</kbd> ouvre cette aide.</li>
     </ul>
 
     <h3>Pour aller plus loin</h3>
+    <p>Chaque étape de la page cite ses sources en ligne, cliquables (OIV, INRAE, IFV, AWRI, INAO, Pl@ntGrape, Agriréseau, Scott Laboratories, revues). Les ouvrages de référence, non liés :</p>
     <p><small>P. Ribéreau-Gayon et al., <i>Traité d'œnologie</i> (Dunod) ; J. Robinson et J. Harding, <i>The Oxford Companion to Wine</i> ; A. Reynier, <i>Manuel de viticulture</i> (Lavoisier) ; Conseil des vins du Québec, guides de viticulture nordique ; les fiches techniques de l'IFV (Institut français de la vigne et du vin) ; C. van Leeuwen et G. Seguin, « The concept of terroir in viticulture », <i>Journal of Wine Research</i>, 2006 ; A. J. Winkler et al., <i>General Viticulture</i> (University of California Press) ; N. Bokulich et al., « Microbial biogeography of wine grapes », <i>PNAS</i>, 2014 ; R. Trouvelot et al., « Arbuscular mycorrhiza symbiosis in viticulture », <i>Agronomy for Sustainable Development</i>, 2015 ; É. Peynaud et J. Blouin, <i>Le goût du vin</i> (Dunod) ; A. Carbonneau, A. Deloire et B. Jaillard, <i>La vigne : physiologie, terroir, culture</i> (Dunod) ; C. van Leeuwen et P. Darriet, « The impact of climate change on viticulture and wine quality », <i>Journal of Wine Economics</i>, 2016 ; G. Jones et al., « Climate change and global wine quality », <i>Climatic Change</i>, 2005 ; N. Ollat et J.-M. Touzard, projet LACCAVE (INRAE), <i>Vignes et vins face au changement climatique</i>, 2021 ; GIEC, sixième rapport d'évaluation, 2021-2023.</small></p>
 
     <form method="dialog"><button class="bouton fermer">Fermer</button></form>
