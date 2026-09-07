@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Du cep à la bouteille — comment on fabrique le vin</title>
-<meta name="description" content="Une page interactive en sept chapitres qui suit le vin du choix du lieu jusqu'au verre : la coupe du raisin, le climat et son réchauffement, le lieu, le sol, le choix du cépage, le cycle annuel, l'eau et la chaleur, la vendange, la fermentation simulée heure par heure, la malolactique, l'élevage, l'assemblage puis la stabilisation, la mise en bouteille, le vieillissement, et un bilan sensoriel final. Rouge, blanc ou rosé, avec sources par sujet.">
+<meta name="description" content="Une page interactive en sept chapitres qui suit le vin du choix du lieu jusqu'au verre : la coupe du raisin, le climat et son réchauffement, le lieu, le sol, le choix du cépage, le cycle annuel, l'eau et la chaleur, la vendange, la fermentation simulée heure par heure, la malolactique, l'élevage, l'assemblage puis la stabilisation, la mise en bouteille, le vieillissement, et un bilan sensoriel final. Rouge, blanc, rosé, orange (blanc macéré), doux ou muté : six parcours, avec sources par sujet.">
 <meta name="theme-color" content="#160f11">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%87%3C/text%3E%3C/svg%3E">
 <style>
@@ -64,6 +64,9 @@ eleventyExcludeFromCollections: true
   }
   html[data-style="blanc"] { --accent: #d9b25f; --accent-sombre: #9c7a2c; --accent-doux: #f1dca0; }
   html[data-style="rose"]  { --accent: #f08aa0; --accent-sombre: #b8506b; --accent-doux: #ffc4d1; }
+  html[data-style="orange"] { --accent: #e0863a; --accent-sombre: #a4562a; --accent-doux: #f3c08e; }
+  html[data-style="doux"]  { --accent: #f2c95c; --accent-sombre: #b08a2a; --accent-doux: #f8e3a6; }
+  html[data-style="mute"]  { --accent: #c95a3f; --accent-sombre: #8a3a2c; --accent-doux: #efb09d; }
 
   * { box-sizing: border-box; margin: 0; }
   html { scroll-behavior: smooth; overflow-x: clip; }
@@ -124,7 +127,7 @@ eleventyExcludeFromCollections: true
     text-transform: uppercase;
     color: var(--sourdine);
   }
-  .segment { display: inline-flex; border: 1px solid var(--bord-clair); border-radius: 6px; overflow: hidden; }
+  .segment { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--bord-clair); border-radius: 6px; overflow: hidden; }
   .segment button {
     font: 500 13px/1 var(--ui);
     color: var(--texte);
@@ -479,6 +482,8 @@ eleventyExcludeFromCollections: true
     .bandeau { padding: 8px 12px; gap: 8px 12px; }
     .bandeau h1 { font-size: 18px; }
     .cmdes { margin-left: 0; width: 100%; }
+    .segment { flex: 1 1 auto; }
+    .segment button { flex: 1 1 auto; padding: 8px 6px; }
     .cmdes .legende-style { display: none; }
     main { padding: 0 12px 60px; }
     .reglages { grid-template-columns: minmax(0, 1fr); }
@@ -499,6 +504,9 @@ eleventyExcludeFromCollections: true
       <button type="button" data-style="rouge" aria-pressed="true">Rouge</button>
       <button type="button" data-style="blanc" aria-pressed="false">Blanc</button>
       <button type="button" data-style="rose" aria-pressed="false">Rosé</button>
+      <button type="button" data-style="orange" aria-pressed="false">Orange</button>
+      <button type="button" data-style="doux" aria-pressed="false">Doux</button>
+      <button type="button" data-style="mute" aria-pressed="false">Muté</button>
     </div>
     <button class="bouton" id="btnAide" title="Ce que cette page simplifie, et où aller plus loin (H)">? En savoir plus</button>
   </div>
@@ -531,7 +539,7 @@ eleventyExcludeFromCollections: true
   <div id="stades"></div>
 
   <footer class="fin">
-    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Les autres ateliers sont du même genre : les relations vont dans le bon sens et les ordres de grandeur sont plausibles, mais aucun ne prédit un millésime, et chaque atelier dit ses limites sous son résultat. La page décrit le parcours principal des rouges, blancs et rosés secs ; les <b>effervescents</b> (seconde fermentation en bouteille), les <b>vins orange</b> (blancs macérés), les <b>vins doux</b> et les <b>vins mutés</b> sont d'autres parcours, qui partagent la vigne et divergent au chai. Page construite en paire avec Claude. Chaque étape cite ses sources ; le bouton « En savoir plus » ajoute les ouvrages de référence.</p>
+    <p><b>Ce que cette page simplifie.</b> Les chiffres sont des ordres de grandeur pour un vignoble tempéré de l'hémisphère Nord, pas des recettes : chaque région, chaque cépage et chaque millésime les bousculent. Le simulateur de fermentation est un modèle jouet à cinq variables, calibré pour reproduire les comportements typiques, dont l'emballement thermique d'une cuve sans refroidissement. Les autres ateliers sont du même genre : les relations vont dans le bon sens et les ordres de grandeur sont plausibles, mais aucun ne prédit un millésime, et chaque atelier dit ses limites sous son résultat. La page décrit six parcours — rouge, blanc, rosé, <b>orange</b> (un blanc macéré comme un rouge), <b>doux</b> (un moût concentré dont la fermentation est arrêtée) et <b>muté</b> (une fermentation arrêtée à l'eau-de-vie) — qui partagent la vigne et divergent au chai ; les <b>effervescents</b> (seconde fermentation en bouteille) restent un autre parcours. Page construite en paire avec Claude. Chaque étape cite ses sources ; le bouton « En savoir plus » ajoute les ouvrages de référence.</p>
   </footer>
 </main>
 
@@ -540,11 +548,12 @@ eleventyExcludeFromCollections: true
     <h2 id="aideTitre">Ce que vous regardez</h2>
     <p class="sous">Un parcours pédagogique, pas un manuel de vinification. Chaque étape a un atelier où l'on peut tourner un bouton et voir ce que ça change.</p>
 
-    <h3>Trois vins, trois ordres d'opérations</h3>
+    <h3>Six vins, six ordres d'opérations</h3>
     <p>La grande différence entre un <b>rouge</b> et un <b>blanc</b> n'est pas la couleur du raisin, c'est le moment du pressurage. Pour un rouge, le jus fermente <i>avec</i> les peaux (macération) et on presse à la fin : la couleur et les tanins sont dans les peaux. Pour un blanc, on presse <i>avant</i> de fermenter, et le jus seul fermente au frais. Un <b>rosé</b> est un vin de raisins noirs traité presque comme un blanc, après un contact de quelques heures avec les peaux. On peut donc faire un blanc avec des raisins noirs (les « blancs de noirs » de Champagne), mais jamais un rouge avec des raisins blancs.</p>
+    <p>Trois autres parcours décalent ces gestes. Le <b>vin orange</b> est un blanc traité comme un rouge : le jus macère avec les peaux, des jours ou des mois, souvent en amphore ; il en tire des tanins et une couleur d'ambre qui n'est pas un pigment mais l'oxydation des phénols. Le <b>vin doux</b> part d'un moût concentré à 300 ou 400 g/L par la pourriture noble, le passerillage ou le gel ; les levures, épuisées par le sucre et l'alcool, s'arrêtent vers 13 ou 14 % — ou l'on les arrête par le froid et le soufre — et le sucre reste. Le <b>vin muté</b> arrête la fermentation d'un coup, après deux ou trois jours, en versant de l'eau-de-vie : le porto, les vins doux naturels. Dans ces deux derniers cas, le simulateur de fermentation a un bouton pour le faire, et c'est le moment où l'on appuie qui décide du vin.</p>
 
     <h3>Sept chapitres</h3>
-    <p>La page suit l'ordre des décisions plutôt que celui de l'agronomie : <b>comprendre</b> (le raisin en coupe, les trois parcours, le vocabulaire de la dégustation), <b>choisir où et quoi planter</b> (climat, réchauffement, lieu, sol, cépage, plantation), <b>accompagner une année</b> (cycle, eau et chaleur), <b>récolter</b>, <b>transformer</b> (fermentations), <b>construire la cuvée</b> (élevage, assemblage, puis clarification et stabilisation) et <b>mettre en bouteille</b>, jusqu'au bilan dans le verre. La barre du haut donne les chapitres, celle du dessous les étapes du chapitre en cours ; l'étape sur les micro-organismes du sol est un approfondissement, qu'on peut sauter.</p>
+    <p>La page suit l'ordre des décisions plutôt que celui de l'agronomie : <b>comprendre</b> (le raisin en coupe, les six parcours, le vocabulaire de la dégustation), <b>choisir où et quoi planter</b> (climat, réchauffement, lieu, sol, cépage, plantation), <b>accompagner une année</b> (cycle, eau et chaleur), <b>récolter</b>, <b>transformer</b> (fermentations), <b>construire la cuvée</b> (élevage, assemblage, puis clarification et stabilisation) et <b>mettre en bouteille</b>, jusqu'au bilan dans le verre. La barre du haut donne les chapitres, celle du dessous les étapes du chapitre en cours ; l'étape sur les micro-organismes du sol est un approfondissement, qu'on peut sauter.</p>
 
     <h3>Le terroir</h3>
     <p>Au sens de l'OIV, le terroir est un espace où se construit un <b>savoir collectif</b> des interactions entre un milieu physique et biologique — climat, géographie, sol, vie du sol — et les <b>pratiques</b> qui s'y appliquent : le mot inclut le travail humain, et pas seulement ce que le lieu impose. Les ateliers du chapitre 2 en prennent la part physique : le <b>climat</b> (résumé par les degrés-jours de Winkler, la somme des températures au-dessus de 10 °C d'avril à octobre), la <b>géographie</b> (latitude, altitude, pente et exposition, présence d'eau), le <b>sol</b> (surtout son régime hydrique, bien plus que sa composition chimique), les <b>micro-organismes</b> autour des racines, et le <b>cépage</b> qu'on leur accorde. Ce sont des modèles à une ou deux formules : l'énergie reçue par un coteau est calculée pour le soleil direct seulement, la réserve en eau d'un sol à partir de valeurs moyennes par texture, la fenêtre de maturité d'un cépage à partir de seuils approximatifs de degrés-jours, et les indicateurs de vie du sol sont des ordres de grandeur tirés d'essais agronomiques, pas des mesures. Les associations entre un sol et un style de vin y sont présentées comme des exemples régionaux, pas comme des propriétés de la roche.</p>
@@ -572,7 +581,8 @@ eleventyExcludeFromCollections: true
 
     <h3>Ce que la page ne montre pas</h3>
     <ul>
-      <li>Les effervescents (seconde fermentation en bouteille), les vins doux, mutés, oxydatifs ou orange : ce sont d'autres parcours, qui partagent la vigne et divergent au chai.</li>
+      <li>Les effervescents (seconde fermentation en bouteille) et les vins de voile (xérès, vin jaune) : ce sont d'autres parcours encore, qui partagent la vigne et divergent au chai.</li>
+      <li>Pour les vins doux et mutés, le stress osmotique du simulateur est un ajustement simple (plafond d'alcool abaissé, levures ralenties au-delà de 260 g/L) ; l'arithmétique du mutage, elle, est exacte. L'atelier de concentration donne des ordres de grandeur, pas la météo : il ne dit pas si le botrytis viendra.</li>
       <li>La microbiologie du chai : la nutrition des levures, les bactéries d'altération, les <i>Brettanomyces</i>, réduite à un seul indicateur de risque. Le lien entre le microbiote du sol et le goût du vin, réel dans les analyses génétiques, reste mal quantifié : la page le dit, elle ne le simule pas.</li>
       <li>La réglementation (appellations, rendements autorisés, doses maximales de SO<sub>2</sub>, cépages permis, droit d'irriguer ou d'acidifier), qui varie selon les pays et qui décide pourtant d'une bonne partie des adaptations possibles.</li>
       <li>L'économie : le prix du raisin, le coût d'une plantation, celui d'un filet d'ombrage ou d'un forage. Beaucoup de choix présentés ici comme techniques sont d'abord des choix comptables.</li>

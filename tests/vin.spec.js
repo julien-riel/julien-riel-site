@@ -242,6 +242,111 @@ test.describe("Du cep à la bouteille", () => {
     await expect(page.locator("#s-mise .limite")).toContainText("haloanisoles");
   });
 
+  test("orange, sweet and fortified paths render their own cellar steps without errors", async ({ page }) => {
+    const erreurs = [];
+    page.on("pageerror", (e) => erreurs.push(e.message));
+    await page.goto(URL);
+    await attendrePage(page);
+    // orange : un blanc traité comme un rouge
+    await page.click('#choixStyle [data-style="orange"]');
+    await expect(page.getByTestId("etiquette")).toHaveText("Orange");
+    let chapitres = await page.evaluate(() => window.vin.chapitres());
+    expect(chapitres[3].stades).toEqual(["maturite", "vendanges", "maceration-orange"]);
+    expect(chapitres[4].stades).toEqual(["fermentation", "pressurage-rouge", "malo"]);
+    await expect(page.locator("#s-fermentation .echantillon")).toContainText("jus doré");
+    await expect(page.locator("#s-parcours .atelier canvas")).toBeVisible();
+    // doux : concentration, arrêt, pas de malo active
+    await page.click('#choixStyle [data-style="doux"]');
+    chapitres = await page.evaluate(() => window.vin.chapitres());
+    expect(chapitres[3].stades).toEqual(["maturite", "vendanges", "concentration", "pressurage-blanc", "debourbage"]);
+    expect(chapitres[4].stades).toEqual(["fermentation", "arret", "malo"]);
+    await expect(page.locator("#s-pressurage-blanc h3")).toContainText("rôties");
+    expect(await page.locator("#mlAvancement").inputValue()).toBe("0");
+    // muté : lagar, mutage, ni débourbage ni malo
+    await page.click('#choixStyle [data-style="mute"]');
+    chapitres = await page.evaluate(() => window.vin.chapitres());
+    expect(chapitres[3].stades).toEqual(["maturite", "vendanges", "lagar"]);
+    expect(chapitres[4].stades).toEqual(["fermentation", "mutage", "pressurage-rouge"]);
+    const stades = await page.evaluate(() => window.vin.stades());
+    expect(stades).not.toContain("malo");
+    await expect(page.locator(".stade")).toHaveCount(stades.length);
+    // aucune étape n'a perdu son texte au passage
+    for (const style of ["orange", "doux", "mute"]) {
+      await page.click(`#choixStyle [data-style="${style}"]`);
+      const vides = await page.evaluate(() => [...document.querySelectorAll(".stade .intro, .stade h3, .stade .duree")].filter((el) => !el.textContent.trim()).length);
+      expect(vides, `textes vides pour ${style}`).toBe(0);
+    }
+    expect(erreurs).toEqual([]);
+  });
+
+  test("fortifying stops the fermentation with spirit and keeps the sugar", async ({ page }) => {
+    await page.goto(URL);
+    await attendrePage(page);
+    await page.click('#choixStyle [data-style="mute"]');
+    await expect(page.locator("#fMuter")).toBeDisabled();
+    await page.evaluate(() => window.vin.ateliers.fermentation.avancer(24 * 2));
+    await expect(page.locator("#fMuter")).toBeEnabled();
+    const avant = await page.evaluate(() => ({ S: window.vin.ateliers.fermentation.sim.S, E: window.vin.ateliers.fermentation.sim.E }));
+    expect(avant.S).toBeGreaterThan(60);
+    await page.click("#fMuter");
+    const apres = await page.evaluate(() => { const s = window.vin.ateliers.fermentation.sim; return { S: s.S, E: s.E, fini: s.fini }; });
+    expect(apres.fini).toBe("mute");
+    expect(apres.E).toBeGreaterThan(19);
+    expect(apres.E).toBeLessThan(20);
+    expect(apres.S).toBeGreaterThan(40);
+    expect(apres.S).toBeLessThan(avant.S);
+    await expect(page.getByTestId("etat-fermentation")).toContainText("Muté");
+    // le bilan relit le sucre gardé
+    await expect(page.getByTestId("bilan-sucre")).not.toHaveText("sec");
+    await expect(page.getByTestId("lecture-bilan")).toContainText("Le sucre est voulu");
+  });
+
+  test("the sweet path concentrates the must and the fermentation stops on its own with sugar left", async ({ page }) => {
+    await page.goto(URL);
+    await attendrePage(page);
+    await page.click('#choixStyle [data-style="doux"]');
+    // pourriture noble à 70 % : un moût de liquoreux ; sans brouillard, pas de botrytis
+    const sucre = parseInt((await page.getByTestId("sucre-concentre").textContent()).replace(/\D/g, ""), 10);
+    expect(sucre).toBeGreaterThan(300);
+    await page.selectOption("#cAutomne", "sec");
+    await expect(page.getByTestId("lecture-concentration")).toContainText("Pas de botrytis");
+    await page.selectOption("#cAutomne", "brumes");
+    // le gel : pas assez froid à −6, légal à −9
+    await page.selectOption("#cMethode", "gel");
+    await page.locator("#cGel").fill("-6");
+    await expect(page.getByTestId("lecture-concentration")).toContainText("Pas assez froid");
+    await page.locator("#cGel").fill("-9");
+    const sucreGel = parseInt((await page.getByTestId("sucre-concentre").textContent()).replace(/\D/g, ""), 10);
+    expect(sucreGel).toBeGreaterThan(330);
+    // on encuve : la cuve reçoit ce sucre et s'arrête d'elle-même, sucre restant
+    await page.click("#cEncuver");
+    expect(parseInt(await page.locator("#fSucre").inputValue(), 10)).toBeGreaterThanOrEqual(330);
+    await page.evaluate(() => window.vin.ateliers.fermentation.avancer(24 * 90));
+    const sim = await page.evaluate(() => { const s = window.vin.ateliers.fermentation.sim; return { S: s.S, E: s.E, fini: s.fini }; });
+    expect(sim.fini).toBe("alcool");
+    expect(sim.E).toBeLessThan(15);
+    expect(sim.S).toBeGreaterThan(60);
+    await expect(page.getByTestId("etat-fermentation")).toContainText("vin doux voulu");
+    // ou l'on arrête plus tôt, à la main
+    await page.click("#fReinit");
+    await page.evaluate(() => window.vin.ateliers.fermentation.avancer(24 * 10));
+    await page.click("#fArreter");
+    expect(await page.evaluate(() => window.vin.ateliers.fermentation.sim.fini)).toBe("arret");
+  });
+
+  test("the six style buttons fit a narrow phone without horizontal scrolling", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.goto(URL);
+    await attendrePage(page);
+    for (const style of ["mute", "doux", "orange"]) {
+      await page.click(`#choixStyle [data-style="${style}"]`);
+      const largeurs = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+      expect(largeurs.scroll, style).toBeLessThanOrEqual(largeurs.client);
+      const debordent = await page.evaluate((w) => [...document.querySelectorAll("main *, .bandeau *")].filter((el) => el.getBoundingClientRect().right > w + 1 && el.getBoundingClientRect().width > 0).length, 320);
+      expect(debordent, style).toBe(0);
+    }
+  });
+
   test("the maturity workshop feeds the fermentation sugar", async ({ page }) => {
     await page.goto(URL);
     await attendrePage(page);

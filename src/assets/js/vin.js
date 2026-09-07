@@ -42,8 +42,18 @@ function contexte(canvas, largeur, hauteur) {
 
 /* ---------- État global ---------- */
 
-const NOMS = { rouge: 'Rouge', blanc: 'Blanc', rose: 'Rosé' };
-const TITRES = { rouge: 'un vin rouge', blanc: 'un vin blanc', rose: 'un vin rosé' };
+/* Six parcours. « noir » : la couleur du raisin ; « peaux » : le jus fermente
+   avec les peaux ; « sucre » : le vin garde du sucre, par arrêt ou par mutage. */
+const STYLES = {
+  rouge: { nom: 'Rouge', titre: 'un vin rouge', noir: true, peaux: true, sucre: false, duree: '4 à 6 ans' },
+  blanc: { nom: 'Blanc', titre: 'un vin blanc', noir: false, peaux: false, sucre: false, duree: '4 à 5 ans' },
+  rose: { nom: 'Rosé', titre: 'un vin rosé', noir: true, peaux: false, sucre: false, duree: '3 ans et demi' },
+  orange: { nom: 'Orange', titre: 'un vin orange', noir: false, peaux: true, sucre: false, duree: '4 à 6 ans' },
+  doux: { nom: 'Doux', titre: 'un vin doux', noir: false, peaux: false, sucre: true, duree: '5 à 8 ans' },
+  mute: { nom: 'Muté', titre: 'un vin muté', noir: true, peaux: true, sucre: true, duree: '5 à 10 ans' },
+};
+const NOMS = Object.fromEntries(Object.entries(STYLES).map(([k, v]) => [k, v.nom]));
+const TITRES = Object.fromEntries(Object.entries(STYLES).map(([k, v]) => [k, v.titre]));
 
 const ETAT = {
   style: 'rouge',
@@ -54,7 +64,9 @@ const ETAT = {
 };
 try { if (NOMS[localStorage.getItem(CLE)]) ETAT.style = localStorage.getItem(CLE); } catch (e) { /* stockage indisponible */ }
 
-/* Texte selon le style : une chaîne, ou un objet { rouge, blanc, rose, _ }. */
+const ST = () => STYLES[ETAT.style];
+
+/* Texte selon le style : une chaîne, ou un objet { rouge, blanc, rose, orange, doux, mute, _ }. */
 const t = (v) => (v && typeof v === 'object' && !Array.isArray(v)) ? (v[ETAT.style] ?? v._ ?? '') : v;
 
 /* ---------- Sources : quelques URL réutilisées d'un stade à l'autre ---------- */
@@ -93,6 +105,12 @@ const SRC = {
   haloanisoles: ['« Uncorking haloanisoles in wine » (2023)', 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10054257/'],
   bandol: ['Vins de Bandol — les trois couleurs', 'https://vinsdebandol.com/vins-vignobles-3-couleurs'],
   equilibreVigne: ['Vine balance : charge, feuillage et rendement (eXtension)', 'https://grapes.extension.org/basic-concept-of-vine-balance/'],
+  unescoQvevri: ['UNESCO — la méthode géorgienne de vinification en qvevri', 'https://ich.unesco.org/fr/RL/la-methode-traditionnelle-georgienne-de-vinification-en-qvevri-00870'],
+  vinOrange: ['Wikipédia — vin orange (blanc de macération)', 'https://fr.wikipedia.org/wiki/Vin_orange'],
+  porto: ['IVDP — Instituto dos Vinhos do Douro e do Porto', 'https://www.ivdp.pt/'],
+  vdn: ['Wikipédia — vin doux naturel et mutage', 'https://fr.wikipedia.org/wiki/Vin_doux_naturel'],
+  pourritureNoble: ['Wikipédia — pourriture noble (Botrytis cinerea)', 'https://fr.wikipedia.org/wiki/Pourriture_noble'],
+  vinGlace: ['Wikipédia — vin de glace', 'https://fr.wikipedia.org/wiki/Vin_de_glace'],
 };
 
 /* ---------- Les chapitres ---------- */
@@ -101,7 +119,7 @@ const CHAPITRES = [
   { id: 'comprendre', titre: 'Comprendre le parcours', chapeau: "Avant d'entrer dans le détail, deux clés suffisent : ce qu'il y a dans un grain de raisin, et le moment où l'on presse. Tout le reste de la page en découle, et les mots pour en parler sont posés ici." },
   { id: 'planter', titre: 'Choisir où et quoi planter', chapeau: "Une vigne plantée aujourd'hui produira jusque vers 2065. Choisir un lieu et un cépage, c'est donc parier sur le climat qu'il y fera, pas seulement sur celui qu'il y fait. Ce chapitre suit l'ordre des décisions d'une plantation : le climat et son évolution, le lieu précis, le sol et ce qui y vit, le cépage et son porte-greffe, puis les premières années. Les conséquences du réchauffement pendant la saison sont reprises au chapitre suivant, dans « L'eau et la chaleur », et au chapitre 4, dans « Décider de vendanger »." },
   { id: 'annee', titre: 'Accompagner une année de vigne', chapeau: "Chaque année, la vigne refait tout depuis le bois. Le vigneron accompagne ce cycle et joue sur deux variables qui font le goût bien avant le chai : l'eau et la chaleur." },
-  { id: 'recolter', titre: 'Récolter et préparer les raisins', chapeau: "Décider du jour, récolter vite, trier, puis séparer ou non le jus des peaux : c'est ici que les trois parcours divergent." },
+  { id: 'recolter', titre: 'Récolter et préparer les raisins', chapeau: "Décider du jour, récolter vite, trier, puis séparer ou non le jus des peaux : c'est ici que les parcours divergent : six vins, six façons de séparer — ou non — le jus des peaux, et de garder — ou non — du sucre." },
   { id: 'transformer', titre: 'Transformer le raisin en vin', chapeau: "Les levures font le vin, les bactéries l'arrondissent. Ce chapitre suit la fermentation alcoolique heure par heure, puis la malolactique." },
   { id: 'cuvee', titre: 'Construire et préparer la cuvée', chapeau: "Le vin nouveau se fait avec le temps et le contenant ; puis on compose la cuvée à partir des lots du chai ; et seulement ensuite on la clarifie et on la stabilise pour la bouteille, parce que le mélange change les équilibres." },
   { id: 'bouteille', titre: 'Mettre en bouteille et laisser évoluer', chapeau: "Le bouchon, la cave et le temps finissent le travail. Le dernier atelier relit toutes vos décisions dans le verre." },
@@ -116,7 +134,7 @@ const STADES = [
     chapitre: 'comprendre',
     titre: 'Trois vins, un même raisin',
     duree: 'Vue d’ensemble',
-    intro: "Faire du vin, c'est laisser des levures transformer le sucre d'un jus de raisin en alcool. Tout le reste — quatre ans de vigne, une saison, quelques semaines au chai, des mois d'élevage — sert à décider <b>quel jus</b>, <b>en contact avec quoi</b> et <b>pendant combien de temps</b>. La grande différence entre un rouge et un blanc n'est pas la couleur du raisin, c'est <b>le moment du pressurage</b>. Pour un rouge, le jus fermente avec les peaux et les pépins, et on presse à la fin. Pour un blanc, on presse avant de fermenter : le jus seul fermente, au frais. Un rosé est un vin de raisins noirs traité presque comme un blanc, après quelques heures de contact avec les peaux. Pour comprendre pourquoi ce moment change tout, il faut regarder l'intérieur d'un grain : l'atelier ci-contre le découpe.",
+    intro: "Faire du vin, c'est laisser des levures transformer le sucre d'un jus de raisin en alcool. Tout le reste — quatre ans de vigne, une saison, quelques semaines au chai, des mois d'élevage — sert à décider <b>quel jus</b>, <b>en contact avec quoi</b> et <b>pendant combien de temps</b>. La grande différence entre un rouge et un blanc n'est pas la couleur du raisin, c'est <b>le moment du pressurage</b>. Pour un rouge, le jus fermente avec les peaux et les pépins, et on presse à la fin. Pour un blanc, on presse avant de fermenter : le jus seul fermente, au frais. Un rosé est un vin de raisins noirs traité presque comme un blanc, après quelques heures de contact avec les peaux. Trois autres parcours décalent ces mêmes gestes : le <b>vin orange</b> est un blanc traité comme un rouge, dont le jus macère avec les peaux ; le <b>vin doux</b> part d'un raisin si sucré que les levures s'arrêtent avant la fin, ou qu'on les arrête ; le <b>vin muté</b> les arrête d'un coup, en versant de l'eau-de-vie dans la cuve. Six boutons en haut de page, six ordres d'opérations. Pour comprendre pourquoi ce moment change tout, il faut regarder l'intérieur d'un grain : l'atelier ci-contre le découpe.",
     reperes: [
       "<b>Rouge</b> : vendange → éraflage → fermentation <i>avec</i> les peaux (macération) → pressurage → malolactique → élevage → assemblage → clarification et stabilisation → bouteille.",
       "<b>Blanc</b> : vendange → pressurage immédiat → débourbage → fermentation au frais du jus seul → malolactique ou non → élevage → assemblage → clarification et stabilisation → bouteille.",
@@ -350,12 +368,31 @@ const STADES = [
     sources: [SRC.awriFerm],
   },
   {
+    id: 'concentration',
+    chapitre: 'recolter',
+    styles: ['doux'],
+    titre: 'Concentrer le sucre dans la baie',
+    duree: 'Octobre → janvier',
+    intro: "Un vin doux garde du sucre parce que les levures n'ont pas pu — ou pas eu le droit de — tout transformer. Pour cela, il faut d'abord un moût <b>bien plus sucré</b> qu'un moût ordinaire : 300 à 400 g/L au lieu de 200 à 240. Trois façons de concentrer le sucre dans la baie, toutes en lui retirant de l'eau. La <b>pourriture noble</b> : le champignon <i>Botrytis cinerea</i>, sur un raisin mûr et par temps de brumes matinales suivies d'après-midis secs, perce la peau, et la baie se dessèche en se « rôtissant » ; il consomme un peu de sucre et d'acide, mais concentre le reste, et fabrique du glycérol et des arômes de miel, d'abricot, de safran. Le <b>passerillage</b> : on laisse le raisin se flétrir sur souche, sur des claies ou sur la paille, sans champignon. Le <b>gel</b> : on vendange par −8 °C ou moins, et l'on presse des baies gelées dont l'eau reste en glace dans le pressoir ; le jus qui coule est un sirop. Dans les trois cas, le rendement s'effondre et l'on ramasse par <b>tries</b> successives, grappe par grappe, parfois baie par baie.",
+    reperes: [
+      "<b>Sauternes</b> : sémillon, sauvignon et muscadelle, trois à six passages dans les vignes d'octobre à novembre, 10 à 25 hL/ha contre 50 pour un bordeaux sec — « un verre par pied de vigne », selon le mot d'Yquem.",
+      "<b>Tokaji aszú</b> : les baies rôties (<i>aszú</i>) sont ramassées une à une puis macérées dans un vin ou un moût de base ; les <i>puttonyos</i> comptaient autrefois les hottes de baies versées par fût.",
+      "<b>Vin de glace</b> : né en Allemagne (<i>Eiswein</i>), devenu la spécialité du Canada, premier producteur mondial, avec le vidal et le riesling. Récolte de nuit, à −8 °C au moins, souvent en décembre ou janvier, et un moût d'au moins 35 °Brix. Le Québec en produit aussi, ainsi que du cidre de glace sur le même principe.",
+      "<b>Passerillage</b> : jurançon et vendanges tardives d'Alsace sur souche ; vin de paille du Jura, vin santo et recioto d'Italie sur claies pendant l'hiver. Sans botrytis, les arômes restent ceux du fruit — fruits secs, figue, coing — sans le miel et le safran du champignon.",
+    ],
+    atelier: 'concentration',
+    sources: [SRC.pourritureNoble, SRC.vinGlace],
+  },
+  {
     id: 'pressurage-blanc',
     chapitre: 'recolter',
-    styles: ['blanc'],
-    titre: 'Pressurage direct',
-    duree: 'Jour de la vendange',
-    intro: "Pour un blanc, on presse tout de suite, avant toute fermentation : le jus seul fermentera, sans les peaux. Les grappes vont, entières ou éraflées, dans un <b>pressoir pneumatique</b> : une membrane se gonfle doucement contre les grappes, et le jus s'écoule par les grilles. Les premiers litres, le <b>jus de goutte</b>, sont les plus fins ; les dernières pressées sont plus tanniques et souvent écartées. Cent kilos de raisin donnent 60 à 70 litres de moût.",
+    styles: ['blanc', 'doux'],
+    titre: { doux: 'Presser des baies rôties ou gelées', _: 'Pressurage direct' },
+    duree: { doux: 'Des heures par pressée', _: 'Jour de la vendange' },
+    intro: {
+      doux: "Les baies botrytisées ou gelées ne se pressent pas comme les autres. Rôties, elles n'ont presque plus de jus, et ce jus est visqueux : on presse <b>lentement</b>, par cycles, en trois ou quatre pressées dont la dernière, la plus concentrée en sucre, est souvent la meilleure — l'inverse d'un blanc sec, où les dernières pressées sont écartées. Cent kilos donnent 30 à 40 litres au lieu de 65. Gelées, on les presse à −8 °C, dehors ou dans un chai ouvert, et la glace reste dans la cage du pressoir : quelques litres de sirop par charge. Le botrytis apporte aussi une <b>laccase</b>, une enzyme qui oxyde le moût et que le soufre n'inhibe pas ; on protège par le froid et l'on accepte une teinte plus dorée.",
+      _: "Pour un blanc, on presse tout de suite, avant toute fermentation : le jus seul fermentera, sans les peaux. Les grappes vont, entières ou éraflées, dans un <b>pressoir pneumatique</b> : une membrane se gonfle doucement contre les grappes, et le jus s'écoule par les grilles. Les premiers litres, le <b>jus de goutte</b>, sont les plus fins ; les dernières pressées sont plus tanniques et souvent écartées. Cent kilos de raisin donnent 60 à 70 litres de moût.",
+    },
     reperes: [
       "<b>Macération pelliculaire</b> : quelques heures de contact avec les peaux, à froid, avant de presser, pour les cépages aromatiques (sauvignon, gewurztraminer).",
       "<b>Blanc de noirs</b> : pressé sans macération, un raisin noir donne un jus presque incolore. C'est ainsi que le pinot noir devient du champagne blanc.",
@@ -379,7 +416,7 @@ const STADES = [
   {
     id: 'debourbage',
     chapitre: 'recolter',
-    styles: ['blanc', 'rose'],
+    styles: ['blanc', 'rose', 'doux'],
     titre: 'Débourbage',
     duree: '12 à 24 heures',
     intro: "Le jus qui sort du pressoir est trouble : il charrie des débris de pulpe, de peau, de la terre. On le laisse reposer une nuit à 8 à 12 °C, assez froid pour que la fermentation ne démarre pas, et les <b>bourbes</b> tombent au fond. On soutire le jus clair par-dessus. Un jus trop débourbé fermente mal (les levures manquent de nutriments) ; pas assez, le vin prend des goûts herbacés et de réduction. Puis on remonte doucement la température et on ensemence les levures.",
@@ -390,33 +427,99 @@ const STADES = [
     sources: [SRC.ifvFiches],
   },
 
+  {
+    id: 'maceration-orange',
+    chapitre: 'recolter',
+    styles: ['orange'],
+    titre: 'Encuver un blanc avec ses peaux',
+    duree: '1 semaine à 8 mois',
+    intro: "Un vin orange est un blanc vinifié comme un rouge : au lieu de presser tout de suite, on <b>érafle</b> (ou pas), on foule, et l'on met jus, peaux et pépins ensemble en cuve, en <b>amphore</b> ou en <b>qvevri</b>, cette jarre géorgienne enterrée où l'on fait du vin ainsi depuis huit mille ans. Les peaux d'un raisin blanc n'ont pas d'anthocyanes, mais elles ont des tanins, des arômes et des <b>phénols jaunes</b> qui, au contact de l'air et de l'alcool, virent à l'ambre : d'où la couleur, du vieil or au cuivre selon la durée. La macération dure de quelques jours à plusieurs mois ; en Géorgie, souvent jusqu'au printemps, chapeau de marc compris. On soufre peu ou pas : les tanins et le gaz carbonique protègent le vin, et une oxydation contrôlée fait partie du style.",
+    reperes: [
+      "<b>Ce que les peaux donnent</b> : des tanins (un blanc macéré a la structure d'un rouge léger), du volume, des arômes de fruits secs, de thé, d'écorce d'orange, et une couleur qui ne vient pas d'un pigment mais de l'oxydation des phénols.",
+      "<b>Cépages</b> : ribolla gialla et malvasia au Frioul et en Slovénie, rkatsiteli et mtsvane en Géorgie, pinot gris (dont la peau est rose : le vin tire sur le cuivre), chenin et sauvignon ailleurs. La peau doit être saine et mûre : les défauts d'un raisin passent tous dans un vin macéré.",
+      "<b>Qvevri</b> : jarre d'argile de 300 à 3 000 L, enduite de cire d'abeille, enterrée jusqu'au col ; la terre tient 13 à 15 °C sans thermorégulation. La méthode est inscrite au patrimoine immatériel de l'UNESCO depuis 2013.",
+      "<b>Le renouveau</b> : redécouvert dans les années 1990 au Frioul (Gravner, Radikon), le blanc de macération est passé de curiosité à catégorie. « Vin orange » figure sur les cartes sans définition légale dans la plupart des pays ; l'Afrique du Sud et quelques appellations italiennes commencent à l'encadrer.",
+    ],
+    sources: [SRC.unescoQvevri, SRC.vinOrange],
+  },
+  {
+    id: 'lagar',
+    chapitre: 'recolter',
+    styles: ['mute'],
+    titre: 'Fouler et encuver pour extraire vite',
+    duree: 'Jour de la vendange',
+    intro: "Un vin muté n'aura que <b>deux ou trois jours</b> de fermentation avant qu'on l'arrête : c'est très court pour extraire la couleur et les tanins d'un raisin noir, quand un rouge sec y passe une à trois semaines. Tout le travail se concentre donc au début. Dans le Douro, les raisins sont foulés dans des <b>lagares</b>, des bassins de granit larges et peu profonds, longtemps au pied, aujourd'hui souvent par des <b>lagares robotisés</b> dont les pistons imitent la marche : le foulage écrase les peaux sans casser les pépins, et le jus, peu profond, reste en contact permanent avec elles. À Banyuls et Maury, on obtient la même chose autrement : on mute <b>sur grains</b>, c'est-à-dire qu'on verse l'eau-de-vie sur la vendange encore en cuve, et l'on laisse macérer des semaines dans ce mélange de vin, de sucre et d'alcool, qui extrait très bien.",
+    reperes: [
+      "<b>Éraflage</b> : le plus souvent total, la rafle donnant de l'astringence dans une extraction aussi brutale ; certains en gardent une part pour la fraîcheur.",
+      "<b>Chaleur</b> : on laisse monter à 28 à 32 °C dans les lagares, avec quatre à six heures de foulage le premier jour. La température et le mouvement extraient ce que le temps n'aura pas le loisir d'extraire.",
+      "<b>Rendement</b> : les terrasses de schiste du Douro donnent 25 à 35 hL/ha, souvent moins. La concentration commence dans la vigne, et le cépage compte : touriga nacional, touriga franca, tinta roriz, tinta barroca, tinto cão, souvent complantés dans les vieilles parcelles.",
+    ],
+    sources: [SRC.porto, SRC.vdn],
+  },
   /* ---- 5. Transformer le raisin en vin ---- */
   {
     id: 'fermentation',
     chapitre: 'transformer',
-    titre: { rouge: 'Fermentation alcoolique et macération', _: 'Fermentation alcoolique' },
-    duree: { rouge: '5 à 20 jours', blanc: '2 à 4 semaines', rose: '2 à 3 semaines' },
+    titre: { rouge: 'Fermentation alcoolique et macération', orange: 'Fermentation alcoolique et macération', mute: 'Fermentation alcoolique, écourtée', doux: 'Fermentation alcoolique, lente', _: 'Fermentation alcoolique' },
+    duree: { rouge: '5 à 20 jours', blanc: '2 à 4 semaines', rose: '2 à 3 semaines', orange: '1 à 8 semaines, puis la macération', doux: '3 semaines à 3 mois', mute: '2 à 3 jours' },
     intro: {
       rouge: "C'est ici que le jus devient vin. Les levures transforment le sucre en alcool et en gaz carbonique, en dégageant beaucoup de chaleur. Le gaz remonte les peaux en surface, où elles forment le <b>chapeau de marc</b>, épais et sec, qu'il faut sans cesse remouiller : par <b>remontage</b> (on pompe le jus du bas vers le haut), par <b>pigeage</b> (on enfonce le chapeau), ou par <b>délestage</b> (on vide la cuve et on la remplit). C'est ce contact qui extrait couleur, tanins et arômes. Tout se joue sur la température : 25 à 30 °C pour extraire, jamais au-delà de 35 °C, où les levures meurent.",
       blanc: "C'est ici que le jus devient vin. Les levures transforment le sucre en alcool et en gaz carbonique, en dégageant beaucoup de chaleur. Pour un blanc, on fermente <b>au frais</b>, entre 12 et 18 °C, en cuve inox thermorégulée ou en barrique : les arômes de fruit et de fleur, volatils, s'évaporent avec le gaz si la cuve chauffe. La fermentation est donc lente, deux à quatre semaines, et le chai sent la brioche et la pomme. Le simulateur montre ce qui arrive si l'on coupe le refroidissement.",
       rose: "C'est ici que le jus devient vin. Les levures transforment le sucre en alcool et en gaz carbonique, en dégageant beaucoup de chaleur. Un rosé se fermente comme un blanc, <b>au frais</b>, entre 14 et 18 °C, pour garder ses arômes de petits fruits et sa couleur fragile. Deux à trois semaines en cuve inox thermorégulée. Le simulateur montre ce qui arrive si l'on coupe le refroidissement.",
+      orange: "C'est ici que le jus devient vin, et pour un orange, c'est une fermentation de rouge dans un jus de blanc : les peaux remontent en <b>chapeau</b>, qu'on remouille par pigeage ou remontage, et le contact extrait les tanins, les arômes et cette couleur d'ambre qui vient de l'oxydation des phénols jaunes. On fermente plus chaud qu'un blanc, 20 à 25 °C, souvent sans thermorégulation dans une amphore enterrée qui tient sa température seule. Quand la fermentation est finie, la macération continue : des semaines ou des mois sous le chapeau, en Géorgie jusqu'au printemps. Le simulateur suit la fermentation ; la macération se prolonge à l'étape suivante.",
+      doux: "C'est ici que le jus devient vin, et pour un liquoreux, c'est une <b>fermentation en souffrance</b>. Un moût à 350 g/L de sucre est un milieu hostile : la pression osmotique ralentit les levures, l'azote manque, et l'alcool les arrête plus tôt qu'à l'ordinaire — vers 13 ou 14 % vol. plutôt que 15 ou 16. Elle dure des semaines, parfois des mois, souvent en barrique, à 16 à 20 °C. On la surveille à la densité, et on l'arrête au bon couple sucre/alcool par le froid et le soufre : c'est l'étape suivante. Dans le simulateur, un bouton le fait ; sans lui, la cuve s'arrêtera d'elle-même avec du sucre — ou finira sèche, si le moût n'était pas assez riche.",
+      mute: "C'est ici que le jus devient vin — pendant deux ou trois jours seulement. La fermentation part vite et chaud, à 28 à 30 °C, dans un lagar ou une cuve où l'on foule et remonte sans relâche pour extraire couleur et tanins avant l'heure. On suit la <b>densité</b> plusieurs fois par jour : vers 90 à 100 g/L de sucre restant, soit 6 à 8 % vol. d'alcool, on <b>mute</b> en versant l'eau-de-vie, et tout s'arrête. Le simulateur a un bouton pour cela : muter trop tôt donne un vin sirupeux et pâle, trop tard un vin presque sec qui n'est plus un porto.",
     },
     reperes: [
       "<b>C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> → 2 C<sub>2</sub>H<sub>5</sub>OH + 2 CO<sub>2</sub></b>, plus de la chaleur : environ 100 kJ par mole de glucose. Chaque litre de moût dégage près de 50 L de gaz carbonique.",
       "La <b>densité</b> est l'instrument du vigneron : le moût sucré pèse 1,090 à 1,100 ; le vin sec, 0,990 à 0,996. On la mesure au mustimètre chaque matin.",
-      { rouge: "La <b>couleur</b> s'extrait dans les trois à cinq premiers jours ; les <b>tanins</b> continuent tant que le vin macère, aidés par l'alcool. La durée de cuvaison règle la structure.", _: "Le <b>gaz carbonique</b> qui s'échappe protège le vin de l'air pendant la fermentation ; c'est après, quand il s'arrête, que le vin devient vulnérable." },
+      { rouge: "La <b>couleur</b> s'extrait dans les trois à cinq premiers jours ; les <b>tanins</b> continuent tant que le vin macère, aidés par l'alcool. La durée de cuvaison règle la structure.", orange: "Les <b>tanins</b> d'un raisin blanc s'extraient comme ceux d'un noir, aidés par l'alcool ; la <b>couleur</b>, elle, ne vient pas d'un pigment mais de l'oxydation lente des phénols : elle continue de foncer pendant l'élevage.", mute: "La <b>couleur</b> s'extrait dans les trois premiers jours — c'est justement tout le temps dont on dispose : d'où le foulage intense et la chaleur. Le mutage fixe ensuite ce qui a été extrait.", doux: "Le <b>glycérol</b>, produit par les levures et par le botrytis, atteint 10 à 20 g/L dans un liquoreux contre 5 à 8 dans un sec : c'est lui qui donne l'onctuosité, plus encore que le sucre.", _: "Le <b>gaz carbonique</b> qui s'échappe protège le vin de l'air pendant la fermentation ; c'est après, quand il s'arrête, que le vin devient vulnérable." },
     ],
     atelier: 'fermentation',
     large: true,
     sources: [SRC.awriFerm],
   },
   {
+    id: 'arret',
+    chapitre: 'transformer',
+    styles: ['doux'],
+    titre: 'Arrêter la fermentation',
+    duree: 'Quand le sucre est au bon niveau',
+    intro: "Dans un moût à 350 g/L, les levures souffrent : la pression osmotique les freine, le peu d'azote d'un raisin botrytisé les affame, et l'alcool les achève plus tôt qu'à l'ordinaire, souvent vers <b>13 à 14 % vol.</b>. Un grand liquoreux s'arrête ainsi presque seul, avec 100 à 150 g/L de sucre non transformé. Mais « presque » ne suffit pas : une fermentation qui traînerait des semaines mangerait du sucre qu'on voulait garder, et une reprise en bouteille ferait sauter les bouchons. On l'<b>arrête</b> donc : on refroidit la cuve à 3 ou 4 °C, on <b>soutire</b> le vin pour le séparer du gros des levures, on <b>sulfite</b> plus fort qu'un vin sec (50 à 80 mg/L de SO<sub>2</sub> libre, parce que le sucre et les produits du botrytis en combinent une partie), et l'on filtrera finement avant la mise. En Allemagne, on arrête volontairement beaucoup plus tôt, vers 7 à 9 % vol., pour des vins légers et très sucrés : c'est une décision de style, pas une contrainte.",
+    reperes: [
+      "<b>Le tableau de bord</b> : on suit la densité chaque jour et l'on arrête quand le couple sucre/alcool est celui du vin voulu — 13,5 % et 120 g/L pour un sauternes, 8 % et 60 g/L pour un riesling <i>Spätlese</i>, 10 % et 200 g/L pour un vin de glace.",
+      "<b>Le SO<sub>2</sub> combiné</b> : les moûts botrytisés sont riches en composés qui se lient au soufre ; il en faut donc plus pour la même protection, et les plafonds légaux sont relevés pour ces vins — jusqu'à 400 mg/L de total dans l'Union européenne, contre 150 pour un rouge sec.",
+      "<b>Le risque</b> : une refermentation en bouteille. Le sucre résiduel est un aliment ; seuls le froid, le soufre, la filtration stérile et l'alcool le tiennent à distance. Une bouteille de liquoreux qui pétille n'était pas stable.",
+      "<b>Le simulateur</b> de l'étape précédente a un bouton pour arrêter la cuve ; sans lui, elle s'arrête d'elle-même quand l'alcool et le sucre ont épuisé les levures — ou finit sèche si le moût n'était pas assez riche.",
+    ],
+    sources: [SRC.awriFerm, SRC.awriSo2Usage],
+  },
+  {
+    id: 'mutage',
+    chapitre: 'transformer',
+    styles: ['mute'],
+    titre: 'Muter : arrêter la fermentation à l’alcool',
+    duree: 'Une heure, au bon moment',
+    intro: "Muter, c'est verser de l'<b>eau-de-vie</b> dans la cuve pendant que le moût fermente encore. Au-dessus de 16 à 18 % vol., les levures meurent en quelques heures ; tout le sucre qu'elles n'avaient pas encore mangé reste dans le vin, qui prend en même temps le degré d'un spiritueux léger. Le moment est tout. Dans le Douro, on mute quand le moût est descendu vers <b>90 à 100 g/L</b> de sucre, après deux ou trois jours seulement, avec une <i>aguardente</i> à 77 % vol. à raison d'environ un litre pour quatre de vin : le porto sort à 19 ou 20 %. Les <b>vins doux naturels</b> du Roussillon (Banyuls, Maury, Rivesaltes) et du Rhône (Rasteau, Beaumes-de-Venise) mutent avec un alcool neutre à 96 %, cinq à dix pour cent du volume, pour finir entre 15 et 18 %. Le mot « naturel » ne dit pas que rien n'est ajouté : il dit que le sucre est celui du raisin, jamais ajouté après coup.",
+    reperes: [
+      "<b>Arithmétique du mutage</b> : ajouter 20 % d'eau-de-vie à 77 % à un moût à 6 % vol. donne (6 + 0,2 × 77) ÷ 1,2 ≈ 17,8 % vol., et dilue le sucre d'un sixième. Le simulateur de l'étape précédente fait ce calcul quand on appuie sur « Muter ».",
+      "<b>Le cadre légal</b> des vins doux naturels : un moût d'au moins 252 g/L de sucre (14,5 % potentiels), un mutage de 5 à 10 % du volume, un vin fini de 15 à 18 % vol. avec au moins 45 g/L de sucre. Le porto : 19 à 22 % vol.",
+      "<b>Sur grains ou sur jus</b> : mutage sur la vendange encore en cuve, qui macère ensuite des semaines dans le mélange (banyuls et maury rouges) ; ou sur le jus décuvé, pour les blancs et les muscats qu'on veut frais et aromatiques.",
+      "<b>Pas de malolactique</b> : à 18 % vol. et 100 g/L de sucre, plus aucune bactérie ne travaille ; le vin est stable dès le mutage. C'est une des raisons du succès historique de ces vins, qui voyageaient sans se gâter.",
+    ],
+    sources: [SRC.porto, SRC.vdn],
+  },
+  {
     id: 'pressurage-rouge',
     chapitre: 'transformer',
-    styles: ['rouge'],
-    titre: 'Décuvage et pressurage',
-    duree: "À la fin de la macération",
-    intro: "Quand le vigneron juge l'extraction suffisante, on <b>décuve</b> : le vin s'écoule par gravité, c'est le <b>vin de goutte</b>, le plus fin. Le marc (peaux et pépins gorgés de vin) est sorti à la pelle ou à la vis et passé au pressoir : c'est le <b>vin de presse</b>, plus tannique, plus coloré, qu'on gardera à part pour en ajouter, ou pas, à l'assemblage. Le marc épuisé part à la distillerie (marc, grappa) ou au compost.",
+    styles: ['rouge', 'orange', 'mute'],
+    titre: { mute: 'Décuvage et pressurage après le mutage', _: 'Décuvage et pressurage' },
+    duree: { orange: 'Après des semaines ou des mois', mute: 'Le lendemain du mutage', _: "À la fin de la macération" },
+    intro: {
+      orange: "Après des semaines ou des mois sous le chapeau, on <b>décuve</b> : le vin de goutte s'écoule, ambré, tannique, souvent un peu trouble ; le marc est pressé doucement, et le vin de presse, plus dur, est gardé à part ou écarté. Un blanc macéré supporte mal une presse forte : ses tanins sont ceux de peaux blanches, plus amers que ceux d'un raisin noir. En qvevri, le vin reste souvent sur son marc jusqu'au printemps, et l'on ne presse qu'alors — ou jamais : on soutire le vin clair, et le marc part à la distillation (la <i>chacha</i>).",
+      mute: "Le vin muté, encore chargé de son sucre et de son alcool neuf, est <b>décuvé</b> le lendemain : le vin de goutte s'écoule, le marc est pressé, et les deux sont le plus souvent réunis — pour un porto, on ne trie guère entre goutte et presse, la matière est bienvenue. À Banyuls, si l'on a muté sur grains, la macération se poursuit deux à six semaines dans le mélange, et l'on décuve plus tard. Le marc, imbibé d'eau-de-vie, ne part pas à la distillerie : il a déjà donné.",
+      _: "Quand le vigneron juge l'extraction suffisante, on <b>décuve</b> : le vin s'écoule par gravité, c'est le <b>vin de goutte</b>, le plus fin. Le marc (peaux et pépins gorgés de vin) est sorti à la pelle ou à la vis et passé au pressoir : c'est le <b>vin de presse</b>, plus tannique, plus coloré, qu'on gardera à part pour en ajouter, ou pas, à l'assemblage. Le marc épuisé part à la distillerie (marc, grappa) ou au compost.",
+    },
     reperes: [
       "Le vin de presse représente <b>10 à 15 %</b> du volume. Les premières pressées sont bonnes, les dernières dures et amères.",
       "Le vin qui sort est <b>trouble, chaud, gazeux</b> et encore plein de levures : il n'est pas fini.",
@@ -426,12 +529,15 @@ const STADES = [
   {
     id: 'malo',
     chapitre: 'transformer',
+    styles: ['rouge', 'blanc', 'rose', 'orange', 'doux'],
     titre: 'Fermentation malolactique',
     duree: '2 à 8 semaines',
     intro: {
       rouge: "Une seconde fermentation, discrète, sans alcool cette fois. Des bactéries lactiques (<i>Oenococcus oeni</i>) transforment l'<b>acide malique</b>, dur et vert comme une pomme, en <b>acide lactique</b>, plus doux, en dégageant un peu de gaz. Le vin perd du mordant, gagne en rondeur et devient plus stable : un rouge qui ne l'aurait pas faite pourrait la faire en bouteille, avec du gaz et du trouble. Elle est <b>presque systématique</b> pour les rouges. Le plus souvent, elle suit la fermentation alcoolique, spontanément vers 18 à 22 °C ou avec un ensemencement ; on peut aussi <b>co-inoculer</b> les bactéries avec les levures, et les deux fermentations se chevauchent.",
       blanc: "Une seconde fermentation, discrète, sans alcool cette fois. Des bactéries lactiques (<i>Oenococcus oeni</i>) transforment l'<b>acide malique</b>, dur et vert comme une pomme, en <b>acide lactique</b>, plus doux, en dégageant un peu de gaz. Pour un blanc, c'est un <b>choix de style</b> : oui pour un chardonnay bourguignon, qui s'arrondit et <i>peut</i> prendre des notes de beurre et de noisette (le diacétyle) — pas toujours : cela dépend de la souche, du moment de l'ensemencement et des lies, et une malo lancée en même temps que la fermentation alcoolique en produit peu ; non pour un sauvignon ou un riesling, dont on veut garder la tension. On la bloque alors par le froid et le soufre.",
       rose: "Une seconde fermentation, discrète, sans alcool cette fois. Des bactéries lactiques transforment l'<b>acide malique</b>, dur et vert comme une pomme, en <b>acide lactique</b>, plus doux. Pour un rosé, on l'évite presque toujours : c'est l'acidité qui fait sa fraîcheur. On la bloque par le froid et une dose de soufre, puis on surveille.",
+      orange: "Une seconde fermentation, discrète, sans alcool cette fois. Des bactéries lactiques transforment l'<b>acide malique</b>, dur et vert comme une pomme, en <b>acide lactique</b>, plus doux. Pour un blanc macéré, elle se fait presque toujours, comme pour un rouge : les tanins et le peu de soufre laissent les bactéries travailler, et le vin s'arrondit. C'est l'un des traits du style — un orange a rarement l'acidité vive d'un blanc frais, et il ne la cherche pas.",
+      doux: "Une seconde fermentation, discrète, sans alcool cette fois, où des bactéries lactiques transforment l'<b>acide malique</b> en <b>acide lactique</b>, plus doux. Dans un liquoreux, elle n'a pas lieu : le sucre, le soufre de l'arrêt et le froid bloquent les bactéries, et l'on veut de toute façon garder l'acide malique, qui tient tête au sucre. C'est ce qui rend un sauternes frais malgré ses 130 g/L : de l'acidité, et pas de rondeur lactée par-dessus. Le simulateur ci-contre la laisse à zéro ; poussez-le pour voir ce qu'on perdrait.",
     },
     reperes: [
       "1 g de malique donne <b>0,67 g de lactique</b> : l'acidité totale baisse de 1 à 3 g/L et le pH monte de 0,1 à 0,3.",
@@ -447,11 +553,14 @@ const STADES = [
     id: 'elevage',
     chapitre: 'cuvee',
     titre: 'Élevage',
-    duree: { rouge: '6 à 24 mois', blanc: '3 à 18 mois', rose: '2 à 6 mois' },
+    duree: { rouge: '6 à 24 mois', blanc: '3 à 18 mois', rose: '2 à 6 mois', orange: '6 à 18 mois', doux: '12 à 36 mois', mute: '2 ans à des décennies' },
     intro: {
       rouge: "Le vin nouveau est brut, gazeux, anguleux. L'élevage, c'est le temps qu'on lui laisse pour se faire, et le contenant dans lequel on le laisse. En <b>barrique</b> de chêne (225 L à Bordeaux, 228 en Bourgogne), le bois cède ses arômes (vanille, épices, toasté) et laisse passer un filet d'oxygène qui assouplit les tanins et fixe la couleur. En <b>cuve inox</b>, rien n'entre et rien ne sort : le fruit reste intact. Entre les deux, le béton, les foudres, les amphores. On <b>soutire</b> régulièrement pour séparer le vin de ses lies, et on <b>ouille</b> : on complète ce que les anges ont bu.",
       blanc: "Le vin nouveau est brut, gazeux, un peu trouble. L'élevage, c'est le temps qu'on lui laisse pour se faire, et le contenant dans lequel on le laisse. Beaucoup de blancs restent en <b>cuve inox</b>, au frais, pour garder le fruit ; les grands chardonnays vont en <b>barrique</b>, où le bois cède ses arômes et un filet d'oxygène. Souvent on les laisse <b>sur lies</b> : les levures mortes, qu'on remet en suspension au bâton (le bâtonnage), donnent du gras et protègent de l'oxydation.",
       rose: "Un rosé s'élève peu : quelques mois en <b>cuve inox</b>, au frais, parfois sur lies fines pour le gras, et on le met en bouteille avant le printemps pour le vendre jeune. Le bois est rare, et discret quand il est là. L'atelier ci-dessous montre pourquoi une longue barrique ne lui irait pas.",
+      orange: "Le vin nouveau, ambré et tannique, s'élève souvent là où il a macéré : <b>amphore</b> ou qvevri, foudre, vieilles barriques — rarement du bois neuf, dont la vanille jurerait avec les notes de thé et d'écorce. L'oxygène y entre doucement, les tanins se fondent, la couleur se fixe dans le cuivre. Peu de soutirages, peu ou pas de soufre : les tanins protègent. On accepte, et l'on cherche parfois, une touche d'oxydation qui rapproche certains oranges des vins de voile.",
+      doux: "Le liquoreux nouveau est riche, trouble et fragile : le sucre et le botrytis nourrissent tout ce qui pourrait le gâter. On l'élève en <b>barrique</b>, souvent neuve pour un tiers, pendant 18 à 36 mois : le bois cède ses arômes, l'oxygène affine, et le temps fait le reste. On <b>soutire</b> et l'on <b>sulfite</b> avec soin à chaque manipulation, et l'on vérifie qu'aucune levure ne repart. Un vin de glace, lui, s'élève en cuve, au frais, pour garder son fruit tranchant.",
+      mute: "Deux voies, qui font deux vins. <b>Réductrice</b> : le vin passe deux ou trois ans en grands foudres puis en bouteille, à l'abri de l'air, et garde son fruit noir et sa couleur — le porto <i>ruby</i>, le <i>vintage</i>, le banyuls <i>rimage</i>. <b>Oxydative</b> : le vin vieillit des années en petits fûts, en demi-muids, voire dehors en bonbonnes de verre au soleil ; il perd sa couleur, prend l'ambre puis l'acajou, et des arômes de noix, de caramel, de figue sèche : le <b>rancio</b>. Le porto <i>tawny</i>, le banyuls traditionnel, le rivesaltes ambré. L'alcool et le sucre permettent ce que rien d'autre ne permettrait : trente ans de fût sans se perdre.",
     },
     reperes: [
       "<b>Part des anges</b> : 2 à 5 % du volume s'évapore chaque année à travers le bois. On ouille toutes les semaines.",
@@ -472,6 +581,9 @@ const STADES = [
       rouge: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par date de vendange, puis des barriques neuves et d'autres usagées, du vin de goutte et du vin de presse. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final. Ce n'est pas un mélange, c'est un choix appuyé sur des mesures : chaque lot apporte une caractéristique mesurable — degré, acidité totale, indice de tanins, intensité colorante, marque du bois — et le vigneron cherche la combinaison qui approche le mieux le vin qu'il a en tête. À Bordeaux, c'est le mariage du merlot (chair, alcool, rondeur) et du cabernet sauvignon (structure, couleur, garde), corrigé au cabernet franc ; en Bourgogne, un seul cépage, mais on décide quelle barrique entre dans la cuvée et laquelle part dans le second vin.",
       blanc: "Un domaine n'a jamais une seule cuve : il en a une par parcelle, par cépage, par pressée, en inox et en barrique. L'<b>assemblage</b> est le moment où l'on goûte tout et où l'on compose le vin final. Ce n'est pas un mélange, c'est un choix appuyé sur des mesures : chaque lot apporte une caractéristique mesurable — degré, acidité totale, gras, amertume de peau, marque du bois — et le vigneron cherche la combinaison qui approche le mieux le vin qu'il a en tête. La cuve inox pour la tension, la barrique pour le gras, les lies pour le volume, le jus de presse pour la matière ou pas du tout : c'est un exercice de dégustation, avec des éprouvettes, des proportions et une calculatrice.",
       rose: "Même pour un rosé, on assemble, et c'est même là que la couleur se décide. La cuvée de saignée, sombre et structurée, corrige la cuvée de pressurage direct, pâle et fruitée ; le grenache donne le gras, le cinsault la fraîcheur, une pointe de syrah la couleur. L'<b>assemblage</b> vise une teinte précise — souvent mesurée au spectrophotomètre, tant la couleur fait vendre — et un équilibre entre le fruit et l'acidité. Il se fait à la dégustation, avec des éprouvettes et des proportions.",
+      orange: "Un domaine qui fait de l'orange a rarement une seule cuve : une amphore de six mois, une cuve de dix jours de peaux, une vendange entière, une presse. L'<b>assemblage</b> règle ce que la macération a donné : trop de tanins d'un côté, trop peu de couleur de l'autre, un lot oxydatif qui apporte la noix et le sel, un lot frais qui garde le fruit. Il se fait à la dégustation, comme ailleurs, et sert aussi à décider ce qui restera « orange » et ce qui, trop léger, sera vendu comme un blanc.",
+      doux: "Un liquoreux est un assemblage de <b>tries</b> : la première, peu rôtie, apporte l'acidité et le fruit ; les suivantes, de plus en plus botrytisées, le sucre, le miel et le safran ; la dernière, presque du sirop, ne se boit pas seule. Chaque trie a fermenté à part, souvent en barrique, et s'est arrêtée à son propre couple sucre/alcool. L'<b>assemblage</b> vise l'équilibre entre le sucre et l'acidité — la <i>liqueur</i> et la <i>fraîcheur</i> — et décide ce qui devient le grand vin et ce qui devient le second, plus léger et vendu plus tôt.",
+      mute: "Le porto est l'archétype du vin d'assemblage. Un <i>vintage</i> assemble les meilleurs lots d'une seule année ; un <i>tawny</i> « 10 ans » assemble des fûts d'âges divers dont le caractère <i>évoque</i> dix ans ; un <i>colheita</i> est le millésime d'un seul fût. Les maisons gardent des lots de vingt, quarante ans pour donner du rancio à des cuvées jeunes. L'<b>assemblage</b> joue donc sur trois axes : le cépage et la parcelle, le moment du mutage (donc le sucre), et l'<b>âge</b> — la part de fûts anciens décide de la couleur, du fruit et de la noix.",
     },
     reperes: [
       "<b>Pourquoi assembler</b> : la complémentarité (ce qui manque à l'un, l'autre l'a), la régularité (offrir le même vin chaque année malgré les millésimes), la correction (remonter une acidité, diluer un excès de bois) et la sélection (ce qui n'entre pas dans la cuvée fait le second vin).",
@@ -523,6 +635,9 @@ const STADES = [
       rouge: "Le vin n'est pas mort en bouteille : il continue d'évoluer, lentement, à l'abri de l'air. Les tanins s'assemblent en longues chaînes et deviennent soyeux, la couleur passe du violet au rubis puis au grenat et à l'orangé, un dépôt se forme. Les arômes changent de registre : le fruit frais (<b>arômes primaires</b>) et les notes d'élevage (<b>secondaires</b>) laissent la place aux <b>tertiaires</b> : sous-bois, cuir, tabac, truffe. Tout dépend du vin de départ : la plupart des rouges sont faits pour cinq ans, quelques-uns pour cinquante.",
       blanc: "Le vin n'est pas mort en bouteille : il continue d'évoluer, lentement, à l'abri de l'air. La couleur, presque incolore au départ, tourne à l'or puis à l'ambre. Les arômes changent de registre : les fleurs et les agrumes (<b>arômes primaires</b>) laissent la place aux notes de miel, de noix, de cire, de pétrole pour un riesling (<b>tertiaires</b>). L'acidité et le sucre sont les garants de la garde : la plupart des blancs secs se boivent dans les trois ans, les grands rieslings, chenins et chardonnays dans les vingt.",
       rose: "Un rosé est le plus souvent un vin de l'année : sa couleur pâlit et vire à l'orangé, ses arômes de petits fruits s'éteignent en deux ou trois ans, et l'on n'y gagne rien à attendre. Le plus souvent, pas toujours : un rosé structuré, issu d'une saignée ou d'un cépage tannique comme le mourvèdre à Bandol, peut évoluer quelques années vers des notes d'abricot sec et d'orangette. Pour les autres, on garde au frais et à l'ombre, on ouvre l'été qui suit, et on recommence l'année d'après.",
+      orange: "Un blanc macéré vieillit comme un rouge léger : ses tanins se fondent, sa couleur passe du vieil or au cuivre puis au brun ambré, et ses arômes de thé et d'écorce d'orange tournent aux fruits secs, à la noix, au curry. L'oxydation, entamée en amphore, continue lentement. Les bons oranges tiennent cinq à dix ans ; ils déposent, et se servent moins froids qu'un blanc, comme un rouge léger.",
+      doux: "Le sucre, l'acidité et le soufre font des liquoreux les vins les plus <b>durables</b> qui soient : un sauternes ou un tokaji traversent cinquante ans, un vin de glace vingt. La robe passe de l'or au vieil or, à l'ambre puis à l'acajou ; le miel et l'abricot tournent à l'orange confite, à la crème brûlée, au safran, à la truffe blanche. Le sucre semble reculer avec l'âge — il ne bouge pas, c'est le fruit qui s'efface et laisse la place à l'acidité. On ouvre un liquoreux jeune pour le fruit, ou vieux pour la complexité ; entre les deux, il se ferme parfois.",
+      mute: "Deux destins. Un <i>ruby</i> ou un <i>vintage</i> mis en bouteille jeune continue d'évoluer à l'abri de l'air : les tanins se fondent, le fruit noir devient sous-bois et cacao, la couleur tuile, un dépôt épais se forme — on décante. Un grand vintage demande vingt ans et en vit soixante. Un <i>tawny</i> ou un banyuls oxydatif, lui, a fait tout son vieillissement en fût : la bouteille ne change plus rien, elle conserve, et l'on peut la garder ouverte des semaines. À 20 % vol., un vin muté est le plus <b>indestructible</b> des vins.",
     },
     reperes: [
       "<b>Conditions</b> : 12 à 14 °C constants, obscurité, couchée si liège, un peu d'humidité. Les chocs de température vieillissent plus vite que les années.",
@@ -565,7 +680,7 @@ function rendre() {
   document.documentElement.dataset.style = ETAT.style;
   $('#etiquetteStyle').textContent = NOMS[ETAT.style];
   $('#titreStyle').textContent = TITRES[ETAT.style];
-  $('#resumeDuree').textContent = ETAT.style === 'rouge' ? '4 à 6 ans' : ETAT.style === 'blanc' ? '4 à 5 ans' : '3 ans et demi';
+  $('#resumeDuree').textContent = ST().duree;
   $$('#choixStyle button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.style === ETAT.style)));
 
   const listeChapitres = $('#chapitres');
@@ -1551,7 +1666,7 @@ ATELIERS.cycle = (boite) => {
           const lx = x0 + dx + courbe * tt * 0.9 + (k % 2 ? 9 : -9);
           const ly = yBras + (haut - yBras) * tt;
           const r = 7 + feuillage * 4;
-          const vert = automne > 0 ? (ETAT.style === 'rouge' ? `rgba(${Math.round(lerp(90, 190, automne))},${Math.round(lerp(150, 70, automne))},40,.95)` : `rgba(${Math.round(lerp(90, 210, automne))},${Math.round(lerp(150, 170, automne))},40,.95)`) : 'rgba(95,155,55,.95)';
+          const vert = automne > 0 ? (ST().noir ? `rgba(${Math.round(lerp(90, 190, automne))},${Math.round(lerp(150, 70, automne))},40,.95)` : `rgba(${Math.round(lerp(90, 210, automne))},${Math.round(lerp(150, 170, automne))},40,.95)`) : 'rgba(95,155,55,.95)';
           ctx.fillStyle = vert;
           ctx.beginPath(); ctx.ellipse(lx, ly, r, r * 0.75, (k % 2 ? 0.5 : -0.5), 0, Math.PI * 2); ctx.fill();
         }
@@ -1561,7 +1676,7 @@ ATELIERS.cycle = (boite) => {
         const gy = yBras - 8;
         const taille = j < flo ? 0.35 : clamp(0.45 + (j - flo) / (ver - flo) * 0.55, 0.45, 1.05);
         const mur = j > ver ? clamp((j - ver) / (ven - ver), 0, 1) : 0;
-        const couleur = ETAT.style === 'blanc'
+        const couleur = !ST().noir
           ? `rgb(${Math.round(lerp(140, 205, mur))},${Math.round(lerp(190, 185, mur))},${Math.round(lerp(80, 90, mur))})`
           : `rgb(${Math.round(lerp(140, 70, mur))},${Math.round(lerp(190, 30, mur))},${Math.round(lerp(80, 80, mur))})`;
         ctx.fillStyle = j < flo ? 'rgba(200,220,150,.9)' : couleur;
@@ -1658,7 +1773,7 @@ function equilibreBaie({ eau, temp, ampl, charge, soleil }) {
 }
 
 ATELIERS.equilibre = (boite) => {
-  const rouge = ETAT.style !== 'blanc';
+  const rouge = ST().noir;
   atelierEntete(boite, 'Atelier', 'Les boutons de l’eau et de la chaleur');
   const canvas = h('canvas', { 'aria-label': 'Une grappe et une baie en coupe : taille, épaisseur de peau et couleur selon les réglages' });
   boite.append(canvas);
@@ -1683,7 +1798,7 @@ ATELIERS.equilibre = (boite) => {
   boite.append(mesures);
   const jauges = h('div', { class: 'jauges' });
   const jTan = jauge(jauges, rouge ? 'Tanins de peau et de pépins' : 'Structure, amers de peau', 'or');
-  const jCoul = jauge(jauges, ETAT.style === 'blanc' ? 'Matière colorante et gras' : 'Couleur (anthocyanes)', 'rougeb');
+  const jCoul = jauge(jauges, !ST().noir ? 'Matière colorante et gras' : 'Couleur (anthocyanes)', 'rougeb');
   const jArom = jauge(jauges, 'Arômes fins et fraîcheur', 'vert');
   const jAcid = jauge(jauges, 'Acidité perçue', 'bleu');
   boite.append(jauges);
@@ -1694,7 +1809,7 @@ ATELIERS.equilibre = (boite) => {
 
   function couleurBaie(r) {
     const c = r.couleur / 100;
-    if (ETAT.style === 'blanc') return `rgb(${Math.round(lerp(205, 232, c))},${Math.round(lerp(200, 210, c))},${Math.round(lerp(120, 90, c))})`;
+    if (!ST().noir) return `rgb(${Math.round(lerp(205, 232, c))},${Math.round(lerp(200, 210, c))},${Math.round(lerp(120, 90, c))})`;
     if (ETAT.style === 'rose') return `rgb(${Math.round(lerp(190, 150, c))},${Math.round(lerp(90, 40, c))},${Math.round(lerp(110, 80, c))})`;
     return `rgb(${Math.round(lerp(96, 44, c))},${Math.round(lerp(40, 12, c))},${Math.round(lerp(70, 44, c))})`;
   }
@@ -1729,7 +1844,7 @@ ATELIERS.equilibre = (boite) => {
     ctx.fillStyle = teinte; ctx.fill();
     const ep = clamp(6 + 16 * (r.peau - 0.85), 4, 22);
     ctx.beginPath(); ctx.arc(cx, cy, R - ep, 0, Math.PI * 2);
-    ctx.fillStyle = ETAT.style === 'blanc' ? '#d9d0a8' : '#e8dcc6'; ctx.globalAlpha = .9; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = !ST().noir ? '#d9d0a8' : '#e8dcc6'; ctx.globalAlpha = .9; ctx.fill(); ctx.globalAlpha = 1;
     const brun = clamp((r.tanins - 20) / 70, 0, 1);
     for (const [dx, dy] of [[-13, -6], [12, -8], [-2, 12]]) {
       ctx.save(); ctx.translate(cx + dx, cy + dy); ctx.rotate(dx * 0.06);
@@ -1801,7 +1916,7 @@ ATELIERS.maturite = (boite) => {
   boite.append(canvas);
   const reglages = h('div', { class: 'reglages' });
   boite.append(reglages);
-  const jours = curseur(reglages, { id: 'mJours', label: 'Jours après la véraison', min: 0, max: 70, valeur: ETAT.style === 'rouge' ? 48 : 38, affiche: (v) => `J+${v}` });
+  const jours = curseur(reglages, { id: 'mJours', label: 'Jours après la véraison', min: 0, max: 70, valeur: ({ rouge: 48, orange: 42, mute: 52, doux: 70 })[ETAT.style] ?? 38, affiche: (v) => `J+${v}` });
   const climat = selection(reglages, { id: 'mClimat', label: 'Climat du millésime', valeur: '1', options: [['0.8', 'Frais et pluvieux'], ['1', 'Tempéré'], ['1.25', 'Chaud et sec']] });
   const mesures = h('dl', { class: 'mesures' });
   const dSucre = h('dd', { 'data-testid': 'sucre' }), dAcide = h('dd'), dPh = h('dd'), dAlc = h('dd', { class: 'grand', 'data-testid': 'alcool-potentiel' });
@@ -1851,10 +1966,10 @@ ATELIERS.maturite = (boite) => {
     const d = j * c;
     let l, cls = '';
     if (d < 18) { l = "<b>Trop tôt.</b> Baies vertes, dures, acides ; le sucre donnerait à peine 6 ou 7 % d'alcool. On ne vendange à ce stade que pour une base d'effervescent, qui cherche justement l'acidité, ou en vendange verte pour alléger la charge."; cls = 'alerte'; }
-    else if (d < 32) { l = ETAT.style === 'rouge' ? "<b>Maturité précoce.</b> Assez de sucre pour un rouge léger, mais les tanins sont encore verts et les pépins pas bruns : le vin serait âpre, herbacé. Il faut attendre la maturité phénolique." : "<b>Fraîcheur et tension.</b> Acidité vive, sucre modéré, arômes d'agrumes et de fleurs blanches : c'est le stade des blancs vifs et des rosés nerveux, souvent vendangé de nuit."; cls = ETAT.style === 'rouge' ? 'alerte' : 'bon'; }
-    else if (d < 50) { l = ETAT.style === 'rouge' ? "<b>La bonne fenêtre.</b> Sucre et acidité s'équilibrent, les pépins sont bruns, la peau lâche sa couleur au frottement. Un rouge équilibré, entre 12,5 et 14 %. C'est le stade où l'on vendange la plupart des grands rouges." : "<b>Maturité pleine.</b> Le fruit devient mûr, l'acidité reste suffisante, l'alcool sera entre 12,5 et 13,5 %. Le stade des blancs amples et ronds, chardonnays et chenins secs."; cls = 'bon'; }
-    else if (d < 62) { l = "<b>Vendange tardive.</b> Beaucoup de sucre, donc d'alcool (14 à 15 %), une acidité qui manque, des arômes de fruit confit. Les vins sont riches, chaleureux, parfois lourds. C'est la maturité des rouges de climat chaud et des blancs moelleux."; }
-    else { l = "<b>Surmaturité.</b> Les baies se flétrissent, le sucre dépasse ce que les levures peuvent transformer : le vin gardera du sucre résiduel. Domaine des vendanges tardives, du passerillage, et de la pourriture noble si le brouillard s'en mêle. Pour un vin sec, c'est trop tard."; cls = 'alerte'; }
+    else if (d < 32) { l = ST().peaux ? "<b>Maturité précoce.</b> Assez de sucre pour un vin léger, mais les tanins sont encore verts et les pépins pas bruns : le vin, qui macérera avec ses peaux, serait âpre, herbacé. Il faut attendre la maturité phénolique." : "<b>Fraîcheur et tension.</b> Acidité vive, sucre modéré, arômes d'agrumes et de fleurs blanches : c'est le stade des blancs vifs et des rosés nerveux, souvent vendangé de nuit."; cls = ST().peaux || ST().sucre ? 'alerte' : 'bon'; }
+    else if (d < 50) { l = ST().peaux ? "<b>La bonne fenêtre.</b> Sucre et acidité s'équilibrent, les pépins sont bruns, la peau lâche sa couleur au frottement. Un vin équilibré, entre 12,5 et 14 % potentiels. C'est le stade où l'on vendange la plupart des grands rouges — et, pour un vin muté, le raisin qu'on foulera demain." : "<b>Maturité pleine.</b> Le fruit devient mûr, l'acidité reste suffisante, l'alcool sera entre 12,5 et 13,5 %. Le stade des blancs amples et ronds, chardonnays et chenins secs."; cls = ETAT.style === 'doux' ? '' : 'bon'; if (ETAT.style === 'doux') l += " Pour un vin doux, c'est le point de départ : l'étape « Concentrer le sucre » fera le reste."; }
+    else if (d < 62) { l = "<b>Vendange tardive.</b> Beaucoup de sucre, donc d'alcool (14 à 15 %), une acidité qui manque, des arômes de fruit confit. Les vins sont riches, chaleureux, parfois lourds. C'est la maturité des rouges de climat chaud et des blancs moelleux."; if (ETAT.style === 'mute') { l += " C'est aussi celle qu'exige un vin doux naturel : au moins 14,5 % potentiels dans le moût, dont on n'en fermentera que le tiers avant de muter."; cls = 'bon'; } }
+    else { l = "<b>Surmaturité.</b> Les baies se flétrissent, le sucre dépasse ce que les levures peuvent transformer : le vin gardera du sucre résiduel. Domaine des vendanges tardives, du passerillage, et de la pourriture noble si le brouillard s'en mêle."; if (ETAT.style === 'doux') { l += " C'est ici que commence un vin doux, et l'étape « Concentrer le sucre » va plus loin encore."; cls = 'bon'; } else if (ETAT.style === 'mute') { l += " Pour un vin muté, c'est possible mais rarement souhaité : on y perd la fraîcheur, et le mutage n'a pas besoin de tant de sucre."; } else { l += " Pour un vin sec, c'est trop tard."; cls = 'alerte'; } }
     lecture.innerHTML = l;
     lecture.className = `lecture ${cls}`;
     dessiner();
@@ -1870,6 +1985,110 @@ ATELIERS.maturite = (boite) => {
   });
   maj();
   return { maj, reglerClimat: (v) => { climat.value = v; maj(); } };
+};
+
+/* ---------- Concentrer le sucre : botrytis, passerillage, gel ---------- */
+
+/* Modèle jouet : chaque méthode retire de l'eau à la baie, donc concentre le
+   sucre et l'acidité ; le botrytis en consomme une part et ajoute du glycérol ;
+   le rendement chute d'autant. Le moût obtenu alimente le simulateur. */
+function concentrer({ methode, rotie, eau, gel, automne, sucre0, acidite0 }) {
+  const base = { sucre: sucre0, acidite: acidite0, rendement: 45, glycerol: 5, grise: 0, aromes: [] };
+  if (methode === 'botrytis') {
+    const p = rotie / 100 * (automne === 'sec' ? 0.3 : 1);
+    const grise = automne === 'humide' ? rotie / 100 * 0.5 : 0;
+    return {
+      ...base, p, grise,
+      sucre: sucre0 * ((1 - p) + 1.75 * p) * (1 - 0.15 * grise),
+      acidite: acidite0 * ((1 - p) + 1.2 * p) + 1.2 * grise,
+      rendement: 45 * ((1 - p) + 0.33 * p) * (1 - 0.6 * grise),
+      glycerol: 5 + 15 * p,
+      aromes: p > 0.35 ? ['miel', 'abricot rôti', 'safran', 'cire'] : p > 0.1 ? ['fruit mûr', 'une pointe de miel'] : ['fruit frais'],
+    };
+  }
+  if (methode === 'passerillage') {
+    const w = eau / 100;
+    return {
+      ...base, p: w,
+      sucre: sucre0 / (1 - w), acidite: acidite0 / (1 - w) * 0.9, rendement: 45 * (1 - w) * 0.9,
+      glycerol: 5 + 3 * w,
+      aromes: w > 0.3 ? ['figue', 'fruits secs', 'coing', 'écorce d’orange'] : w > 0.1 ? ['fruit mûr', 'pêche'] : ['fruit frais'],
+    };
+  }
+  const f = clamp((-gel - 5) / 12, 0, 0.55);   // part de l'eau restée en glace dans le pressoir
+  return {
+    ...base, p: f,
+    sucre: sucre0 / (1 - f), acidite: acidite0 / (1 - f), rendement: 45 * (1 - f) * 0.35,
+    glycerol: 5,
+    aromes: f > 0.3 ? ['abricot', 'litchi', 'miel d’acacia', 'une acidité tranchante'] : ['fruit frais', 'agrumes'],
+  };
+}
+
+ATELIERS.concentration = (boite) => {
+  atelierEntete(boite, 'Atelier', 'Faire un sirop d’un jus de raisin');
+  const reglages = h('div', { class: 'reglages' });
+  boite.append(reglages);
+  const methode = selection(reglages, { id: 'cMethode', label: 'Méthode', valeur: 'botrytis', options: [['botrytis', 'Pourriture noble (botrytis)'], ['passerillage', 'Passerillage, sur souche ou sur claies'], ['gel', 'Gel sur pied : vin de glace']] });
+  const automne = selection(reglages, { id: 'cAutomne', label: 'L’automne', valeur: 'brumes', options: [['brumes', 'Brumes le matin, soleil l’après-midi'], ['humide', 'Humide et couvert'], ['sec', 'Sec et ensoleillé']] });
+  const rotie = curseur(reglages, { id: 'cRotie', label: 'Part des baies rôties', min: 0, max: 100, step: 5, valeur: 70, affiche: (v) => `${v} %` });
+  const eau = curseur(reglages, { id: 'cEau', label: 'Eau perdue par la baie', min: 0, max: 55, step: 5, valeur: 35, affiche: (v) => `${v} %` });
+  const gel = curseur(reglages, { id: 'cGel', label: 'Température à la récolte', min: -14, max: -3, valeur: -9, affiche: (v) => `${fmt(v)} °C` });
+  const mesures = h('dl', { class: 'mesures' });
+  const dSucre = h('dd', { class: 'grand', 'data-testid': 'sucre-concentre' }), dPot = h('dd'), dAcide = h('dd'), dRend = h('dd', { 'data-testid': 'rendement-concentre' }), dGly = h('dd'), dNez = h('dd', { style: 'text-align:left;grid-column:1 / -1;font-family:var(--ui)' });
+  mesures.append(
+    h('dt', {}, 'Sucre du moût'), dSucre,
+    h('dt', {}, 'Alcool si tout fermentait'), dPot,
+    h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcide,
+    h('dt', {}, 'Rendement'), dRend,
+    h('dt', {}, 'Glycérol attendu dans le vin'), dGly,
+    h('dt', { style: 'grid-column:1 / -1' }, 'Au nez'), dNez);
+  boite.append(mesures);
+  const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-concentration' });
+  boite.append(lecture);
+  const btn = h('button', { class: 'bouton principal', type: 'button', id: 'cEncuver' }, 'Encuver ce moût →');
+  boite.append(h('div', { class: 'boutons' }, btn));
+  limite(boite, "Les facteurs de concentration sont des ordres de grandeur : le botrytis consomme 15 à 20 % du sucre qu'il concentre, une baie rôtie a perdu plus de la moitié de son eau, et le pressoir d'un vin de glace ne rend que le jus non gelé. Rien ici ne dit si le champignon viendra : il faut le brouillard du matin et le soleil de l'après-midi, et l'un sans l'autre fait de la pourriture grise.");
+
+  let resultat = null;
+  function maj() {
+    const m = methode.value;
+    rotie.closest('.reglage').hidden = m !== 'botrytis';
+    automne.closest('.reglage').hidden = m !== 'botrytis';
+    eau.closest('.reglage').hidden = m !== 'passerillage';
+    gel.closest('.reglage').hidden = m !== 'gel';
+    const d = ETAT.decisions;
+    const r = concentrer({ methode: m, rotie: +rotie.value, eau: +eau.value, gel: +gel.value, automne: automne.value, sucre0: d.maturite?.sucre ?? ETAT.sucre, acidite0: d.maturite?.acidite ?? 5.5 });
+    resultat = r;
+    const pot = r.sucre / 16.83;
+    dSucre.textContent = `${fmt(Math.round(r.sucre / 5) * 5)} g/L`;
+    dPot.textContent = `${fmt(pot, 1)} % vol.${pot > 16 ? ' — impossible : il restera du sucre' : ''}`;
+    dPot.className = pot > 16 ? 'bon' : '';
+    dAcide.textContent = `≈ ${fmt(r.acidite, 1)} g/L`;
+    dRend.textContent = `${fmt(r.rendement)} hL/ha · ${fmt(r.rendement * 100 / 0.75)} bouteilles`;
+    dGly.textContent = `${fmt(r.glycerol)} g/L`;
+    dNez.textContent = r.aromes.join(', ');
+    let l, cls = '';
+    if (m === 'botrytis' && r.grise > 0.2) { l = `<b>Pourriture grise, pas noble.</b> Sans soleil l'après-midi, le champignon ne rôtit pas la baie : il la fait pourrir. Le moût sent le moisi, l'acidité volatile monte, et la laccase du botrytis oxyde tout ce qu'elle touche. On trie sévèrement, on perd une part de la récolte, et l'on fait un vin plus simple.`; cls = 'alerte'; }
+    else if (m === 'botrytis' && automne.value === 'sec') { l = `<b>Pas de botrytis sans brouillard.</b> Par temps sec, le champignon ne s'installe pas : les baies passerillent un peu au soleil, le sucre monte doucement, mais le miel et le safran ne viendront pas. C'est un moelleux honnête, pas un liquoreux de pourriture noble. Il faudra attendre les brumes, au risque des pluies.`; }
+    else if (r.sucre < 260) { l = `<b>Pas assez concentré.</b> ${fmt(Math.round(r.sucre / 5) * 5)} g/L, c'est un moût de blanc mûr, pas un moût de vin doux : les levures le finiraient sec, ou presque. Il faut d'autres tries, plus de baies rôties, ou un froid plus vif.`; cls = 'alerte'; }
+    else if (m === 'gel' && +gel.value > -8) { l = `<b>Pas assez froid.</b> À ${fmt(+gel.value)} °C, trop peu d'eau reste en glace : le moût ne dépasse pas les 35 °Brix qu'exige un vin de glace, et la loi ne le reconnaîtra pas comme tel. On attend une nuit plus froide — parfois jusqu'en janvier, en veillant les prévisions.`; cls = 'alerte'; }
+    else if (m === 'gel' && +gel.value < -12) { l = `<b>Presque tout en glace.</b> À ${fmt(+gel.value)} °C, le pressoir peine et ne rend que quelques litres d'un sirop à ${fmt(Math.round(r.sucre / 5) * 5)} g/L, si concentré que la fermentation traînera des mois. ${fmt(r.rendement)} hL/ha : de quoi remplir quelques centaines de demi-bouteilles.`; }
+    else if (r.sucre > 380) { l = `<b>Très concentré.</b> ${fmt(Math.round(r.sucre / 5) * 5)} g/L : les levures n'en transformeront que le tiers avant de s'arrêter, et le vin gardera plus de 150 g/L. C'est le registre des grandes années de Sauternes, des <i>Trockenbeerenauslese</i> et des vins de glace : un sirop équilibré par son acidité, ${fmt(r.acidite, 1)} g/L ici. Le rendement est celui d'un jardin : ${fmt(r.rendement)} hL/ha.`; cls = 'bon'; }
+    else { l = `<b>Un moût de liquoreux.</b> ${fmt(Math.round(r.sucre / 5) * 5)} g/L de sucre, soit ${fmt(pot, 1)} % d'alcool si tout fermentait — ce qui n'arrivera pas : les levures s'arrêteront vers 13 ou 14 %, en laissant une centaine de grammes de sucre. L'acidité, ${fmt(r.acidite, 1)} g/L, tiendra tête au sucre. Il a coûté ${fmt(100 - r.rendement / 45 * 100)} % de la récolte.`; cls = 'bon'; }
+    lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
+    const nomM = m === 'botrytis' ? `pourriture noble (${rotie.value} % de baies rôties)` : m === 'passerillage' ? `passerillage (${eau.value} % d'eau perdue)` : `gel à ${fmt(+gel.value)} °C`;
+    noter('concentration', { texte: `Concentration par ${nomM} : moût à ≈ ${fmt(Math.round(r.sucre / 5) * 5)} g/L, ${fmt(r.rendement)} hL/ha`, sucre: r.sucre, acidite: r.acidite, methode: m });
+  }
+  [methode, automne].forEach((el) => el.addEventListener('change', maj));
+  [rotie, eau, gel].forEach((el) => el.addEventListener('input', maj));
+  btn.addEventListener('click', () => {
+    if (!resultat) return;
+    ETAT.sucre = Math.round(resultat.sucre);
+    const f = API.ateliers.fermentation;
+    if (f) { f.reglerSucre(Math.min(ETAT.sucre, 450)); document.getElementById('s-fermentation')?.scrollIntoView({ behavior: 'smooth' }); }
+  });
+  maj();
+  return { maj, resultat: () => resultat };
 };
 
 /* ---------- Vendanges : rendement ---------- */
@@ -1912,7 +2131,13 @@ ATELIERS.rendement = (boite) => {
 
 /* ---------- Fermentation alcoolique : le simulateur ---------- */
 
-const DEFAUTS_FERM = { rouge: { consigne: 27, depart: 20 }, blanc: { consigne: 15, depart: 12 }, rose: { consigne: 16, depart: 13 } };
+const DEFAUTS_FERM = {
+  rouge: { consigne: 27, depart: 20 }, blanc: { consigne: 15, depart: 12 }, rose: { consigne: 16, depart: 13 },
+  orange: { consigne: 23, depart: 17 }, doux: { consigne: 18, depart: 14, sucre: 340 }, mute: { consigne: 29, depart: 24, sucre: 250 },
+};
+const TITRES_FERM = { rouge: 'Une cuve de rouge, heure par heure', orange: 'Une amphore de blanc macéré, heure par heure', mute: 'Un lagar : trois jours, puis l’eau-de-vie', doux: 'Un moût très sucré, semaine après semaine', _: 'Une cuve au frais, heure par heure' };
+/* Eaux-de-vie de mutage : degré, et degré visé pour le vin fini. */
+const MUTAGES = { porto: { nom: 'Aguardente à 77 % → porto à 19,5 %', degre: 77, cible: 19.5 }, vdn: { nom: 'Alcool neutre à 96 % → vin doux naturel à 16,5 %', degre: 96, cible: 16.5 } };
 const LEVURES = { indigenes: { emax: 14.5, x0: 0.004, mu: 0.12 }, selectionnees: { emax: 16, x0: 0.02, mu: 0.16 } };
 
 /* Taux d'activité des levures selon la température (0..1). */
@@ -1942,22 +2167,45 @@ class Fermentation {
     this.note(type === 'pigeage' ? 'Pigeage : le chapeau est enfoncé dans le jus.' : 'Remontage : le jus est pompé par-dessus le chapeau.');
   }
   note(texte) { this.journal.unshift({ h: this.heure, texte }); if (this.journal.length > 6) this.journal.pop(); }
+  point() { this.serie.push({ h: this.heure, d: this.densite(), T: this.T, E: this.E, A: this.A, Ta: this.Ta }); }
+  /* Mutage : on verse l'eau-de-vie, l'alcool monte d'un coup, le sucre est dilué d'autant, les levures meurent. */
+  muter(type = 'porto') {
+    if (this.fini) return;
+    const m = MUTAGES[type] || MUTAGES.porto;
+    const v = clamp((m.cible - this.E) / (m.degre - m.cible), 0, 0.35);   // fraction du volume ajoutée
+    this.E = (this.E + v * m.degre) / (1 + v);
+    this.S = this.S / (1 + v);
+    this.X = 0; this.morte = true; this.fini = 'mute'; this.mutage = { v, degre: m.degre };
+    this.point();
+    this.note(`Mutage : ${fmt(v * 100)} % du volume en eau-de-vie à ${m.degre} % vol. Les levures meurent ; le vin titre ${fmt(this.E, 1)} % vol. et garde ${fmt(this.S)} g/L de sucre.`);
+  }
+  /* Arrêt d'un liquoreux : froid, soutirage, soufre ; les levures ne repartent pas. */
+  arreter() {
+    if (this.fini) return;
+    this.p.thermo = true; this.p.consigne = 3; this.T = Math.min(this.T, 6);
+    this.X = 0; this.morte = true; this.fini = 'arret';
+    this.point();
+    this.note(`Arrêt : cuve à 3 °C, soutirage, 60 mg/L de SO₂. Il reste ${fmt(this.S)} g/L de sucre pour ${fmt(this.E, 1)} % vol.`);
+  }
   pas() {
     if (this.fini) return;
     const p = this.p, L = LEVURES[p.levures];
     const dt = 1;
-    // travail du chapeau programmé (rouge)
-    if (p.rouge) {
+    // stress osmotique : un moût très sucré ralentit les levures et abaisse leur plafond d'alcool
+    const osm = clamp((p.sucre - 260) / 160, 0, 1);
+    const emax = L.emax - 2.5 * osm;
+    // travail du chapeau programmé (macération)
+    if (p.peaux) {
       const hj = this.heure % 24;
       if (p.programme === 'remontage' && hj === 8) this.travailChapeau('remontage');
       if (p.programme === 'pigeage' && (hj === 8 || hj === 20)) this.travailChapeau('pigeage');
     }
     const fT = fTemp(this.T);
-    const inhib = Math.max(0, 1 - (this.E / L.emax) ** 2);
+    const inhib = Math.max(0, 1 - (this.E / emax) ** 2);
     // croissance des levures
     if (!this.morte) {
       // Plus de multiplication au-delà de 35 °C, ni après un coup de chaud : les levures stressées ne repartent pas.
-      const mu = (this.T > 35 || this.stress > 3) ? 0 : L.mu * fT * (this.S / (this.S + 10)) * inhib;
+      const mu = (this.T > 35 || this.stress > 3) ? 0 : L.mu * fT * (this.S / (this.S + 10)) * inhib * (1 - 0.4 * osm);
       this.X = clamp(this.X + mu * this.X * (1 - this.X) * dt, 0, 1);
       if (this.T > 35) {
         this.stress += (this.T - 35) * dt;
@@ -1968,7 +2216,7 @@ class Fermentation {
       if (!this.morte && this.stress > 3 && this.X < 0.12 && this.S > 2) { this.morte = true; this.note('Affaiblies par le coup de chaud, les levures ne repartent plus.'); }
     }
     // consommation du sucre
-    let dS = 2.2 * fT * this.X * (this.S / (this.S + 8)) * inhib * dt;
+    let dS = 2.2 * fT * this.X * (this.S / (this.S + 8)) * inhib * (1 - 0.35 * osm) * dt;
     dS = Math.min(dS, this.S);
     this.S -= dS;
     this.E += dS / 16.83;
@@ -1978,8 +2226,8 @@ class Fermentation {
     if (p.thermo) dT += (p.consigne - this.T) * 0.3 * dt;
     else dT += (20 - this.T) * 0.004 * dt;   // grande cuve dans un chai à 20 °C : pertes faibles
     this.T += dT;
-    // extraction (rouge)
-    if (p.rouge) {
+    // extraction (macération)
+    if (p.peaux) {
       const boost = this.heure < this.boostFin ? this.boostFacteur : 1;
       const ext = (0.25 + 0.035 * clamp(this.T - 12, 0, 25)) * boost;
       const dA = 0.9 * ext * (1 - this.A / 100) * dt - (this.E > 8 ? 0.004 * this.A * dt : 0);
@@ -1993,25 +2241,33 @@ class Fermentation {
     // fin
     if (this.S < 2) { this.fini = 'sec'; this.note('Moins de 2 g/L de sucre : le vin est sec.'); }
     else if (this.morte && this.heure > 24) { this.fini = 'chaleur'; }
-    else if (this.E >= L.emax - 0.05 && this.S > 2) { this.fini = 'alcool'; this.note(`${fmt(this.E, 1)} % vol. : les levures ne supportent plus l'alcool. Il reste ${fmt(this.S)} g/L de sucre.`); }
+    else if (this.E >= emax - 0.05 && this.S > 2) { this.fini = 'alcool'; this.note(`${fmt(this.E, 1)} % vol. : les levures ne supportent plus l'alcool${osm > 0.3 ? ', et le sucre les a épuisées' : ''}. Il reste ${fmt(this.S)} g/L de sucre.`); }
     else if (this.heure > 24 * 45) { this.fini = 'languissante'; this.note('Après 45 jours, la fermentation traîne toujours. On appelle l’œnologue.'); }
     if (this.fini && this.fini !== 'sec' && this.fini !== 'alcool') this.note(this.fini === 'chaleur' ? 'Fermentation arrêtée : la cuve a surchauffé.' : 'Fermentation languissante.');
   }
   etat() {
-    if (this.fini === 'sec') return { texte: `Vin sec en ${fmt(this.heure / 24, 1)} jours : ${fmt(this.E, 1)} % vol.`, cls: 'bon' };
+    const j = fmt(this.heure / 24, 1);
+    if (this.fini === 'sec') return this.p.sucreVoulu
+      ? { texte: `Vin sec en ${j} jours : ${fmt(this.E, 1)} % vol. Tout le sucre est parti — ce n'est plus un vin doux.`, cls: 'alerte' }
+      : { texte: `Vin sec en ${j} jours : ${fmt(this.E, 1)} % vol.`, cls: 'bon' };
     if (this.fini === 'chaleur') return { texte: `Arrêt de fermentation : levures tuées par la chaleur. ${fmt(this.S)} g/L de sucre restent, le vin est perdu ou à relancer.`, cls: 'alerte' };
-    if (this.fini === 'alcool') return { texte: `Arrêt : ${fmt(this.E, 1)} % vol., les levures ne suivent plus. ${fmt(this.S)} g/L de sucre résiduel.`, cls: 'alerte' };
+    if (this.fini === 'alcool') return this.p.sucreVoulu
+      ? { texte: `Arrêt naturel à J${Math.floor(this.heure / 24)} : ${fmt(this.E, 1)} % vol., les levures, épuisées par le sucre et l'alcool, laissent ${fmt(this.S)} g/L. C'est le vin doux voulu.`, cls: this.S > 40 ? 'bon' : '' }
+      : { texte: `Arrêt : ${fmt(this.E, 1)} % vol., les levures ne suivent plus. ${fmt(this.S)} g/L de sucre résiduel.`, cls: 'alerte' };
+    if (this.fini === 'mute') return { texte: `Muté à J${Math.floor(this.heure / 24)} : ${fmt(this.E, 1)} % vol. et ${fmt(this.S)} g/L de sucre${this.S > 130 ? ' — trop tôt : sirupeux et pâle' : this.S < 45 ? ' — trop tard : presque sec, ce n’est plus un vin doux' : ''}.`, cls: this.S >= 45 && this.S <= 130 ? 'bon' : 'alerte' };
+    if (this.fini === 'arret') return { texte: `Arrêtée à J${Math.floor(this.heure / 24)} : ${fmt(this.E, 1)} % vol., ${fmt(this.S)} g/L de sucre résiduel${this.S < 40 ? ' — trop tard pour un liquoreux' : this.E < 6 ? ' — très tôt : un vin léger et très doux, à l’allemande' : ''}.`, cls: this.S >= 40 ? 'bon' : 'alerte' };
     if (this.fini === 'languissante') return { texte: 'Fermentation languissante : trop froid ou levures épuisées.', cls: 'alerte' };
     if (this.heure === 0) return { texte: 'Prêt : cuve remplie, levures ensemencées.', cls: '' };
     if (this.X < 0.25) return { texte: 'Phase de latence : les levures se multiplient, rien ne bouge en apparence.', cls: '' };
-    if (this.S > this.p.sucre * 0.25) return { texte: 'Fermentation tumultueuse : la cuve bout, le gaz siffle, la densité chute.', cls: '' };
+    if (this.p.style === 'mute') return { texte: `Fermentation tumultueuse : ${fmt(this.S)} g/L de sucre restant. Un porto se mute vers 90 à 100 g/L, un vin doux naturel plus tôt encore.`, cls: this.S < 130 && this.S > 80 ? 'bon' : '' };
+    if (this.S > this.p.sucre * 0.25) return { texte: this.p.sucreVoulu ? `Fermentation lente : ${fmt(this.S)} g/L de sucre, ${fmt(this.E, 1)} % vol. On l'arrête quand le couple sucre/alcool convient.` : 'Fermentation tumultueuse : la cuve bout, le gaz siffle, la densité chute.', cls: '' };
     return { texte: 'Fin de fermentation : les derniers grammes de sucre partent lentement.', cls: '' };
   }
 }
 
 ATELIERS.fermentation = (boite) => {
-  const rouge = ETAT.style === 'rouge';
-  atelierEntete(boite, 'Simulateur', rouge ? 'Une cuve de rouge, heure par heure' : 'Une cuve au frais, heure par heure');
+  const peaux = ST().peaux, sucreVoulu = ST().sucre;
+  atelierEntete(boite, 'Simulateur', t(TITRES_FERM));
   const cuve = h('canvas', { 'aria-label': 'Coupe de la cuve de fermentation' });
   const graphe = h('canvas', { 'aria-label': 'Courbes de densité et de température' });
   const gauche = h('div', {}, cuve);
@@ -2021,11 +2277,12 @@ ATELIERS.fermentation = (boite) => {
   const reglages = h('div', { class: 'reglages' });
   gauche.append(reglages);
   const def = DEFAUTS_FERM[ETAT.style];
-  const sucre = curseur(reglages, { id: 'fSucre', label: 'Sucre du moût', min: 150, max: 280, step: 5, valeur: Math.round(ETAT.sucre / 5) * 5, affiche: (v) => `${v} g/L ≈ ${fmt(v / 16.83, 1)} %` });
+  const sucre = curseur(reglages, { id: 'fSucre', label: 'Sucre du moût', min: 150, max: sucreVoulu ? 450 : 300, step: 5, valeur: Math.round(Math.max(ETAT.sucre, def.sucre || 0) / 5) * 5, affiche: (v) => `${v} g/L ≈ ${fmt(v / 16.83, 1)} %` });
   const consigne = curseur(reglages, { id: 'fConsigne', label: 'Consigne de température', min: 8, max: 34, valeur: def.consigne, affiche: (v) => `${v} °C` });
   const levures = selection(reglages, { id: 'fLevures', label: 'Levures (plafond d’alcool du modèle)', valeur: 'selectionnees', options: [['selectionnees', 'Sélectionnées · ici, une souche vigoureuse : 16 %'], ['indigenes', 'Indigènes · ici, une flore moyenne : 14,5 %']] });
-  let programme = null;
-  if (rouge) programme = selection(reglages, { id: 'fProgramme', label: 'Travail du chapeau', valeur: 'remontage', options: [['aucun', 'Aucun'], ['remontage', 'Un remontage par jour'], ['pigeage', 'Deux pigeages par jour']] });
+  let programme = null, mutage = null;
+  if (peaux) programme = selection(reglages, { id: 'fProgramme', label: ETAT.style === 'mute' ? 'Foulage du lagar' : 'Travail du chapeau', valeur: ETAT.style === 'mute' ? 'pigeage' : 'remontage', options: [['aucun', 'Aucun'], ['remontage', 'Un remontage par jour'], ['pigeage', 'Deux pigeages par jour']] });
+  if (ETAT.style === 'mute') mutage = selection(reglages, { id: 'fMutage', label: 'Eau-de-vie de mutage', valeur: 'porto', options: Object.entries(MUTAGES).map(([k, m]) => [k, m.nom]) });
   const thermo = h('input', { type: 'checkbox', id: 'fThermo', checked: '' });
   gauche.append(h('label', { class: 'case' }, thermo, 'Thermorégulation de la cuve (drapeau ou double paroi)'));
   limite(gauche, "Les deux plafonds d'alcool sont des choix du modèle, pas des propriétés des catégories : la tolérance à l'alcool dépend de la souche, de l'azote du moût, de la température et de l'oxygène. Une flore indigène peut finir un moût à 15 %, une souche sélectionnée mal nourrie s'arrêter à 13.");
@@ -2035,10 +2292,14 @@ ATELIERS.fermentation = (boite) => {
   const vitesse = h('select', { id: 'fVitesse', 'aria-label': 'Vitesse' }, [[12, '×1 · 1 jour / 2 s'], [48, '×4'], [240, '×20']].map(([v, l]) => h('option', { value: v }, l)));
   vitesse.value = '48';
   boutons.append(btnLancer, btnReinit, vitesse);
-  if (rouge) {
+  if (peaux) {
     boutons.append(h('button', { class: 'bouton', type: 'button', id: 'fRemontage', title: 'Pomper le jus du bas de la cuve sur le chapeau' }, 'Remontage'),
       h('button', { class: 'bouton', type: 'button', id: 'fPigeage', title: 'Enfoncer le chapeau de marc dans le jus' }, 'Pigeage'));
   }
+  let btnStop = null;
+  if (ETAT.style === 'mute') btnStop = h('button', { class: 'bouton', type: 'button', id: 'fMuter', title: 'Verser l’eau-de-vie : les levures meurent, le sucre reste' }, 'Muter à l’eau-de-vie');
+  if (ETAT.style === 'doux') btnStop = h('button', { class: 'bouton', type: 'button', id: 'fArreter', title: 'Refroidir, soutirer, sulfiter : la fermentation s’arrête' }, 'Arrêter : froid + SO₂');
+  if (btnStop) boutons.append(btnStop);
   gauche.append(boutons);
 
   const etatEl = h('p', { class: 'etat-ferm', 'data-testid': 'etat-fermentation' });
@@ -2048,7 +2309,7 @@ ATELIERS.fermentation = (boite) => {
   mesures.append(h('dt', {}, 'Jour'), dJour, h('dt', {}, 'Densité'), dDens, h('dt', {}, 'Sucre'), dSucre, h('dt', {}, 'Alcool'), dAlc, h('dt', {}, 'Température'), dT, h('dt', {}, 'Levures actives'), dLev, h('dt', {}, 'CO₂ dégagé, pour 1 000 L'), dCO2);
   droite.append(mesures);
   let jCouleur = null, jTanins = null, echantillon = null;
-  if (rouge) {
+  if (peaux) {
     const jauges = h('div', { class: 'jauges' });
     jCouleur = jauge(jauges, 'Couleur extraite');
     jTanins = jauge(jauges, 'Tanins extraits', 'or');
@@ -2061,8 +2322,12 @@ ATELIERS.fermentation = (boite) => {
 
   const lireParam = () => ({
     sucre: +sucre.value, consigne: +consigne.value, depart: def.depart, levures: levures.value,
-    thermo: thermo.checked, rouge, programme: programme ? programme.value : 'aucun',
+    thermo: thermo.checked, peaux, sucreVoulu, style: ETAT.style, programme: programme ? programme.value : 'aucun',
   });
+  /* Couleur du liquide : anthocyanes pour un raisin noir, ambre pour un blanc macéré. */
+  const teinte = (a) => ETAT.style === 'orange'
+    ? `rgb(${Math.round(lerp(215, 200, a))},${Math.round(lerp(200, 120, a))},${Math.round(lerp(140, 40, a))})`
+    : `rgb(${Math.round(lerp(190, 70, a))},${Math.round(lerp(120, 12, a))},${Math.round(lerp(120, 45, a))})`;
   const sim = new Fermentation(lireParam());
   let anim = null, accumule = 0, dernier = 0;
 
@@ -2077,15 +2342,13 @@ ATELIERS.fermentation = (boite) => {
     // liquide
     const frac = 0.86;
     const yl = y + ht * (1 - frac);
-    const couleur = rouge
-      ? `rgb(${Math.round(lerp(190, 70, sim.A / 100))},${Math.round(lerp(120, 12, sim.A / 100))},${Math.round(lerp(120, 45, sim.A / 100))})`
-      : ETAT.style === 'rose' ? '#e9a3b0' : (sim.S > 30 ? '#c9b98a' : '#e9dfa0');
+    const couleur = peaux ? teinte(sim.A / 100) : ETAT.style === 'rose' ? '#e9a3b0' : (sim.S > 30 ? '#c9b98a' : '#e9dfa0');
     ctx.fillStyle = couleur; ctx.fillRect(x, yl, l, y + ht - yl);
     // chapeau de marc
-    if (rouge && sim.heure > 0) {
+    if (peaux && sim.heure > 0) {
       const ep = 28 + 10 * clamp(sim.X, 0, 1);
       const enfonce = sim.heure < sim.boostFin ? 12 : 0;
-      ctx.fillStyle = sim.chapeauSec > 30 && !sim.fini ? '#4a2a22' : '#5a2830';
+      ctx.fillStyle = ETAT.style === 'orange' ? (sim.chapeauSec > 30 && !sim.fini ? '#6a5a30' : '#8a7a3a') : (sim.chapeauSec > 30 && !sim.fini ? '#4a2a22' : '#5a2830');
       ctx.fillRect(x, yl + enfonce, l, ep);
       ctx.fillStyle = 'rgba(0,0,0,.25)';
       for (let k = 0; k < 40; k++) { const bx = x + ((k * 37) % l), by = yl + enfonce + ((k * 17) % ep); ctx.beginPath(); ctx.arc(bx, by, 2.2, 0, Math.PI * 2); ctx.fill(); }
@@ -2106,7 +2369,7 @@ ATELIERS.fermentation = (boite) => {
     ctx.fillText(`${fmt(sim.T, 1)} °C`, x + l / 2, y + ht + 4 + 10);
     if (sim.p.thermo) { ctx.fillStyle = '#86b7d9'; ctx.fillRect(x - 6, y + 30, 4, ht - 60); ctx.fillText('froid', x - 34, y + ht / 2); }
     ctx.fillStyle = '#f3ebe4'; ctx.textAlign = 'right';
-    ctx.fillText(rouge && sim.heure > 0 ? 'chapeau de marc' : (sim.S > 30 ? 'moût' : 'vin'), x + l - 8, yl - 8);
+    ctx.fillText(peaux && sim.heure > 0 ? 'chapeau de marc' : (sim.S > 30 ? 'moût' : 'vin'), x + l - 8, yl - 8);
   }
   function dessinerGraphe() {
     const L = 420, H = 210, m = { g: 44, d: 40, h: 12, b: 26 };
@@ -2114,12 +2377,13 @@ ATELIERS.fermentation = (boite) => {
     ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
     const jours = Math.max(15, Math.ceil(sim.heure / 24 / 5) * 5);
     const X = (hh) => m.g + (hh / 24 / jours) * (L - m.g - m.d);
-    const YD = (d) => H - m.b - ((d - 0.985) / 0.12) * (H - m.h - m.b);
+    const dMax = Math.max(1.105, (sim.serie[0]?.d ?? 1.1) + 0.006);   // un moût de liquoreux dépasse 1,15
+    const YD = (d) => H - m.b - ((d - 0.985) / (dMax - 0.985)) * (H - m.h - m.b);
     const YT = (T) => H - m.b - (T / 42) * (H - m.h - m.b);
     ctx.strokeStyle = '#2f2226';
-    for (const d of [1.0, 1.02, 1.04, 1.06, 1.08, 1.1]) { ctx.beginPath(); ctx.moveTo(m.g, YD(d)); ctx.lineTo(L - m.d, YD(d)); ctx.stroke(); }
+    for (let d = 1.0; d <= dMax; d += 0.02) { ctx.beginPath(); ctx.moveTo(m.g, YD(d)); ctx.lineTo(L - m.d, YD(d)); ctx.stroke(); }
     ctx.font = '500 9.5px JetBrains Mono, monospace'; ctx.textAlign = 'right'; ctx.fillStyle = '#d9b25f';
-    for (const d of [1.0, 1.05, 1.1]) ctx.fillText(d.toFixed(3), m.g - 4, YD(d) + 3);
+    for (let d = 1.0; d <= dMax; d += 0.05) ctx.fillText(d.toFixed(3), m.g - 4, YD(d) + 3);
     ctx.textAlign = 'left'; ctx.fillStyle = '#e0705d';
     for (const T of [10, 20, 30, 40]) ctx.fillText(`${T}°`, L - m.d + 4, YT(T) + 3);
     ctx.fillStyle = '#a89a95'; ctx.textAlign = 'center';
@@ -2135,7 +2399,7 @@ ATELIERS.fermentation = (boite) => {
     ctx.strokeStyle = '#d9b25f'; ctx.beginPath();
     sim.serie.forEach((s, i) => i ? ctx.lineTo(X(s.h), YD(s.d)) : ctx.moveTo(X(s.h), YD(s.d)));
     ctx.stroke();
-    if (rouge) {
+    if (peaux) {
       ctx.strokeStyle = '#d4577a'; ctx.setLineDash([3, 3]); ctx.beginPath();
       sim.serie.forEach((s, i) => { const yy = H - m.b - (s.A / 100) * (H - m.h - m.b); i ? ctx.lineTo(X(s.h), yy) : ctx.moveTo(X(s.h), yy); });
       ctx.stroke(); ctx.setLineDash([]);
@@ -2153,19 +2417,22 @@ ATELIERS.fermentation = (boite) => {
     dT.className = sim.T > 35 ? 'alerte' : '';
     dLev.textContent = sim.morte ? 'mortes' : `${fmt(sim.X * 100)} %`;
     dCO2.textContent = `${fmt(sim.CO2, 1)} m³`;
-    if (rouge) {
+    if (peaux) {
       jCouleur(sim.A); jTanins(sim.Ta);
-      echantillon.style.background = `rgb(${Math.round(lerp(200, 60, sim.A / 100))},${Math.round(lerp(130, 10, sim.A / 100))},${Math.round(lerp(130, 40, sim.A / 100))})`;
-      echantillon.textContent = sim.A < 15 ? 'moût rosé' : sim.A < 45 ? 'rouge clair' : sim.A < 75 ? 'rouge franc' : 'rouge profond';
+      echantillon.style.background = teinte(sim.A / 100);
+      echantillon.textContent = ETAT.style === 'orange'
+        ? (sim.A < 15 ? 'jus doré' : sim.A < 45 ? 'vieil or' : sim.A < 75 ? 'ambre' : 'cuivre')
+        : (sim.A < 15 ? 'moût rosé' : sim.A < 45 ? 'rouge clair' : sim.A < 75 ? 'rouge franc' : 'rouge profond');
       if (sim.chapeauSec > 36 && !sim.fini && sim.p.programme === 'aucun' && !sim.journal.some((n) => n.texte.startsWith('Chapeau'))) sim.note('Chapeau sec depuis plus d’un jour : les bactéries acétiques s’y installent. Remontez !');
     }
     journal.replaceChildren(...sim.journal.map((n) => h('li', {}, h('b', {}, `J${Math.floor(n.h / 24)} `), n.texte)));
     dessinerCuve(); dessinerGraphe();
     btnLancer.textContent = anim ? '⏸ Pause' : sim.fini ? '✓ Terminé' : sim.heure ? '▶ Reprendre' : '▶ Lancer';
     btnLancer.disabled = !!sim.fini;
+    if (btnStop) btnStop.disabled = !!sim.fini || sim.heure === 0;
     if (sim.fini || sim.heure === 0) noter('fermentation', {
       texte: sim.fini ? `Fermentation : ${e.texte}` : `Fermentation : cuve prête (${sim.p.sucre} g/L, consigne ${sim.p.consigne} °C, levures ${sim.p.levures === 'indigenes' ? 'indigènes' : 'sélectionnées'}), pas encore lancée`,
-      fini: sim.fini, alcool: sim.E, sucre: sim.S, tanins: rouge ? sim.Ta : null, couleur: rouge ? sim.A : null,
+      fini: sim.fini, alcool: sim.E, sucre: sim.S, tanins: peaux ? sim.Ta : null, couleur: peaux ? sim.A : null,
     });
   }
   function avancer(heures) { for (let k = 0; k < heures && !sim.fini; k++) sim.pas(); afficher(); }
@@ -2195,13 +2462,16 @@ ATELIERS.fermentation = (boite) => {
   levures.addEventListener('change', () => { if (sim.heure === 0) reinit(); });
   btnLancer.addEventListener('click', lancer);
   btnReinit.addEventListener('click', reinit);
-  if (rouge) {
+  if (peaux) {
     $('#fRemontage', boite).addEventListener('click', () => { sim.travailChapeau('remontage'); afficher(); });
     $('#fPigeage', boite).addEventListener('click', () => { sim.travailChapeau('pigeage'); afficher(); });
   }
+  const muter = () => { if (anim) { cancelAnimationFrame(anim); anim = null; } sim.muter(mutage ? mutage.value : 'porto'); afficher(); };
+  const arreter = () => { if (anim) { cancelAnimationFrame(anim); anim = null; } sim.arreter(); afficher(); };
+  if (btnStop) btnStop.addEventListener('click', ETAT.style === 'mute' ? muter : arreter);
   afficher();
   return {
-    sim, avancer, reinit, lancer,
+    sim, avancer, reinit, lancer, muter, arreter,
     reglerSucre(v) { sucre.value = Math.round(v / 5) * 5; sucre.majSortie(); reinit(); },
     regler(champ, valeur) {
       if (champ === 'thermo') thermo.checked = !!valeur;
@@ -2221,7 +2491,7 @@ ATELIERS.malo = (boite) => {
   const reglages = h('div', { class: 'reglages' });
   boite.append(reglages);
   const malique = curseur(reglages, { id: 'mlMalique', label: 'Acide malique au départ', min: 1, max: 6, step: 0.5, valeur: ETAT.style === 'rouge' ? 3 : 4, affiche: (v) => `${fmt(v, 1)} g/L` });
-  const avancement = curseur(reglages, { id: 'mlAvancement', label: 'Avancement', min: 0, max: 100, valeur: ETAT.style === 'rose' ? 0 : 60, affiche: (v) => `${v} %` });
+  const avancement = curseur(reglages, { id: 'mlAvancement', label: 'Avancement', min: 0, max: 100, valeur: ETAT.style === 'rose' || ETAT.style === 'doux' ? 0 : 60, affiche: (v) => `${v} %` });
   const jauges = h('div', { class: 'jauges' });
   const jMal = jauge(jauges, 'Acide malique', 'vert');
   const jLac = jauge(jauges, 'Acide lactique', 'or');
@@ -2245,12 +2515,13 @@ ATELIERS.malo = (boite) => {
     dGout.textContent = a < 0.2 ? 'pomme verte, mordant' : a < 0.7 ? 'en transition, un peu de gaz' : ETAT.style === 'blanc' ? 'rondeur ; parfois beurre ou noisette' : 'rond, souple, lacté';
     dStatut.textContent = a === 0 ? 'Non commencée' : a < 1 ? 'En cours' : 'Terminée';
     let l;
-    if (ETAT.style === 'rose') l = a === 0 ? "<b>Bloquée, comme prévu.</b> Un rosé garde son acide malique : c'est lui qui donne la sensation de croquant. On le garde au froid, on soufre légèrement, et on surveille le malique au laboratoire jusqu'à la mise." : "<b>Un rosé qui fait sa malo</b> perd de sa vivacité et de son fruit de petits fruits rouges, et gagne une rondeur lactée. Rare, et rarement voulu, sauf pour quelques rosés de gastronomie.";
+    if (ETAT.style === 'doux') l = a === 0 ? "<b>Bloquée, comme prévu.</b> Le sucre, le soufre de l'arrêt et le froid tiennent les bactéries lactiques à distance, et l'on veut garder l'acide malique : c'est lui qui tient tête aux 100 ou 150 g/L de sucre. On surveille le malique et les levures au laboratoire jusqu'à la mise." : "<b>Un liquoreux qui fait sa malo</b> perd la fraîcheur qui l'équilibrait : rond sur rond, il devient pâteux. Rare, presque toujours accidentel, et signe d'un soufre insuffisant ou d'un chai trop chaud.";
+    else if (ETAT.style === 'rose') l = a === 0 ? "<b>Bloquée, comme prévu.</b> Un rosé garde son acide malique : c'est lui qui donne la sensation de croquant. On le garde au froid, on soufre légèrement, et on surveille le malique au laboratoire jusqu'à la mise." : "<b>Un rosé qui fait sa malo</b> perd de sa vivacité et de son fruit de petits fruits rouges, et gagne une rondeur lactée. Rare, et rarement voulu, sauf pour quelques rosés de gastronomie.";
     else if (a === 0) l = "<b>Pas encore commencée.</b> Le plus souvent, les bactéries attendent que la fermentation alcoolique soit finie, que la température remonte vers 18 à 20 °C et que le soufre libre soit bas ; ça peut prendre des semaines. On peut aussi les <b>co-inoculer</b> avec les levures dès l'encuvage : les deux fermentations se chevauchent, la malo finit plus tôt et produit moins de notes beurrées.";
     else if (a < 1) l = `<b>En cours.</b> Des bulles minuscules montent dans le vin, le nez sent un peu la choucroute, puis ça passe. On suit l'acide malique par chromatographie sur papier ou par analyse enzymatique. Il en reste environ ${fmt(mal, 1)} g/L.`;
     else l = ETAT.style === 'blanc' ? "<b>Terminée.</b> L'acidité a baissé et le vin s'est arrondi ; selon la souche, le moment de l'ensemencement et les lies, il a pris ou non des notes beurrées (le diacétyle), qu'un élevage sur lies atténue. On soufre. La malo a retiré un aliment aux microbes, mais elle ne garantit pas la stabilité : sucres résiduels et microbiologie se vérifient avant la mise." : "<b>Terminée.</b> Le vin a perdu son mordant et pris de la rondeur ; on soutire et on soufre légèrement. Il est plus stable qu'avant — plus de malique à attaquer — mais pas stable à tous égards : on contrôlera les sucres résiduels, le SO₂ et la microbiologie avant la mise.";
     lecture.innerHTML = l;
-    noter('malo', { texte: ETAT.style === 'rose' && a === 0 ? 'Malolactique bloquée : le rosé garde son acide malique' : a === 0 ? 'Malolactique pas encore commencée' : a < 1 ? `Malolactique en cours (${fmt(a * 100)} %)` : `Malolactique terminée : ${fmt(m0, 1)} g/L de malique transformés`, avancement: a, malique: m0 });
+    noter('malo', { texte: (ETAT.style === 'rose' || ETAT.style === 'doux') && a === 0 ? `Malolactique bloquée : le ${ETAT.style === 'rose' ? 'rosé' : 'liquoreux'} garde son acide malique` : a === 0 ? 'Malolactique pas encore commencée' : a < 1 ? `Malolactique en cours (${fmt(a * 100)} %)` : `Malolactique terminée : ${fmt(m0, 1)} g/L de malique transformés`, avancement: a, malique: m0 });
   }
   limite(boite, "Acidité et pH sont des tendances : la baisse d'acidité dépend de la quantité de malique, le pH du pouvoir tampon de chaque vin. Une malo terminée est une contribution à la stabilité, pas une garantie.");
   malique.addEventListener('input', maj);
@@ -2276,15 +2547,15 @@ ATELIERS.elevage = (boite) => {
   boite.append(h('div', { class: 'double' }, gauche, droite));
   const reglages = h('div', { class: 'reglages' });
   gauche.append(reglages);
-  const contenant = selection(reglages, { id: 'eContenant', label: 'Contenant', valeur: ETAT.style === 'rouge' ? 'usagee' : 'inox', options: Object.entries(CONTENANTS).map(([k, c]) => [k, c.nom]) });
+  const contenant = selection(reglages, { id: 'eContenant', label: 'Contenant', valeur: ({ rouge: 'usagee', orange: 'amphore', doux: 'usagee', mute: 'foudre' })[ETAT.style] ?? 'inox', options: Object.entries(CONTENANTS).map(([k, c]) => [k, c.nom]) });
   const chauffe = selection(reglages, { id: 'eChauffe', label: 'Chauffe du bois', valeur: 'moyenne', options: [['legere', 'Légère'], ['moyenne', 'Moyenne'], ['forte', 'Forte']] });
-  const duree = curseur(reglages, { id: 'eDuree', label: "Durée d'élevage", min: 0, max: 36, valeur: ETAT.style === 'rouge' ? 14 : ETAT.style === 'blanc' ? 9 : 4, affiche: (v) => `${v} mois` });
+  const duree = curseur(reglages, { id: 'eDuree', label: "Durée d'élevage", min: 0, max: 36, valeur: ({ rouge: 14, blanc: 9, orange: 8, doux: 18, mute: 30 })[ETAT.style] ?? 4, affiche: (v) => `${v} mois` });
   const lies = h('input', { type: 'checkbox', id: 'eLies' });
   if (ETAT.style === 'blanc') lies.checked = true;
   gauche.append(h('label', { class: 'case' }, lies, 'Élevage sur lies avec bâtonnage'));
   const jauges = h('div', { class: 'jauges' });
   const jBois = jauge(jauges, 'Arômes du bois', 'or');
-  const jRond = jauge(jauges, ETAT.style === 'rouge' ? 'Tanins fondus' : 'Rondeur, gras');
+  const jRond = jauge(jauges, ST().peaux ? 'Tanins fondus' : 'Rondeur, gras');
   const jFruit = jauge(jauges, 'Fruit frais préservé', 'vert');
   const jOxy = jauge(jauges, 'Oxydation', 'rougeb');
   droite.append(jauges);
@@ -2300,7 +2571,7 @@ ATELIERS.elevage = (boite) => {
     chauffe.disabled = c.bois === 0;
     const bois = c.bois * (1 - Math.exp(-mois / 8)) * 100;
     const rond = (c.oxy * (1 - Math.exp(-mois / 10)) * 0.8 + (lies.checked ? 0.25 : 0) * (1 - Math.exp(-mois / 6))) * 100;
-    const fragile = ETAT.style === 'rose' ? 1.8 : ETAT.style === 'blanc' ? 1.3 : 1;
+    const fragile = ({ rose: 1.8, blanc: 1.3, orange: 0.8, doux: 0.9, mute: 0.45 })[ETAT.style] ?? 1;
     const fruit = 100 * Math.exp(-mois * (0.015 + c.oxy * 0.03) * fragile);
     let oxy = 100 * (1 - Math.exp(-mois * c.oxy * 0.04 * fragile));
     if (lies.checked) oxy *= 0.6;
@@ -2320,10 +2591,12 @@ ATELIERS.elevage = (boite) => {
     dNez.textContent = aromes.join(', ');
     let l, cls = '';
     if (mois === 0) l = "<b>Pas d'élevage</b> : le vin va en bouteille dès qu'il est clair. C'est le cas des primeurs et de beaucoup de rosés, faits pour le fruit et pour être bus dans l'année.";
+    else if (oxy > 50 && ETAT.style === 'mute') { l = `<b>Élevage oxydatif voulu.</b> ${mois} mois au contact de l'air : la couleur vire au fauve, le fruit s'efface, la noix, le caramel et la figue sèche prennent la place — c'est le rancio, le style des tawnies et des banyuls traditionnels. L'alcool et le sucre permettent ce que rien d'autre ne permettrait.`; cls = 'bon'; }
+    else if (oxy > 50 && oxy < 75 && ETAT.style === 'orange') { l = `<b>Oxydation assumée.</b> Après ${mois} mois, les notes de noix et de pomme sèche arrivent ; dans un blanc macéré, dont les tanins tempèrent l'oxydation, c'est une composante du style, à la frontière des vins de voile. Au-delà, le fruit disparaîtrait tout à fait.`; }
     else if (oxy > 50) { l = `<b>Trop long pour ce vin.</b> Après ${mois} mois dans ce contenant, l'oxygène a pris le dessus : le fruit s'éteint, les notes de noix et de pomme blette apparaissent. C'est voulu pour un vin jaune ou un xérès, pas ici.`; cls = 'alerte'; }
-    else if (c.bois >= 1 && bois > 60 && ETAT.style !== 'rouge') { l = "<b>Le bois domine.</b> Une barrique neuve marque vite un blanc ou un rosé ; au-delà de quelques mois, on ne sent plus que la vanille et le toasté. Les vignerons mélangent souvent barriques neuves et usagées pour doser."; cls = 'alerte'; }
-    else if (c.bois >= 1 && bois > 70) l = "<b>Élevage boisé classique</b> des grands rouges : la barrique neuve donne ses arômes, l'oxygène fixe la couleur et fond les tanins. Le fruit recule au profit d'un profil épicé et toasté qui demandera quelques années de bouteille pour se fondre.";
-    else if (c.oxy <= 0.2) l = ETAT.style === 'rouge' ? "<b>Élevage réducteur</b>, sans bois : le fruit reste entier, les tanins restent ce qu'ils étaient à la sortie de cuve. C'est le style de nombreux rouges de soif et de vins nature ; les tanins durs y restent durs." : "<b>Élevage en cuve</b>, au frais : le vin garde son fruit et sa fraîcheur, avec du gras si on l'a laissé sur ses lies. Le profil de la plupart des blancs et rosés du monde.";
+    else if (c.bois >= 1 && bois > 60 && !ST().peaux && ETAT.style !== 'doux') { l = "<b>Le bois domine.</b> Une barrique neuve marque vite un blanc ou un rosé ; au-delà de quelques mois, on ne sent plus que la vanille et le toasté. Les vignerons mélangent souvent barriques neuves et usagées pour doser."; cls = 'alerte'; }
+    else if (c.bois >= 1 && bois > 70) l = "<b>Élevage boisé classique</b> des grands rouges et des liquoreux : la barrique neuve donne ses arômes, l'oxygène fixe la couleur et fond les tanins. Le fruit recule au profit d'un profil épicé et toasté qui demandera quelques années de bouteille pour se fondre.";
+    else if (c.oxy <= 0.2) l = ST().peaux ? "<b>Élevage réducteur</b>, sans bois : le fruit reste entier, les tanins restent ce qu'ils étaient à la sortie de cuve. C'est le style de nombreux rouges de soif et de vins nature ; les tanins durs y restent durs." : "<b>Élevage en cuve</b>, au frais : le vin garde son fruit et sa fraîcheur, avec du gras si on l'a laissé sur ses lies. Le profil de la plupart des blancs et rosés du monde.";
     else l = `<b>Élevage mesuré.</b> ${mois} mois dans ce contenant apportent de l'oxygène sans trop d'arômes de bois : le vin s'arrondit et garde son fruit. Il faudra ouiller régulièrement pour compenser l'évaporation${lies.checked ? ', et bâtonner les lies chaque semaine' : ''}.`;
     lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
     noter('elevage', { texte: mois === 0 ? "Pas d'élevage : mise en bouteille dès que le vin est clair" : `Élevage : ${mois} mois en ${c.nom.toLowerCase()}${lies.checked ? ', sur lies bâtonnées' : ''}${c.bois > 0 ? `, chauffe ${ch === 'legere' ? 'légère' : ch}` : ''}`, bois, rond, fruit, oxy, mois, lies: lies.checked });
@@ -2357,11 +2630,44 @@ const LOTS = {
     { nom: 'Cinsault vendangé de nuit', court: 'Cinsault', hl: 230, alcool: 12.2, acidite: 4.5, ph: 3.2, tanin: 12, couleur: 25, fruit: 92, bois: 0, presse: 0, mot: 'l’acidité et la fraîcheur' },
     { nom: 'Cuvée élevée en barrique', court: 'Barrique', hl: 90, alcool: 13.5, acidite: 3.4, ph: 3.5, tanin: 36, couleur: 45, fruit: 45, bois: 70, presse: 0, mot: 'du gras et du bois, à doser au pourcent' },
   ],
+  orange: [
+    { nom: 'Ribolla gialla, 6 mois en qvevri', court: 'Qvevri', hl: 180, alcool: 13, acidite: 3.6, ph: 3.5, tanin: 58, couleur: 72, fruit: 50, bois: 15, presse: 0, mot: 'la structure, l’ambre et la noix' },
+    { nom: 'Pinot gris, 10 jours de peaux, cuve', court: 'Dix jours', hl: 220, alcool: 12.8, acidite: 4, ph: 3.35, tanin: 30, couleur: 45, fruit: 85, bois: 0, presse: 0, mot: 'le fruit et la fraîcheur, une teinte cuivrée' },
+    { nom: 'Malvasia, vendange entière, amphore', court: 'Amphore', hl: 120, alcool: 13.4, acidite: 3.4, ph: 3.6, tanin: 66, couleur: 80, fruit: 48, bois: 22, presse: 0, mot: 'les tanins de rafle et l’oxydation assumée' },
+    { nom: 'Vin de presse', court: 'Presse', hl: 40, alcool: 12.6, acidite: 3.8, ph: 3.5, tanin: 88, couleur: 90, fruit: 28, bois: 0, presse: 1, mot: 'de l’amertume de peau blanche, vite excessive' },
+  ],
+  doux: [
+    { nom: 'Sémillon, 1re trie, peu rôtie, barrique usagée', court: '1re trie', hl: 60, alcool: 13.6, acidite: 4.8, ph: 3.5, tanin: 8, couleur: 38, fruit: 82, bois: 25, sucre: 95, presse: 0, mot: 'l’acidité et le fruit' },
+    { nom: 'Sémillon, 3e trie, très rôtie, barrique neuve', court: '3e trie', hl: 45, alcool: 13.8, acidite: 4.3, ph: 3.6, tanin: 10, couleur: 62, fruit: 65, bois: 65, sucre: 150, presse: 0, mot: 'la liqueur, le miel et le safran' },
+    { nom: 'Sauvignon, passerillé, cuve', court: 'Sauvignon', hl: 50, alcool: 13.2, acidite: 5.4, ph: 3.3, tanin: 6, couleur: 28, fruit: 92, bois: 0, sucre: 80, presse: 0, mot: 'la tension et les agrumes' },
+    { nom: 'Muscadelle, dernière trie, presque sirop', court: 'Sirop', hl: 15, alcool: 14, acidite: 3.9, ph: 3.7, tanin: 12, couleur: 80, fruit: 50, bois: 40, sucre: 215, presse: 0, mot: 'du sucre pur, imbuvable seul' },
+  ],
+  mute: [
+    { nom: 'Touriga nacional, lagar, mutée à 95 g/L', court: 'Touriga', hl: 300, alcool: 19.5, acidite: 3.4, ph: 3.6, tanin: 72, couleur: 92, fruit: 78, bois: 8, sucre: 95, presse: 0, mot: 'la couleur, la violette et la structure' },
+    { nom: 'Tinta roriz, cuve, mutée à 110 g/L', court: 'Tinta roriz', hl: 260, alcool: 19, acidite: 3.2, ph: 3.7, tanin: 50, couleur: 76, fruit: 82, bois: 4, sucre: 110, presse: 0, mot: 'la chair et le fruit rouge' },
+    { nom: 'Lot de 4 ans en pipa (fût de 550 L)', court: '4 ans', hl: 120, alcool: 20, acidite: 3.5, ph: 3.6, tanin: 42, couleur: 45, fruit: 42, bois: 68, sucre: 100, presse: 0, mot: 'le début du rancio : caramel et fruits secs' },
+    { nom: 'Lot de 20 ans, réserve de la maison', court: '20 ans', hl: 40, alcool: 20.5, acidite: 3.8, ph: 3.5, tanin: 28, couleur: 22, fruit: 18, bois: 96, sucre: 105, presse: 0, mot: 'la noix, le vieux bois, la longueur' },
+  ],
 };
-const DEFAUTS_ASSEMBLAGE = { rouge: [40, 28, 22, 10], blanc: [45, 15, 30, 10], rose: [45, 15, 32, 8] };
+const DEFAUTS_ASSEMBLAGE = { rouge: [40, 28, 22, 10], blanc: [45, 15, 30, 10], rose: [45, 15, 32, 8], orange: [35, 40, 20, 5], doux: [30, 35, 25, 10], mute: [40, 35, 18, 7] };
 const COULEURS_LOTS = ['#9b2f4c', '#d9b25f', '#8fbf6a', '#86b7d9'];
 
 function butsAssemblage(style) {
+  if (style === 'orange') return {
+    garde: { nom: 'Un orange de garde, tannique et ambré', cible: { alcool: 13.2, acidite: 3.6, tanin: 60, couleur: 75, bois: 15, fruit: 50 }, prime: 6 },
+    fruit: { nom: 'Un orange léger, de soif', cible: { alcool: 12.8, acidite: 3.9, tanin: 32, couleur: 48, bois: 2, fruit: 86 }, prime: 3 },
+    regularite: { nom: 'La cuvée de marque, la même chaque année', cible: { alcool: 13, acidite: 3.7, tanin: 45, couleur: 60, bois: 10, fruit: 70 }, prime: 10 },
+  };
+  if (style === 'doux') return {
+    garde: { nom: 'Le grand liquoreux, pour trente ans', cible: { alcool: 13.8, acidite: 4.5, tanin: 9, couleur: 58, bois: 45, fruit: 62, sucre: 140 }, prime: 6 },
+    fruit: { nom: 'Un moelleux léger, de dessert', cible: { alcool: 13, acidite: 5, tanin: 7, couleur: 35, bois: 8, fruit: 90, sucre: 85 }, prime: 3 },
+    regularite: { nom: 'La cuvée de marque, la même chaque année', cible: { alcool: 13.5, acidite: 4.7, tanin: 8, couleur: 45, bois: 28, fruit: 75, sucre: 115 }, prime: 10 },
+  };
+  if (style === 'mute') return {
+    garde: { nom: 'Un vintage, à oublier vingt ans', cible: { alcool: 19.5, acidite: 3.4, tanin: 68, couleur: 88, bois: 8, fruit: 76, sucre: 96 }, prime: 6 },
+    fruit: { nom: 'Un ruby jeune et fruité', cible: { alcool: 19.2, acidite: 3.3, tanin: 52, couleur: 76, bois: 6, fruit: 82, sucre: 105 }, prime: 3 },
+    regularite: { nom: 'Un tawny 10 ans, le même chaque année', cible: { alcool: 20, acidite: 3.5, tanin: 42, couleur: 42, bois: 62, fruit: 40, sucre: 100 }, prime: 10 },
+  };
   if (style === 'blanc') return {
     garde: { nom: 'Un blanc de garde, ample et boisé', cible: { alcool: 13.2, acidite: 4.2, tanin: 32, couleur: 50, bois: 45, fruit: 55 }, prime: 6 },
     fruit: { nom: 'Un blanc de soif, vif et fruité', cible: { alcool: 12.5, acidite: 4.5, tanin: 20, couleur: 28, bois: 5, fruit: 90 }, prime: 3 },
@@ -2379,7 +2685,7 @@ function butsAssemblage(style) {
   };
 }
 
-const AXES = ['alcool', 'acidite', 'tanin', 'couleur', 'fruit', 'bois'];
+const AXES = ['alcool', 'acidite', 'tanin', 'couleur', 'fruit', 'bois', 'sucre'];
 
 /* Mélange pondéré des lots + volume réalisable : la cuvée ne peut pas dépasser
    ce que le plus sollicité des lots permet de tirer. */
@@ -2387,7 +2693,7 @@ function melanger(lots, parts) {
   const somme = parts.reduce((a, b) => a + b, 0) || 1;
   const p = parts.map((v) => v / somme);
   const mix = {};
-  for (const a of AXES) mix[a] = lots.reduce((s, l, i) => s + p[i] * l[a], 0);
+  for (const a of AXES) mix[a] = lots.reduce((s, l, i) => s + p[i] * (l[a] ?? 0), 0);
   mix.parts = p;
   mix.presse = lots.reduce((s, l, i) => s + p[i] * l.presse * 100, 0);
   mix.complexite = clamp((1 - p.reduce((s, v) => s + v * v, 0)) / 0.75 * 100, 0, 100);
@@ -2400,7 +2706,8 @@ function noterAssemblage(mix, but) {
   const c = but.cible;
   const ecart = 0.9 * Math.abs(mix.tanin - c.tanin) + 0.9 * Math.abs(mix.couleur - c.couleur)
     + 0.7 * Math.abs(mix.bois - c.bois) + 0.8 * Math.abs(mix.fruit - c.fruit)
-    + 12 * Math.abs(mix.alcool - c.alcool) + 15 * Math.abs(mix.acidite - c.acidite);
+    + 12 * Math.abs(mix.alcool - c.alcool) + 15 * Math.abs(mix.acidite - c.acidite)
+    + (c.sucre !== undefined ? 0.35 * Math.abs(mix.sucre - c.sucre) : 0);
   let note = 100 - ecart / 1.6 + mix.complexite / 100 * but.prime;
   if (mix.presse > 15) note -= (mix.presse - 15) * 1.2;
   note -= Math.max(0, 55 - mix.volume / mix.total * 100) * (but.prime >= 10 ? 0.35 : 0.12);
@@ -2423,20 +2730,21 @@ ATELIERS.assemblage = (boite) => {
   const echantillon = h('div', { class: 'echantillon', 'data-testid': 'robe-assemblage' });
   boite.append(echantillon);
   const jauges = h('div', { class: 'jauges' });
-  const jTan = jauge(jauges, ETAT.style === 'rouge' ? 'Tanins' : 'Structure', 'or');
-  const jCoul = jauge(jauges, 'Couleur', 'rougeb');
+  const jTan = jauge(jauges, ST().peaux ? 'Tanins' : 'Structure', 'or');
+  const jCoul = jauge(jauges, ETAT.style === 'mute' ? 'Couleur (rubis → fauve)' : 'Couleur', 'rougeb');
   const jFruit = jauge(jauges, 'Fruit', 'vert');
-  const jBois = jauge(jauges, 'Marque du bois');
+  const jBois = jauge(jauges, ETAT.style === 'mute' ? 'Âge oxydatif (rancio)' : 'Marque du bois');
   boite.append(jauges);
   const mesures = h('dl', { class: 'mesures' });
-  const dAlc = h('dd', { 'data-testid': 'assemblage-alcool' }), dAcide = h('dd'),
+  const dAlc = h('dd', { 'data-testid': 'assemblage-alcool' }), dAcide = h('dd'), dSucre = h('dd', { 'data-testid': 'assemblage-sucre' }),
     dPresse = h('dd'), dCplx = h('dd'), dVol = h('dd', { 'data-testid': 'volume-cuvee' }), dSecond = h('dd'),
     dNote = h('dd', { class: 'grand', 'data-testid': 'assemblage-note' });
   mesures.append(
     h('dt', {}, 'Degré de la cuvée'), dAlc,
     h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcide,
+    ...(ST().sucre ? [h('dt', {}, 'Sucre résiduel'), dSucre] : []),
     h('dt', {}, 'pH'), h('dd', { 'data-testid': 'assemblage-ph' }, 'à mesurer sur l’essai'),
-    h('dt', {}, 'Part de vin de presse'), dPresse,
+    ...(ST().sucre ? [] : [h('dt', {}, 'Part de vin de presse'), dPresse]),
     h('dt', {}, 'Complexité (répartition entre les lots)'), dCplx,
     h('dt', {}, 'Volume réalisable'), dVol,
     h('dt', {}, 'Ce qui part au second vin'), dSecond,
@@ -2450,6 +2758,9 @@ ATELIERS.assemblage = (boite) => {
 
   function robe(mix) {
     const c = mix.couleur / 100;
+    if (ETAT.style === 'orange') return `rgb(${Math.round(lerp(225, 175, c))},${Math.round(lerp(195, 100, c))},${Math.round(lerp(110, 35, c))})`;
+    if (ETAT.style === 'doux') return `rgb(${Math.round(lerp(240, 205, c))},${Math.round(lerp(215, 150, c))},${Math.round(lerp(120, 45, c))})`;
+    if (ETAT.style === 'mute') { const f = mix.bois / 100; return `rgb(${Math.round(lerp(lerp(150, 80, c), 160, f))},${Math.round(lerp(lerp(60, 14, c), 90, f))},${Math.round(lerp(lerp(90, 46, c), 40, f))})`; }
     if (ETAT.style === 'blanc') return `rgb(${Math.round(lerp(238, 214, c))},${Math.round(lerp(232, 186, c))},${Math.round(lerp(178, 96, c))})`;
     if (ETAT.style === 'rose') return `rgb(${Math.round(lerp(247, 214, c))},${Math.round(lerp(196, 96, c))},${Math.round(lerp(190, 112, c))})`;
     return `rgb(${Math.round(lerp(150, 80, c))},${Math.round(lerp(60, 14, c))},${Math.round(lerp(90, 46, c))})`;
@@ -2497,6 +2808,7 @@ ATELIERS.assemblage = (boite) => {
     jTan(mix.tanin); jCoul(mix.couleur); jFruit(mix.fruit); jBois(mix.bois);
     dAlc.textContent = `${fmt(mix.alcool, 1)} % vol.`;
     dAcide.textContent = `≈ ${fmt(mix.acidite, 1)} g/L`;
+    dSucre.textContent = `${fmt(mix.sucre)} g/L`;
     dPresse.textContent = `${fmt(mix.presse)} %`;
     dPresse.className = mix.presse > 15 ? 'alerte' : '';
     dCplx.textContent = `${fmt(mix.complexite)} / 100`;
@@ -2505,10 +2817,11 @@ ATELIERS.assemblage = (boite) => {
     dNote.textContent = `${fmt(note)} / 100`;
     dNote.className = `grand ${note >= 80 ? 'bon' : note < 55 ? 'alerte' : ''}`;
     echantillon.style.background = robe(mix);
-    echantillon.textContent = `${fmt(mix.alcool, 1)} % vol. · ≈ ${fmt(mix.acidite, 1)} g/L`;
+    echantillon.textContent = `${fmt(mix.alcool, 1)} % vol. · ≈ ${fmt(mix.acidite, 1)} g/L${ST().sucre ? ` · ${fmt(mix.sucre)} g/L de sucre` : ''}`;
 
     // Le plus gros écart à l'objectif, et le lot qui le corrigerait.
-    const axes = [['tanin', 'de tanins', 0.9], ['couleur', 'de couleur', 0.9], ['bois', 'de bois', 0.7], ['fruit', 'de fruit', 0.8]];
+    const axes = [['tanin', 'de tanins', 0.9], ['couleur', 'de couleur', 0.9], ['bois', ETAT.style === 'mute' ? 'de vieux fûts' : 'de bois', 0.7], ['fruit', 'de fruit', 0.8]];
+    if (b.cible.sucre !== undefined) axes.push(['sucre', 'de sucre', 0.35]);
     let pire = null;
     for (const [a, mot, poids] of axes) {
       const e = (mix[a] - b.cible[a]) * poids;
@@ -2528,7 +2841,7 @@ ATELIERS.assemblage = (boite) => {
     lecture.innerHTML = l;
     lecture.className = `lecture ${cls}`;
     dessiner(mix);
-    noter('assemblage', { texte: `Assemblage : ${lots.map((lo, i) => `${fmt(mix.parts[i] * 100)} % ${lo.court.toLowerCase()}`).filter((x) => !x.startsWith('0 %')).join(', ')} → ${fmt(mix.alcool, 1)} % vol., ≈ ${fmt(mix.acidite, 1)} g/L`, alcool: mix.alcool, acidite: mix.acidite, tanin: mix.tanin, couleur: mix.couleur, fruit: mix.fruit, bois: mix.bois });
+    noter('assemblage', { texte: `Assemblage : ${lots.map((lo, i) => `${fmt(mix.parts[i] * 100)} % ${lo.court.toLowerCase()}`).filter((x) => !x.startsWith('0 %')).join(', ')} → ${fmt(mix.alcool, 1)} % vol., ≈ ${fmt(mix.acidite, 1)} g/L${ST().sucre ? `, ${fmt(mix.sucre)} g/L de sucre` : ''}`, alcool: mix.alcool, acidite: mix.acidite, tanin: mix.tanin, couleur: mix.couleur, fruit: mix.fruit, bois: mix.bois, sucre: mix.sucre });
   }
 
   /* Recherche exhaustive par pas de 5 % : 1 771 assemblages, de quoi trancher. */
@@ -2575,8 +2888,8 @@ ATELIERS.bouchage = (boite) => {
   const reglages = h('div', { class: 'reglages' });
   boite.append(reglages);
   const bouchon = selection(reglages, { id: 'bBouchon', label: 'Bouchon', valeur: 'liege', options: Object.entries(BOUCHONS).map(([k, b]) => [k, b.nom]) });
-  const ph = curseur(reglages, { id: 'bPh', label: 'pH du vin', min: 2.9, max: 4, step: 0.05, valeur: ETAT.style === 'rouge' ? 3.6 : 3.2, affiche: (v) => fmt(v, 2) });
-  const so2 = curseur(reglages, { id: 'bSo2', label: 'SO₂ libre à la mise', min: 0, max: 60, step: 5, valeur: ETAT.style === 'rouge' ? 25 : 35, affiche: (v) => `${v} mg/L` });
+  const ph = curseur(reglages, { id: 'bPh', label: 'pH du vin', min: 2.9, max: 4, step: 0.05, valeur: ({ rouge: 3.6, orange: 3.5, doux: 3.6, mute: 3.6 })[ETAT.style] ?? 3.2, affiche: (v) => fmt(v, 2) });
+  const so2 = curseur(reglages, { id: 'bSo2', label: 'SO₂ libre à la mise', min: 0, max: 60, step: 5, valeur: ({ rouge: 25, doux: 45, mute: 15 })[ETAT.style] ?? 35, affiche: (v) => `${v} mg/L` });
   const mesures = h('dl', { class: 'mesures' });
   const dOtr = h('dd'), dTca = h('dd'), dMol = h('dd', { 'data-testid': 'so2-moleculaire' }), dBis = h('dd', { 'data-testid': 'so2-bisulfite' }), dGarde = h('dd', { class: 'grand', 'data-testid': 'garde' });
   mesures.append(h('dt', {}, 'Oxygène qui traverse le bouchon'), dOtr, h('dt', {}, 'Goût de bouchon dû au bouchon lui-même'), dTca, h('dt', {}, 'SO₂ moléculaire (antimicrobien)'), dMol, h('dt', {}, 'SO₂ bisulfite (antioxydant)'), dBis, h('dt', {}, 'Potentiel de garde'), dGarde);
@@ -2590,16 +2903,18 @@ ATELIERS.bouchage = (boite) => {
     dMol.textContent = `≈ ${fmt(mol, 1)} mg/L`;
     dMol.className = mol < 0.4 ? 'alerte' : mol > 1.2 ? 'alerte' : 'bon';
     dBis.textContent = `≈ ${fmt(+so2.value - mol)} mg/L`;
-    const base = ETAT.style === 'rouge' ? 8 : ETAT.style === 'blanc' ? 4 : 2;
+    const base = ({ rouge: 8, blanc: 4, rose: 2, orange: 7, doux: 15, mute: 20 })[ETAT.style];
+    const alcoolProtege = ETAT.style === 'mute';
     let garde = base * b.garde;
-    if (mol < 0.4) garde *= 0.6;
+    if (mol < 0.4 && !alcoolProtege) garde *= 0.6;
     if (+ph.value > 3.8) garde *= 0.7;
     dGarde.textContent = garde < 1.5 ? "l'année" : `${fmt(garde)} ans environ`;
     let l = `<b>${b.nom}.</b> ${b.note}`;
-    if (mol < 0.4) l += ` <b>Protection antimicrobienne insuffisante</b> : à pH ${fmt(+ph.value, 2)}, ${so2.value} mg/L de SO₂ libre ne laissent qu'environ ${fmt(mol, 1)} mg/L de forme moléculaire, celle qui bloque les levures et les bactéries. Le reste, sous forme bisulfite, protège de l'oxydation mais pas des microbes : il faut viser 0,5 à 0,8 mg/L de moléculaire, donc plus de soufre libre à ce pH, ou un pH plus bas.`;
+    if (alcoolProtege) l += ` À 19 ou 20 % vol., c'est l'<b>alcool</b> qui tient les levures et les bactéries : le soufre ne sert plus qu'à freiner l'oxydation, et l'on en met peu — ${so2.value} mg/L ici. Un porto ou un banyuls se garde des décennies avec la moitié du soufre d'un blanc sec.`;
+    else if (mol < 0.4) l += ` <b>Protection antimicrobienne insuffisante</b> : à pH ${fmt(+ph.value, 2)}, ${so2.value} mg/L de SO₂ libre ne laissent qu'environ ${fmt(mol, 1)} mg/L de forme moléculaire, celle qui bloque les levures et les bactéries. Le reste, sous forme bisulfite, protège de l'oxydation mais pas des microbes : il faut viser 0,5 à 0,8 mg/L de moléculaire, donc plus de soufre libre à ce pH, ou un pH plus bas.`;
     else if (mol > 1.2) l += ` <b>Soufre excessif</b> : au-delà de 1 mg/L moléculaire, le vin pique le nez et l'arrière-gorge. À ce pH, on peut réduire la dose.`;
     else l += ` À pH ${fmt(+ph.value, 2)}, ${so2.value} mg/L de SO₂ libre donnent environ ${fmt(mol, 1)} mg/L de forme moléculaire, qui tient les microbes, et ${fmt(+so2.value - mol)} mg/L de bisulfite, qui capte les produits de l'oxydation : le vin est protégé sur les deux fronts sans être marqué.`;
-    lecture.innerHTML = l; lecture.className = `lecture ${mol < 0.4 || mol > 1.2 ? 'alerte' : ''}`;
+    lecture.innerHTML = l; lecture.className = `lecture ${(mol < 0.4 && !alcoolProtege) || mol > 1.2 ? 'alerte' : ''}`;
     noter('bouchage', { texte: `Mise : ${b.nom.toLowerCase()}, ${so2.value} mg/L de SO₂ libre à pH ${fmt(+ph.value, 2)} (≈ ${fmt(mol, 1)} mg/L moléculaire)`, garde, mol });
   }
   limite(boite, "Le SO₂ moléculaire est calculé par l'équilibre acide-base (pKa 1,81) : c'est la seule formule exacte de cet atelier. Le potentiel de garde est une tendance, pas une prédiction, et le risque de goût de bouchon affiché ne couvre que le bouchon : un chai contaminé aux haloanisoles peut marquer un vin sous capsule.");
@@ -2628,7 +2943,7 @@ ATELIERS.garde = (boite) => {
   boite.append(lecture);
   function maj() {
     const a = +annees.value;
-    const apogee = { leger: 1.5, moyen: 6, grand: 18 }[potentiel.value] * (ETAT.style === 'rouge' ? 1 : ETAT.style === 'blanc' ? 0.7 : 0.35);
+    const apogee = { leger: 1.5, moyen: 6, grand: 18 }[potentiel.value] * ({ rouge: 1, blanc: 0.7, rose: 0.35, orange: 0.9, doux: 1.6, mute: 2 })[ETAT.style];
     const x = a / apogee;
     const prim = 100 * Math.exp(-x * 1.1);
     const sec = 100 * Math.exp(-((x - 0.6) ** 2) / 0.5);
@@ -2637,10 +2952,18 @@ ATELIERS.garde = (boite) => {
     jPrim(prim); jSec(sec); jTer(ter); jPlaisir(plaisir);
     // robe
     let couleur, nom;
-    if (ETAT.style === 'rouge') {
+    if (ETAT.style === 'rouge' || ETAT.style === 'mute') {
       const t2 = clamp(x / 2.5, 0, 1);
       couleur = `rgb(${Math.round(lerp(110, 150, t2))},${Math.round(lerp(20, 60, t2))},${Math.round(lerp(70, 30, t2))})`;
-      nom = x < 0.3 ? 'violacé' : x < 0.9 ? 'rubis' : x < 1.6 ? 'grenat' : 'tuilé';
+      nom = x < 0.3 ? 'violacé' : x < 0.9 ? 'rubis' : x < 1.6 ? 'grenat' : ETAT.style === 'mute' ? 'fauve (tawny)' : 'tuilé';
+    } else if (ETAT.style === 'orange') {
+      const t2 = clamp(x / 2.5, 0, 1);
+      couleur = `rgb(${Math.round(lerp(214, 150, t2))},${Math.round(lerp(150, 80, t2))},${Math.round(lerp(60, 30, t2))})`;
+      nom = x < 0.3 ? 'vieil or' : x < 0.9 ? 'ambre' : x < 1.6 ? 'cuivre' : 'brun ambré';
+    } else if (ETAT.style === 'doux') {
+      const t2 = clamp(x / 2.5, 0, 1);
+      couleur = `rgb(${Math.round(lerp(232, 150, t2))},${Math.round(lerp(190, 80, t2))},${Math.round(lerp(80, 30, t2))})`;
+      nom = x < 0.3 ? 'or pâle' : x < 0.9 ? 'or' : x < 1.6 ? 'vieil or à ambre' : 'acajou';
     } else if (ETAT.style === 'blanc') {
       const t2 = clamp(x / 2.5, 0, 1);
       couleur = `rgb(${Math.round(lerp(235, 200, t2))},${Math.round(lerp(228, 150, t2))},${Math.round(lerp(160, 60, t2))})`;
@@ -2651,13 +2974,13 @@ ATELIERS.garde = (boite) => {
       nom = x < 0.5 ? 'rose framboise' : x < 1.2 ? 'saumon' : 'pelure d’oignon';
     }
     echantillon.style.background = couleur; echantillon.textContent = `robe ${nom}`;
-    const tertiaires = ETAT.style === 'rouge' ? 'sous-bois, cuir, tabac, truffe' : ETAT.style === 'blanc' ? 'miel, noix, cire, pétrole' : 'orangette, abricot sec';
-    const primaires = ETAT.style === 'rouge' ? 'fruits rouges et noirs, violette' : ETAT.style === 'blanc' ? 'agrumes, fleurs blanches, pomme' : 'fraise, pamplemousse';
+    const tertiaires = ({ rouge: 'sous-bois, cuir, tabac, truffe', blanc: 'miel, noix, cire, pétrole', rose: 'orangette, abricot sec', orange: 'noix, curry, cire, fruits secs', doux: 'orange confite, crème brûlée, safran, truffe blanche', mute: 'noix, caramel, figue sèche, café' })[ETAT.style];
+    const primaires = ({ rouge: 'fruits rouges et noirs, violette', blanc: 'agrumes, fleurs blanches, pomme', rose: 'fraise, pamplemousse', orange: 'abricot, écorce d’orange, thé', doux: 'abricot, miel, ananas rôti', mute: 'mûre, cassis, violette, réglisse' })[ETAT.style];
     let l, cls = '';
-    if (x < 0.15) { l = `<b>Trop jeune, ou juste jeune.</b> Le vin sent le fruit (${primaires}) et, s'il est passé sous bois, la vanille. ${ETAT.style === 'rouge' ? 'Les tanins sont encore serrés.' : "L'acidité domine, c'est vif."} Beaucoup de vins ne demandent rien de plus.`; }
-    else if (x < 0.7) { l = `<b>En montée.</b> Le fruit frais recule, les arômes d'élevage se fondent, ${ETAT.style === 'rouge' ? 'les tanins s’assouplissent' : 'le vin prend du volume'} et les premières notes tertiaires (${tertiaires}) pointent. On peut ouvrir, on peut attendre.`; cls = 'bon'; }
+    if (x < 0.15) { l = `<b>Trop jeune, ou juste jeune.</b> Le vin sent le fruit (${primaires}) et, s'il est passé sous bois, la vanille. ${ST().peaux ? 'Les tanins sont encore serrés.' : ST().sucre ? 'Le sucre domine encore le fruit.' : "L'acidité domine, c'est vif."} Beaucoup de vins ne demandent rien de plus.`; }
+    else if (x < 0.7) { l = `<b>En montée.</b> Le fruit frais recule, les arômes d'élevage se fondent, ${ST().peaux ? 'les tanins s’assouplissent' : 'le vin prend du volume'} et les premières notes tertiaires (${tertiaires}) pointent. On peut ouvrir, on peut attendre.`; cls = 'bon'; }
     else if (x < 1.5) { l = `<b>Apogée.</b> L'équilibre entre ce qui reste du fruit et ce que le temps a fabriqué : ${tertiaires}. La robe est ${nom}. C'est la fenêtre qu'on attendait, et elle dure des années pour un grand vin, des mois pour un léger.`; cls = 'bon'; }
-    else if (x < 2.5) { l = `<b>Sur le déclin.</b> Le fruit a disparu, les tertiaires dominent, l'acidité et ${ETAT.style === 'rouge' ? 'les tanins' : 'l’alcool'} ressortent. Encore intéressant pour qui aime les vieux vins, décevant pour les autres. Un dépôt s'est formé : on décante.`; cls = 'alerte'; }
+    else if (x < 2.5) { l = `<b>Sur le déclin.</b> Le fruit a disparu, les tertiaires dominent, l'acidité et ${ST().peaux ? 'les tanins' : 'l’alcool'} ressortent. Encore intéressant pour qui aime les vieux vins, décevant pour les autres. Un dépôt s'est formé : on décante.`; cls = 'alerte'; }
     else { l = `<b>Passé.</b> Robe ${nom}, arômes de madère, de pomme blette ; le vin est oxydé et fatigué. Il aurait fallu l'ouvrir vers ${fmt(apogee)} an${apogee >= 2 ? 's' : ''}.`; cls = 'alerte'; }
     lecture.innerHTML = l; lecture.className = `lecture ${cls}`;
     noter('garde', { texte: `Ouverture ${a === 0 ? 'à la mise' : `après ${a} an${a > 1 ? 's' : ''}`} : robe ${nom}`, annees: a });
@@ -2681,6 +3004,9 @@ const PARTIES = {
       rouge: 'macère avec le jus de 5 à 20 jours : toute la couleur et une bonne part des tanins viennent d’ici',
       blanc: 'séparée du jus au pressurage, avant la fermentation : quelques heures de contact au plus (macération pelliculaire)',
       rose: 'quelques heures de contact, à froid : juste assez de couleur, très peu de tanins',
+      orange: 'macère avec le jus des semaines ou des mois, comme pour un rouge : des tanins, des arômes, et une couleur d’ambre venue de l’oxydation de ses phénols jaunes',
+      doux: 'percée par le botrytis, flétrie par le sec ou le gel : c’est elle qui laisse partir l’eau et concentre le sucre du jus',
+      mute: 'macère deux ou trois jours seulement, foulée et chauffée pour donner vite toute sa couleur ; ou des semaines si l’on mute sur grains',
     },
   },
   pulpe: {
@@ -2691,6 +3017,9 @@ const PARTIES = {
       rouge: 'c’est le jus lui-même : presque incolore, même pour un raisin noir. Il ne rougit qu’au contact des peaux',
       blanc: 'c’est le jus lui-même : pressé puis fermenté seul, il donne le blanc, quelle que soit la couleur du raisin',
       rose: 'c’est le jus lui-même, à peine teinté par les heures passées avec les peaux',
+      orange: 'c’est le jus lui-même : incolore au départ, il prend l’ambre au contact des peaux et de l’air',
+      doux: 'c’est le jus lui-même, réduit à un sirop de 300 à 400 g/L de sucre par la perte d’eau de la baie',
+      mute: 'c’est le jus lui-même : il ne fermente qu’à moitié avant que l’eau-de-vie ne l’arrête, et garde 90 à 100 g/L de son sucre',
     },
   },
   pepins: {
@@ -2701,6 +3030,9 @@ const PARTIES = {
       rouge: 'macèrent avec les peaux ; l’alcool en extrait les tanins à mesure : d’où l’importance de pépins bruns et mûrs, et d’un foulage doux',
       blanc: 'écartés au pressurage ; une presse trop forte les écrase et donne de l’amertume',
       rose: 'écartés au pressurage, comme pour un blanc',
+      orange: 'macèrent avec les peaux ; leurs tanins, plus amers dans un raisin blanc, imposent une presse douce et une macération sur baies mûres',
+      doux: 'écartés à la presse ; dans une baie rôtie, ils sont souvent tout ce qui reste de ferme',
+      mute: 'macèrent deux ou trois jours ; le foulage au pied les épargne, ce que les pistons des lagares robotisés imitent',
     },
   },
   rafle: {
@@ -2711,6 +3043,9 @@ const PARTIES = {
       rouge: 'retirée à l’éraflage, ou gardée en partie (vendange entière) pour la structure et le parfum',
       blanc: 'gardée au pressoir, où elle draine le jus, puis écartée avec le marc',
       rose: 'retirée, ou gardée pour drainer le pressurage direct',
+      orange: 'retirée, ou gardée en vendange entière dans le qvevri, où elle apporte structure et parfum',
+      doux: 'retirée à la trie, ou gardée au pressoir où elle draine un jus visqueux qui coule mal',
+      mute: 'retirée le plus souvent : dans une extraction aussi rapide et chaude, ses tanins verts passeraient trop vite',
     },
   },
 };
@@ -2734,7 +3069,7 @@ ATELIERS.raisin = (boite) => {
     const ctx = contexte(canvas, L, H);
     ctx.fillStyle = '#120c0e'; ctx.fillRect(0, 0, L, H);
     const cx = 200, cy = 128, R = 88;
-    const noir = ETAT.style !== 'blanc';
+    const noir = ST().noir;
     const peauCoul = noir ? '#4a1630' : '#b9b05a', pulpeCoul = noir ? '#e8dcc6' : '#e5dfb0';
     const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d4577a';
     // rafle : un bout de tige au-dessus
@@ -2771,7 +3106,7 @@ ATELIERS.raisin = (boite) => {
       ctx.fillText(nom.toUpperCase(), tx, ty);
     });
     ctx.fillStyle = '#a89a95'; ctx.textAlign = 'left';
-    ctx.fillText(noir ? 'raisin noir : la couleur est dans la peau' : 'raisin blanc : peau dorée, jus incolore', 12, H - 10);
+    ctx.fillText(noir ? 'raisin noir : la couleur est dans la peau' : ST().peaux ? 'raisin blanc macéré : la peau donne tanins et ambre' : 'raisin blanc : peau dorée, jus incolore', 12, H - 10);
   }
   function maj() {
     const p = PARTIES[partie.value];
@@ -2811,7 +3146,7 @@ const CEPAGES = {
   vidal: { nom: 'Vidal (hybride)', couleur: 'blanc', dj: 1100, djMax: 1600, froid: -22, debourrement: 'tardif', acidite: 4, tanins: 0.5, teinte: 0, maladies: 2, aromes: 'agrumes, pêche ; miel et abricot en vin de glace', note: 'semi-rustique : au Québec, il faut le butter ou le couvrir chaque automne' },
   seyval: { nom: 'Seyval blanc (hybride)', couleur: 'blanc', dj: 1000, djMax: 1500, froid: -23, debourrement: 'précoce', acidite: 4, tanins: 0.5, teinte: 0, maladies: 3, aromes: 'pomme verte, agrumes, herbe', note: 'semi-rustique : protection hivernale nécessaire au Québec ; sensible à la pourriture' },
 };
-const DEFAUTS_CEPAGE = { rouge: 'pinot-noir', blanc: 'chardonnay', rose: 'grenache' };
+const DEFAUTS_CEPAGE = { rouge: 'pinot-noir', blanc: 'chardonnay', rose: 'grenache', orange: 'chenin', doux: 'vidal', mute: 'grenache' };
 
 ATELIERS.cepage = (boite) => {
   atelierEntete(boite, 'Atelier', 'Accorder un cépage à un lieu');
@@ -2914,7 +3249,7 @@ ATELIERS.cepage = (boite) => {
    ====================================================================== */
 
 ATELIERS.verre = (boite) => {
-  const rouge = ETAT.style === 'rouge';
+  const rouge = ST().peaux, doux = ST().sucre;
   atelierEntete(boite, 'Bilan', 'Le vin que vos décisions ont fait');
   const echantillon = h('div', { class: 'echantillon', style: 'margin-top:0;height:64px', 'data-testid': 'robe-bilan' });
   boite.append(echantillon);
@@ -2927,8 +3262,8 @@ ATELIERS.verre = (boite) => {
   const jGarde = jauge(jauges, 'Aptitude à la garde', 'or');
   boite.append(jauges);
   const mesures = h('dl', { class: 'mesures' });
-  const dAlc = h('dd', { 'data-testid': 'bilan-alcool' }), dAcid = h('dd', { 'data-testid': 'bilan-acidite' }), dGarde = h('dd', { class: 'grand', 'data-testid': 'bilan-garde' });
-  mesures.append(h('dt', {}, 'Degré'), dAlc, h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcid, h('dt', {}, 'À ouvrir dans'), dGarde);
+  const dAlc = h('dd', { 'data-testid': 'bilan-alcool' }), dAcid = h('dd', { 'data-testid': 'bilan-acidite' }), dSuc = h('dd', { 'data-testid': 'bilan-sucre' }), dGarde = h('dd', { class: 'grand', 'data-testid': 'bilan-garde' });
+  mesures.append(h('dt', {}, 'Degré'), dAlc, h('dt', {}, 'Acidité totale (éq. H₂SO₄)'), dAcid, h('dt', {}, 'Sucre résiduel'), dSuc, h('dt', {}, 'À ouvrir dans'), dGarde);
   boite.append(mesures);
   const lecture = h('p', { class: 'lecture', 'data-testid': 'lecture-bilan' });
   boite.append(lecture);
@@ -2937,7 +3272,7 @@ ATELIERS.verre = (boite) => {
   boite.append(decisions);
   limite(boite, 'Une lecture, pas une note : chaque jauge est une tendance déduite de modèles jouets, et le vin réel dépend aussi de tout ce que la page ne simule pas.');
 
-  const ORDRE = ['climat', 'cepage', 'millesime', 'maturite', 'fermentation', 'malo', 'elevage', 'assemblage', 'bouchage', 'garde'];
+  const ORDRE = ['climat', 'cepage', 'millesime', 'maturite', 'concentration', 'fermentation', 'malo', 'elevage', 'assemblage', 'bouchage', 'garde'];
 
   function maj() {
     const d = ETAT.decisions;
@@ -2946,25 +3281,28 @@ ATELIERS.verre = (boite) => {
     let acidite = d.assemblage?.acidite ?? d.maturite?.acidite ?? 4;
     if (!d.assemblage && d.malo && ETAT.style !== 'rose') acidite -= 1.2 * d.malo.avancement;
     acidite = clamp(acidite, 1.5, 8);
-    const sucreResiduel = d.fermentation?.fini && d.fermentation.fini !== 'sec' ? d.fermentation.sucre : 0;
-    const frais = clamp((acidite - 2.2) / 3 * 100 - (alcool - 13) * 6 - sucreResiduel * 0.4, 0, 100);
-    const chaud = clamp((alcool - 11) / 4.5 * 100, 0, 100);
+    const sucreResiduel = d.assemblage?.sucre ?? (d.fermentation?.fini && d.fermentation.fini !== 'sec' ? d.fermentation.sucre : (doux ? 100 : 0));
+    const frais = clamp((acidite - 2.2) / 3 * 100 - (alcool - (ETAT.style === 'mute' ? 19 : 13)) * 6 - sucreResiduel * (doux ? 0.25 : 0.4), 0, 100);
+    const chaud = clamp((alcool - 11) / (ETAT.style === 'mute' ? 10 : 4.5) * 100, 0, 100);
     const fondu = d.elevage?.rond ?? 0;
     const tanins = d.assemblage?.tanin ?? d.fermentation?.tanins ?? (d.cepage ? d.cepage.tanins * 18 : 50);
     const texture = rouge ? clamp(tanins - fondu * 0.25, 0, 100) : clamp(20 + fondu * 0.9 + (d.elevage?.lies ? 15 : 0), 0, 100);
     const fruitBase = d.assemblage?.fruit ?? 75;
     const fruit = clamp(fruitBase * (d.elevage ? 0.4 + 0.6 * d.elevage.fruit / 100 : 1), 0, 100);
     const bois = clamp(d.assemblage?.bois ?? d.elevage?.bois ?? 0, 0, 100);
-    let garde = d.bouchage?.garde ?? (rouge ? 6 : ETAT.style === 'blanc' ? 3 : 1.5);
+    let garde = d.bouchage?.garde ?? ({ rouge: 6, blanc: 3, rose: 1.5, orange: 5, doux: 12, mute: 15 })[ETAT.style];
     garde *= rouge ? 0.6 + 0.6 * tanins / 80 : 0.6 + 0.5 * clamp((acidite - 3) / 2, 0, 1);
-    if (sucreResiduel > 4) garde *= 0.7;
+    if (sucreResiduel > 4) garde *= doux ? 1.4 : 0.7;
     const gardeJauge = clamp(Math.log(garde + 1) / Math.log(26) * 100, 0, 100);
 
     jFrais(frais); jChaud(chaud); jTexture(texture); jFruit(fruit); jBois(bois); jGarde(gardeJauge);
     dAlc.textContent = `≈ ${fmt(alcool, 1)} % vol.`;
     dAcid.textContent = `≈ ${fmt(acidite, 1)} g/L`;
+    dSuc.textContent = sucreResiduel > 4 ? `≈ ${fmt(sucreResiduel)} g/L` : 'sec';
     dGarde.textContent = garde < 1.5 ? "l'année" : garde < 4 ? '1 à 3 ans' : garde < 8 ? '3 à 8 ans' : garde < 15 ? '8 à 15 ans' : 'plus de 15 ans';
-    const c = rouge ? [Math.round(lerp(150, 70, tanins / 100)), Math.round(lerp(60, 14, tanins / 100)), Math.round(lerp(90, 46, tanins / 100))]
+    const c = ETAT.style === 'orange' ? [Math.round(lerp(225, 175, tanins / 100)), Math.round(lerp(195, 100, tanins / 100)), Math.round(lerp(110, 35, tanins / 100))]
+      : ETAT.style === 'doux' ? [Math.round(lerp(240, 205, bois / 100)), Math.round(lerp(215, 150, bois / 100)), Math.round(lerp(120, 45, bois / 100))]
+      : rouge ? [Math.round(lerp(150, 70, tanins / 100)), Math.round(lerp(60, 14, tanins / 100)), Math.round(lerp(90, 46, tanins / 100))]
       : ETAT.style === 'blanc' ? [Math.round(lerp(238, 214, bois / 100)), Math.round(lerp(232, 186, bois / 100)), Math.round(lerp(178, 96, bois / 100))]
         : [Math.round(lerp(247, 214, (d.assemblage?.couleur ?? 30) / 100)), Math.round(lerp(196, 96, (d.assemblage?.couleur ?? 30) / 100)), Math.round(lerp(190, 112, (d.assemblage?.couleur ?? 30) / 100))];
     echantillon.style.background = `rgb(${c.join(',')})`;
@@ -2977,8 +3315,10 @@ ATELIERS.verre = (boite) => {
     else phrases.push(texture > 55 ? 'du gras et du volume' : texture > 30 ? 'une texture moyenne' : 'un corps léger, sans gras');
     phrases.push(bois > 45 ? 'un bois qui marque' : bois > 15 ? 'une touche de bois' : 'pas de bois');
     phrases.push(fruit > 60 ? 'un fruit intact' : fruit > 35 ? 'un fruit en retrait' : 'un fruit presque effacé par l’élevage');
+    if (doux) phrases.push(sucreResiduel / Math.max(acidite, 1) > 32 ? `un sucre (${fmt(sucreResiduel)} g/L) qui écrase l'acidité : de la liqueur, mais lourde` : sucreResiduel > 4 ? `un sucre (${fmt(sucreResiduel)} g/L) que l'acidité tient en respect : l'équilibre d'un vin doux réussi` : 'presque plus de sucre : ce n’est plus un vin doux');
     let l = `${phrases.join(', ')}. `;
-    if (sucreResiduel > 4) l += `La cuve s'est arrêtée avec ${fmt(sucreResiduel)} g/L de sucre : le vin n'est pas sec, et il faudra le stabiliser avec soin. `;
+    if (sucreResiduel > 4 && !doux) l += `La cuve s'est arrêtée avec ${fmt(sucreResiduel)} g/L de sucre : le vin n'est pas sec, et il faudra le stabiliser avec soin. `;
+    else if (doux && sucreResiduel > 4) l += `Le sucre est voulu, et avec ${ETAT.style === 'mute' ? "l'alcool" : "l'acidité et le soufre"}, c'est un conservateur : ces vins durent. `;
     l += `À ouvrir ${dGarde.textContent === "l'année" ? "dans l'année" : `dans ${dGarde.textContent}`}, ${garde >= 8 ? 'et il peut attendre : la garde tient à ' + (rouge ? 'ses tanins et à son acidité' : 'son acidité') : 'sans trop attendre'}.`;
     lecture.innerHTML = l;
     lecture.className = 'lecture';
