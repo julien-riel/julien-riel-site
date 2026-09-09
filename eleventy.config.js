@@ -346,10 +346,11 @@ export default function(eleventyConfig) {
 
   // Filter: estimate reading time in minutes
   eleventyConfig.addFilter("readingTime", (content) => {
-    if (!content) return "1 min";
+    // Le gabarit ajoute lui-même « min de lecture » / « min read » : on ne renvoie que le nombre.
+    if (!content) return "1";
     const words = content.replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean).length;
     const minutes = Math.max(1, Math.round(words / 200));
-    return `${minutes} min`;
+    return `${minutes}`;
   });
 
   // Filter: glossary terms belonging to one category, in data-file order
