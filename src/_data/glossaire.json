@@ -745,6 +745,12 @@
       "source": {
         "label": "Model Context Protocol — Documentation",
         "url": "https://modelcontextprotocol.io"
+      },
+      "related": {
+        "fr": "/articles/mcp/",
+        "en": "/en/articles/mcp/",
+        "labelFr": "MCP, ou comment on branche une IA sur le monde",
+        "labelEn": "MCP, or How You Plug an AI Into the World"
       }
     },
     {
