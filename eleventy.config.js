@@ -512,6 +512,18 @@ export default function(eleventyConfig) {
     "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2": "assets/fonts/jetbrains-mono-400.woff2",
     "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-500-normal.woff2": "assets/fonts/jetbrains-mono-500.woff2",
     "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2": "assets/fonts/jetbrains-mono-600.woff2",
+    // Serveur à tout prix
+    "node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-500-normal.woff2": "assets/fonts/chakra-petch-500.woff2",
+    "node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-600-normal.woff2": "assets/fonts/chakra-petch-600.woff2",
+    "node_modules/@fontsource/chakra-petch/files/chakra-petch-latin-700-normal.woff2": "assets/fonts/chakra-petch-700.woff2",
+    "node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2": "assets/fonts/instrument-sans-400.woff2",
+    "node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-400-italic.woff2": "assets/fonts/instrument-sans-400-italic.woff2",
+    "node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-500-normal.woff2": "assets/fonts/instrument-sans-500.woff2",
+    "node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-600-normal.woff2": "assets/fonts/instrument-sans-600.woff2",
+    "node_modules/@fontsource/instrument-sans/files/instrument-sans-latin-700-normal.woff2": "assets/fonts/instrument-sans-700.woff2",
+    "node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2": "assets/fonts/ibm-plex-mono-400.woff2",
+    "node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2": "assets/fonts/ibm-plex-mono-500.woff2",
+    "node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2": "assets/fonts/ibm-plex-mono-600.woff2",
   };
   eleventyConfig.addPassthroughCopy(fontFiles);
 

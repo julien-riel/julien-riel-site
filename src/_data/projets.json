@@ -80,5 +80,19 @@
     "emoji": "💥",
     "modele": "Claude Fable 5.1",
     "date": "2026-09-07"
+  },
+  {
+    "name": {
+      "fr": "Serveur à tout prix",
+      "en": "Server at any price"
+    },
+    "description": {
+      "fr": "Un jeu sérieux en six missions et un comité de direction : acheter, installer, dimensionner et justifier un serveur GPU qui sert des LLM aux 50 000 employés du Groupe Polyvalent Universel inc. On y calcule la VRAM et le cache KV, on remplace l’Ollama de Kevin par du batching continu, on case 35 kW de serveurs dans trois baies de 12 kW, on remplit les nuits pour battre la location, on monte une pile qui survit à une semaine de pannes, puis on défend chaque dollar devant Régis, Me Bérubé et la PDG.",
+      "en": "A serious game in six missions and a board meeting: buy, install, size and justify a GPU server that serves LLMs to 50,000 employees. Work out VRAM and KV cache, replace an Ollama box with continuous batching, fit 35 kW of servers into three 12 kW racks, fill the nights to beat cloud rental, build a stack that survives a week of incidents, then defend every dollar in front of the CFO, legal and the CEO. French only."
+    },
+    "url": "/projets/serveur-a-tout-prix/",
+    "emoji": "🖥️",
+    "modele": "Claude Opus 5.5",
+    "date": "2026-10-16"
   }
 ]
