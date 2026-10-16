@@ -87,10 +87,11 @@
       "en": "Server at any price"
     },
     "description": {
-      "fr": "Un jeu sérieux en six missions et un comité de direction : acheter, installer, dimensionner et justifier un serveur GPU qui sert des LLM aux 50 000 employés du Groupe Polyvalent Universel inc. On y calcule la VRAM et le cache KV, on remplace l’Ollama de Kevin par du batching continu, on case 35 kW de serveurs dans trois baies de 12 kW, on remplit les nuits pour battre la location, on monte une pile qui survit à une semaine de pannes, puis on défend chaque dollar devant Régis, Me Bérubé et la PDG.",
-      "en": "A serious game in six missions and a board meeting: buy, install, size and justify a GPU server that serves LLMs to 50,000 employees. Work out VRAM and KV cache, replace an Ollama box with continuous batching, fit 35 kW of servers into three 12 kW racks, fill the nights to beat cloud rental, build a stack that survives a week of incidents, then defend every dollar in front of the CFO, legal and the CEO. French only."
+      "fr": "Un jeu sérieux en huit missions et un comité de direction : acheter, installer, dimensionner et justifier un serveur GPU qui sert des LLM aux 50 000 employés du Groupe Polyvalent Universel inc. On y calcule la VRAM et le cache KV, on remplace l’Ollama de Kevin par du batching continu, on case 35 kW de serveurs dans trois baies de 12 kW, on remplit les nuits pour battre la location, on monte une pile qui survit à une semaine de pannes, on donne aux agents d’IA un modèle qui finit ses tâches, puis on défend chaque dollar devant Régis, Me Bérubé et la PDG.",
+      "en": "A serious game in eight missions and an executive committee: buy, install, size and justify a GPU server that serves LLMs to the 50,000 employees of General Purpose Unlimited Inc. Work out VRAM and KV cache, replace Kevin's Ollama box with continuous batching, fit 35 kW of servers into three 12 kW racks, fill the nights to beat cloud rental, build a stack that survives a week of incidents, give AI agents a model that finishes its tasks, then defend every dollar in front of Régis, Counsel Bérubé and the CEO."
     },
     "url": "/projets/serveur-a-tout-prix/",
+    "urlEn": "/en/projets/server-at-any-price/",
     "emoji": "🖥️",
     "modele": "Claude Opus 5.5",
     "date": "2026-10-16"

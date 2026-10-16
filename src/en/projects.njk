@@ -15,7 +15,7 @@ lang: en
   <ul class="sites-grid">
     {% for projet in projets %}
     <li class="site-item">
-      <a href="{{ projet.url }}" class="site-link">
+      <a href="{{ projet.urlEn or projet.url }}" class="site-link">
         <span class="site-name">{{ projet.emoji }} {{ projet.name.en }}</span>
         <span class="site-description">{{ projet.description.en }}</span>
         {% if projet.date %}<span class="site-url">Built on {{ projet.date | dateFormat("long", "en") }}{% if projet.modele %} with {{ projet.modele }}{% endif %}</span>{% endif %}
