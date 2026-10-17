@@ -271,12 +271,4 @@
     creerContexte: creerContexte, ecrireLevier: ecrireLevier,
   };
 
-  LTP.enregistrerTextes({
-    'levier.change': 'Levier modifié : {levier}.',
-    'levier.programme': 'Changement programmé : {levier}, effectif dans {delai} semaines.',
-    'levier.effectif': 'Changement en vigueur : {levier}.',
-    'comite.convoque': 'Fin du trimestre {trimestre} : le comité de direction vous attend.',
-    'trimestre.debut': 'Début du trimestre {trimestre}.',
-    'partie.fin': 'Fin de la partie.',
-  });
 })(globalThis.LTP = globalThis.LTP || {});

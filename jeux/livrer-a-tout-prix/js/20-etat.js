@@ -260,6 +260,13 @@
     if (ctx && ctx.noter) ctx.noter('incident', 'incident.' + inc.cause, { ilot: spec.ilot, gravite: gravite }, { ilot: spec.ilot });
     return inc;
   };
+  // Un incident est « de sécurité » si sa cause contient un des fragments de LTP.K.metriques.causesSecurite
+  // (source unique, utilisée par les métriques, les comités et les fins).
+  q.estIncidentSecurite = function (cause) {
+    var c = String(cause || '').toLowerCase();
+    var liste = (LTP.K.metriques && LTP.K.metriques.causesSecurite) || ['injection', 'fuite', 'paquet', 'empoison', 'typosquat', 'silencieux', 'destruction'];
+    return liste.some(function (x) { return c.indexOf(String(x).toLowerCase()) >= 0; });
+  };
   q.incidentsActifs = function (etat, ilotId) {
     return etat.incidents.filter(function (i) { return !i.resolu && (!ilotId || i.ilot === ilotId); });
   };

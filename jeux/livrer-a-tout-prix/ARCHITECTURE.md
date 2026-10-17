@@ -219,9 +219,16 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
 }
 ```
 
+Champs ajoutés par les systèmes dans leur `initialiser` (internes, documentés en tête de chaque fichier) :
+`etat.travail` (21–24), `etat.registre` (26 : orphelines, périmées, connaissance capturée), `etat.securite`
+(25 : surface d'attaque, exposition Loi 25, cumul par cause), `etat.personnes` (27 : départs), `etat.evenementsCompte` (29),
+`etat.metriquesDetail` et `etat.cumuls` (30), `etat.fin` (32), `ilot.retard` et `ilot.applisEncadrees` (28).
+`etat.comite.questions[]` contient `{ id, personnage, reponses: [{ id }] }`, et `etat.comite` a aussi `scores` et `reactions`.
+`etat.resultat` contient aussi `faits` (chiffres du bilan) et `affinites` (proximité de chaque profil).
+
 Fonctions utilitaires exposées (`LTP.q`) pour le moteur, les conditions d'événements et l'UI :
 `levier`, `rangLevier`, `levierDebloque`, `devsDe`, `devsPresents`, `disponible`, `ilotDe`, `aTrait`, `modTrait`,
-`triadeComplete`, `metriqueVisible`, `creerIncident`, `incidentsActifs`, `def*` (définitions de contenu).
+`triadeComplete`, `metriqueVisible`, `creerIncident`, `incidentsActifs`, `estIncidentSecurite`, `def*` (définitions de contenu).
 La liste à jour est dans `20-etat.js`.
 
 **Textes du journal** : un système note `ctx.noter(type, cle, vars, ref)` et enregistre lui-même le gabarit
@@ -265,9 +272,10 @@ Ajouter un levier = une entrée ici + sa lecture dans un système. Personne d'au
 LTP.app = { etat, ui: { vue, selection, vitesse, panneau, modale } }
 LTP.app.dispatch(action)   // moteur.action → sauvegarde → notifie
 LTP.app.avancer()          // moteur.semaine → animation → notifie (appelé par l'horloge de 90-main)
-LTP.app.abonner(region, fn)    // régions : 'hud', 'openspace', 'leviers', 'tableau', 'registre', 'modale', 'journal'
+// régions : 'hud', 'openspace', 'panneau' (leviers et registre), 'tableau', 'journal', 'modale' ; écrans : 'accueil', 'fin'
 LTP.ui.h(tag, attrs, ...enfants), LTP.ui.svg(...)
 LTP.ui.regions[region] = { monter(racine), rendre(etat, ui, precedent) }
+// Le comité et la visite guidée sont des couches de la région 'modale' (47, 48).
 ```
 
 Chaque module d'interface enregistre sa région et ne touche qu'à sa racine DOM.

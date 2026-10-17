@@ -1,5 +1,6 @@
 /* 49-ui-sauvegarde.js */
-/* Sauvegarde automatique dans localStorage, protégée (navigation privée, stockage bloqué). Propriétaire : agent F. */
+/* Sauvegarde automatique dans localStorage, protégée (navigation privée, stockage bloqué). Propriétaire : agent F.
+   API : enregistrer(etat), charger() → etat | null, effacer(), existe() → booléen. */
 (function (LTP) {
   'use strict';
   var CLE = 'livrer-a-tout-prix:v1';
@@ -12,9 +13,10 @@
         var s = localStorage.getItem(CLE);
         if (!s) return null;
         var etat = JSON.parse(s);
-        return etat && etat.version === 1 ? etat : null;
+        return etat && etat.version === 1 && etat.devs && etat.ilots ? etat : null;
       } catch (e) { return null; }
     },
     effacer: function () { try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ } },
+    existe: function () { return !!LTP.sauvegarde.charger(); },
   };
 })(globalThis.LTP = globalThis.LTP || {});

@@ -1,2 +1,120 @@
 /* 60-mobile.css */
-/* Propriétaire : agent F. */
+/* Tablette et téléphone (dès 360 px) : HUD sur deux lignes, panneau en feuille du bas, tableau de bord
+   un groupe à la fois, modales pleine largeur. Aucun défilement horizontal. Propriétaire : agent F. */
+
+@media (max-width: 1440px) {
+  .hud-inner { gap: 8px 14px; }
+  .btn--semaine .btn-lib { display: none; }
+  .btn--semaine::after { content: "+1 sem."; }
+}
+@media (max-width: 1180px) {
+  .hud-inner { gap: 8px 12px; }
+  .hud-phase { display: none; }
+  .hud .tool--back { font-size: var(--fs-xs); }
+}
+
+@media (max-width: 900px) {
+  /* ---------- HUD ---------- */
+  .hud-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "marque outils" "temps stats" "commandes commandes"; gap: 6px 10px; padding-top: 6px; padding-bottom: 8px; }
+  .hud-marque { grid-area: marque; gap: 10px; flex-wrap: wrap; }
+  .hud-outils { grid-area: outils; }
+  .hud-temps { grid-area: temps; min-width: 0; }
+  .hud-stats { grid-area: stats; justify-self: end; }
+  .hud-commandes { grid-area: commandes; margin-left: 0; justify-content: stretch; }
+  .hud-commandes .btn--lecture { flex: 1 1 auto; }
+  .hud-titre { font-size: var(--fs-m); }
+  .hud-stat { padding: 2px 8px; }
+  .hud-stat-val { font-size: var(--fs-s); }
+  .tiroir { left: var(--gutter); right: var(--gutter-r); width: auto; }
+
+  /* ---------- Panneau en feuille du bas ---------- */
+  .zone-panneau { min-height: 0; }
+  .panneau {
+    position: fixed; z-index: 32; left: 0; right: 0; bottom: 0; max-height: min(82vh, calc(100vh - 56px));
+    border-radius: 16px 16px 0 0; border-bottom: 0; box-shadow: 0 -12px 40px -16px rgba(30, 20, 10, .55);
+    transform: translateY(calc(100% - 60px - env(safe-area-inset-bottom, 0px))); transition: transform .28s cubic-bezier(.2, .8, .3, 1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .panneau[data-ouvert="true"] { transform: none; }
+  .panneau-poignee {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "barre barre" "lib fleche";
+    align-items: center; gap: 4px 8px; width: 100%; min-height: 60px; padding: 6px var(--gutter-r) 8px var(--gutter);
+    border: 0; border-bottom: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; text-align: left; flex: none;
+  }
+  .poignee-barre { grid-area: barre; justify-self: center; width: 44px; height: 4px; border-radius: 2px; background: var(--line-strong); }
+  .poignee-lib { grid-area: lib; display: flex; align-items: center; gap: 8px; font-family: var(--font-titre); font-weight: 600; min-width: 0; }
+  .poignee-texte { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .poignee-fleche { grid-area: fleche; transform: rotate(180deg); transition: transform .2s; color: var(--muted); }
+  .panneau[data-ouvert="true"] .poignee-fleche { transform: none; }
+  .panneau-titre { display: none; }
+  .panneau-tete { padding: 10px var(--gutter-r) 10px var(--gutter); }
+  .onglets { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter-r) 2px var(--gutter); }
+  .onglets::-webkit-scrollbar { display: none; }
+  .onglet { flex: none; }
+  .panneau-corps { padding: 12px var(--gutter-r) 24px var(--gutter); }
+
+  /* ---------- Tableau de bord compact : un groupe à la fois ---------- */
+  .tableau-entete { display: block; width: 100%; }
+  .tableau-entete .choix { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tableau-entete .choix::-webkit-scrollbar { display: none; }
+  .tableau-entete .choix-opt { flex: none; font-size: var(--fs-xs); }
+  .groupe:not(.is-mobile-actif) { display: none; }
+  .tableau-corps { grid-template-columns: minmax(0, 1fr); }
+  .groupe-titre { display: none; }
+  .groupe { padding-top: 4px; }
+
+  .journal-liste { max-height: 260px; }
+
+  /* ---------- Toast au-dessus de la poignée ---------- */
+  .couche-toast { left: var(--gutter); right: var(--gutter-r); width: auto; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 720px) {
+  .accueil { gap: 28px; padding-top: 12px; }
+  .accueil-hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 24px; }
+  .accueil-art { max-width: 280px; margin: 0 auto; }
+  .trims { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .actions .btn--grand { flex: 1 1 100%; }
+
+  /* Modales en feuille pleine largeur */
+  @keyframes monte-bas { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modale { left: 8px; right: 8px; top: auto; bottom: 8px; width: auto; transform: none; max-height: calc(100vh - 24px); padding: 18px 16px 20px; animation-name: monte-bas; }
+  .comite { top: 8px; bottom: 8px; padding: 16px 14px 20px; }
+  .ev-bande { margin: 0 -16px; }
+  .ev-titre { font-size: var(--fs-xl); }
+  .ev-corps { grid-template-columns: minmax(0, 1fr); }
+  .ev-perso, .fauteuil { display: flex; gap: 12px; align-items: center; max-width: none; text-align: left; }
+  .ev-perso .visage svg, .fauteuil .visage svg { width: 48px; height: 48px; }
+  .comite-jauge { display: flex; gap: 10px; align-items: baseline; justify-items: start; }
+  .comite-jauge b { font-size: var(--fs-xl); }
+  .salle { padding: 14px 12px; }
+  .salle-question { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .fiche-tete { grid-template-columns: 72px minmax(0, 1fr); }
+  .fiche-visage svg { width: 72px; height: 72px; }
+  .comite-resume li { grid-template-columns: auto minmax(0, 1fr); }
+  .comite-resume .verdict { grid-column: 2; justify-self: start; }
+  .profil-replique { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+}
+
+@media (max-width: 480px) {
+  .hud-inner { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "marque temps outils" "stats stats stats" "commandes commandes commandes"; gap: 6px 8px; padding-top: 4px; padding-bottom: 6px; }
+  .hud:not([data-phase="accueil"]) .hud-nom { display: none; }
+  .hud .tool--back { font-size: 0; padding: 6px 4px; min-width: 28px; }
+  .hud .tool--back::before { content: "←"; font-size: var(--fs-l); }
+  .hud-phase { display: none; }
+  .hud-temps { min-width: 84px; gap: 3px; }
+  .hud-quand { gap: 4px; }
+  .hud-sem { font-size: var(--fs-xs); }
+  .hud-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; justify-self: stretch; }
+  .hud-stat { padding: 0 8px; }
+  .hud-stat-lib { font-size: .625rem; letter-spacing: .04em; }
+  .hud-stat-val { font-size: var(--fs-xs); }
+  .hud .ibtn { min-width: 36px; height: 36px; }
+  .hud-commandes .btn { min-height: 38px; }
+  .hud-commandes .btn--semaine .btn-lib { display: none; }
+  .btn--semaine::after { content: "+1"; }
+  .cap-attr > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .jauge { grid-template-columns: minmax(0, 1fr) minmax(60px, 1fr) auto; gap: 8px; }
+  .trims { grid-template-columns: minmax(0, 1fr); }
+  .titre-jeu { font-size: 2.5rem; }
+}

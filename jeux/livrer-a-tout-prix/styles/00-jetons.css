@@ -1,21 +1,85 @@
 /* 00-jetons.css */
-/* Jetons de design. Propriétaire : agent F (direction visuelle complète en phase 1). */
+/* Jetons de design. Propriétaire : agent F.
+   Direction : un open space en fin d'après-midi. Papier crème et moquette chaude, lumière dorée qui entre
+   par les stores, post-it jaunes ; un seul accent, le bleu du stylo à bille, pour tout ce qui se clique.
+   Les couleurs d'état (ok, warn, crit) restent réservées aux états et ne servent jamais de décor.
+   Contrat avec l'agent E : --bg --surface --fg --muted --line --accent --ok --warn --crit
+   --font-titre --font-texte --font-mono (les autres jetons sont des ajouts). */
 :root {
-  color-scheme: light dark;
-  --bg: #f4efe6;
-  --surface: #fffaf1;
-  --fg: #1f1a14;
-  --muted: #6b6155;
-  --line: #d8cdbb;
-  --accent: #c2410c;
-  --ok: #1f7a3f;
-  --warn: #b26b00;
-  --crit: #c0261c;
-  --font-titre: 'Chakra Petch', system-ui, sans-serif;
-  --font-texte: 'Instrument Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  color-scheme: light;
+  --bg: #efe7da;
+  --surface: #fbf7ef;
+  --surface-2: #f4ecdf;
+  --paper: #fffdf8;
+  --fg: #221c15;
+  --muted: #675c4f;
+  --line: #ddd0bc;
+  --line-strong: #b5a48c;
+  --accent: #2346c7;
+  --accent-fg: #ffffff;
+  --accent-soft: #e2e7fa;
+  --accent-line: #8d9fe6;
+  --ok: #276b37;
+  --ok-soft: #dcefdc;
+  --warn: #8a5a00;
+  --warn-soft: #f8e8c4;
+  --crit: #b3261e;
+  --crit-soft: #f8dcd6;
+  --postit: #fbe48f;
+  --postit-fg: #3a2e10;
+  --postit-line: #e3c75a;
+  --soleil: #f2a541;
+  --lueur: rgba(242, 165, 65, .22);
+  --ciel-haut: #f6c98b;
+  --ciel-bas: #f19a62;
+  --ville: #b26a4b;
+  --moquette: rgba(90, 64, 40, .035);
+  --hachure: rgba(103, 92, 79, .18);
+  --shadow: 0 1px 0 rgba(60, 40, 20, .05), 0 10px 28px -14px rgba(60, 40, 20, .35);
+  --shadow-haute: 0 2px 0 rgba(60, 40, 20, .05), 0 24px 60px -20px rgba(40, 25, 10, .5);
+  --backdrop: rgba(34, 24, 14, .46);
+
+  --font-titre: 'Chakra Petch', 'Bahnschrift', 'DIN Alternate', 'Arial Narrow', sans-serif;
+  --font-texte: 'Instrument Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --fs-xs: .75rem; --fs-s: .8125rem; --fs-m: .9375rem; --fs-l: 1.0625rem; --fs-xl: 1.375rem; --fs-2xl: 1.875rem;
+  --fs-3xl: clamp(2.25rem, 6.5vw, 4rem);
+  --r: 4px;
+  --r-l: 10px;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --hud-h: 64px;
+  --panneau-l: 380px;
 }
+
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #15120e; --surface: #1e1a14; --surface-2: #27211a; --paper: #231e17;
+    --fg: #f1e9dc; --muted: #b3a590; --line: #3a3127; --line-strong: #5a4c3c;
+    --accent: #93a6ff; --accent-fg: #0d1430; --accent-soft: #232b4d; --accent-line: #4b5aa3;
+    --ok: #63cf86; --ok-soft: #173322; --warn: #e9b44f; --warn-soft: #3a2c11; --crit: #ff7b6c; --crit-soft: #401b16;
+    --postit: #4a3e18; --postit-fg: #f8e8aa; --postit-line: #6d5b22;
+    --soleil: #d9893a; --lueur: rgba(217, 137, 58, .13);
+    --ciel-haut: #3b2f4a; --ciel-bas: #a8573a; --ville: #2a2028;
+    --moquette: rgba(255, 230, 200, .025); --hachure: rgba(179, 165, 144, .2);
+    --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 12px 30px -14px rgba(0, 0, 0, .75);
+    --shadow-haute: 0 2px 0 rgba(0, 0, 0, .3), 0 24px 60px -18px rgba(0, 0, 0, .85);
+    --backdrop: rgba(5, 3, 1, .62);
+  }
 }
-:root[data-theme="dark"] { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #15120e; --surface: #1e1a14; --surface-2: #27211a; --paper: #231e17;
+  --fg: #f1e9dc; --muted: #b3a590; --line: #3a3127; --line-strong: #5a4c3c;
+  --accent: #93a6ff; --accent-fg: #0d1430; --accent-soft: #232b4d; --accent-line: #4b5aa3;
+  --ok: #63cf86; --ok-soft: #173322; --warn: #e9b44f; --warn-soft: #3a2c11; --crit: #ff7b6c; --crit-soft: #401b16;
+  --postit: #4a3e18; --postit-fg: #f8e8aa; --postit-line: #6d5b22;
+  --soleil: #d9893a; --lueur: rgba(217, 137, 58, .13);
+  --ciel-haut: #3b2f4a; --ciel-bas: #a8573a; --ville: #2a2028;
+  --moquette: rgba(255, 230, 200, .025); --hachure: rgba(179, 165, 144, .2);
+  --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 12px 30px -14px rgba(0, 0, 0, .75);
+  --shadow-haute: 0 2px 0 rgba(0, 0, 0, .3), 0 24px 60px -18px rgba(0, 0, 0, .85);
+  --backdrop: rgba(5, 3, 1, .62);
+}
