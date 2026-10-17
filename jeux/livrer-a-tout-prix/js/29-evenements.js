@@ -8,9 +8,13 @@
   var O = LTP.outils;
 
   LTP.K.evenements = {
-    probabilite: 0.35,            // chance hebdomadaire qu'une carte soit tirée
-    probabiliteDebut: 0.1,        // pendant les premières semaines (le joueur découvre l'open space)
-    semainesDebut: 1,             // nombre de semaines « calmes » en début de partie
+    probabilite: 0.18,            // chance hebdomadaire qu'une carte soit tirée (≈ 13 cartes par partie, suites et rattrapage compris)
+    probabiliteDebut: 0,          // pendant les premières semaines (le joueur découvre l'open space)
+    semainesDebut: 1,             // nombre de semaines « calmes » en début de partie (aucune carte en semaine 1)
+    // Rythme : au moins espacementMin semaines entre deux cartes (suites comprises), et au moins
+    // minimumParTrimestre cartes par trimestre (la probabilité monte quand le trimestre avance sans carte).
+    espacementMin: 2,
+    minimumParTrimestre: 3,
     poidsDefaut: 1,               // poids d'une carte qui n'en précise pas
     delaiRetirageDefaut: 8,       // semaines avant qu'une carte puisse revenir
     bonusTheme: 2,                // multiplicateur de poids pour les thèmes dominants du trimestre
@@ -113,6 +117,8 @@
     var c = etat.evenementsCompte || (etat.evenementsCompte = { tires: 0, parTrimestre: {} });
     c.tires += 1;
     c.parTrimestre[etat.trimestre] = (c.parTrimestre[etat.trimestre] || 0) + 1;
+    c.derniere = etat.semaine;
+    (c.semaines || (c.semaines = [])).push(etat.semaine);
     if (ctx && ctx.noter) ctx.noter('evenement', 'evenements.tire', { evenement: def.id, force: !!force }, r);
   }
 
@@ -122,6 +128,11 @@
     var q = LTP.q, rng = ctx.rng;
     var spt = LTP.K.etat.semainesParTrimestre;
     if (K.pasEnFinDeTrimestre && etat.semaine % spt === 0) return;
+    if (etat.semaine <= K.semainesDebut && !(K.probabiliteDebut > 0)) return;
+    // Espacement : pas deux cartes coup sur coup (les suites attendent aussi).
+    var compte = etat.evenementsCompte || {};
+    var ecart = etat.semaine - compte.derniere;
+    if (compte.derniere != null && ecart >= 0 && ecart < (K.espacementMin || 0)) return;
 
     // 1. Suites planifiées échues (dans l'ordre de planification).
     var forces = etat.evenementsForces || [];
@@ -139,6 +150,13 @@
 
     // 2. Tirage au hasard.
     var p = etat.semaine <= K.semainesDebut ? K.probabiliteDebut : K.probabilite;
+    // Rattrapage : un trimestre trop calme voit sa probabilité monter jusqu'à son minimum de cartes.
+    var manque = (K.minimumParTrimestre || 0) - ((compte.parTrimestre && compte.parTrimestre[etat.trimestre]) || 0);
+    if (manque > 0) {
+      var finTrimestre = etat.trimestre * spt - 1;          // la semaine du comité est exclue
+      var restantes = Math.max(1, finTrimestre - etat.semaine + 1);
+      p = Math.max(p, Math.min(1, manque * Math.max(1, K.espacementMin || 1) / restantes));
+    }
     if (!rng.chance(p)) return;
     var candidats = (LTP.donnees.evenements || []).filter(function (d) { return admissible(etat, d); });
     for (var essai = 0; essai < K.essaisCible && candidats.length; essai++) {

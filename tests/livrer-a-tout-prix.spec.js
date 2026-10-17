@@ -40,6 +40,22 @@ test.describe("Livrer à tout prix", () => {
     expect(erreurs).toEqual([]);
   });
 
+  test("au comité de fin de T1, chaque réponse affiche son texte", async ({ page }) => {
+    const erreurs = [];
+    page.on("pageerror", (e) => erreurs.push(e.message));
+    await page.goto(URL + "?neuf=1&graine=5");
+    await page.evaluate(() => {
+      const LTP = window.LTP;
+      LTP.app.dispatch({ type: "phase", phase: "planification" });
+      LTP.app.dispatch({ type: "phase", phase: "execution" });
+      LTP.app.demarrer(LTP.moteur.simuler(LTP.app.etat, 13).etat);
+    });
+    const reponses = page.locator(".comite .reponses > *");
+    await expect(reponses).toHaveCount(3);
+    for (const texte of await reponses.allTextContents()) expect(texte.trim().length).toBeGreaterThan(10);
+    expect(erreurs).toEqual([]);
+  });
+
   test("au téléphone, pas de défilement horizontal", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
     await page.goto(URL + "?demo=t2-tendu");

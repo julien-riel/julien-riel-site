@@ -41,7 +41,7 @@
     {
       id: 'inspections', ordre: 3, nom: 'Inspections', court: 'Inspections', teinte: 200,
       pile: 'Kotlin, Swift, synchronisation hors ligne',
-      mission: 'L\'application mobile des inspecteurs terrain : photos, formulaires, rapports.',
+      mission: 'L\'application mobile des inspecteurs sur le terrain : photos, formulaires, rapports.',
       criticite: 0.6, sensibilite: 0.75, volatilite: 0.6, adequationPile: 0.7,
       volumeInitial: 70, backlogInitial: 30, demandeBase: 14, satisfactionInitiale: 0.55,
       exposition: { prive: true, nonFiable: false, sortie: false },
@@ -68,7 +68,7 @@
     {
       id: 'portail', ordre: 6, nom: 'Portail client', court: 'Portail', teinte: 230,
       pile: 'TypeScript, React, Java, OAuth',
-      mission: 'Le portail des clients et des partenaires : comptes, demandes, paiements.',
+      mission: 'Le portail des clients et des partenaires : comptes, demandes, paiements.',
       criticite: 0.8, sensibilite: 0.85, volatilite: 0.5, adequationPile: 0.85,
       volumeInitial: 150, backlogInitial: 35, demandeBase: 15, satisfactionInitiale: 0.55,
       exposition: { prive: true, nonFiable: true, sortie: false },

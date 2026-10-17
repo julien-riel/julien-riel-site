@@ -443,10 +443,10 @@
   };
 
   LTP.enregistrerTextes({
-    'personnes.conge': '{dev} n\'en peut plus : congé forcé de {semaines} semaines.',
+    'personnes.conge': '{dev} n\'en peut plus : congé forcé de {semaines} semaines.',
     'personnes.demission': '{dev} démissionne. Ce que cette personne savait du code s\'en va aussi ({capture}\u202f% capturé dans des skills).',
     'personnes.finContrat': 'Fin du contrat de {dev}. Ce qu\'il savait part avec lui ({capture}\u202f% capturé dans des skills).',
-    'personnes.formationDebut': 'La formation commence : l\'équipe passe une partie de ses semaines en salle.',
-    'personnes.reaction': '{dev} : « {bulle} »',
+    'personnes.formationDebut': 'La formation commence : l\'équipe passe une partie de ses semaines en salle.',
+    'personnes.reaction': '{dev} : « {bulle} »',
   });
 })(globalThis.LTP = globalThis.LTP || {});

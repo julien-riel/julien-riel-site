@@ -4,7 +4,8 @@
 // Les stratégies ne proposent que des leviers débloqués et ne lisent que les données (cartes, îlots, devs) :
 // elles fonctionnent avec n'importe quel contenu conforme, y compris des listes vides.
 
-export const NOMS_STRATEGIES = ["tout-ia", "musee", "equilibree", "economique", "aleatoire"];
+// « par-defaut » : le joueur ne touche à rien de toute la partie (premier choix, première réponse au comité).
+export const NOMS_STRATEGIES = ["tout-ia", "musee", "equilibree", "economique", "aleatoire", "par-defaut"];
 
 // Générateur déterministe propre à la stratégie (ne touche pas au hasard du moteur).
 function hasardDe(graine) {
@@ -167,7 +168,7 @@ export function creerStrategie(LTP, nom, graine = 1) {
         nom,
         leviers(etat) {
           const actions = actionsLeviers(LTP, etat, {
-            autonomie: 4, sessionsMax: 6, reviseurs: 0, approbation: "auto", taillePR: "libre", ci: "aucune", lint: "aucun",
+            autonomie: 4, sessionsMax: 6, reviseurs: 1, approbation: "humain", taillePR: "libre", ci: "aucune", lint: "aucun",
             tests: "aucun", revuesExplication: "non", pair: "ia", modele: "haut", modeleParTache: false, formation: "aucune",
             plafondJetons: "aucun", disciplineNon: "laxiste", specs: "non",
             catalogue: "aucun", classification: "non", bacASable: "aucun", accesProd: "oui", approbationSorties: false,
@@ -218,6 +219,22 @@ export function creerStrategie(LTP, nom, graine = 1) {
         },
         choix: (etat, def) => meilleurChoix(LTP, def, economique ? PREF_ECONOMIQUE : PREF_EQUILIBRE),
         comite: (etat, question) => meilleureReponse(LTP, etat, question),
+      };
+    }
+
+    case "par-defaut": {
+      // L'interface mélange l'ordre des réponses du comité : cliquer la première affichée revient
+      // à répondre au hasard. Les données, elles, mettent souvent la bonne réponse en premier.
+      const hasard = hasardDe(graine ^ 0x5eed);
+      return {
+        nom,
+        leviers: () => [],
+        choix: (etat, def) => (def && def.choix && def.choix[0] ? def.choix[0].id : undefined),
+        comite: (etat, question) => {
+          const def = (LTP.donnees.comites || []).find((c) => c.id === question.id);
+          const reps = def && def.reponses ? def.reponses : question.reponses || [];
+          return reps.length ? reps[Math.floor(hasard() * reps.length)].id : premiereReponse(LTP, etat, question);
+        },
       };
     }
 

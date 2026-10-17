@@ -62,10 +62,11 @@ test("visibilité : les métriques cachées n'apparaissent qu'avec le bon levier
   assert.equal(vis("inconnue"), false);
   const L = etat.leviers.global;
   L.ci = "tests";
-  assert.equal(vis("tauxEchec"), true);
+  assert.equal(vis("tauxEchec"), false);
   assert.equal(vis("frequenceDeploiement"), false);
   L.ci = "complet";
   assert.equal(vis("frequenceDeploiement"), true);
+  assert.equal(vis("tauxEchec"), true, "même visibilité que la fréquence de déploiement");
   L.tests = "mutation";
   assert.equal(vis("couvertureReelle"), true);
   L.revuesExplication = "mensuelles";

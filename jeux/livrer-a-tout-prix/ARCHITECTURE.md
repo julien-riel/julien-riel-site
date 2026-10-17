@@ -376,7 +376,7 @@ de données pour le tableau de bord.
 
 ## 7. Budget et risques
 
-**Budget** : environ 7 000 lignes au total, page générée sous 450 Ko (le premier jeu fait 375 Ko).
+**Budget** : environ 7 000 lignes visées au départ ; le jeu final en compte environ 14 000 (dont la moitié de contenu). La page générée est minifiée par esbuild : environ 560 Ko, 170 Ko compressée (le premier jeu fait 375 Ko non minifié).
 Partie complète simulée en moins de 200 ms.
 
 | Risque | Mitigation |

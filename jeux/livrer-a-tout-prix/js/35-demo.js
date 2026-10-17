@@ -13,7 +13,7 @@
     if (!LTP.q.defEvenement('pr-geante')) {
       LTP.donnees.evenements.push({
         id: 'pr-geante', theme: 'revue', trimestres: [1, 2], poids: 0, personnage: 'nadia',
-        titre: 'La PR de 4 000 lignes', texte: 'Mathieu a ouvert une PR de 4 000 lignes.',
+        titre: 'La PR de 4 000 lignes', texte: 'Mathieu a ouvert une PR de 4 000 lignes.',
         choix: [
           { id: 'approuver', libelle: 'On fusionne', consequence: 'Personne ne l\'a lue.', effets: [] },
           { id: 'decouper', libelle: 'On découpe', consequence: 'Nadia respire.', effets: [] },
@@ -24,9 +24,9 @@
       LTP.donnees.comites = LTP.donnees.comites || [];
       LTP.donnees.comites.push({
         id: 'demo-regis', personnage: 'regis', trimestres: [], poids: 0,
-        question: 'La facture de jetons a doublé ce trimestre. Je résume : on paie deux fois plus pour la même chose ?',
+        question: 'La facture de jetons a doublé ce trimestre. Je résume : on paie deux fois plus pour la même chose ?',
         reponses: [
-          { id: 'a', texte: 'Non : le débit a augmenté de 60 % et voici le coût par point livré.', evaluer: function () { return 1; }, reaction: 'Un chiffre. Enfin.' },
+          { id: 'a', texte: 'Non : le débit a augmenté de 60 % et voici le coût par point livré.', evaluer: function () { return 1; }, reaction: 'Un chiffre. Enfin.' },
           { id: 'b', texte: 'C\'est un investissement stratégique.', evaluer: function () { return -0.5; }, reaction: 'Tout le monde dit ça.' },
           { id: 'c', texte: 'Ce n\'est pas vraiment le double.', evaluer: function () { return -1; }, reaction: 'J\'ai la facture sous les yeux.' },
         ],

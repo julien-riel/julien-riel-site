@@ -138,7 +138,9 @@ function profil(LTP, extra) {
 
 test("profils : chaque situation typique donne son profil", () => {
   const LTP = charger();
-  assert.equal(profil(LTP, { ratioDebit: 1.45, incidentsParSemaine: 0.2, comprehension: 0.75, surfaceAttaque: 0.15, ratioBudget: 0.9 }), "reussie");
+  assert.equal(profil(LTP, { ratioDebit: 1.45, incidentsParSemaine: 0.2, comprehension: 0.75, surfaceAttaque: 0.15, ratioBudget: 0.9, autonomieMoyenne: 2.4 }), "reussie");
+  // Sans transition (autonomie et sessions restées au niveau de départ), pas de « transition réussie ».
+  assert.notEqual(profil(LTP, { ratioDebit: 1.45, incidentsParSemaine: 0.2, comprehension: 0.75, surfaceAttaque: 0.15, ratioBudget: 0.9, autonomieMoyenne: 1, sessionsMoyennes: 1 }), "reussie");
   assert.equal(profil(LTP, { ratioDebit: 1.9, partLgtm: 0.6, incidentsParSemaine: 1.6, comprehension: 0.35 }), "usine");
   assert.equal(profil(LTP, { ratioDebit: 0.75, satisfaction: 0.3, applisFantomes: 7, surfaceAttaque: 0.1, incidentsParSemaine: 0.1, comprehension: 0.8 }), "musee");
   assert.equal(profil(LTP, { fuitesMajeures: 1, fuites: 2, surfaceAttaque: 0.7 }), "farwest");

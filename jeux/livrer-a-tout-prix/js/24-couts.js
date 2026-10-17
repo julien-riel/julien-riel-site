@@ -13,14 +13,16 @@
 
   LTP.K.couts = {
     // Millions de jetons par session et par semaine, selon l'autonomie (0 à 4).
-    intensite: [0.5, 3, 15, 30, 45],
+    intensite: [0.5, 3, 10, 15, 17],
     // Un développeur habile gaspille moins : × (plancher − pente × competenceIA).
     competenceIA: [1.2, 0.4],
     // Une pile mal connue de l'agent le fait tourner plus longtemps : × (plancher − pente × adéquation).
     pile: [1.3, 0.3],
     // Prix moyen en dollars par million de jetons (entrée et sortie confondues, avec cache).
-    prix: { economique: 0.8, intermediaire: 4, haut: 15, local: 0.1 },
+    prix: { economique: 2.5, intermediaire: 4, haut: 10, local: 0.1 },
     reductionParTache: 0.35,
+    // Hausse de prix du fournisseur : tirée une fois au début du T2 (modèles infonuagiques seulement).
+    hausseFournisseur: { trimestre: 2, proba: 0.5, facteur: 1.3 },
     // Boucle d'agent : probabilité par semaine et par session (autonomie ≥ 2), en millions de jetons.
     boucle: { autonomie: 2, proba: 0.004, jetons: [150, 450], souple: 0.3 },
     // Attente d'une CI lente : l'agent relance et interroge en boucle. Fraction de jetons en plus (autonomie ≥ 2),
@@ -30,7 +32,7 @@
     // Plafond par développeur présent (millions de jetons par semaine) ; souple : alerte au-delà.
     plafondParDev: 60,
     // Coûts fixes hebdomadaires ($).
-    licenceParDev: 50,
+    licenceParDev: 100,        // postes d'agent, IDE et outils, par développeur présent
     formation: { aucune: 0, atelier: 400, programme: 1200, mentorat: 2000 },
     ciParIlot: { aucune: 0, build: 40, tests: 100, complet: 200 },
     mutationParIlot: 40,
@@ -42,7 +44,7 @@
     modeleLocal: 600,          // location d'un GPU modeste
     modeleLocalServeur: 900,   // électricité et entretien du serveur acheté
     // Confiance perdue chaque semaine où le budget est dépassé : base + pente × dépassement relatif, plafonnée.
-    confianceDepassement: [0.3, 1, 1.5],
+    confianceDepassement: [0.1, 0.7, 0.8],
     seuilsBudget: [50, 75, 90],
     delaiJournal: 13,          // semaines minimales entre deux avis de plafond pour un îlot
   };
@@ -56,6 +58,7 @@
     var cle = P().cleModele(etat);
     var prix = K.prix[cle] != null ? K.prix[cle] : K.prix.intermediaire;
     if (q.levier(etat, 'modeleParTache')) prix *= 1 - K.reductionParTache;
+    if (cle !== 'local' && etat.org.drapeaux && etat.org.drapeaux.hausseFournisseur && K.hausseFournisseur) prix *= K.hausseFournisseur.facteur;
     return prix;
   }
 
@@ -110,6 +113,15 @@
   function semaine(etat, ctx) {
     var K = LTP.K.couts, q = LTP.q, p = P(), rng = ctx.rng;
     var T = p.travail(etat);
+    // Hausse de prix du fournisseur, tirée une seule fois au trimestre prévu.
+    var KH = K.hausseFournisseur;
+    if (KH && !T.org.hausseTiree && etat.trimestre >= KH.trimestre) {
+      T.org.hausseTiree = true;
+      if (rng.chance(KH.proba)) {
+        etat.org.drapeaux.hausseFournisseur = true;
+        ctx.noter('alerte', 'couts.hausseFournisseur', { pourcent: Math.round((KH.facteur - 1) * 100) }, null);
+      }
+    }
     var prix = prixModele(etat);
     var fixes = coutsFixes(etat);
     var jetonsTotal = 0, coutTotal = fixes.org;
@@ -201,10 +213,11 @@
   };
 
   LTP.enregistrerTextes({
-    'couts.boucle': '{dev} : un agent a tourné en boucle et brûlé {jetons} jetons ({cout}).',
-    'couts.plafondSouple': '{ilot} : alerte de plafond, {jetons} jetons cette semaine.',
-    'couts.plafondCoupe': '{ilot} : le plafond strict a coupé les agents en pleine tâche. Environ {points} points de travail perdus.',
-    'couts.budget': '{pourcent} % du budget annuel de l\'IA et des outils est dépensé.',
+    'couts.boucle': '{dev} : un agent a tourné en boucle et brûlé {jetons} jetons ({cout}).',
+    'couts.plafondSouple': '{ilot} : alerte de plafond, {jetons} jetons cette semaine.',
+    'couts.plafondCoupe': '{ilot} : le plafond strict a coupé les agents en pleine tâche. Environ {points} points de travail perdus.',
+    'couts.budget': '{pourcent} % du budget annuel de l\'IA et des outils est dépensé.',
     'couts.budgetDepasse': 'Le budget annuel est dépassé. Régis a réservé une salle pour en parler.',
+    'couts.hausseFournisseur': 'Le fournisseur de modèles augmente ses tarifs de {pourcent} %. Chaque jeton coûte désormais plus cher.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

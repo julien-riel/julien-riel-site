@@ -10,12 +10,13 @@
   var etat_ = { groupeMobile: null };
 
   // Les n dernières valeurs numériques de l'historique, jusqu'à la semaine courante : [{ semaine, v }].
+  // La semaine 0 (état initial, souvent à zéro pour les flux hebdomadaires) est exclue.
   function serie(etat, id, n) {
     var hist = (etat.historique || {})[id];
     var res = [];
     if (!hist || !hist.length) return res;
     var fin = Math.min(hist.length - 1, etat.semaine);
-    for (var i = fin; i >= 0 && res.length < n; i--) {
+    for (var i = fin; i >= 1 && res.length < n; i--) {
       var v = hist[i];
       if (typeof v === 'number' && isFinite(v)) res.unshift({ semaine: i, v: v });
     }
@@ -23,23 +24,34 @@
   }
   LTP.ui.serieMetrique = serie;
 
-  // Variation sur la fenêtre : { sens: 'mieux' | 'pire' | 'stable' | 'neutre', texte, fleche }
+  // Variation : moyenne des (au plus) 4 dernières semaines comparée à celle des 4 précédentes.
+  // pts vient de serie() : semaine 0 et trous déjà écartés. → { sens: 'mieux' | 'pire' | 'stable' | 'neutre', texte, fleche, n }
+  var FENETRE_TENDANCE = 4;
+  function moyenne(l) { var t = 0; for (var i = 0; i < l.length; i++) t += l[i].v; return t / l.length; }
   function variation(def, pts) {
-    if (pts.length < 2) return null;
-    var a = pts[0].v, b = pts[pts.length - 1].v, d = b - a;
+    // Au moins deux semaines de chaque côté, sinon la « tendance » n'est que du bruit.
+    if (pts.length < 4) return null;
+    var k = Math.min(FENETRE_TENDANCE, Math.floor(pts.length / 2));
+    var recents = pts.slice(pts.length - k), avant = pts.slice(pts.length - 2 * k, pts.length - k);
+    var a = moyenne(avant), b = moyenne(recents), d = b - a;
     var f = LTP.format, texte, relatif;
+    var stable = { sens: 'stable', texte: t('tableau.stable'), fleche: '→', n: k };
     if (def.unite === 'ratio') {
       relatif = Math.abs(d);
       texte = (d >= 0 ? '+' : '−') + f.nombre(Math.abs(d) * 100, 0) + f.NBSP + 'pts';
-      if (relatif < 0.01) return { sens: 'stable', texte: t('tableau.stable'), fleche: '→' };
+      if (relatif < 0.01) return stable;
     } else {
       var base = Math.max(Math.abs(a), 1e-9);
       relatif = Math.abs(d) / base;
-      if (Math.abs(a) < 1e-9) {
-        if (Math.abs(d) < 1e-9) return { sens: 'stable', texte: t('tableau.stable'), fleche: '→' };
+      if (def.unite === 'nb' && Math.abs(a) < 5) {
+        // Petits comptes (incidents, applications…) : un pourcentage exagérerait ; on montre l'écart moyen par semaine.
+        if (Math.abs(d) < 0.1) return stable;
+        texte = (d >= 0 ? '+' : '−') + f.nombre(Math.abs(d), 1) + f.NNBSP + '/sem.';
+      } else if (Math.abs(a) < 1e-9) {
+        if (Math.abs(d) < 1e-9) return stable;
         texte = (d >= 0 ? '+' : '−') + F.formatMetrique(Math.abs(d), def.unite);
       } else {
-        if (relatif < 0.03) return { sens: 'stable', texte: t('tableau.stable'), fleche: '→' };
+        if (relatif < 0.03) return stable;
         texte = (d >= 0 ? '+' : '−') + f.nombre(Math.min(relatif, 9.99) * 100, 0) + f.NNBSP + '%';
       }
     }
@@ -47,7 +59,7 @@
     var sens;
     if (def.sens === 'neutre' || !def.sens) sens = 'neutre';
     else sens = (def.sens === 'haut') === (d > 0) ? 'mieux' : 'pire';
-    return { sens: sens, texte: texte, fleche: fleche };
+    return { sens: sens, texte: texte, fleche: fleche, n: k };
   }
 
   // Sparkline : trait de 1,5 px dans la teinte discrète, dernier point dans l'accent (sauf métrique neutre).
@@ -104,10 +116,10 @@
     var scrubEl = h('span', { class: 'met-scrub mono', 'aria-hidden': 'true' });
     var min = null, max = null;
     pts.forEach(function (p) { if (min == null || p.v < min) min = p.v; if (max == null || p.v > max) max = p.v; });
-    var resumeTendance = pts.length >= 2 ? t('tableau.tendance', { n: pts.length }) + ' : ' + t('tableau.min', { v: F.formatMetrique(min, def.unite) }) + ', ' + t('tableau.max', { v: F.formatMetrique(max, def.unite) }) : '';
-    var deltaEl = varia ? h('span', { class: 'met-delta met-delta--' + varia.sens, title: varia.sens === 'neutre' ? t('tableau.neutre') : null },
+    var resumeTendance = pts.length >= 2 ? t('tableau.tendance', { n: pts.length }) + ' : ' + t('tableau.min', { v: F.formatMetrique(min, def.unite) }) + ', ' + t('tableau.max', { v: F.formatMetrique(max, def.unite) }) : '';
+    var deltaEl = varia ? h('span', { class: 'met-delta met-delta--' + varia.sens, title: (varia.sens === 'neutre' ? t('tableau.neutre') + ' · ' : '') + t('tableau.vs', { n: varia.n }) },
       h('span', { 'aria-hidden': 'true' }, varia.fleche), ' ', varia.texte,
-      h('span', { class: 'sr-only' }, ' ' + t('tableau.vs', { n: pts.length - 1 }) + (varia.sens === 'mieux' ? ', ' + t('tableau.mieux') : varia.sens === 'pire' ? ', ' + t('tableau.pire') : varia.sens === 'neutre' ? ', ' + t('tableau.neutre') : ''))) : null;
+      h('span', { class: 'sr-only' }, ' ' + t('tableau.vs', { n: varia.n }) + (varia.sens === 'mieux' ? ', ' + t('tableau.mieux') : varia.sens === 'pire' ? ', ' + t('tableau.pire') : varia.sens === 'neutre' ? ', ' + t('tableau.neutre') : ''))) : null;
     var li = h('li', { class: 'metrique' + (def.sens === 'neutre' ? ' is-neutre' : ''), 'data-metrique': def.id, title: resumeTendance || null },
       h('span', { class: 'met-lib' }, def.libelle),
       valEl,

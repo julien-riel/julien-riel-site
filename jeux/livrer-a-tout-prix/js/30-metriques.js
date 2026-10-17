@@ -31,7 +31,9 @@
     // changementSilencieux, destructionProd, fuiteDonnees ; les événements peuvent en créer d'autres).
     causesSecurite: ['injection', 'exfiltr', 'fuite', 'typosquat', 'slopsquat', 'paquet', 'empoison', 'silencieux', 'destruction', 'loi25', 'secu'],
     causesFuite: ['fuite', 'exfiltr', 'empoison', 'loi25'],
-    graviteMajeure: 0.6,          // gravité à partir de laquelle une fuite est « majeure »
+    // Taux d'échec des changements : part des défauts échappés qui se manifestent, lissage hebdomadaire.
+    tauxEchec: { partManifestee: 1, lissage: 0.35 },
+    graviteMajeure: 0.75,        // gravité à partir de laquelle une fuite est « majeure » (et un incident, grave)
     seuilPerime: 0.4,             // fraîcheur sous laquelle une carte est périmée
     // Seuils de visibilité (rangs dans la liste des valeurs du levier).
     majoriteIlots: 0.5,           // part des îlots qui doivent avoir le bon réglage (leviers surchargeables)
@@ -50,7 +52,8 @@
 
   function nouveauxCumuls() {
     return { semaines: 0, pointsLivres: 0, points: 0, prFusionnees: 0, code: 0, bogues: 0, incidents: 0, incidentsGraves: 0,
-      incidentsSecurite: 0, fuites: 0, fuitesMajeures: 0, lgtm: 0, pr: 0, defautsEchappes: 0, deploiements: 0, jetons: 0 };
+      incidentsSecurite: 0, fuites: 0, fuitesMajeures: 0, lgtm: 0, pr: 0, defautsEchappes: 0, deploiements: 0, jetons: 0,
+      autonomie: 0, sessions: 0 }; // autonomie et sessions : sommes hebdomadaires des moyennes (adoption de l'IA)
   }
 
   // Niveau d'observabilité : 0 aucune, 1 base, 2 complète (levier, ou jauge org.observabilite).
@@ -74,7 +77,7 @@
   // --- Visibilité (CONCEPTION §5) ---
   var REGLES = {
     frequenceDeploiement: function (etat) { return majorite(etat, 'ci', ['complet']); },
-    tauxEchec: function (etat) { return majorite(etat, 'ci', ['tests', 'complet']); },
+    tauxEchec: function (etat) { return majorite(etat, 'ci', ['complet']); }, // comme la fréquence de déploiement
     couvertureReelle: function (etat) { return majorite(etat, 'tests', ['mutation']) || niveauObservabilite(etat) >= 1; },
     comprehension: function (etat) {
       var r = LTP.q.levier(etat, 'revuesExplication');
@@ -260,9 +263,17 @@
       satisfaction: function () { return O.moyenne(ilots, function (il) { return num(il.satisfaction); }); },
       bogues: function () { return O.somme(ilots, function (il) { return der(il, 'bogues'); }); },
       incidents: function () { return incidentsVisiblesSemaine(etat); },
+      // Part des déploiements fautifs : un déploiement qui emporte λ défauts échappés en moyenne
+      // en contient au moins un qui finira en bogue ou en incident avec la probabilité 1 − e^(−λ × part).
       tauxEchec: function () {
-        if (deploiements > 0) return O.borner(echappes / deploiements);
-        return num(precedent.tauxEchec);
+        if (!(deploiements > 0)) return num(precedent.tauxEchec);
+        var KE = K.tauxEchec, fautifs = 0;
+        ilots.forEach(function (il) {
+          var d = der(il, 'deploiements');
+          if (d > 0) fautifs += d * (1 - Math.exp(-KE.partManifestee * der(il, 'defautsEchappes') / d));
+        });
+        var courant = O.borner(fautifs / deploiements);
+        return precedent.tauxEchec == null ? courant : O.lerp(num(precedent.tauxEchec), courant, KE.lissage);
       },
       mttr: function () { return arrondirA(mttr, K.arrondiMttr[obs] == null ? 1 : K.arrondiMttr[obs]); },
       volumeCode: function () { return O.somme(ilots, function (il) { return num(il.codebase && il.codebase.volume); }); },
@@ -323,6 +334,8 @@
     ['pointsLivres', 'points', 'prFusionnees', 'code', 'bogues', 'lgtm', 'pr', 'defautsEchappes', 'deploiements', 'jetons'].forEach(function (champ) {
       c[champ] += O.somme(ilots, function (il) { return der(il, champ); });
     });
+    c.autonomie = num(c.autonomie) + O.moyenne(ilots.map(function (il) { return num(LTP.q.levier(etat, 'autonomie', il.id)); }));
+    c.sessions = num(c.sessions) + O.moyenne(LTP.q.devsPresents(etat), 'sessions');
     incidentsDeLaSemaine(etat).forEach(function (i) {
       c.incidents += 1;
       var g = num(i.gravite, 0.5);

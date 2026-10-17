@@ -28,9 +28,12 @@
   LTP.K.demandes = {
     // --- Nouvelles demandes ---
     alea: 0.6,                    // demande × (1 + volatilité × alea), alea uniforme dans [−0,6 ; 0,6]
-    appetit: 0.6,                 // demande × (1 + 0,6 × gain de l'IA perçu)
-    perception: [0, 0.15, 0.35, 0.6, 0.85],  // gain perçu selon l'autonomie
-    perceptionDebit: 0.5,         // + 0,5 × mods.debit (les skills qui accélèrent se voient)
+    appetit: 0.8,                 // demande × (1 + 0,8 × gain de l'IA perçu)
+    perception: [0, 0.1, 0.25, 0.7, 1],      // gain perçu selon l'autonomie
+    // Gain attendu par les directions même sans IA : attente × part de l'année écoulée × (1 − criticite × criticité de l'îlot).
+    // La demande suit le plus grand du gain perçu et du gain attendu.
+    engouement: { attente: 0.6, criticite: 0.7 },
+    perceptionDebit: 0.5,       // + 0,5 × mods.debit (les skills qui accélèrent se voient)
     // --- Discipline du « non » ---
     refus: { laxiste: 0, normale: 0.15, ferme: 0.35 },          // part des demandes refusées (faible valeur)
     sansValeur: { laxiste: 0.3, normale: 0.12, ferme: 0.04 },   // part des points livrés qui n'apportent rien
@@ -49,25 +52,26 @@
       base: 0.15, valeur: 0.55, ratioMax: 1.3,  // cible = base + valeur × min(ratioMax, valeur livrée / demandes acceptées)
       bogue: 0.02, boguesMax: 5,  // par bogue de la semaine
       incident: 0.06, incidentActif: 0.03,
-      retard: 0.2, delai: 0.02, delaiTolere: 2,  // délai de livraison toléré (semaines)
-      refus: 0.08,                // × part des demandes refusées (le « non » déçoit à court terme)
+      retard: 0.25, delai: 0.02, delaiTolere: 2,  // délai de livraison toléré (semaines)
+      delaiPlafond: 5,            // au-delà de 5 semaines de trop, le délai ne pèse pas plus (le retard compte déjà)
+      refus: 0.4,                 // × part des demandes refusées (le « non » déçoit à court terme)
       vitesse: 0.12,              // rapprochement hebdomadaire de la cible
     },
     retard: { tolere: 3, echelle: 6 }, // semaines de backlog tolérées, puis 0 → 1 sur 6 semaines
     // --- Applications hors TI ---
     nonTI: {
       trimestreMin: 2,            // le développement citoyen commence au T2
-      base: 0.04,                 // probabilité par semaine et par îlot × insatisfaction
+      base: 0.08,                 // probabilité par semaine et par îlot × insatisfaction
       seuilSat: 0.55,             // sous cette satisfaction, la direction se débrouille
       echelleSat: 0.35,
       retard: 0.5,                // + 0,5 × retard dans l'insatisfaction
       gainPercu: 0.5,             // × (1 + 0,5 × gain perçu) : « c'est facile maintenant »
-      politique: { ignorer: 1, interdire: 0.55, encadrer: 1 },   // × probabilité d'apparition
+      politique: { ignorer: 1, interdire: 0.8, encadrer: 1 },    // × probabilité d'apparition (interdire freine peu)
       encadreePart: 0.85,         // encadrer : part des nouvelles applications qui naissent encadrées
       regularisation: 0.06,       // encadrer : probabilité par semaine de régulariser une application fantôme
       absorbe: 0.3,               // encadrer : points de backlog absorbés par semaine et par application encadrée
       satEncadrer: 0.03,          // + cible de satisfaction (accompagnement)
-      satInterdire: 0.05,         // − cible de satisfaction (ça fâche)
+      satInterdire: 0.12,      // − cible de satisfaction (ça fâche)
       ilotsKevin: ['bureautique', 'web'],
     },
     // --- Goodhart « incidents » : reclassement en demandes ---
@@ -118,7 +122,12 @@
 
     // Nouvelles demandes, filtrées par la discipline du « non ».
     P.gainPercu = gainPercu(etat, il);
-    var demandes = Math.max(0, (def.demandeBase || 10) * (1 + il.volatilite * rng.entre(-K.alea, K.alea)) * (1 + K.appetit * P.gainPercu));
+    // Engouement : les directions lisent les journaux et attendent un gain de l'IA qui monte au fil de l'année,
+    // même si l'équipe ne change rien (l'inaction a un coût) ; les secteurs critiques attendent moins de miracles.
+    var E = K.engouement || { attente: 0, criticite: 0 };
+    var attendu = E.attente * O.borner(etat.semaine / LTP.K.etat.semainesTotal) * (1 - E.criticite * il.criticite);
+    var demandes = Math.max(0, (def.demandeBase || 10) * (1 + il.volatilite * rng.entre(-K.alea, K.alea))
+      * (1 + K.appetit * Math.max(P.gainPercu, attendu)));
     var refusees = demandes * (K.refus[d] || 0);
     var acceptees = demandes - refusees;
     il.backlog += acceptees;
@@ -168,7 +177,7 @@
       - S.bogue * Math.min(S.boguesMax, il.derniere.bogues || 0)
       - S.incident * (il.derniere.incidents || 0) - S.incidentActif * actifs
       - S.retard * il.retard
-      - S.delai * Math.max(0, (il.derniere.delai || 0) - S.delaiTolere)
+      - S.delai * Math.min(S.delaiPlafond == null ? Infinity : S.delaiPlafond, Math.max(0, (il.derniere.delai || 0) - S.delaiTolere))
       - S.refus * partRefus;
     if (pol === 'encadrer') cible += K.nonTI.satEncadrer;
     if (pol === 'interdire') cible -= K.nonTI.satInterdire;
@@ -214,7 +223,7 @@
   };
 
   LTP.enregistrerTextes({
-    'demandes.portee': 'Changement de portée à l\'îlot {ilot} : « finalement, on le voudrait autrement ». {points} points à refaire.',
+    'demandes.portee': 'Changement de portée à l\'îlot {ilot} : « finalement, on le voudrait autrement ». {points} points à refaire.',
     'demandes.kevinAppli': 'Kevin, du marketing, a mis en ligne sa propre application. Elle marche. Personne ne sait où sont les données.',
     'demandes.kevinAppliEncadree': 'Kevin, du marketing, a construit sa propre application, dans le registre approuvé et avec un coup de main de l\'équipe.',
     'demandes.appliFantome': 'Une nouvelle application hors TI est apparue du côté de l\'îlot {ilot}.',

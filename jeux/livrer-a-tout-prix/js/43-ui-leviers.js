@@ -117,7 +117,7 @@
     var texte = opts.texte || LTP.format.pourcent(v);
     return h('div', { class: 'jauge jauge--' + ton },
       opts.libelle ? h('span', { class: 'jauge-lib' }, opts.libelle) : null,
-      h('span', { class: 'jauge-piste', role: 'img', 'aria-label': (opts.libelle ? opts.libelle + ' : ' : '') + texte },
+      h('span', { class: 'jauge-piste', role: 'img', 'aria-label': (opts.libelle ? opts.libelle + ' : ' : '') + texte },
         h('span', { class: 'jauge-rempli', style: { width: Math.round(v * 100) + '%' } })),
       h('span', { class: 'jauge-val mono' }, texte));
   };
@@ -128,12 +128,54 @@
     triade = triade || {};
     var branches = ['prive', 'nonFiable', 'sortie'];
     var n = branches.filter(function (b) { return triade[b]; }).length;
-    var resume = t('triade.titre') + ' : ' + branches.map(function (b) { return t('triade.' + b) + ' ' + (triade[b] ? t('triade.allume') : t('triade.eteint')); }).join(', ');
+    var resume = t('triade.titre') + ' : ' + branches.map(function (b) { return t('triade.' + b) + ' ' + (triade[b] ? t('triade.allume') : t('triade.eteint')); }).join(', ');
     return h('div', { class: 'voyants' + (n === 3 ? ' is-complete' : '') + (opts.etiquettes ? ' voyants--etiquettes' : ''), role: 'img', 'aria-label': resume, title: opts.etiquettes ? null : resume },
       branches.map(function (b) {
         return h('span', { class: 'voyant' + (triade[b] ? ' is-on' : ''), 'data-branche': b },
           h('i', { 'aria-hidden': 'true' }), opts.etiquettes ? h('span', null, t('triade.' + b)) : null);
       }));
+  };
+
+  // D'où vient chaque branche allumée de la triade d'un îlot, et quand le joueur pourra agir.
+  // Reprend la règle de 26-registre : exposition de l'îlot (nature du travail), branches des cartes équipées,
+  // accès des agents à la production (données privées), approbation humaine des sorties (coupe la sortie).
+  // → { branches: [{ b, allume, sources: [texte] }], lignes: [texte], quand: texte, resume: texte }
+  var NATURE = {
+    prive: 'le travail touche des données personnelles ou financières',
+    nonFiable: 'les agents lisent du contenu venu de l\'extérieur',
+    sortie: 'le travail publie ou envoie vers l\'extérieur',
+  };
+  F.originesTriade = function (etat, ilotId) {
+    var il = etat.ilots[ilotId] || {}, def = LTP.q.defIlot(ilotId) || {};
+    var expo = def.exposition || {}, triade = il.triade || {};
+    var N = LTP.format.NBSP;
+    var res = { branches: [], lignes: [] };
+    var accesProd = LTP.q.levier(etat, 'accesProd', ilotId) === 'oui';
+    var approbation = LTP.q.levier(etat, 'approbationSorties', ilotId) === true;
+    ['prive', 'nonFiable', 'sortie'].forEach(function (b) {
+      var sources = [];
+      if (expo[b]) sources.push('nature du travail (' + NATURE[b] + ')');
+      (il.capacites || []).forEach(function (cid) {
+        var c = LTP.q.defCapacite ? LTP.q.defCapacite(cid) : null;
+        if (c && (c.branches || []).indexOf(b) >= 0) sources.push('carte «' + N + (c.nom || cid) + N + '»');
+      });
+      if (b === 'prive' && accesProd) sources.push('accès des agents à la production');
+      res.branches.push({ b: b, allume: !!triade[b], sources: sources });
+      if (triade[b]) res.lignes.push(t('triade.' + b) + N + ': ' + (sources.length ? sources.join(', ') : 'réglages de l\'îlot') + '.');
+      else if (b === 'sortie' && approbation && sources.length) res.lignes.push(t('triade.sortie') + N + ': coupée par l\'approbation humaine des sorties.');
+    });
+    var dAcces = LTP.q.defLevier('accesProd'), dSorties = LTP.q.defLevier('approbationSorties');
+    var ouvert = LTP.q.levierDebloque(etat, 'approbationSorties');
+    var nb = res.branches.filter(function (x) { return x.allume; }).length;
+    if (!nb) res.quand = '';
+    else if (!ouvert) {
+      res.quand = 'Vous pourrez couper une branche au T' + ((dSorties && dSorties.trimestre) || 3) + ' (onglet Données et sécurité)' + N + ': «' + N + (dSorties ? dSorties.libelle : 'approbation des sorties') + N + '» et «' + N + (dAcces ? dAcces.libelle : 'accès à la production') + N + '».' + (nb < 3 ? ' D\'ici là, évitez d\'équiper des cartes qui allument la branche manquante.' : '');
+    } else {
+      res.quand = 'Pour couper une branche' + N + ': l\'approbation humaine des sorties, l\'accès à la production en lecture seule, ou retirer une carte.';
+    }
+    res.resume = (nb === 3 ? t('triade.complete') : nb ? nb + ' branche' + (nb > 1 ? 's' : '') + ' sur 3 allumée' + (nb > 1 ? 's' : '') + '.' : t('triade.eteinte') + '.') +
+      (res.lignes.length ? ' ' + res.lignes.join(' ') : '') + (res.quand ? ' ' + res.quand : '');
+    return res;
   };
 
   // Valeur d'une métrique selon son unité.
@@ -345,7 +387,7 @@
           etat_.indice = texte ? { id: def.id, valeur: v, texte: texte } : null;
           var r = app.dispatch(action);
           if (r && r.erreur) { etat_.erreur = { id: def.id, code: r.erreur }; etat_.indice = null; }
-          else if (texte) LTP.ui.annoncer('Ginette : ' + texte);
+          else if (texte) LTP.ui.annoncer('Ginette : ' + texte);
         },
       }),
       m.court ? h('p', { class: 'levier-courant' }, LTP.ui.libelleValeur(def.id, courant)) : null,
@@ -402,6 +444,15 @@
         h('span', { class: 'poignee-lib' }, F.icone('reglage', 18), ' ', h('span', { class: 'poignee-texte' }, t('panneau.poignee'))),
         h('span', { class: 'poignee-fleche', 'aria-hidden': 'true' }, F.icone('fleche', 18)));
       this._onglets = h('div', { class: 'onglets', role: 'tablist', 'aria-label': t('panneau.onglets') });
+      // Au téléphone, les onglets défilent horizontalement : un fondu signale ce qui dépasse de chaque côté.
+      var onglets = this._onglets;
+      this._majDebord = function () {
+        var max = onglets.scrollWidth - onglets.clientWidth;
+        onglets.classList.toggle('deborde-g', max > 2 && onglets.scrollLeft > 2);
+        onglets.classList.toggle('deborde-d', max > 2 && onglets.scrollLeft < max - 2);
+      };
+      onglets.addEventListener('scroll', this._majDebord, { passive: true });
+      window.addEventListener('resize', this._majDebord);
       this._select = h('select', { class: 'portee-select', id: 'portee-ilot', onchange: function (ev) {
         app.setUI({ ilotEdition: ev.target.value || null });
       } });
@@ -409,10 +460,11 @@
       this._portee = h('div', { class: 'portee' },
         h('label', { for: 'portee-ilot', class: 'portee-lib' }, t('panneau.portee')),
         this._select, this._porteeNote);
+      this._triade = h('div', { class: 'triade-explic-zone' });
       this._ouverture = h('div', { class: 'ouverture-zone' });
       this._leviers = h('div', { class: 'panneau-leviers', id: 'panneau-contenu', role: 'tabpanel' });
       this._registre = h('div', { class: 'panneau-registre', role: 'tabpanel', hidden: true });
-      this._corps = h('div', { class: 'panneau-corps' }, this._ouverture, this._leviers, this._registre);
+      this._corps = h('div', { class: 'panneau-corps' }, this._triade, this._ouverture, this._leviers, this._registre);
       this._feuille = h('div', { class: 'panneau', id: 'panneau-feuille', 'data-ouvert': 'false' },
         this._poignee,
         h('div', { class: 'panneau-tete' }, h('h2', { class: 'panneau-titre' }, t('panneau.titre')), this._onglets, this._portee),
@@ -480,6 +532,15 @@
         });
       });
 
+      var actifO = this._onglets.querySelector('.onglet.is-actif');
+      if (actifO && this._ongletVu !== pid && F.etroit()) {
+        this._ongletVu = pid;
+        var o = this._onglets, g = actifO.offsetLeft, d = g + actifO.offsetWidth;
+        if (g < o.scrollLeft) o.scrollLeft = g - 24;
+        else if (d > o.scrollLeft + o.clientWidth) o.scrollLeft = d - o.clientWidth + 24;
+      }
+      this._majDebord();
+
       // Portée : globale ou par îlot
       var options = [''].concat(etat.ordreIlots || []);
       if (this._select.options.length !== options.length) {
@@ -494,6 +555,22 @@
       if (this._porteeNote.textContent !== note) this._porteeNote.textContent = note;
       this._portee.classList.toggle('is-ilot', !!ui.ilotEdition);
       this._portee.hidden = !debloque;
+
+      // Triade de l'îlot réglé : d'où viennent les branches allumées, et quand on pourra agir.
+      var ilotT = ui.ilotEdition && etat.ilots[ui.ilotEdition] && pid !== 'registre' ? ui.ilotEdition : null;
+      F.reconstruire(this._triade, ilotT ? JSON.stringify([ilotT, etat.ilots[ilotT].triade, etat.ilots[ilotT].capacites, etat.trimestre,
+        LTP.q.levier(etat, 'accesProd', ilotT), LTP.q.levier(etat, 'approbationSorties', ilotT)]) : '', function () {
+        if (!ilotT) return null;
+        var o = F.originesTriade(etat, ilotT);
+        var nb = o.branches.filter(function (x) { return x.allume; }).length;
+        return h('section', { class: 'triade-explic' + (nb === 3 ? ' is-complete' : ''), 'aria-labelledby': 'triade-explic-t' },
+          h('div', { class: 'triade-explic-tete' },
+            h('p', { class: 'eyebrow', id: 'triade-explic-t' }, t('triade.titre') + ' · ' + LTP.ui.nomIlot(ilotT)),
+            F.voyants(etat.ilots[ilotT].triade)),
+          o.lignes.length ? h('ul', { class: 'triade-explic-lignes' }, o.lignes.map(function (l) { return h('li', null, l); }))
+            : h('p', { class: 'muted petit' }, t('triade.eteinte') + '.'),
+          o.quand ? h('p', { class: 'triade-explic-quand' }, o.quand) : null);
+      });
 
       // Mot d'ouverture du trimestre
       F.reconstruire(this._ouverture, JSON.stringify([etat.trimestre, etat.phase, !!etat_.ouvertureVue[etat.trimestre]]), function () {

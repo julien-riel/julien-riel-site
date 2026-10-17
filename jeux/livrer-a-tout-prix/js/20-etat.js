@@ -19,7 +19,7 @@
       budgetAnnuel: 650000,   // $ pour l'IA, les outils et la formation
       confiance: 60,          // 0–100
       donnees: { qualite: 0.6, duplication: 0.4, fraicheur: 0.6, classification: 0.1 },
-      menace: 0.2,
+      menace: 0.1,
       releve: 0.5,
     },
     couvertureDepart: 0.35,

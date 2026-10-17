@@ -95,5 +95,19 @@
     "emoji": "🖥️",
     "modele": "Claude Opus 5.5",
     "date": "2026-10-16"
+  },
+  {
+    "name": {
+      "fr": "Livrer à tout prix",
+      "en": "Ship at any price"
+    },
+    "description": {
+      "fr": "Un jeu sérieux sur une année de transition vers le développement agentique au Groupe Polyvalent Universel inc. : 21 développeurs dans un open space, sept lignes d’affaires, et vous qui réglez l’autonomie des agents, le nombre de sessions, la revue de code, les tests, les skills et les serveurs MCP, la gouvernance des données et la sécurité. On y voit la pile de PR de Nadia monter, la dette cognitive embrumer les bureaux, la facture de jetons inquiéter Régis et la triade létale s’allumer à l’Appro, avant de défendre ses choix devant le comité de direction.",
+      "en": "A serious game about a year-long shift to agentic software development at General Purpose Unlimited Inc.: 21 developers in an open-plan office, seven business lines, and you tuning agent autonomy, parallel sessions, code review, tests, skills and MCP servers, data governance and security. Watch Nadia's review queue pile up, cognitive debt fog the desks, the token bill worry Régis and the lethal trifecta light up in Procurement, then defend your choices before the executive committee. French only."
+    },
+    "url": "/projets/livrer-a-tout-prix/",
+    "emoji": "🧑‍💻",
+    "modele": "Claude Opus 5.5",
+    "date": "2026-10-17"
   }
 ]

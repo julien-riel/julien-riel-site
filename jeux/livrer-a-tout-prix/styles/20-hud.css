@@ -37,7 +37,7 @@
 .hud-stat[data-ton="warn"] .conf-metre i { background: var(--warn); opacity: 1; }
 .hud-stat[data-ton="crit"] .conf-metre i { background: var(--crit); opacity: 1; }
 
-.hud-commandes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+.hud-commandes { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-wrap: wrap; position: relative; }
 .btn--lecture { min-width: 104px; }
 .btn--lecture.btn--grand { font-family: var(--font-titre); letter-spacing: .02em; animation: appel 2.4s ease-in-out infinite; }
 @keyframes appel { 0%, 100% { box-shadow: 0 1px 0 rgba(0, 0, 0, .12), 0 6px 16px -8px var(--accent); } 50% { box-shadow: 0 1px 0 rgba(0, 0, 0, .12), 0 0 0 5px var(--accent-soft), 0 6px 20px -6px var(--accent); } }
@@ -48,7 +48,12 @@
 .vitesse.is-actif.is-pause { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--fg); }
 .vitesse[disabled] { opacity: .45; cursor: not-allowed; }
 .btn--semaine { font-size: var(--fs-s); }
-.hud-attente { font-size: var(--fs-xs); font-weight: 600; color: var(--warn); background: var(--warn-soft); padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+/* Hors du flux : son apparition ne doit pas changer la hauteur du HUD (ni décaler la page). */
+.hud-attente {
+  position: absolute; right: 0; top: calc(100% + 6px); z-index: 1;
+  font-size: var(--fs-xs); font-weight: 600; color: var(--warn); background: var(--paper); padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  box-shadow: inset 0 0 0 1px var(--warn), var(--shadow);
+}
 .hud-attente::before { content: "● "; }
 .hud-outils { display: flex; align-items: center; gap: 2px; }
 .hud-commandes[hidden] + .hud-outils { margin-left: auto; }
@@ -133,3 +138,11 @@
 .entree--evenement .entree-icone, .entree--comite .entree-icone { color: var(--accent); }
 .entree--personne .entree-icone { color: var(--ok); }
 .entree--vide { grid-template-columns: 1fr; color: var(--muted); font-style: italic; }
+
+/* ---------- Lien d'évitement ---------- */
+.lien-evitement {
+  position: absolute; left: var(--gutter); top: calc(var(--hud-h, 64px) + 6px); z-index: 31;
+  padding: 8px 14px; border-radius: var(--r); background: var(--fg); color: var(--bg); font-weight: 600; text-decoration: none;
+  transform: translateY(-200%); opacity: 0; pointer-events: none;
+}
+.lien-evitement:focus, .lien-evitement:focus-visible { transform: none; opacity: 1; pointer-events: auto; position: fixed; }

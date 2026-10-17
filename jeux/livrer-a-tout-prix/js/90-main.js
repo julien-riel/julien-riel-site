@@ -34,6 +34,12 @@
 
     document.addEventListener('keydown', function (ev) {
       if (ev.target && /input|select|textarea|button/i.test(ev.target.tagName)) return;
+      // Dans un dialogue (carte d'événement, comité, visite), Espace ne pilote pas la lecture.
+      var racineModale = document.getElementById('modale-racine');
+      if (LTP.app.ui.modaleBloquante || (racineModale && ev.target && racineModale.contains(ev.target))) {
+        if (ev.key === ' ' && ev.target && ev.target.getAttribute && ev.target.getAttribute('tabindex') === '-1') ev.preventDefault();
+        if (ev.key !== 'Escape') return;
+      }
       if (ev.key === ' ' && LTP.app.etat.phase === 'execution') {
         ev.preventDefault();
         LTP.app.setUI({ vitesse: LTP.app.ui.vitesse ? 0 : 1 });

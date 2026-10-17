@@ -88,12 +88,18 @@
                 h('span', { class: 'case-texte' }, h('b', null, t('accueil.serveur')), h('small', null, t('accueil.serveurAide')))),
               h('div', { class: 'actions' },
                 h('button', { type: 'button', id: 'btn-commencer', class: 'btn btn--primaire btn--grand', 'data-cle': 'commencer',
-                  onclick: function () { app.dispatch({ type: 'phase', phase: 'planification' }); } }, t('action.commencer')),
+                  onclick: function () {
+                    app.dispatch({ type: 'phase', phase: 'planification' });
+                    if (LTP.ui.restaurerFocus) LTP.ui.restaurerFocus(null);
+                  } }, t('action.commencer')),
                 h('button', { type: 'button', id: 'btn-tutoriel', class: 'btn btn--grand', 'data-cle': 'tutoriel',
-                  onclick: function () { app.setUI({ visite: { etape: 0 } }); app.dispatch({ type: 'phase', phase: 'tutoriel' }); } },
+                  onclick: function () { app.setUI({ visite: { etape: 0 } }); app.dispatch({ type: 'phase', phase: 'planification' }); } },
                   F.visage('ginette', 24), ' ', t('action.tutoriel')),
                 sauv ? h('button', { type: 'button', id: 'btn-reprendre', class: 'btn btn--fantome btn--grand', 'data-cle': 'reprendre',
-                  onclick: function () { var e = LTP.sauvegarde.charger(); if (e) { app.ui.vitesse = 0; app.demarrer(e); } } },
+                  onclick: function () {
+                    var e = LTP.sauvegarde.charger();
+                    if (e) { app.ui.vitesse = 0; app.demarrer(e); if (LTP.ui.restaurerFocus) LTP.ui.restaurerFocus(null); }
+                  } },
                   t('action.reprendre'), h('small', { class: 'mono' }, t('action.reprendreDetail', sauv))) : null),
               h('div', { class: 'accueil-pied' },
                 h('a', { href: '?animateur=1', class: 'lien', title: t('accueil.animateurAide') }, t('accueil.animateur')),
@@ -351,7 +357,9 @@
   // =====================================================================
   // Visite guidée avec Ginette
   // =====================================================================
-  var tuto_ = { cle: null, ecoute: false, retourFocus: null };
+  // Chaque étape montre un élément réel de l'écran. Les étapes « attendre » laissent la main au joueur
+  // (la bulle n'est alors plus modale) : changer un levier, puis jouer une vraie semaine.
+  var tuto_ = { cle: null, ecoute: false, retourFocus: null, etape: null, depart: null, fait: false, minuterie: null, fin: false };
 
   function etapes() {
     var d = LTP.donnees.tutoriel;
@@ -366,18 +374,33 @@
     ];
   }
 
-  function cibleDe(region) {
+  function visible(el) {
+    if (!el || !document.contains(el)) return false;
+    var r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+  }
+  function cibleRegion(region) {
     if (!region) return null;
     if (region === 'hud') return document.getElementById('hud');
     if (region === 'panneau' && F.etroit()) return document.querySelector('.panneau-poignee') || document.querySelector('[data-region="panneau"]');
     return document.querySelector('[data-region="' + region + '"]');
   }
+  function cibleDe(et) {
+    if (!et) return null;
+    var l = et.cibles || (et.cible ? [et.cible] : []);
+    for (var i = 0; i < l.length; i++) {
+      var el = null;
+      try { el = document.querySelector(l[i]); } catch (e) { el = null; }
+      if (visible(el)) return el;
+    }
+    return cibleRegion(et.region);
+  }
 
   function placer(couche) {
     var spot = couche.querySelector('.tuto-spot'), bulle = couche.querySelector('.tuto-bulle');
     if (!spot || !bulle) return;
-    var cible = cibleDe(couche._region);
-    var vw = window.innerWidth, vh = window.innerHeight;
+    var cible = cibleDe(couche._etape);
+    var vw = document.documentElement.clientWidth || window.innerWidth, vh = window.innerHeight;
     if (!cible) { spot.style.display = 'none'; bulle.style.left = Math.max(16, (vw - bulle.offsetWidth) / 2) + 'px'; bulle.style.top = Math.max(16, (vh - bulle.offsetHeight) / 2) + 'px'; return; }
     var r = cible.getBoundingClientRect();
     var m = 6;
@@ -389,8 +412,11 @@
     var bw = bulle.offsetWidth, bh = bulle.offsetHeight;
     var bx, by;
     if (vw < 640) {
-      bx = 12;
-      by = (r.top + r.bottom) / 2 > vh / 2 ? 12 + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hud-h'), 10) || 0) : vh - bh - 12;
+      bx = Math.max(8, (vw - bw) / 2);
+      var hudH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hud-h'), 10) || 0;
+      // Au-dessus ou au-dessous de la cible, du côté où il reste le plus de place.
+      if (vh - bas >= top - hudH) by = Math.min(vh - bh - 8, bas + 10);
+      else by = Math.max(8, top - bh - 10);
     } else if (vh - bas > bh + 16) { by = bas + 12; bx = Math.min(Math.max(16, r.left), vw - bw - 16); }
     else if (top > bh + 16) { by = top - bh - 12; bx = Math.min(Math.max(16, r.left), vw - bw - 16); }
     else if (vw - droite > bw + 24) { bx = droite + 12; by = Math.min(Math.max(16, r.top), vh - bh - 16); }
@@ -400,9 +426,34 @@
     bulle.style.top = Math.round(Math.max(8, by)) + 'px';
   }
 
+  function focaliser(el) { if (el) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } } }
+
   function terminer(etat, app) {
+    tuto_.fin = true;
+    clearTimeout(tuto_.minuterie);
+    if (F.etroit() && LTP.ui.panneau) LTP.ui.panneau.fermer();
     app.setUI({ visite: null });
     if (LTP.app.etat.phase === 'tutoriel') app.dispatch({ type: 'phase', phase: 'planification' });
+  }
+
+  // Ce que l'étape attend est-il fait ? (comparé à l'instantané pris à l'entrée de l'étape)
+  function actionFaite(et, etat) {
+    if (!et.attendre || !tuto_.depart) return true;
+    if (et.attendre === 'levier') return JSON.stringify(etat.leviers) !== tuto_.depart.leviers;
+    if (et.attendre === 'semaine') return etat.semaine > tuto_.depart.semaine && !etat.evenementEnAttente;
+    return true;
+  }
+
+  function entrerEtape(et, etat, app) {
+    tuto_.depart = { leviers: JSON.stringify(etat.leviers), semaine: etat.semaine };
+    tuto_.fait = false;
+    if (et.panneau) {
+      var patch = {};
+      if (LTP.app.ui.panneau !== et.panneau) patch.panneau = et.panneau;
+      if (LTP.app.ui.ilotEdition) patch.ilotEdition = null;
+      if (Object.keys(patch).length) app.setUI(patch);
+      if (F.etroit() && LTP.ui.panneau) LTP.ui.panneau.ouvrir();
+    } else if (F.etroit() && LTP.ui.panneau) LTP.ui.panneau.fermer();
   }
 
   LTP.ui.tutoriel = {
@@ -411,8 +462,17 @@
       if (!this.actif(etat, ui)) {
         if (tuto_.cle) {
           tuto_.cle = null;
+          tuto_.etape = null;
           var r = tuto_.retourFocus; tuto_.retourFocus = null;
-          if (r && document.contains(r)) r.focus(); else { var b = document.getElementById('btn-lecture'); if (b) b.focus(); }
+          var finie = tuto_.fin; tuto_.fin = false;
+          // Fin de visite : retour en haut et focus sur « Lancer le trimestre » (ou « Jouer »).
+          if (finie) {
+            try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
+            setTimeout(function () {
+              var b = document.getElementById('btn-lecture');
+              if (b && !b.disabled && b.offsetParent !== null) focaliser(b); else if (r && document.contains(r)) focaliser(r);
+            }, 40);
+          } else if (r && document.contains(r)) focaliser(r);
         }
         F.reconstruire(couche, '', function () { return null; });
         return;
@@ -421,42 +481,75 @@
       var n = Math.max(0, Math.min(liste.length - 1, (ui.visite && ui.visite.etape) || 0));
       var et = liste[n] || {};
       if (!tuto_.cle) { var a = document.activeElement; tuto_.retourFocus = a && a !== document.body ? a : null; }
-      var cle = 'tuto:' + n + ':' + liste.length;
+      if (tuto_.etape !== n) { tuto_.etape = n; entrerEtape(et, etat, app); }
+      // Une carte d'événement passe devant : la visite s'efface le temps de la décision.
+      if (etat.evenementEnAttente) {
+        tuto_.cle = 'tuto:attente';
+        F.reconstruire(couche, 'tuto:evenement', function () { return null; });
+        return;
+      }
+      var attend = !!et.attendre;
+      var fait = attend && actionFaite(et, etat);
+      if (fait && !tuto_.fait) {
+        tuto_.fait = true;
+        // L'action est faite : on passe à l'étape suivante après un court instant.
+        clearTimeout(tuto_.minuterie);
+        tuto_.minuterie = setTimeout(function () {
+          if (LTP.app.ui.visite && LTP.app.ui.visite.etape === n) app.setUI({ visite: { etape: Math.min(liste.length - 1, n + 1) } });
+        }, F.reduit() ? 900 : 1400);
+      }
+      var cle = 'tuto:' + n + ':' + liste.length + ':' + (fait ? 'fait' : '');
+      var ancienne = couche._sig;
       var change = F.reconstruire(couche, cle, function () {
         var p = F.personne(et.personnage || 'ginette');
         var dernier = n === liste.length - 1;
         var action = typeof et.action === 'string' ? et.action : (et.action && et.action.texte) || null;
+        // Pendant une étape interactive, la bulle n'est pas modale : le joueur agit sur l'écran.
+        var modale = !attend || fait;
         return [
-          h('div', { class: 'tuto-spot', 'aria-hidden': 'true' }),
-          h('div', { class: 'tuto-bulle', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'tuto-titre', 'aria-describedby': 'tuto-texte',
+          h('div', { class: 'tuto-spot' + (attend && !fait ? ' is-action' : ''), 'aria-hidden': 'true' }),
+          h('div', { class: 'tuto-bulle' + (attend && !fait ? ' is-action' : ''), role: 'dialog', 'aria-modal': modale ? 'true' : 'false', 'aria-labelledby': 'tuto-titre', 'aria-describedby': 'tuto-texte',
             onkeydown: function (ev) { if (ev.key === 'Escape') { ev.preventDefault(); terminer(etat, app); } } },
             h('div', { class: 'tuto-tete' }, F.visage(p.id, 44),
-              h('div', null, h('p', { class: 'eyebrow', id: 'tuto-titre' }, t('tuto.titre') + ' · ' + t('tuto.etape', { n: n + 1, total: liste.length })), h('b', null, p.nom))),
-            h('p', { class: 'tuto-texte', id: 'tuto-texte' }, F.texte(et.texte, etat)),
-            action ? h('p', { class: 'tuto-action' }, F.texte(action, etat)) : null,
-            h('div', { class: 'tuto-points', 'aria-hidden': 'true' }, liste.map(function (x, i) { return h('i', { class: i === n ? 'is-on' : '' }); })),
+              h('div', null, h('p', { class: 'eyebrow', id: 'tuto-titre', tabindex: '-1' }, t('tuto.titre') + ' · ' + t('tuto.etape', { n: n + 1, total: liste.length })), h('b', null, p.nom))),
+            h('p', { class: 'tuto-texte', id: 'tuto-texte' }, F.texte(fait && et.fait ? et.fait : et.texte, etat)),
+            attend && !fait && action ? h('p', { class: 'tuto-action', role: 'status' }, h('span', { class: 'tuto-action-puce', 'aria-hidden': 'true' }), F.texte(action, etat)) : null,
+            fait ? h('p', { class: 'tuto-action tuto-action--fait', role: 'status' }, h('span', { 'aria-hidden': 'true' }, '✓ '), t('tuto.fait')) : null,
+            h('div', { class: 'tuto-points', 'aria-hidden': 'true' }, liste.map(function (x, i) { return h('i', { class: i === n ? 'is-on' : i < n ? 'is-fait' : '' }); })),
             h('div', { class: 'tuto-actions' },
               h('button', { type: 'button', class: 'lien', 'data-cle': 'tuto-passer', onclick: function () { terminer(etat, app); } }, t('action.passerVisite')),
               h('span', { class: 'tuto-nav' },
                 n > 0 ? h('button', { type: 'button', class: 'btn btn--petit btn--fantome', 'data-cle': 'tuto-prec', onclick: function () { app.setUI({ visite: { etape: n - 1 } }); } }, t('action.precedent')) : null,
-                h('button', { type: 'button', class: 'btn btn--petit btn--primaire', id: 'btn-tuto-suivant', 'data-cle': 'tuto-suiv', onclick: function () {
+                attend && !fait ? null : h('button', { type: 'button', class: 'btn btn--petit btn--primaire', id: 'btn-tuto-suivant', 'data-cle': 'tuto-suiv', onclick: function () {
+                  clearTimeout(tuto_.minuterie);
                   if (dernier) terminer(etat, app); else app.setUI({ visite: { etape: n + 1 } });
                 } }, dernier ? t('action.terminerVisite') : t('action.suivant'))))),
         ];
       });
+      var nouvelleEtape = !tuto_.cle || tuto_.cle.indexOf('tuto:' + n + ':') !== 0;
       tuto_.cle = cle;
-      couche._region = et.region;
+      couche._etape = et;
       if (change) {
-        var cible = cibleDe(et.region);
-        if (cible && et.region !== 'hud') {
-          try { cible.scrollIntoView({ block: 'nearest', behavior: F.reduit() ? 'auto' : 'smooth' }); } catch (e) { cible.scrollIntoView(); }
+        var cible = cibleDe(et);
+        if (nouvelleEtape && cible && et.region !== 'hud') {
+          try { cible.scrollIntoView({ block: F.etroit() ? 'center' : 'nearest', behavior: F.reduit() ? 'auto' : 'smooth' }); } catch (e) { cible.scrollIntoView(); }
         }
         var boite = couche.querySelector('.tuto-bulle');
-        if (boite && !boite.contains(document.activeElement)) F.focusPremier(boite, '#btn-tuto-suivant');
-        LTP.ui.annoncer(F.texte(et.texte, etat));
+        if (attend && !fait) {
+          // Étape interactive : le focus va sur l'élément à manipuler.
+          if (nouvelleEtape) {
+            var f = cible && (cible.matches(F.FOCUSABLES) ? cible : (cible.querySelector('[aria-checked="true"]') || cible.querySelector(F.FOCUSABLES)));
+            setTimeout(function () { focaliser(f || boite); }, F.etroit() ? 320 : 30);
+          }
+        } else if (boite && !boite.contains(document.activeElement)) {
+          focaliser(boite.querySelector('#btn-tuto-suivant') || boite.querySelector('#tuto-titre'));
+        }
+        if (nouvelleEtape || fait) LTP.ui.annoncer(F.texte(fait && et.fait ? et.fait : et.texte, etat) + (attend && !fait && et.action ? ' ' + F.texte(et.action, etat) : ''));
         var debut = Date.now();
         var boucle = function () { placer(couche); if (Date.now() - debut < 900) requestAnimationFrame(boucle); };
         requestAnimationFrame(boucle);
+      } else if (ancienne === cle) {
+        placer(couche);
       }
       if (!tuto_.ecoute) {
         tuto_.ecoute = true;

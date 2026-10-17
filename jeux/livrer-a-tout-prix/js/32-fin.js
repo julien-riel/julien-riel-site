@@ -16,17 +16,19 @@
 
     // Débit de référence sans IA (points par semaine et par niveau × compétence) si 21-production n'en fournit pas.
     baseProduction: { stagiaire: 2, junior: 3, inter: 5, senior: 6 },
+    facteurReference: 0.8,        // part du temps de code d'une semaine sans IA (calée sur une partie sans IA : ratio ≈ 1)
 
     // Critères (0–1) : bornes des normalisations.
     criteres: {
-      debit: [0.7, 1.8],          // ratio valeur livrée / référence → 0..1
+      debit: [0.7, 1.4],          // ratio des points livrés / référence sans IA → 0..1
       poidsDebitLivraison: 0.6,   // le reste : satisfaction finale
       incidentsParSemaine: 1.5,   // au-delà, la note d'incidents tombe à 0
       comprehension: [0.3, 0.8],
       couverture: [0.2, 0.7],
       poidsQualite: { incidents: 0.4, comprehension: 0.35, couverture: 0.25 },
-      budget: { pleinAvant: 0.8, nulApres: 2 },   // ratio dépense / budget prorata : 1 avant 0,8, 0 après 2
-      risques: { surface: 0.35, loi25: 0.2, fuites: 0.25, securite: 0.1, fantomes: 0.1, fuitesRef: 2, securiteRef: 4, fantomesRef: 6 },
+      // Ratio dépense / budget au prorata : 1 jusqu'à 0,6 ; 0,8 au budget ; 0 à 1,6.
+      budget: { pleinAvant: 0.6, auBudget: 0.8, nulApres: 1.6 },
+      risques: { surface: 0.3, loi25: 0.15, fuites: 0.25, securite: 0.1, fantomes: 0.2, fuitesRef: 2, securiteRef: 4, fantomesRef: 5 },
       personnes: { moral: 0.35, fatigue: 0.2, releve: 0.25, departs: 0.2, departsRef: 4 },
     },
     poidsScore: { livraison: 0.25, qualite: 0.2, couts: 0.15, risques: 0.2, personnes: 0.2 },
@@ -38,11 +40,16 @@
       farwest: { fuitesMajeures: 1, surface: 0.45 },      // règle ferme : fuite majeure et surface d'attaque élevée
       facture: { depassement: 1.5, criteresMin: 0.45 },   // règle ferme : budget dépassé de 50 % et le reste correct
       // Affinités : [min, max] des normalisations utilisées par le profil le plus proche.
-      usine: { debit: [1.0, 1.8], lgtm: [0.1, 0.5], incidents: [0.3, 1.5], dette: [0.3, 0.6] },
-      musee: { debit: [0.8, 1.25], satisfaction: [0.35, 0.6], fantomes: [1, 6] },
+      // lgtm : part des PR fusionnées en « LGTM » (celles que l'agent fusionne seul n'y sont pas : bornes basses).
+      usine: { debit: [0.95, 1.5], lgtm: [0.05, 0.3], incidents: [0.3, 1.5], dette: [0.3, 0.6] },
+      // planDebit : part de l'affinité « musée » qui subsiste quand le débit a nettement monté (sinon ce n'est pas un musée).
+      musee: { planDebit: 0.4, debit: [0.75, 1.15], satisfaction: [0.3, 0.55], fantomes: [1, 6] },
       chateau: { volume: [1.1, 1.8], dette: [0.4, 0.7], releve: [0.2, 0.45] },
       // planDebit : part de l'affinité « réussie » acquise même sans hausse de débit (le reste dépend du débit).
-      reussie: { planDebit: 0.4, debit: [1.0, 1.5], incidents: [0.3, 1.2], comprehension: [0.45, 0.7], surface: [0.3, 0.6], budget: [1.1, 1.5] },
+      // exigence : poids du pire terme (0 : simple moyenne) ; satisfaction : les directions doivent suivre.
+      // « Transition » réussie : il faut qu'il y ait eu transition (autonomie moyenne ou sessions parallèles au-dessus du départ).
+      reussie: { autonomieMin: 1.6, sessionsMin: 1.6, planDebit: 0.4, exigence: 0.5, debit: [0.95, 1.25], incidents: [0.15, 0.6], comprehension: [0.5, 0.8], surface: [0.25, 0.5],
+        budget: [1.1, 1.5], satisfaction: [0.25, 0.5] },
       farwestAffinite: { surface: [0.3, 0.7], fuites: [0, 2], loi25: [0.2, 0.6] },
     },
   };
@@ -53,10 +60,16 @@
   function norm(v, ab) { return ab[1] === ab[0] ? (v >= ab[1] ? 1 : 0) : O.borner((v - ab[0]) / (ab[1] - ab[0])); }
 
   function debitReference(etat) {
-    var base = (LTP.K.production && LTP.K.production.base) || K.baseProduction;
+    // Même facteur de compétence que 21-production, × la part du temps réellement passée à coder sans IA
+    // (fatigue, revue, réunions) : un ratio de 1 veut dire « le débit de l'équipe sans IA ».
+    var KP = LTP.K.production || {};
+    var base = KP.base || K.baseProduction;
+    var plancher = KP.competencePlancher != null ? KP.competencePlancher : 0, pente = KP.competencePente != null ? KP.competencePente : 1;
     var s = 0;
-    LTP.q.devs(etat).forEach(function (d) { s += num(base[d.niveau], K.baseProduction[d.niveau] || 4) * num(d.competence, 0.5); });
-    return Math.max(1, s);
+    LTP.q.devs(etat).forEach(function (d) {
+      s += num(base[d.niveau], K.baseProduction[d.niveau] || 4) * (plancher + pente * num(d.competence, 0.5));
+    });
+    return Math.max(1, s * K.facteurReference);
   }
 
   function initialiser(etat) {
@@ -195,6 +208,8 @@
       ratioDebit: O.arrondir(num(c.pointsLivres) / Math.max(1, ref.debit * semaines), 3),
       prFusionnees: Math.round(num(c.prFusionnees)),
       lgtm: Math.round(num(c.lgtm)),
+      autonomieMoyenne: O.arrondir(num(c.autonomie) / Math.max(1, num(c.semaines)), 2),
+      sessionsMoyennes: O.arrondir(num(c.sessions) / Math.max(1, num(c.semaines)), 2),
       partLgtm: O.arrondir(num(c.lgtm) / Math.max(1, num(c.prFusionnees) || num(c.pr)), 3),
       incidents: num(c.incidents),
       incidentsParSemaine: O.arrondir(num(c.incidents) / semaines, 3),
@@ -240,7 +255,10 @@
     var qualite = pq.incidents * (1 - O.borner(faits.incidentsParSemaine / KC.incidentsParSemaine))
       + pq.comprehension * norm(faits.comprehension, KC.comprehension)
       + pq.couverture * norm(faits.couvertureReelle, KC.couverture);
-    var couts = 1 - norm(faits.ratioBudget, [KC.budget.pleinAvant, KC.budget.nulApres]);
+    // Coûts : 1 jusqu'à pleinAvant, auBudget à 100 % du budget au prorata, 0 à nulApres (le dépassement coûte vite).
+    var B = KC.budget, rb = faits.ratioBudget;
+    var couts = B.auBudget == null ? 1 - norm(rb, [B.pleinAvant, B.nulApres])
+      : rb <= 1 ? 1 - (1 - B.auBudget) * norm(rb, [B.pleinAvant, 1]) : B.auBudget * (1 - norm(rb, [1, B.nulApres]));
     var r = KC.risques;
     var risques = 1 - r.surface * O.borner(faits.surfaceAttaque) - r.loi25 * O.borner(faits.expositionLoi25)
       - r.fuites * O.borner(faits.fuites / r.fuitesRef) - r.securite * O.borner(faits.incidentsSecurite / r.securiteRef)
@@ -258,6 +276,11 @@
   }
 
   function moyenneListe(l) { return l.length ? l.reduce(function (a, b) { return a + b; }, 0) / l.length : 0; }
+  // Moyenne tirée vers le pire terme : (1 − e) × moyenne + e × minimum.
+  function exigeant(l, e) {
+    var x = num(e, 0);
+    return l.length ? (1 - x) * moyenneListe(l) + x * Math.min.apply(null, l) : 0;
+  }
 
   // Affinité (0–1) de chaque profil, pour le cas où aucune règle ferme ne s'applique.
   function affinites(faits) {
@@ -267,12 +290,15 @@
       usine: moyenneListe([norm(faits.ratioDebit, P.usine.debit), norm(faits.partLgtm, P.usine.lgtm),
         norm(faits.incidentsParSemaine, P.usine.incidents), norm(dette, P.usine.dette)]),
       musee: moyenneListe([1 - norm(faits.ratioDebit, P.musee.debit), 1 - norm(faits.satisfaction, P.musee.satisfaction),
-        Math.max(norm(faits.applisFantomes, P.musee.fantomes), 1 - O.borner(faits.surfaceAttaque * 2))]),
+        Math.max(norm(faits.applisFantomes, P.musee.fantomes), 1 - O.borner(faits.surfaceAttaque * 2))])
+        * (P.musee.planDebit == null ? 1 : P.musee.planDebit + (1 - P.musee.planDebit) * (1 - norm(faits.ratioDebit, P.musee.debit))),
       chateau: moyenneListe([norm(faits.ratioVolume, P.chateau.volume), norm(dette, P.chateau.dette), 1 - norm(faits.releve, P.chateau.releve)]),
       // La transition réussie exige un débit en hausse : sans lui, la prudence ressemble au musée.
-      reussie: moyenneListe([1 - norm(faits.incidentsParSemaine, P.reussie.incidents),
+      // Elle exige aussi toutes ses conditions à la fois : la pire compte pour une part « exigence ».
+      reussie: exigeant([1 - norm(faits.incidentsParSemaine, P.reussie.incidents),
         norm(faits.comprehension, P.reussie.comprehension), 1 - norm(faits.surfaceAttaque, P.reussie.surface),
-        1 - norm(faits.ratioBudget, P.reussie.budget)]) * (P.reussie.planDebit + (1 - P.reussie.planDebit) * norm(faits.ratioDebit, P.reussie.debit)),
+        1 - norm(faits.ratioBudget, P.reussie.budget), norm(faits.satisfaction, P.reussie.satisfaction)], P.reussie.exigence)
+        * (P.reussie.planDebit + (1 - P.reussie.planDebit) * norm(faits.ratioDebit, P.reussie.debit)),
       farwest: moyenneListe([norm(faits.surfaceAttaque, P.farwestAffinite.surface), norm(faits.fuites, P.farwestAffinite.fuites),
         norm(faits.expositionLoi25, P.farwestAffinite.loi25)]) * (faits.fuitesMajeures > 0 ? 1 : 0.6),
     };
@@ -285,7 +311,9 @@
     var autres = moyenneListe([criteres.livraison, criteres.qualite, criteres.risques, criteres.personnes]);
     if (faits.ratioBudget >= P.facture.depassement && autres >= P.facture.criteresMin) return 'facture';
     var a = affinites(faits), meilleur = null;
+    var transition = num(faits.autonomieMoyenne) >= P.reussie.autonomieMin || num(faits.sessionsMoyennes) >= P.reussie.sessionsMin;
     ['reussie', 'usine', 'musee', 'chateau', 'farwest'].forEach(function (id) {
+      if (id === 'reussie' && !transition) return;
       if (meilleur == null || a[id] > a[meilleur] + 1e-9) meilleur = id;
     });
     return meilleur;
@@ -327,9 +355,9 @@
   Object.defineProperty(LTP.systemes.fin, 'seuilConfiance', { get: function () { return K.seuilConfiance; }, enumerable: true });
 
   LTP.enregistrerTextes({
-    'fin.reponseBonne': 'Le comité hoche la tête. Confiance : +{delta}.',
-    'fin.reponseMauvaise': 'Le comité fronce les sourcils. Confiance : {delta}.',
-    'fin.bilanTrimestre': 'Bilan du trimestre {trimestre} : {pointsLivres} points livrés, {prFusionnees} PR fusionnées, {incidents} incidents.',
-    'fin.resultat': 'Bilan annuel : {etoiles} étoiles sur 5.',
+    'fin.reponseBonne': 'Le comité hoche la tête. Confiance : +{delta}.',
+    'fin.reponseMauvaise': 'Le comité fronce les sourcils. Confiance : {delta}.',
+    'fin.bilanTrimestre': 'Bilan du trimestre {trimestre} : {pointsLivres} points livrés et {prFusionnees} PR fusionnées. Incidents : {incidents}.',
+    'fin.resultat': 'Bilan annuel : {etoiles} sur 5 étoiles.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

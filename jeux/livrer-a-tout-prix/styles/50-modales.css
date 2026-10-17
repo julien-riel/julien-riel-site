@@ -67,6 +67,14 @@
 .is-aime .reaction-signe { color: var(--ok); }
 .is-naime .reaction-signe { color: var(--crit); }
 
+/* ---------- Empilement des couches (#modale-racine) ----------
+   Chaque couche forme son propre contexte d'empilement : le bandeau de conséquence (35) reste toujours
+   sous la fiche ou la carte d'événement (40), quel que soit le navigateur ; il est même masqué tant qu'un
+   dialogue est ouvert (la conséquence reste lisible dans le journal). */
+.couche-comite, .couche-dialogue { position: relative; z-index: 40; }
+.couche-tuto { position: relative; z-index: 41; }
+#modale-racine.a-dialogue .couche-toast { visibility: hidden; }
+
 /* ---------- Bandeau de conséquence ---------- */
 .couche-toast { position: fixed; z-index: 35; right: var(--gutter-r); bottom: 20px; width: min(400px, calc(100vw - 32px)); pointer-events: none; }
 .toast {
@@ -147,7 +155,14 @@
 .tuto-tete .eyebrow { color: inherit; opacity: .75; }
 .tuto-tete b { font-family: var(--font-titre); font-size: var(--fs-l); }
 .tuto-texte { font-size: var(--fs-m); }
-.tuto-action { font-size: var(--fs-s); font-weight: 600; }
+.tuto-action { font-size: var(--fs-s); font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.tuto-action-puce { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; animation: pouls 1.4s ease-in-out infinite; }
+@keyframes pouls { 0%, 100% { box-shadow: 0 0 0 0 var(--accent-line, var(--accent)); } 50% { box-shadow: 0 0 0 5px transparent; } }
+.tuto-action--fait { color: inherit; opacity: .85; }
+/* Étape interactive : le reste de l'écran est moins assombri, et le contour de la cible pulse. */
+.tuto-spot.is-action { box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px color-mix(in srgb, var(--backdrop) 55%, transparent); animation: contour 1.6s ease-in-out infinite; }
+@keyframes contour { 50% { outline: 3px solid var(--accent); outline-offset: 4px; } }
+.tuto-points i.is-fait { opacity: .55; }
 .tuto-points { display: flex; gap: 5px; }
 .tuto-points i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .25; }
 .tuto-points i.is-on { opacity: .9; }
@@ -190,7 +205,8 @@
 .courbes { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 14px; margin-top: 6px; }
 .courbe { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 12px 12px 8px; display: grid; gap: 6px; }
 .courbe figcaption { display: flex; gap: 4px 8px; align-items: baseline; flex-wrap: wrap; font-size: var(--fs-s); line-height: 1.25; min-height: 2.5em; }
-.courbe-fin { margin-left: auto; font-weight: 600; }
+.courbe-fin { margin-left: auto; display: inline-flex; gap: 4px; align-items: baseline; }
+.courbe-fin-lib { font-size: var(--fs-xs); color: var(--muted); }
 .courbe-cadre { position: relative; }
 .courbe-svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
 .courbe-grille { stroke: var(--line); stroke-width: 1; }

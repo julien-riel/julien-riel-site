@@ -16,6 +16,9 @@ function carte(id, extra = {}) {
   };
 }
 function neuf(LTP, graine = 1) {
+  // Ces tests visent le tirage lui-même : sans espacement ni rattrapage de rythme (testés à part).
+  LTP.K.evenements.espacementMin = 0;
+  LTP.K.evenements.minimumParTrimestre = 0;
   const etat = LTP.moteur.creer(graine);
   etat.phase = "execution";
   etat.semaine = 2;

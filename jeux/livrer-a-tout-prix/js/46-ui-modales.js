@@ -30,7 +30,7 @@
       h('div', { class: 'ev-bande', 'aria-hidden': 'true' }),
       h('header', { class: 'ev-tete' },
         h('p', { class: 'eyebrow' }, t('evenement.eyebrow', { semaine: etat.semaine }), lieu ? ' · ' + lieu : '', def.theme ? h('span', { class: 'ev-theme mono' }, def.theme) : null),
-        h('h2', { id: 'ev-titre', class: 'ev-titre' }, titre)),
+        h('h2', { id: 'ev-titre', class: 'ev-titre', tabindex: '-1' }, titre)),
       h('div', { class: 'ev-corps' },
         h('figure', { class: 'ev-perso' }, F.visage(perso.id, 64), h('figcaption', null, h('b', null, perso.nom), perso.role ? h('span', null, perso.role) : null)),
         h('p', { class: 'ev-texte bulle', id: 'ev-texte' }, F.texte(def.texte, etat, ref))),
@@ -90,9 +90,9 @@
           var aime = (r.moral || 0) >= 0;
           return h('li', { class: aime ? 'is-aime' : 'is-naime' },
             h('span', { class: 'reaction-signe', 'aria-hidden': 'true' }, aime ? '+' : '−'),
-            h('span', null, h('b', null, aime ? t('fiche.aime') : t('fiche.naimePas')), ' : ', LTP.ui.libelleLevier(r.levier), ' (',
+            h('span', null, h('b', null, aime ? t('fiche.aime') : t('fiche.naimePas')), ' : ', LTP.ui.libelleLevier(r.levier), ' (',
               (r.valeurs || []).map(function (v) { return LTP.ui.libelleValeur(r.levier, v); }).join(', '), ')',
-              r.bulle ? h('em', null, ' « ' + F.texte(r.bulle, etat, { dev: id }) + ' »') : null));
+              r.bulle ? h('em', null, ' « ' + F.texte(r.bulle, etat, { dev: id }) + ' »') : null));
         }))) : null);
   }
 
@@ -115,18 +115,25 @@
       h('button', { type: 'button', class: 'toast-fermer', 'aria-label': t('action.fermer'), onclick: fermer }, F.icone('fermer', 16)));
   }
 
+  // Rend le focus à l'élément déclencheur, sinon au bouton de lecture (ou « +1 semaine »).
+  // Différé : le HUD est rendu après cette région, et le bouton de lecture n'est réactivé qu'à ce moment-là.
+  function focusable(el) { return !!(el && document.contains(el) && !el.disabled && el.offsetParent !== null); }
+  function focaliser(el) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
   function restaurerFocus() {
     var r = etat_.retourFocus;
     etat_.retourFocus = null;
-    if (r && document.contains(r) && r.offsetParent !== null) { try { r.focus({ preventScroll: true }); } catch (e) { r.focus(); } return; }
-    // Après le rendu du HUD (le bouton de lecture redevient actif quand la décision est prise).
-    setTimeout(function () {
-      if (document.activeElement && document.activeElement !== document.body) return;
+    var essayer = function () {
+      var a = document.activeElement;
+      if (a && a !== document.body && document.contains(a)) return true;
+      if (focusable(r)) { focaliser(r); if (document.activeElement === r) return true; }
       var b = document.getElementById('btn-lecture');
-      if (!b || b.disabled || b.offsetParent === null) b = document.getElementById('btn-semaine');
-      if (b && !b.disabled) b.focus({ preventScroll: true });
-    }, 60);
+      if (!focusable(b)) b = document.getElementById('btn-semaine');
+      if (focusable(b)) { focaliser(b); return true; }
+      return false;
+    };
+    setTimeout(function () { if (!essayer()) setTimeout(essayer, 120); }, 30);
   }
+  LTP.ui.restaurerFocus = function (el) { etat_.retourFocus = el || null; restaurerFocus(); };
 
   LTP.ui.regions.modale = {
     monter: function (racine, app) {
@@ -192,7 +199,8 @@
             LTP.ui.annoncer(t('evenement.annonce', { titre: defEv ? F.texte(defEv.titre, etat, att.ref) : t('evenement.inconnu') }));
           }
           var boite = this._dialogue.querySelector('[role="dialog"]');
-          if (boite) F.focusPremier(boite, estEv ? '[data-choix]' : '.modale-fermer');
+          // La carte d'événement focalise son titre : une Espace ou une Entrée ne choisit rien par accident.
+          if (boite) F.focusPremier(boite, estEv ? '#ev-titre' : '.modale-fermer');
         }
       }
 

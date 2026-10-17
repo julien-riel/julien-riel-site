@@ -15,9 +15,9 @@
     competencePlancher: 0.5,
     competencePente: 0.8,
     // niveauAutonomie[a] du gain de l'IA, a = 0 (autocomplétion) à 4 (agent qui fusionne seul).
-    autonomie: [0.08, 0.4, 1, 1.8, 2.6],
+    autonomie: [0.08, 0.3, 1.4, 2.1, 2.6],
     // Qualité du modèle dans le gain de l'IA. Le modèle local est meilleur sur le serveur acheté.
-    qualiteModele: { economique: 0.75, intermediaire: 1, haut: 1.2, local: 0.65, localServeur: 0.85 },
+    qualiteModele: { economique: 0.6, intermediaire: 1, haut: 1.2, local: 0.65, localServeur: 0.85 },
     // Rendement décroissant des sessions parallèles : sessions ^ exposant.
     exposantSessions: 0.6,
     // Envie de sessions : 1 + envieSessions × adhésion × envieAutonomie[a] + mod de trait, plafonnée par le levier.
@@ -30,7 +30,7 @@
       aucun:    { temps: 0,    gainIA: 0 },
       humain:   { temps: 0.2,  gainIA: 0 },
       ia:       { temps: 0,    gainIA: 0.1 },
-      rotation: { temps: 0.1,  gainIA: 0.05 },
+      rotation: { temps: 0.06, gainIA: 0.05 },
     },
     // Temps hebdomadaire moyen des revues d'explication et de la rédaction des specs.
     tempsExplication: { non: 0, mensuelles: 0.025, majeures: 0.06 },
@@ -55,7 +55,7 @@
     seuilEtatRevue: 0.22,
     seuilAttente: 0.5,
     // Semaines minimales entre deux avis « carnet vide » pour un îlot.
-    delaiJournal: 13,
+    delaiJournal: 26,
   };
 
   var ETATS_EXTERNES = { conge: true, formation: true, absent: true };
@@ -280,6 +280,6 @@
   };
 
   LTP.enregistrerTextes({
-    'production.carnetVide': '{ilot} : le carnet de demandes est presque vide. Les agents tournent à vide en attendant du travail.',
+    'production.carnetVide': '{ilot} : le carnet de demandes est presque vide. Les agents tournent à vide en attendant du travail.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

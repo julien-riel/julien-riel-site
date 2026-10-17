@@ -525,16 +525,16 @@
   };
 
   LTP.enregistrerTextes({
-    'registre.equipee': '{nom} est équipée sur l\'îlot {ilot}.',
-    'registre.desequipee': '{nom} est retirée de l\'îlot {ilot}.',
-    'registre.developpement': '{dev} commence le développement de {nom} ({semaines} semaines).',
-    'registre.developpementInterrompu': 'Le développement de {nom} est interrompu : la personne responsable n\'est plus là.',
-    'registre.carteDisponible': '{nom} est prête : {dev} vient de la terminer.',
+    'registre.equipee': 'La carte {nom} est équipée sur l\'îlot {ilot}.',
+    'registre.desequipee': 'La carte {nom} est retirée de l\'îlot {ilot}.',
+    'registre.developpement': '{dev} commence le développement de {nom} ({semaines} sem.).',
+    'registre.developpementInterrompu': 'Le développement de {nom} est interrompu : la personne responsable n\'est plus là.',
+    'registre.carteDisponible': 'La carte {nom} est prête : {dev} vient de la terminer.',
     'registre.proprietaire': '{dev} devient responsable de {nom}.',
-    'registre.installationLibre': '{dev} a installé {nom} tout seul. « Ça avait l\'air pratique. »',
-    'registre.perimee': '{nom} est périmée : elle décrit encore l\'ancienne API.',
-    'registre.abandonnee': '{nom} n\'est plus maintenue par sa communauté. Dernier commit : il y a longtemps.',
-    'registre.conflit': 'Conflit à l\'îlot {ilot} : {a} et {b} se disputent le déclencheur « {declencheur} ».',
-    'registre.saturation': 'Contexte saturé à l\'îlot {ilot} : trop de skills et de MCP, l\'agent s\'y perd.',
+    'registre.installationLibre': '{dev} a installé {nom} de son propre chef. « Ça avait l\'air pratique. »',
+    'registre.perimee': 'La carte {nom} est périmée : elle décrit encore l\'ancienne API.',
+    'registre.abandonnee': 'La carte {nom} n\'est plus maintenue par sa communauté. Dernier commit : il y a longtemps.',
+    'registre.conflit': 'Conflit à l\'îlot {ilot} : {a} et {b} se disputent le déclencheur « {declencheur} ».',
+    'registre.saturation': 'Contexte saturé à l\'îlot {ilot} : trop de skills et de MCP, l\'agent s\'y perd.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

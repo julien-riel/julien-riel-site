@@ -73,6 +73,15 @@
     if (e.ilot && vars.ilot == null) vars.ilot = nomIlot(e.ilot);
     if (vars.dev && typeof vars.dev === 'string') vars.dev = nomDev(vars.dev);
     if (e.dev && vars.dev == null) vars.dev = nomDev(e.dev);
+    if (typeof vars.evenement === 'string' && vars.titre == null && LTP.q.defEvenement) {
+      var defEv = LTP.q.defEvenement(vars.evenement);
+      if (defEv) {
+        var ref = {};
+        if (e.ilot) ref.ilot = e.ilot;
+        if (e.dev) ref.dev = e.dev;
+        try { vars.titre = texteContenu(defEv.titre, LTP.app && LTP.app.etat, ref) || null; } catch (err) { vars.titre = null; }
+      }
+    }
     return LTP.t(e.cle, vars);
   }
   // Texte d'un champ de contenu qui peut être une chaîne ou une fonction (etat, q, ref).
@@ -93,6 +102,22 @@
     ecrans: {},   // nom → { monter(racine, app), rendre(etat, ui, precedent, app) }
   };
 
+  // Textes propres à l'interface (ajoutés ici pour ne pas toucher aux modules du moteur).
+  //   : espace insécable (avant « : » et dans les guillemets) ;   : espace fine insécable.
+  LTP.enregistrerTextes({
+    'jeu.allerLeviers': 'Aller aux leviers',
+    // Le journal nomme l'événement (29-evenements note { evenement: id } ; texteJournal ajoute { titre }).
+    'evenements.tire': function (v) {
+      return v && v.titre ? 'Événement : « ' + v.titre + ' »' : 'Un événement demande votre attention.';
+    },
+    'tableau.vs': function (v) {
+      return v && v.n > 1 ? 'moyenne des ' + v.n + ' dernières semaines comparée aux ' + v.n + ' précédentes' : 'cette semaine comparée à la précédente';
+    },
+    'tuto.fait': 'C\'est fait.',
+    'fin.totalAnnee': 'total de l\'année',
+    'fin.finAnnee': 'en fin d\'année',
+  });
+
   // --- Application ---
   LTP.K.ui = { dureeSemaineMs: 3000 };
 
@@ -108,7 +133,18 @@
 
   function monterEcranJeu(racine) {
     var h_ = LTP.ui.h;
+    // Lien d'évitement : l'open space compte une trentaine d'arrêts de tabulation avant les leviers.
+    var evitement = h_('a', { class: 'lien-evitement', href: '#panneau-feuille',
+      onclick: function (ev) {
+        ev.preventDefault();
+        if (LTP.ui.panneau && LTP.ui.panneau.ouvrir) LTP.ui.panneau.ouvrir();
+        setTimeout(function () {
+          var cible = document.querySelector('#panneau-feuille .onglet[aria-selected="true"]') || document.querySelector('#panneau-feuille .onglet');
+          if (cible) { cible.focus(); try { cible.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignoré */ } }
+        }, 40);
+      } }, LTP.t('jeu.allerLeviers'));
     LTP.ui.remplacer(racine,
+      evitement,
       h_('div', { class: 'jeu' },
         h_('section', { class: 'zone zone-openspace', 'data-region': 'openspace', 'aria-label': 'Open space' }),
         h_('aside', { class: 'zone zone-panneau', 'data-region': 'panneau', 'aria-label': 'Leviers et registre' }),

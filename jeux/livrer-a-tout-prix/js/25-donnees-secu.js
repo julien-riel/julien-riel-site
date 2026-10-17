@@ -49,47 +49,50 @@
     classificationCible: { non: 0.1, manuelle: 0.6, auto: 0.9 },
     classificationVitesse: 0.08,
     // --- Menace ---
-    menaceHausse: 0.01,           // par semaine
+    // Hausse par semaine, selon le trimestre (T1 à T4) : les attaques visant les agents se multiplient
+    // à partir du T3, quand les leviers de gouvernance se débloquent (sinon le joueur subirait sans recours).
+    menaceHausse: [0.004, 0.007, 0.014, 0.012],
     // --- Exposition Loi 25 ---
     sortieModeleExterne: 0.7,     // part des données qui sortent avec un modèle infonuagique
     sortieModeleLocal: 0.1,       // avec le modèle local (serveur GPU)
     sortieParFournisseur: 0.15,   // + par MCP de fournisseur actif dans l'îlot
     // --- Usage des agents selon l'autonomie (0 à 4) ---
     usage: [0.1, 0.4, 0.7, 1, 1.2],
-    facteurRisqueCarte: 0.5,      // × la probabilité de risque déclarée par une carte (risque.proba, par semaine)
+    facteurRisqueCarte: 0.2,  // × la probabilité de risque déclarée par une carte (risque.proba, par semaine)
     formation: [0, 0.4, 0.7, 1],  // vigilance acquise selon le programme de formation (aucune → mentorat)
     // --- Injection de prompt (CONCEPTION §4.8) ---
     injection: {
-      base: 0.12, triadePartielle: 0.08, // par semaine × menace ; triade incomplète : × 0,08 × branches / 3
+      base: 0.025, triadePartielle: 0.08, // par semaine × menace ; triade incomplète : × 0,08 × branches / 3
       bacASable: [0, 0.5, 0.85],          // part neutralisée (aucun, conteneur, filtré)
       approbationSorties: 0.1,            // × si un humain approuve les sorties
-      gravite: 0.4, graviteSensibilite: 0.4, confiance: 3,
+      gravite: 0.4, graviteSensibilite: 0.4, confiance: 1.5,
     },
     // --- Paquet halluciné (slopsquatting) ---
     paquet: {
-      base: 0.008, modele: { economique: 2.5, intermediaire: 1, haut: 0.4, local: 1.6 }, // × menace
+      base: 0.008, modele: { economique: 6, intermediaire: 1, haut: 0.4, local: 2 }, // × menace
       autonomie: [0, 0.2, 0.5, 1, 1.5], bacASable: [0, 0.4, 0.95],
-      gravite: 0.5, confiance: 2,
+      gravite: 0.5, confiance: 1.5,
     },
     // --- MCP communautaire empoisonné ---
     empoisonne: {
-      base: 0.015, // base × menace + risque de la carte (exfiltration, typosquat), par carte communautaire active
+      base: 0.008, // base × menace + risque de la carte (exfiltration, typosquat), par carte communautaire active
       passerelle: 0.3, bacASable: [0, 0.3, 0.6],
-      gravite: 0.55, confiance: 3,
+      gravite: 0.42, confiance: 1.5,
     },
     // --- Changement silencieux d'un MCP de fournisseur ---
-    silencieux: { base: 0.008, gravite: 0.35, confiance: 2, confianceDetection: 1 },
+    silencieux: { base: 0.003, gravite: 0.35, confiance: 1.5, confianceDetection: 1 },
     // --- Destruction en production (accès en écriture et autonomie ≥ 3) ---
     destruction: {
-      base: 0.005, autonomie4: 1.6, accesLecture: 0.1, // les cartes « destruction » restent risquées en lecture (× 0,1)
-      gravite: 0.6, graviteCriticite: 0.3, confiance: 5,
+      base: 0.002, autonomie4: 1.6, accesLecture: 0.1, // les cartes « destruction » restent risquées en lecture (× 0,1)
+      gravite: 0.6, graviteCriticite: 0.3, confiance: 2,
     },
     // --- Fuite de données sensibles ---
     fuite: {
       base: 0.03, // × exposition Loi 25 de l'îlot × menace × usage
       gravite: 0.25, graviteSensibilite: 0.25, graviteExposition: 0.5, graviteTriade: 0.15, // gravité selon la sensibilité,
                                   // l'exposition Loi 25 et la triade complète
-      seuilMajeure: 0.8, confiance: 4, confianceMajeure: 8,
+      seuilMajeure: 0.8, confiance: 2, confianceMajeure: 4,
+      vigilance: 0.5,             // × (1 − 0,5 × formation)
     },
     incidentsMaxIlot: 1,          // incidents de sécurité au plus par îlot et par semaine
     // --- Surface d'attaque (0–100 par îlot) ---
@@ -250,8 +253,9 @@
     var cartesFuite = K.facteurRisqueCarte * O.somme(ev.cartes, function (c) {
       return c.def.provenance === 'communaute' ? 0 : risqueCarte(c.def, ['exfiltration']); // les communautaires sont dans mcpEmpoisonne
     });
+    // La formation apprend aussi à ne pas coller de données sensibles dans l'agent (vigilance).
     p.fuiteDonnees = (KF.base * ev.loi25 * menace + cartesFuite * il.sensibilite) * usage
-      * (approbation ? 0.5 : 1);
+      * (approbation ? 0.5 : 1) * (1 - (KF.vigilance || 0) * formation);
 
     for (var k in p) p[k] = O.borner(p[k]);
     return { p: p, details: details, passerelle: passerelle };
@@ -335,7 +339,9 @@
     semaine: function (etat, ctx) {
       if (!etat.securite) etat.securite = securiteVide();
       evoluerDonnees(etat);
-      etat.org.menace = O.borner(etat.org.menace + LTP.K.donneesSecu.menaceHausse);
+      var hausse = LTP.K.donneesSecu.menaceHausse;
+      if (Array.isArray(hausse)) hausse = hausse[Math.max(0, Math.min(hausse.length - 1, (etat.trimestre || 1) - 1))];
+      etat.org.menace = O.borner(etat.org.menace + (Number(hausse) || 0));
       evaluerTout(etat);
       q.ilots(etat).forEach(function (il) { tirerRisques(etat, ctx, il.id, evaluerIlot(etat, il.id)); });
       evaluerTout(etat);
@@ -349,11 +355,11 @@
   };
 
   LTP.enregistrerTextes({
-    'incident.paquetHallucine': 'Paquet halluciné : l\'agent a installé une dépendance qui n\'existait pas, jusqu\'à ce que quelqu\'un la publie. {ilot}.',
-    'incident.mcpEmpoisonne': 'MCP communautaire piégé : il envoyait plus que prévu. {ilot}.',
-    'incident.changementSilencieux': 'Un MCP de fournisseur a changé sa description sans prévenir ; l\'agent a suivi. {ilot}.',
-    'incident.destructionProd': 'Un agent a « nettoyé » la production. Sans WHERE. {ilot}.',
-    'incident.fuiteDonnees': 'Fuite de données sensibles : {ilot}. Me Bérubé arrive avec son PDF.',
-    'donneesSecu.changementDetecte': 'La passerelle MCP a détecté un changement silencieux de {carte} ({ilot}) : appels bloqués en lecture seule.',
+    'incident.paquetHallucine': 'Paquet halluciné : l\'agent a installé une dépendance au nom inventé, qu\'un attaquant avait publiée entre-temps. {ilot}.',
+    'incident.mcpEmpoisonne': 'MCP communautaire piégé : il envoyait plus que prévu. {ilot}.',
+    'incident.changementSilencieux': 'Un MCP de fournisseur a changé sa description sans prévenir ; l\'agent a suivi. {ilot}.',
+    'incident.destructionProd': 'Un agent a « nettoyé » la production. Sans WHERE. {ilot}.',
+    'incident.fuiteDonnees': 'Fuite de données sensibles : {ilot}. Me Bérubé arrive avec son PDF.',
+    'donneesSecu.changementDetecte': 'La passerelle MCP a détecté un changement silencieux de {carte} ({ilot}) : appels limités à la lecture seule.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

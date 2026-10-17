@@ -32,6 +32,12 @@
 .panneau-corps { overflow-y: auto; overscroll-behavior: contain; padding: 12px 14px 18px; display: grid; gap: 12px; align-content: start; }
 
 .ouverture { display: grid; gap: 8px; padding-bottom: 6px; }
+.triade-explic-zone:empty { display: none; }
+.triade-explic { font-weight: 400; display: grid; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); font-size: var(--fs-s); }
+.triade-explic.is-complete { border: 1.5px dashed var(--crit); background: var(--crit-soft); }
+.triade-explic-tete { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.triade-explic-lignes { list-style: none; display: grid; gap: 3px; font-weight: 400; }
+.triade-explic-quand { color: var(--muted); }
 .ouverture-nouveau { font-size: var(--fs-s); }
 
 /* ---------- Leviers ---------- */

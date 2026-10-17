@@ -81,7 +81,7 @@
 
   function agir(app, carteId, action) {
     var r = app.dispatch(action);
-    if (r && r.erreur) { etat_.erreurs[carteId] = r.erreur; LTP.ui.annoncer(t('erreur.titre') + ' : ' + F.erreur(r.erreur)); app.notifier(); }
+    if (r && r.erreur) { etat_.erreurs[carteId] = r.erreur; LTP.ui.annoncer(t('erreur.titre') + ' : ' + F.erreur(r.erreur)); app.notifier(); }
     else { delete etat_.erreurs[carteId]; }
     return r;
   }

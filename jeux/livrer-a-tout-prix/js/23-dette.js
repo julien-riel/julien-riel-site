@@ -31,10 +31,23 @@
 
     // --- Bogues et incidents ---
     eclosion: 0.12,           // probabilité par semaine qu'un défaut latent se manifeste en production
-    incidentParBogue: 0.06,   // × criticité de l'îlot : probabilité qu'un bogue devienne un incident
+    // Probabilité qu'un bogue devienne un incident :
+    //   incidentParBogue × criticité × (1 + incidentComprehension × (1 − compréhension de l'îlot))
+    //   × (1 + incidentDensite × défauts latents par kLOC) / (1 + bogues / saturationBogues).
+    // Un code que personne ne comprend et truffé de défauts latents casse plus souvent et plus fort ;
+    // beaucoup de bogues la même semaine partagent souvent une même cause (saturation).
+    incidentParBogue: 0.032,
+    incidentComprehension: 1.5,
+    incidentDensite: 3,
+    saturationBogues: 3,
     maxIncidentsSemaine: 2,   // par îlot, pour éviter les avalanches absurdes
     gravite: [0.2, 0.6],      // gravité tirée dans cet intervalle, + graviteCriticite × criticité
     graviteCriticite: 0.3,
+    graviteComprehension: 0.25, // + 0,25 × (1 − compréhension de l'îlot)
+    // Incident grave (gravité ≥ seuilGrave) : la direction le voit. Confiance −confianceGrave × (1 à 2) selon la gravité.
+    seuilGrave: 0.87,
+    confianceGrave: 0.8,
+    seuilDetteGrave: 0.5,     // compréhension sous ce seuil : le journal dit que personne ne comprenait le code
     mobilises: 2,             // développeurs de l'îlot en état « incident » pendant un incident
     seuilBoguesJournal: 8,
     delaiJournal: 10,
@@ -158,12 +171,25 @@
         ti.avis.bogues = etat.semaine;
         ctx.noter('alerte', 'dette.bogues', { ilot: ilot.id, bogues: bogues }, { ilot: ilot.id });
       }
-      // 3. Certains bogues deviennent des incidents, selon la criticité.
+      // 3. Certains bogues deviennent des incidents : criticité, compréhension et densité de défauts latents.
       var nb = 0;
+      var comp = comprehensionIlot(etat, ilot.id);
+      var densite = Math.max(0, cb.defautsLatents) / Math.max(1, cb.volume);
+      var pIncident = O.borner(K.incidentParBogue * ilot.criticite * (1 + (K.incidentComprehension || 0) * (1 - comp))
+        * (1 + (K.incidentDensite || 0) * densite) / (1 + bogues / Math.max(1e-9, K.saturationBogues || Infinity)));
       for (var i = 0; i < bogues && nb < K.maxIncidentsSemaine; i++) {
-        if (rng.chance(K.incidentParBogue * ilot.criticite)) {
-          var g = O.borner(rng.entre(K.gravite[0], K.gravite[1]) + K.graviteCriticite * ilot.criticite);
-          q.creerIncident(etat, { ilot: ilot.id, gravite: g, cause: 'bogue' }, ctx);
+        if (rng.chance(pIncident)) {
+          var g = O.borner(rng.entre(K.gravite[0], K.gravite[1]) + K.graviteCriticite * ilot.criticite
+            + (K.graviteComprehension || 0) * (1 - comp));
+          var grave = K.seuilGrave != null && g >= K.seuilGrave;
+          var inc = q.creerIncident(etat, { ilot: ilot.id, gravite: g, cause: 'bogue' }, grave ? null : ctx);
+          if (grave && inc) {
+            // La direction voit les pannes graves : confiance −1 à −2 selon la gravité, et le journal dit pourquoi.
+            var delta = K.confianceGrave * (1 + (g - K.seuilGrave) / Math.max(1e-9, 1 - K.seuilGrave));
+            etat.org.confiance = O.borner(etat.org.confiance - delta, 0, 100);
+            ctx.noter('incident', comp < K.seuilDetteGrave ? 'dette.incidentGraveDette' : 'dette.incidentGrave',
+              { ilot: ilot.id, heures: Math.round(inc.mttrHeures), delta: O.arrondir(delta, 1) }, { ilot: ilot.id });
+          }
           nb++;
         }
       }
@@ -192,10 +218,13 @@
   };
 
   LTP.enregistrerTextes({
-    'dette.personneNeComprend': '{ilot} : plus personne ne sait vraiment comment une bonne partie du code fonctionne.',
-    'dette.resolutionLongue': '{ilot} : {heures} h pour rétablir le service. Il a d\'abord fallu comprendre ce que faisait le code.',
-    'dette.bogues': '{ilot} : {bogues} bogues signalés en production cette semaine.',
+    'dette.personneNeComprend': '{ilot} : plus personne ne sait vraiment comment une bonne partie du code fonctionne.',
+    'dette.resolutionLongue': '{ilot} : {heures} h pour rétablir le service. Il a d\'abord fallu comprendre ce que faisait le code.',
+    'dette.bogues': '{ilot} : {bogues} bogues signalés en production cette semaine.',
+    // Incident grave (gravité ≥ K.dette.seuilGrave) : remplace la ligne « incident.bogue » et dit pourquoi la confiance baisse.
+    'dette.incidentGrave': '{ilot} : panne grave en production ({heures} h prévues). La direction l\'a vue passer : confiance −{delta}.',
+    'dette.incidentGraveDette': '{ilot} : panne grave ({heures} h prévues), et personne ne comprend assez ce code pour réparer vite. Confiance −{delta}.',
     // Clé produite par LTP.q.creerIncident pour la cause « bogue » (20-etat.js).
-    'incident.bogue': '{ilot} : un bogue en production tourne à l\'incident.',
+    'incident.bogue': '{ilot} : un bogue en production tourne à l\'incident.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

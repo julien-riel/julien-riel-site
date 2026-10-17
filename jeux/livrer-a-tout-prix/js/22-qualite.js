@@ -15,7 +15,7 @@
     // Code écrit à la main : × (plancher − pente × competence).
     humainCompetence: [1.4, 0.8],
     // Code écrit par l'agent : × modèle × (plancher − pente × adéquation de la pile) × (plancher − pente × competenceIA).
-    modele: { economique: 1.35, intermediaire: 1, haut: 0.7, local: 1.3, localServeur: 1.1 },
+    modele: { economique: 1.5, intermediaire: 1, haut: 0.7, local: 1.3, localServeur: 1.1 },
     agentPile: [1.5, 0.6],
     agentCompetenceIA: [1.2, 0.4],
     // Rigueur de l'auteur, qui relit et teste : × (plancher − pente × rigueur).
@@ -40,13 +40,13 @@
     // --- Revue humaine ---
     heuresPar100Lignes: 1.0,     // heures de lecture attentive pour 100 lignes
     bruitLint: { aucun: 0, formatage: 0.05, strict: 0.1, verrouille: 0.1 }, // temps de revue épargné
-    partRevueMax: 0.3,           // part maximale du temps disponible d'un développeur consacrée à la revue
-    partRevueMaxReviseur: 0.5,   // trait « reviseur » : tout le monde veut sa revue
-    occupationSessions: 0.1,     // chaque session au-delà de la première gruge le temps libre pour la revue
+    partRevueMax: 0.25,          // part maximale du temps disponible d'un développeur consacrée à la revue
+    partRevueMaxReviseur: 0.4,   // trait « reviseur » : tout le monde veut sa revue
+    occupationSessions: 0.15,    // chaque session au-delà de la première gruge le temps libre pour la revue
     tempsLibreMin: 0.4,
     efficaciteReviseur: 1.2,     // trait « reviseur » : lit mieux
     proprietaire: { capacite: 0.75, attention: 1.15 }, // approbation par le propriétaire du code
-    compromis: 0.5,              // file saturée : part traitée = (capacité / demande) ^ compromis ; le reste attend
+    compromis: 0.55,           // file saturée : part traitée = (capacité / demande) ^ compromis ; le reste attend
     distractionSessions: 0.04,   // attention × (1 − ce facteur × (sessions moyennes − 1))
     distractionMin: 0.6,
     taillePetite: 300,           // en deçà, la PR est lue en entier ; au-delà de tailleGrosse, attention × 0,6
@@ -329,8 +329,8 @@
   };
 
   LTP.enregistrerTextes({
-    'qualite.revueSaturee': '{ilot} : {pr} PR attendent une revue. Les réviseurs lisent en diagonale pour suivre.',
-    'qualite.lgtm': '{ilot} : {lgtm} PR approuvées en « LGTM » cette semaine, sans vraie lecture.',
-    'qualite.triche': '{ilot} : un commit d\'agent désactive une règle de vérification. La CI est redevenue verte.',
+    'qualite.revueSaturee': '{ilot} : {pr} PR attendent une revue. Les réviseurs lisent en diagonale pour suivre.',
+    'qualite.lgtm': '{ilot} : {lgtm} PR approuvées en « LGTM » cette semaine, sans vraie lecture.',
+    'qualite.triche': '{ilot} : un commit d\'agent désactive une règle de vérification. La CI est redevenue verte.',
   });
 })(globalThis.LTP = globalThis.LTP || {});

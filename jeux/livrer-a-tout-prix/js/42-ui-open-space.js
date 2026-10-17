@@ -26,7 +26,7 @@
   var ETATS_ACTIFS = { code: 1, revue: 1, attente: 1, incident: 1 };
   var LIBELLES_ETAT = {
     code: 'code avec ses agents', revue: 'fait de la revue', attente: 'attend une revue', incident: 'gère un incident',
-    formation: 'en formation', conge: 'en congé', absent: 'absent du bureau',
+    formation: 'en formation', conge: 'en congé', absent: 'hors du bureau',
   };
 
   // --- Petits outils de mise à jour par différence ---
@@ -327,15 +327,15 @@
     return h('details', { class: 'os-legende' },
       h('summary', null, 'Lire l\'open space'),
       h('ul', null,
-        ligne('ecrans', 'Écrans allumés : sessions d\'agent en parallèle'),
-        ligne('pile', 'Pile de papiers : PR qui attendent la revue de cette personne'),
-        ligne('brouillard', 'Brouillard : dette cognitive (uniforme tant qu\'on ne la mesure pas)'),
-        ligne('flamme', 'Flamme : incident en cours'),
-        ligne('sueur', 'Goutte de sueur, puis tête sur le bureau : fatigue'),
-        ligne('valise', 'Valise : congé · boîte : départ · livre : formation'),
-        ligne('compteur', 'Compteur : jetons consommés par l\'îlot cette semaine'),
-        ligne('triade', 'Trois voyants : triade létale (données privées, contenu non fiable, sortie externe)'),
-        ligne('losange', 'Losange : réglages propres à l\'îlot · prise : skills et MCP équipés')));
+        ligne('ecrans', 'Écrans allumés : sessions d\'agent en parallèle'),
+        ligne('pile', 'Pile de papiers : PR qui attendent la revue de cette personne'),
+        ligne('brouillard', 'Brouillard : dette cognitive (uniforme tant qu\'on ne la mesure pas)'),
+        ligne('flamme', 'Flamme : incident en cours'),
+        ligne('sueur', 'Goutte de sueur, puis tête sur le bureau : fatigue'),
+        ligne('valise', 'Valise : congé · boîte : départ · livre : formation'),
+        ligne('compteur', 'Compteur : jetons consommés par l\'îlot cette semaine'),
+        ligne('triade', 'Trois voyants : triade létale (données privées, contenu non fiable, sortie externe)'),
+        ligne('losange', 'Losange : réglages propres à l\'îlot · prise : skills et MCP équipés')));
   }
 
   // --- Données dérivées ---
@@ -595,17 +595,23 @@
 
     var triadeTexte = 'données privées ' + (t.prive ? 'oui' : 'non') + ', contenu non fiable ' + (t.nonFiable ? 'oui' : 'non') +
       ', sortie externe ' + (t.sortie ? 'oui' : 'non');
-    var lib = il.def.nom + ' : ' + F.jetons(jetons) + ' jetons cette semaine' +
+    var lib = il.def.nom + ' : ' + F.jetons(jetons) + ' jetons cette semaine' +
       (file ? ', ' + file + ' PR à relire' : '') +
       (complete ? '. Triade létale complète' : '. Triade létale') + ' (' + triadeTexte + ')' +
       (cap ? ', ' + pluriel(cap, 'capacité équipée', 'capacités équipées') : '') +
       (sur ? ', ' + pluriel(sur, 'réglage propre', 'réglages propres') : '') +
       (inc ? ', ' + pluriel(inc, 'incident en cours', 'incidents en cours') : '') +
       '. Ouvrir les réglages de l\'îlot.';
+    // D'où viennent les branches allumées, et quand on pourra agir (infobulle et nom accessible).
+    var F_ = LTP.ui.F, origines = null;
+    if (F_ && F_.originesTriade && (t.prive || t.nonFiable || t.sortie)) { try { origines = F_.originesTriade(etat, il.id); } catch (err) { origines = null; } }
+    if (origines) lib = lib.replace(/\. Ouvrir les réglages de l'îlot\.$/, '. ' + origines.lignes.join(' ') + (origines.quand ? ' ' + origines.quand : '') + ' Ouvrir les réglages de l\'îlot.');
     attr(il.etiquette, 'aria-label', lib);
-    attr(il.voyants.prive, 'title', 'Données privées : ' + (t.prive ? 'oui' : 'non'));
-    attr(il.voyants.nonFiable, 'title', 'Contenu non fiable : ' + (t.nonFiable ? 'oui' : 'non'));
-    attr(il.voyants.sortie, 'title', 'Sortie externe : ' + (t.sortie ? 'oui' : 'non'));
+    attr(il.triade, 'title', origines ? origines.resume : null);
+    attr(il.etiquette, 'title', origines ? origines.resume : null);
+    attr(il.voyants.prive, 'title', 'Données privées : ' + (t.prive ? 'oui' : 'non'));
+    attr(il.voyants.nonFiable, 'title', 'Contenu non fiable : ' + (t.nonFiable ? 'oui' : 'non'));
+    attr(il.voyants.sortie, 'title', 'Sortie externe : ' + (t.sortie ? 'oui' : 'non'));
   }
 
   LTP.ui.regions.openspace = {
@@ -694,7 +700,7 @@
       // Coin café : applications hors TI
       var fantomes = Math.round(O.somme(LTP.q.ilots(etat), function (il) { return il.applisFantomes || 0; }));
       vue.cafe.fantomes.forEach(function (f, i) { classe(f, 'on', i < fantomes); });
-      attr(vue.cafe.el, 'aria-label', 'Coin café, hors de la zone TI' + (fantomes ? ' : ' + pluriel(fantomes, 'application faite hors TI', 'applications faites hors TI') + ' sur la table' : ''));
+      attr(vue.cafe.el, 'aria-label', 'Coin café, hors de la zone TI' + (fantomes ? ' : ' + pluriel(fantomes, 'application faite hors TI', 'applications faites hors TI') + ' sur la table' : ''));
       texte(vue.cafe.legende, fantomes ? pluriel(fantomes, 'appli hors TI', 'applis hors TI') : '');
     },
   };

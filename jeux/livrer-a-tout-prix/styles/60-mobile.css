@@ -50,6 +50,10 @@
   .panneau-tete { padding: 10px var(--gutter-r) 10px var(--gutter); }
   .onglets { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter-r) 2px var(--gutter); }
   .onglets::-webkit-scrollbar { display: none; }
+  .onglets { overscroll-behavior-x: contain; scroll-padding-inline: 24px; }
+  .onglets.deborde-d { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); }
+  .onglets.deborde-g { -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px); mask-image: linear-gradient(90deg, transparent, #000 40px); }
+  .onglets.deborde-g.deborde-d { -webkit-mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent); mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent); }
   .onglet { flex: none; }
   .panneau-corps { padding: 12px var(--gutter-r) 24px var(--gutter); }
 

@@ -6,10 +6,13 @@
 //   node scripts/build-livrer-a-tout-prix.js --check      échoue si la page n'est pas à jour
 //   node scripts/build-livrer-a-tout-prix.js --autonome <chemin.html>
 //                                                         écrit une page ouvrable en file://
-//                                                         (sans front matter ni balises Nunjucks)
+//                                                         (sans front matter ni balises Nunjucks, non minifiée)
+//
+// La page du site est minifiée avec esbuild (JS et CSS) ; la version autonome reste lisible pour le débogage.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { transformSync } from "esbuild";
 
 const racine = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sources = join(racine, "jeux/livrer-a-tout-prix");
@@ -22,10 +25,19 @@ function lireDossier(dossier, extension) {
     .map((f) => `/* ${f} */\n` + readFileSync(join(sources, dossier, f), "utf8").replace(/^\/\* [^*]+? \*\/\n/, ""));
 }
 
+function minifier(code, loader) {
+  // charset utf8 : garde les caractères accentués et les espaces insécables tels quels au lieu de \uXXXX.
+  return transformSync(code, { loader, minify: true, charset: "utf8", legalComments: "none", target: "es2018" }).code.trim();
+}
+
 export function assembler({ autonome = false } = {}) {
   let page = readFileSync(join(sources, "page.fr.html"), "utf8");
-  const css = lireDossier("styles", ".css").join("\n");
-  const js = lireDossier("js", ".js").join("\n");
+  let css = lireDossier("styles", ".css").join("\n");
+  let js = lireDossier("js", ".js").join("\n");
+  if (!autonome) {
+    css = minifier(css, "css");
+    js = minifier(js, "js");
+  }
   if (js.includes("</script")) throw new Error("Un module contient « </script » : la page serait coupée.");
   if (autonome) page = page.replace(/^---\n[\s\S]*?\n---\n/, "");
   const entete = "<!-- Fichier généré par scripts/build-livrer-a-tout-prix.js à partir de jeux/livrer-a-tout-prix/. Ne pas éditer. -->\n";

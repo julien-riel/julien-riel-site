@@ -9,14 +9,42 @@
   var h = LTP.ui.h, s = LTP.ui.svg, t = LTP.t, F = LTP.ui.F;
   var LETTRES = 'ABCDEF';
 
-  var etat_ = { debut: {}, avant: {}, vue: {}, erreur: null, cle: null, retourFocus: null };
+  var etat_ = { debut: {}, avant: {}, vue: {}, erreur: null, cle: null, retourFocus: null, orateurs: {}, reactionVue: null, questionVue: null };
+
+  // Qui parle : la définition peut nommer l'orateur (directions d'affaires) ; sinon le personnage, avec l'îlot de la référence.
+  // L'orateur est mémorisé à la première lecture : la réponse change l'état, pas la personne qui a posé la question.
+  function personneDe(etat, q, def, ref) {
+    var cle = (etat.comite && etat.comite.trimestre || etat.trimestre) + ':' + q.id;
+    if (etat_.orateurs[cle]) return etat_.orateurs[cle];
+    var p = null;
+    if (typeof def.orateur === 'function') {
+      var o = null;
+      try { o = def.orateur(etat, LTP.q); } catch (e) { o = null; }
+      if (o && o.nom) p = { id: o.ilot ? 'direction-' + o.ilot : 'direction', nom: o.nom, role: o.titre || (o.ilot ? LTP.ui.nomIlot(o.ilot) : '') };
+    }
+    if (!p) {
+      var ilotRef = (ref && ref.ilot) || def.ilot || null;
+      p = F.personne(def.personnage || 'lavigueur', ilotRef ? { ilot: ilotRef } : ref);
+    }
+    etat_.orateurs[cle] = p;
+    return p;
+  }
+
+  // Ordre d'affichage des réponses : mélangé, mais stable pour une partie donnée (graine) et une question.
+  function ordreReponses(etat, q, reponses) {
+    var g = String(etat.graine);
+    return reponses.map(function (r, i) { return { r: r, cle: LTP.outils.hachage(g + ':' + q.id + ':' + (r.id || i)) }; })
+      .sort(function (a, b) { return a.cle - b.cle; })
+      .map(function (x) { return x.r; });
+  }
 
   function defQuestion(q) {
     var def = (LTP.donnees.comites || []).filter(function (c) { return c.id === q.id; })[0] || {};
     var res = {};
     var k;
     for (k in def) res[k] = def[k];
-    for (k in q) if (q[k] != null) res[k] = q[k];
+    // L'état ne garde que { id } pour chaque réponse : les réponses complètes viennent toujours des données.
+    for (k in q) if (q[k] != null && !(k === 'reponses' && def.reponses)) res[k] = q[k];
     return res;
   }
 
@@ -63,7 +91,7 @@
   function blocQuestion(etat, q, i, total, app) {
     var def = defQuestion(q);
     var ref = q.ref || (def.ilot ? { ilot: def.ilot } : {});
-    var perso = F.personne(def.personnage || 'lavigueur', ref);
+    var perso = personneDe(etat, q, def, ref);
     var rep = reponseDonnee(etat, q.id);
     var score = rep ? scoreDe(etat, q, def, rep) : null;
     var v = verdict(score);
@@ -75,9 +103,9 @@
       h('p', { class: 'eyebrow' }, t('comite.question', { n: i + 1, total: total })),
       h('div', { class: 'salle-question' },
         h('figure', { class: 'fauteuil' }, F.visage(perso.id, 72), h('figcaption', null, h('b', null, perso.nom), perso.role ? h('span', null, perso.role) : null)),
-        h('p', { class: 'bulle bulle--grande', id: 'cq-' + q.id }, F.texte(def.question, etat, ref))),
+        h('p', { class: 'bulle bulle--grande', id: 'cq-' + q.id, tabindex: '-1' }, F.texte(def.question, etat, ref))),
       h('div', { class: 'reponses', role: 'group', 'aria-labelledby': 'cq-' + q.id },
-        (def.reponses || []).map(function (r, j) {
+        ordreReponses(etat, q, def.reponses || []).map(function (r, j) {
           var choisie = rep && rep.id === r.id;
           return h('button', { type: 'button', class: 'reponse' + (choisie ? ' is-choisie' + (v ? ' is-' + v.cls : '') : ''), 'data-reponse': r.id, 'data-cle': 'rep-' + q.id + '-' + j,
             disabled: rep ? true : null, 'aria-pressed': choisie ? 'true' : null,
@@ -90,17 +118,17 @@
               var rr = reponseDonnee(ap, q.id);
               var sc = rr ? scoreDe(ap, q, def, rr) : null;
               var texte = texteReaction(r, ap, sc, ref);
-              LTP.ui.annoncer(perso.nom + ' : ' + texte);
+              LTP.ui.annoncer(perso.nom + ' : ' + texte);
             } },
             h('span', { class: 'reponse-cle mono', 'aria-hidden': 'true' }, LETTRES.charAt(j)),
             h('span', null, F.texte(r.texte, etat, ref)));
         })),
-      rep ? h('div', { class: 'reaction', role: 'status' },
+      rep ? h('div', { class: 'reaction', id: 'reaction-' + q.id, tabindex: '-1' },
         F.visage(perso.id, 40),
         h('div', null,
           h('p', { class: 'reaction-tete' }, h('b', null, perso.nom), v ? h('span', { class: 'verdict verdict--' + v.cls }, v.texte) : null),
           h('p', { class: 'bulle' }, texteReaction(repDef, etat, score, ref) || '…'),
-          avant != null ? h('p', { class: 'reaction-confiance' }, t('comite.confiance'), ' : ', chiffreConfiance(avant, etat.org.confiance)) : null)) : null);
+          avant != null ? h('p', { class: 'reaction-confiance' }, t('comite.confiance'), ' : ', chiffreConfiance(avant, etat.org.confiance)) : null)) : null);
   }
 
   LTP.ui.comite = {
@@ -148,11 +176,11 @@
             questions.length ? h('ol', { class: 'comite-resume' }, questions.map(function (q) {
               var def = defQuestion(q), rep = reponseDonnee(etat, q.id);
               var v = rep ? verdict(scoreDe(etat, q, def, rep)) : null;
-              var p = F.personne(def.personnage || 'lavigueur', q.ref || {});
+              var p = personneDe(etat, q, def, q.ref || (def.ilot ? { ilot: def.ilot } : {}));
               return h('li', null, F.visage(p.id, 28), h('span', { class: 'resume-q' }, h('b', null, p.nom), ' · ', F.texte(def.question, etat, q.ref || {})),
                 v ? h('span', { class: 'verdict verdict--' + v.cls }, v.texte) : null);
             })) : h('p', { class: 'comite-aucune' }, t('comite.aucune')),
-            h('p', { class: 'comite-total' }, t('comite.confiance'), ' : ', chiffreConfiance(etat_.debut[trim], etat.org.confiance)),
+            h('p', { class: 'comite-total' }, t('comite.confiance'), ' : ', chiffreConfiance(etat_.debut[trim], etat.org.confiance)),
             etat_.erreur ? h('p', { class: 'erreur', role: 'alert' }, F.erreur(etat_.erreur)) : null,
             h('div', { class: 'comite-actions' },
               h('button', { type: 'button', class: 'btn btn--primaire btn--grand', id: 'btn-trimestre-suivant', 'data-cle': 'comite-passer', disabled: toutes ? null : true,
@@ -169,7 +197,7 @@
             h('header', { class: 'comite-tete' },
               h('div', null,
                 h('p', { class: 'eyebrow' }, t('comite.eyebrow', { trimestre: trim })),
-                h('h2', { id: 'comite-titre' }, t('comite.titre'))),
+                h('h2', { id: 'comite-titre', tabindex: '-1' }, t('comite.titre'))),
               h('p', { class: 'comite-jauge' }, h('span', { class: 'eyebrow' }, t('comite.confiance')), h('b', { class: 'mono' }, String(Math.round(etat.org.confiance))))),
             idx === 0 && !reponseDonnee(etat, (questions[0] || {}).id) ? h('p', { class: 'comite-intro' }, t('comite.intro')) : null,
             questions.length > 1 ? h('ol', { class: 'comite-points', 'aria-hidden': 'true' }, questions.map(function (q, i) {
@@ -180,8 +208,33 @@
       });
       if (change) {
         var boite = couche.querySelector('.comite');
-        var deja = boite && boite.contains(document.activeElement);
-        if (boite && !deja) F.focusPremier(boite, '#btn-comite-suivante, .reponse:not([disabled]), #btn-trimestre-suivant');
+        var focaliser = function (el) { if (el) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } } };
+        var qc = idx < questions.length ? questions[idx] : null;
+        var repondue = qc && reponseDonnee(etat, qc.id);
+        if (!boite) { /* rien */ }
+        else if (nouveau) {
+          // À l'ouverture : le titre, pour qu'une Espace ou une Entrée ne choisisse pas une réponse par accident.
+          if (qc) etat_[repondue ? 'reactionVue' : 'questionVue'] = trim + ':' + qc.id;
+          focaliser(boite.querySelector('#comite-titre'));
+        } else if (qc && repondue && etat_.reactionVue !== trim + ':' + qc.id) {
+          // Après une réponse : la réaction du personnage (la leçon) est amenée dans la vue et reçoit le focus.
+          etat_.reactionVue = trim + ':' + qc.id;
+          var reac = boite.querySelector('.reaction');
+          if (reac) {
+            try { reac.scrollIntoView({ block: 'nearest', behavior: F.reduit() ? 'auto' : 'smooth' }); } catch (e) { reac.scrollIntoView(); }
+            focaliser(reac);
+          }
+        } else if (qc && !repondue && etat_.questionVue !== trim + ':' + qc.id) {
+          // Nouvelle question : on lit d'abord la question.
+          etat_.questionVue = trim + ':' + qc.id;
+          var bulle = boite.querySelector('#cq-' + F.echapper(qc.id));
+          if (bulle) { try { bulle.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignoré */ } }
+          focaliser(bulle);
+        } else if (!qc && !boite.contains(document.activeElement)) {
+          F.focusPremier(boite, '#btn-trimestre-suivant');
+        } else if (!boite.contains(document.activeElement)) {
+          F.focusPremier(boite, '#comite-titre');
+        }
       }
     },
   };
@@ -197,6 +250,20 @@
   }
 
   // Courbe de l'année : une série, un axe, repères de trimestre, survol avec curseur.
+  // Chiffre affiché à côté d'une courbe : le total de l'année pour un flux hebdomadaire (faits du bilan),
+  // sinon la valeur de fin d'année. → { texte, total }
+  var TOTAUX = { prFusionnees: 'prFusionnees', incidents: 'incidents', bogues: 'bogues' };
+  function chiffreCourbe(etat, def, pts) {
+    var faits = (etat.resultat && etat.resultat.faits) || {};
+    var cle = TOTAUX[def.id];
+    if (cle && typeof faits[cle] === 'number') return { total: true, v: faits[cle] };
+    if (def.id === 'coutSemaine' || def.id === 'pointsLivres' || def.id === 'jetonsSemaine') {
+      return { total: true, v: pts.reduce(function (a, p) { return a + p.v; }, 0) };
+    }
+    if (def.id === 'comprehension' && typeof faits.comprehension === 'number') return { total: false, v: faits.comprehension };
+    return { total: false, v: pts[pts.length - 1].v };
+  }
+
   function courbe(etat, def) {
     var hist = (etat.historique || {})[def.id] || [];
     var pts = [];
@@ -247,9 +314,11 @@
     });
     el.addEventListener('pointerleave', function () { curseurL.style.display = 'none'; curseurP.style.display = 'none'; bulle.hidden = true; });
     var cache = !!def.cachee;
+    var chiffre = chiffreCourbe(etat, def, pts);
     return h('figure', { class: 'courbe' },
       h('figcaption', null, h('b', null, def.libelle), cache ? h('span', { class: 'badge badge--accent' }, t('fin.revele')) : null,
-        h('span', { class: 'mono courbe-fin' }, F.formatMetrique(dernier.v, def.unite))),
+        h('span', { class: 'courbe-fin' }, h('span', { class: 'courbe-fin-lib' }, chiffre.total ? t('fin.totalAnnee') : t('fin.finAnnee')), ' ',
+          h('b', { class: 'mono' }, F.formatMetrique(chiffre.v, def.unite)))),
       h('div', { class: 'courbe-cadre' }, el, bulle));
   }
 
