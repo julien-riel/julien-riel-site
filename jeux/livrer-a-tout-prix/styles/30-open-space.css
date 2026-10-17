@@ -1,0 +1,3 @@
+/* 30-open-space.css */
+/* Propriétaire : agent E. */
+.os-ilot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px; border: 1px solid var(--line); margin-bottom: 6px; }

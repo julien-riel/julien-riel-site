@@ -1,0 +1,2472 @@
+---
+permalink: /projets/livrer-a-tout-prix/index.html
+eleventyExcludeFromCollections: true
+---
+<!-- Fichier généré par scripts/build-livrer-a-tout-prix.js à partir de jeux/livrer-a-tout-prix/. Ne pas éditer. -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Livrer à tout prix — un an pour faire passer une équipe au développement agentique</title>
+<meta name="description" content="Un jeu sérieux : pendant un an, réglez les pratiques, les agents, les skills, les serveurs MCP et la gouvernance des données de 21 développeurs, puis regardez l'open space réagir. Revue de code, dette cognitive, jetons, triade létale, Loi 25.">
+<meta name="theme-color" content="#17140f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%A7%91%E2%80%8D%F0%9F%92%BB%3C/text%3E%3C/svg%3E">
+<style>
+  @font-face { font-family: 'Chakra Petch'; font-style: normal; font-weight: 500; font-display: swap; src: url('/assets/fonts/chakra-petch-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Chakra Petch'; font-style: normal; font-weight: 600; font-display: swap; src: url('/assets/fonts/chakra-petch-600.woff2') format('woff2'); }
+  @font-face { font-family: 'Chakra Petch'; font-style: normal; font-weight: 700; font-display: swap; src: url('/assets/fonts/chakra-petch-700.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/instrument-sans-400.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Sans'; font-style: italic; font-weight: 400; font-display: swap; src: url('/assets/fonts/instrument-sans-400-italic.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('/assets/fonts/instrument-sans-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url('/assets/fonts/instrument-sans-600.woff2') format('woff2'); }
+  @font-face { font-family: 'Instrument Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/assets/fonts/instrument-sans-700.woff2') format('woff2'); }
+  @font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('/assets/fonts/ibm-plex-mono-400.woff2') format('woff2'); }
+  @font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url('/assets/fonts/ibm-plex-mono-500.woff2') format('woff2'); }
+  @font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 600; font-display: swap; src: url('/assets/fonts/ibm-plex-mono-600.woff2') format('woff2'); }
+  .tool--back { display: inline-flex; align-items: center; text-decoration: none; color: var(--muted); white-space: nowrap; }
+  .tool--back:hover { color: var(--fg); }
+</style>
+<style>
+{% raw %}
+/* 00-jetons.css */
+/* Jetons de design. Propriétaire : agent F (direction visuelle complète en phase 1). */
+:root {
+  color-scheme: light dark;
+  --bg: #f4efe6;
+  --surface: #fffaf1;
+  --fg: #1f1a14;
+  --muted: #6b6155;
+  --line: #d8cdbb;
+  --accent: #c2410c;
+  --ok: #1f7a3f;
+  --warn: #b26b00;
+  --crit: #c0261c;
+  --font-titre: 'Chakra Petch', system-ui, sans-serif;
+  --font-texte: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
+}
+:root[data-theme="dark"] { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
+
+/* 10-base.css */
+/* Base et grille de l'écran de jeu. Propriétaire : agent F. */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.45 var(--font-texte); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hud { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--line); }
+.hud-inner { display: flex; gap: 12px; align-items: center; padding: 8px 16px; flex-wrap: wrap; }
+.jeu { display: grid; gap: 12px; padding: 12px 16px; grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-areas: "openspace panneau" "tableau panneau" "journal panneau"; }
+.zone-openspace { grid-area: openspace; } .zone-panneau { grid-area: panneau; }
+.zone-tableau { grid-area: tableau; } .zone-journal { grid-area: journal; }
+@media (max-width: 900px) {
+  .jeu { grid-template-columns: minmax(0, 1fr); grid-template-areas: "openspace" "panneau" "tableau" "journal"; }
+}
+.modale { position: fixed; inset: 10% 50% auto auto; transform: translateX(50%); background: var(--surface); border: 1px solid var(--line);
+  padding: 16px; max-width: min(560px, calc(100vw - 32px)); z-index: 20; }
+
+/* 20-hud.css */
+/* Propriétaire : agent F. */
+
+/* 30-open-space.css */
+/* Propriétaire : agent E. */
+.os-ilot { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px; border: 1px solid var(--line); margin-bottom: 6px; }
+
+/* 40-panneaux.css */
+/* Propriétaire : agent F. */
+
+/* 50-modales.css */
+/* Propriétaire : agent F. */
+
+/* 60-mobile.css */
+/* Propriétaire : agent F. */
+
+{% endraw %}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <header class="hud" id="hud"></header>
+  <main class="app" id="app" tabindex="-1">
+    <section class="notice"><h1>Livrer à tout prix</h1><p>Chargement de l'open space…</p></section>
+  </main>
+  <div id="modale-racine"></div>
+  <div class="sr-only" id="live" aria-live="polite" role="status"></div>
+</div>
+<noscript><p style="padding:16px">Ce jeu a besoin de JavaScript.</p></noscript>
+<script>
+{% raw %}
+/* 00-noyau.js */
+/* Espace de noms, hasard déterministe, outils numériques, formatage fr-CA et textes.
+   Aucun accès au DOM : ce fichier est aussi chargé dans Node pour les tests. */
+(function (LTP) {
+  'use strict';
+
+  LTP.K = LTP.K || {};               // constantes d'équilibrage, un bloc par système
+  LTP.systemes = LTP.systemes || {}; // systèmes du moteur (voir 31-boucle.js)
+  LTP.donnees = LTP.donnees || {};   // contenu : îlots, personnages, leviers, cartes, événements…
+  LTP.textes = LTP.textes || { fr: {} };
+  LTP.langue = LTP.langue || 'fr';
+  LTP.q = LTP.q || {};               // requêtes sur l'état (voir 20-etat.js)
+
+  var NBSP = ' ';
+  var NNBSP = ' '; // espace fine insécable, avant « ; ! ? » et le symbole %
+
+  // --- Hasard déterministe (mulberry32). L'état est un entier sérialisable. ---
+  function rngSuivant(s) {
+    s = (s + 0x6D2B79F5) | 0;
+    var t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return { etat: s, valeur: ((t ^ (t >>> 14)) >>> 0) / 4294967296 };
+  }
+
+  // Crée un générateur lié à un porteur { rngEtat } (l'état du jeu) : chaque tirage avance porteur.rngEtat.
+  function creerRng(porteur) {
+    var r = {
+      suivant: function () {
+        var x = rngSuivant(porteur.rngEtat | 0);
+        porteur.rngEtat = x.etat;
+        return x.valeur;
+      },
+      entre: function (a, b) { return a + (b - a) * r.suivant(); },
+      entier: function (a, b) { return a + Math.floor(r.suivant() * (b - a + 1)); },
+      chance: function (p) { return r.suivant() < p; },
+      choisir: function (liste) { return liste.length ? liste[Math.floor(r.suivant() * liste.length)] : undefined; },
+      // poids : fonction(element) → nombre ≥ 0, ou nom de propriété
+      choisirPondere: function (liste, poids) {
+        var f = typeof poids === 'function' ? poids : function (e) { return e[poids || 'poids'] || 0; };
+        var total = 0, i;
+        for (i = 0; i < liste.length; i++) total += Math.max(0, f(liste[i]) || 0);
+        if (total <= 0) return undefined;
+        var x = r.suivant() * total;
+        for (i = 0; i < liste.length; i++) {
+          x -= Math.max(0, f(liste[i]) || 0);
+          if (x < 0) return liste[i];
+        }
+        return liste[liste.length - 1];
+      },
+      // Bruit centré : moyenne 0, écart-type ≈ e (somme de trois uniformes).
+      bruit: function (e) { return ((r.suivant() + r.suivant() + r.suivant()) / 3 - 0.5) * 2 * 1.732 * (e || 1); },
+      melanger: function (liste) {
+        var a = liste.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(r.suivant() * (i + 1));
+          var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+        }
+        return a;
+      },
+    };
+    return r;
+  }
+
+  // Graine à partir d'un texte ou d'un nombre.
+  function graineDe(x) {
+    if (typeof x === 'number' && isFinite(x)) return x | 0;
+    var s = String(x == null ? Date.now() : x), h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h | 0;
+  }
+
+  // Hachage stable d'un texte en [0, 1) : sert aux variations visuelles déterministes.
+  function hachage(s) {
+    var h = 2166136261;
+    s = String(s);
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return ((h >>> 0) % 100000) / 100000;
+  }
+
+  // --- Outils numériques ---
+  function borner(v, min, max) {
+    if (min == null) min = 0;
+    if (max == null) max = 1;
+    if (typeof v !== 'number' || isNaN(v)) return min;
+    return v < min ? min : v > max ? max : v;
+  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function somme(liste, f) {
+    var s = 0;
+    for (var i = 0; i < liste.length; i++) s += f ? (typeof f === 'function' ? f(liste[i]) : liste[i][f]) : liste[i];
+    return s;
+  }
+  function moyenne(liste, f) { return liste.length ? somme(liste, f) / liste.length : 0; }
+  function arrondir(v, d) { var m = Math.pow(10, d || 0); return Math.round(v * m) / m; }
+  // L'état du jeu est du JSON pur : la copie profonde passe par JSON (disponible aussi dans un contexte vm).
+  function cloner(o) { return o === undefined ? undefined : JSON.parse(JSON.stringify(o)); }
+
+  function lireChemin(obj, chemin) {
+    var parts = String(chemin).split('.');
+    for (var i = 0; i < parts.length; i++) {
+      if (obj == null) return undefined;
+      obj = obj[parts[i]];
+    }
+    return obj;
+  }
+  function ecrireChemin(obj, chemin, valeur) {
+    var parts = String(chemin).split('.');
+    for (var i = 0; i < parts.length - 1; i++) {
+      if (obj[parts[i]] == null || typeof obj[parts[i]] !== 'object') obj[parts[i]] = {};
+      obj = obj[parts[i]];
+    }
+    obj[parts[parts.length - 1]] = valeur;
+  }
+
+  // --- Formatage fr-CA ---
+  function nombre(n, d) {
+    if (n === Infinity) return '∞';
+    if (n == null || isNaN(n)) return '—';
+    var dd = d == null ? (Math.abs(n) >= 100 ? 0 : Math.abs(n) >= 10 ? 1 : 2) : d;
+    return Number(n).toLocaleString('fr-CA', { maximumFractionDigits: dd, minimumFractionDigits: 0 }).replace(/^-/, '−');
+  }
+  function argent(n) {
+    if (n == null || isNaN(n)) return '—';
+    var a = Math.abs(n);
+    if (a >= 1e6) return nombre(n / 1e6, 2) + NBSP + 'M$';
+    if (a >= 1e4) return nombre(n / 1e3, 0) + NBSP + 'k$';
+    return nombre(Math.round(n), 0) + NBSP + '$';
+  }
+  function pourcent(v, d) { return nombre(v * 100, d == null ? 0 : d) + NNBSP + '%'; }
+  function jetons(n) {
+    if (n == null || isNaN(n)) return '—';
+    if (n >= 1e9) return nombre(n / 1e9, 1) + NBSP + 'G';
+    if (n >= 1e6) return nombre(n / 1e6, 1) + NBSP + 'M';
+    if (n >= 1e3) return nombre(n / 1e3, 0) + NBSP + 'k';
+    return nombre(n, 0);
+  }
+
+  // --- Textes : t('cle', { nom: 'Mathieu' }) → gabarit avec {nom} remplacé.
+  // Chaque module peut enregistrer ses propres clés sous son préfixe avec LTP.enregistrerTextes().
+  function t(cle, vars) {
+    var dict = LTP.textes[LTP.langue] || {};
+    var s = dict[cle];
+    if (s == null) s = (LTP.textes.fr || {})[cle];
+    if (s == null) return '⟦' + cle + '⟧';
+    if (typeof s === 'function') return s(vars || {});
+    if (Array.isArray(s)) s = s[0];
+    return gabarit(s, vars);
+  }
+  function gabarit(s, vars) {
+    if (!vars) return s;
+    return String(s).replace(/\{([a-zA-Z0-9_.]+)\}/g, function (m, k) {
+      var v = lireChemin(vars, k);
+      return v == null ? m : String(v);
+    });
+  }
+  function aTexte(cle) { return (LTP.textes[LTP.langue] || {})[cle] != null || (LTP.textes.fr || {})[cle] != null; }
+  function enregistrerTextes(dict, langue) {
+    var l = langue || 'fr';
+    LTP.textes[l] = LTP.textes[l] || {};
+    for (var k in dict) if (Object.prototype.hasOwnProperty.call(dict, k)) LTP.textes[l][k] = dict[k];
+  }
+
+  LTP.rng = { creer: creerRng, graineDe: graineDe };
+  LTP.outils = {
+    borner: borner, lerp: lerp, somme: somme, moyenne: moyenne, arrondir: arrondir, cloner: cloner,
+    lireChemin: lireChemin, ecrireChemin: ecrireChemin, hachage: hachage,
+  };
+  LTP.format = { nombre: nombre, argent: argent, pourcent: pourcent, jetons: jetons, NBSP: NBSP, NNBSP: NNBSP };
+  LTP.t = t;
+  LTP.gabarit = gabarit;
+  LTP.aTexte = aTexte;
+  LTP.enregistrerTextes = enregistrerTextes;
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 05-textes.fr.js */
+/* Chaînes de l'interface en français. Les modules du moteur enregistrent leurs propres clés de journal
+   (préfixées par leur système) avec LTP.enregistrerTextes(). Propriétaire : agent F. */
+(function (LTP) {
+  'use strict';
+  LTP.enregistrerTextes({
+    'jeu.titre': 'Livrer à tout prix',
+    'jeu.sousTitre': 'Une année pour faire passer 21 développeurs au développement agentique.',
+    'hud.semaine': 'Semaine {semaine}',
+    'hud.trimestre': 'T{trimestre}',
+    'action.jouer': 'Jouer',
+    'action.pause': 'Pause',
+    'action.semaine': 'Semaine suivante',
+    'action.commencer': 'Commencer',
+    'action.tutoriel': 'Tutoriel avec Ginette',
+    'action.lancer': 'Lancer le trimestre',
+    'action.continuer': 'Continuer',
+    'action.recommencer': 'Nouvelle partie',
+    'incident.bogue': 'Incident en production : {ilot}.',
+    'incident.injection': 'Injection de prompt : {ilot}.',
+  });
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 10-donnees-ilots.js */
+/* Les sept lignes d'affaires (îlots de l'open space) et leurs paramètres de départ.
+   Valeurs normalisées 0–1 sauf mention contraire. */
+(function (LTP) {
+  'use strict';
+
+  // ordre : position dans l'open space (lecture de gauche à droite, de haut en bas)
+  // criticite : coût d'un incident ; sensibilite : part de données personnelles ou financières
+  // volatilite : fréquence des changements de besoins ; adequationPile : qualité de l'agent sur cette pile
+  // volumeInitial : taille du code existant, en milliers de lignes (kLOC)
+  // demandeBase : points de demande ajoutés au backlog par semaine (un développeur inter livre ≈ 5 points)
+  // exposition : branches de la triade létale allumées par la nature même du travail
+  LTP.donnees.ilots = [
+    {
+      id: 'appro', ordre: 0, nom: 'Approvisionnement', court: 'Appro', teinte: 32,
+      pile: 'AS/400 (RPG), SQL Server, Excel',
+      mission: 'Achats, fournisseurs, bons de commande et factures.',
+      criticite: 0.6, sensibilite: 0.7, volatilite: 0.3, adequationPile: 0.45,
+      volumeInitial: 180, backlogInitial: 30, demandeBase: 14, satisfactionInitiale: 0.55,
+      exposition: { prive: true, nonFiable: true, sortie: false },
+      direction: { nom: 'Francine Gagnon', titre: 'Directrice de l\'approvisionnement' },
+    },
+    {
+      id: 'operations', ordre: 1, nom: 'Opérations', court: 'Opérations', teinte: 4,
+      pile: 'Python, Bash, Ansible, PostgreSQL',
+      mission: 'Ordonnancement, garde, déploiements et outils internes des opérations.',
+      criticite: 0.9, sensibilite: 0.4, volatilite: 0.25, adequationPile: 0.8,
+      volumeInitial: 90, backlogInitial: 25, demandeBase: 13, satisfactionInitiale: 0.6,
+      exposition: { prive: true, nonFiable: false, sortie: false },
+      direction: { nom: 'Réjean Tremblay', titre: 'Directeur des opérations' },
+    },
+    {
+      id: 'bureautique', ordre: 2, nom: 'Bureautique', court: 'Bureautique', teinte: 140,
+      pile: 'VBA, Power Automate, SharePoint',
+      mission: 'Macros, formulaires et automatisations pour les services administratifs, dont la paie.',
+      criticite: 0.5, sensibilite: 0.8, volatilite: 0.5, adequationPile: 0.5,
+      volumeInitial: 60, backlogInitial: 35, demandeBase: 15, satisfactionInitiale: 0.5,
+      exposition: { prive: true, nonFiable: false, sortie: false },
+      direction: { nom: 'Josée Lapointe', titre: 'Directrice des services administratifs' },
+    },
+    {
+      id: 'inspections', ordre: 3, nom: 'Inspections', court: 'Inspections', teinte: 200,
+      pile: 'Kotlin, Swift, synchronisation hors ligne',
+      mission: 'L\'application mobile des inspecteurs terrain : photos, formulaires, rapports.',
+      criticite: 0.6, sensibilite: 0.75, volatilite: 0.6, adequationPile: 0.7,
+      volumeInitial: 70, backlogInitial: 30, demandeBase: 14, satisfactionInitiale: 0.55,
+      exposition: { prive: true, nonFiable: false, sortie: false },
+      direction: { nom: 'Nathalie Bouchard', titre: 'Directrice des inspections' },
+    },
+    {
+      id: 'iot', ordre: 4, nom: 'Capteurs et IoT', court: 'IoT', teinte: 265,
+      pile: 'C embarqué, MQTT, Python',
+      mission: 'Firmware des capteurs et pipelines de télémétrie.',
+      criticite: 0.95, sensibilite: 0.3, volatilite: 0.2, adequationPile: 0.4,
+      volumeInitial: 40, backlogInitial: 20, demandeBase: 12, satisfactionInitiale: 0.6,
+      exposition: { prive: false, nonFiable: false, sortie: false },
+      direction: { nom: 'Alain Côté', titre: 'Directeur du réseau de capteurs' },
+    },
+    {
+      id: 'web', ordre: 5, nom: 'Sites web', court: 'Web', teinte: 320,
+      pile: 'TypeScript, Astro, WordPress',
+      mission: 'Les sites publics et les microsites de campagne.',
+      criticite: 0.3, sensibilite: 0.2, volatilite: 0.85, adequationPile: 0.9,
+      volumeInitial: 110, backlogInitial: 40, demandeBase: 16, satisfactionInitiale: 0.5,
+      exposition: { prive: false, nonFiable: true, sortie: true },
+      direction: { nom: 'Isabelle Roy', titre: 'Directrice des communications' },
+    },
+    {
+      id: 'portail', ordre: 6, nom: 'Portail client', court: 'Portail', teinte: 230,
+      pile: 'TypeScript, React, Java, OAuth',
+      mission: 'Le portail des clients et des partenaires : comptes, demandes, paiements.',
+      criticite: 0.8, sensibilite: 0.85, volatilite: 0.5, adequationPile: 0.85,
+      volumeInitial: 150, backlogInitial: 35, demandeBase: 15, satisfactionInitiale: 0.55,
+      exposition: { prive: true, nonFiable: true, sortie: false },
+      direction: { nom: 'Daniel Morin', titre: 'Directeur des services aux clients' },
+    },
+  ];
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 11-donnees-personnages.js */
+/* Les 21 développeurs, les personnages secondaires et la table des traits.
+   Les champs structurels (id, ilot, niveau, traits) sont un contrat : ne pas les renommer.
+   Les champs de texte (tagline, replique, bulles, reactions) sont du contenu. */
+(function (LTP) {
+  'use strict';
+
+  // --- Traits ---
+  // init : modificateurs appliqués aux statistiques de départ (additifs) par 20-etat.js.
+  // mods : modificateurs lus par les systèmes, chacun dans son fichier :
+  //   production (21) : debit (multiplicatif, ex. −0,15), sessions (additif), taillePR (multiplicatif), verbosite (multiplicatif)
+  //   qualite (22)    : tauxDefaut (multiplicatif), couverture (additif sur la couverture réelle produite)
+  //   dette (23)      : comprehension (multiplicatif sur l'apprentissage)
+  //   personnes (27)  : fatigue (multiplicatif), apprentissage (multiplicatif), adhesionMax (plafond)
+  //   registre (26)   : installeCommunaute (probabilité par semaine d'installer une carte communautaire en libre-service)
+  LTP.donnees.traits = {
+    legacy:          { libelle: 'Gardien du legacy',     init: { comprehension: 0.15, competence: 0.05 }, mods: {} },
+    sceptique:       { libelle: 'Sceptique',             init: { adhesion: -0.25 }, mods: {} },
+    donnees:         { libelle: 'Œil pour les données',  init: { rigueur: 0.05 }, mods: { tauxDefaut: 0.9 } },
+    rigoureux:       { libelle: 'Rigueur',               init: { rigueur: 0.2 }, mods: { tauxDefaut: 0.85 } },
+    curieux:         { libelle: 'Curiosité',             init: { adhesion: 0.15, competenceIA: 0.1 }, mods: { installeCommunaute: 0.04 } },
+    integrateur:     { libelle: 'Intégrateur',           init: { competenceIA: 0.05 }, mods: { installeCommunaute: 0.06 } },
+    garde:           { libelle: 'De garde la nuit',      init: { fatigue: 0.1 }, mods: { fatigue: 1.2 } },
+    stoique:         { libelle: 'Stoïque',               init: { moral: 0.05 }, mods: { fatigue: 0.85 } },
+    sre:             { libelle: 'SRE',                   init: { rigueur: 0.1 }, mods: {} },
+    apprenant:       { libelle: 'Apprend vite',          init: {}, mods: { apprentissage: 1.5 } },
+    automatiseur:    { libelle: 'Automatise tout',       init: { adhesion: 0.2 }, mods: { installeCommunaute: 0.08, debit: 0.05 } },
+    enthousiaste:    { libelle: 'Enthousiaste',          init: { adhesion: 0.25, moral: 0.05 }, mods: {} },
+    vba:             { libelle: 'Macros VBA',            init: { comprehension: 0.1 }, mods: {} },
+    refractaire:     { libelle: 'Réfractaire',           init: { adhesion: -0.4 }, mods: { adhesionMax: 0.3 } },
+    contractuel:     { libelle: 'Contractuel',           init: {}, mods: {} },
+    tdd:             { libelle: 'TDD',                   init: { rigueur: 0.25 }, mods: { debit: -0.15, couverture: 0.3, tauxDefaut: 0.75 } },
+    mobile:          { libelle: 'Mobile',                init: {}, mods: {} },
+    pragmatique:     { libelle: 'Pragmatique',           init: { adhesion: 0.05 }, mods: { debit: 0.05 } },
+    natifIA:         { libelle: 'Native de l\'IA',       init: { adhesion: 0.3, competenceIA: 0.25, competence: -0.05 }, mods: { verbosite: 1.2 } },
+    firmware:        { libelle: 'Firmware',              init: { rigueur: 0.1 }, mods: {} },
+    prudent:         { libelle: 'Prudence',              init: { rigueur: 0.15, adhesion: -0.1 }, mods: { tauxDefaut: 0.85 } },
+    electronicien:   { libelle: 'Électronicien',         init: {}, mods: {} },
+    designer:        { libelle: 'Designer',              init: { competence: -0.05, adhesion: 0.15 }, mods: {} },
+    wordpress:       { libelle: 'WordPress',             init: {}, mods: {} },
+    multiClauding:   { libelle: 'Multi-Clauding',        init: { adhesion: 0.3 }, mods: { sessions: 2, fatigue: 1.25 } },
+    dixX:            { libelle: '« 10x »',               init: { competence: 0.05, rigueur: -0.2, adhesion: 0.3 }, mods: { sessions: 2, taillePR: 3, verbosite: 1.4 } },
+    shipIt:          { libelle: 'Ship it',               init: { rigueur: -0.15 }, mods: { debit: 0.1, tauxDefaut: 1.25 } },
+    reviseur:        { libelle: 'Réviseuse de référence', init: { rigueur: 0.15 }, mods: {} },
+    securite:        { libelle: 'Sécurité',              init: { rigueur: 0.1 }, mods: { tauxDefaut: 0.9 } },
+    mesure:          { libelle: 'Mesure tout',           init: { rigueur: 0.05 }, mods: {} },
+  };
+
+  // --- Développeurs ---
+  // niveau : stagiaire · junior · inter · senior
+  // accessoire : objet signature sur le bureau (dessiné par 41-ui-avatars.js)
+  // apparence : optionnelle ; sinon dérivée de l'id de façon déterministe
+  LTP.donnees.devs = [
+    { id: 'raymond',   nom: 'Raymond',   ilot: 'appro',       niveau: 'senior',    traits: ['legacy', 'sceptique'],         accessoire: 'terminal-vert',
+      tagline: '31 ans sur l\'AS/400. « L\'IA ? J\'ai vu passer le 4GL aussi. »' },
+    { id: 'lucie',     nom: 'Lucie',     ilot: 'appro',       niveau: 'inter',     traits: ['donnees', 'rigoureux'],        accessoire: 'classeurs',
+      tagline: 'Connaît par cœur les trois listes de fournisseurs, et laquelle est la bonne.' },
+    { id: 'yannick',   nom: 'Yannick',   ilot: 'appro',       niveau: 'inter',     traits: ['curieux', 'integrateur'],      accessoire: 'cables',
+      tagline: 'Branche tout sur tout. Premier à installer un MCP trouvé sur un forum.' },
+
+    { id: 'benoit',    nom: 'Benoît',    ilot: 'operations',  niveau: 'senior',    traits: ['garde', 'stoique'],            accessoire: 'tasse',
+      tagline: 'De garde la nuit depuis 2009. Son téléphone vibre, il soupire.' },
+    { id: 'marieeve',  nom: 'Marie-Ève', ilot: 'operations',  niveau: 'senior',    traits: ['sre', 'mesure'],               accessoire: 'tableau-bord',
+      tagline: 'Ne croit que ce qui a un tableau de bord.' },
+    { id: 'tommy',     nom: 'Tommy',     ilot: 'operations',  niveau: 'junior',    traits: ['apprenant'],                   accessoire: 'carnet',
+      tagline: 'Apprend vite, mais seulement ce qu\'on lui laisse faire.' },
+
+    { id: 'steve',     nom: 'Steve',     ilot: 'bureautique', niveau: 'inter',     traits: ['automatiseur', 'enthousiaste'], accessoire: 'organigramme',
+      tagline: 'Roi du Power Automate, voisin de bureau de Kevin.' },
+    { id: 'diane',     nom: 'Diane',     ilot: 'bureautique', niveau: 'senior',    traits: ['vba', 'refractaire'],          accessoire: 'plante',
+      tagline: '58 ans, des macros Excel qui font tourner la paie. Ne veut rien savoir.' },
+    { id: 'olivier',   nom: 'Olivier',   ilot: 'bureautique', niveau: 'inter',     traits: ['contractuel', 'enthousiaste'], accessoire: 'sac-a-dos',
+      tagline: 'Contractuel. Part dans six mois, avec ce qu\'il sait.' },
+
+    { id: 'sophie',    nom: 'Sophie',    ilot: 'inspections', niveau: 'senior',    traits: ['tdd', 'rigoureux'],            accessoire: 'cactus',
+      tagline: 'Pas de code sans test rouge d\'abord. Lente au T1, imbattable au T3.' },
+    { id: 'karim',     nom: 'Karim',     ilot: 'inspections', niveau: 'inter',     traits: ['mobile', 'pragmatique'],       accessoire: 'telephones',
+      tagline: 'L\'application terrain hors ligne, c\'est lui.' },
+    { id: 'jeremy',    nom: 'Jérémy',    ilot: 'inspections', niveau: 'stagiaire', traits: ['natifIA', 'apprenant'],        accessoire: 'boisson-energie',
+      tagline: 'N\'a jamais codé sans IA. Brillant ou perdu selon vos choix.' },
+
+    { id: 'amira',     nom: 'Amira',     ilot: 'iot',         niveau: 'senior',    traits: ['firmware', 'prudent'],         accessoire: 'oscilloscope',
+      tagline: 'Sait qu\'un capteur ne pardonne pas.' },
+    { id: 'luc',       nom: 'Luc',       ilot: 'iot',         niveau: 'inter',     traits: ['electronicien'],               accessoire: 'fer-a-souder',
+      tagline: 'Électronicien devenu développeur. Parle aux capteurs.' },
+    { id: 'hugo',      nom: 'Hugo',      ilot: 'iot',         niveau: 'inter',     traits: ['donnees', 'curieux'],          accessoire: 'graphique',
+      tagline: 'Pipelines Python de télémétrie.' },
+
+    { id: 'chloe',     nom: 'Chloé',     ilot: 'web',         niveau: 'inter',     traits: ['designer', 'natifIA'],         accessoire: 'tablette-dessin',
+      tagline: 'Designer devenue développeuse grâce à l\'IA.' },
+    { id: 'patrick',   nom: 'Patrick',   ilot: 'web',         niveau: 'senior',    traits: ['wordpress', 'pragmatique'],    accessoire: 'mug-wp',
+      tagline: '14 sites WordPress, dont 3 qu\'il aimerait oublier.' },
+    { id: 'laurence',  nom: 'Laurence',  ilot: 'web',         niveau: 'junior',    traits: ['multiClauding', 'enthousiaste'], accessoire: 'ecrans',
+      tagline: 'Quatre écrans, quatre sessions, zéro pause.' },
+
+    { id: 'mathieu',   nom: 'Mathieu',   ilot: 'portail',     niveau: 'senior',    traits: ['dixX', 'shipIt'],              accessoire: 'casque',
+      tagline: '« 10x » autoproclamé. Des PR de 4 000 lignes.' },
+    { id: 'nadia',     nom: 'Nadia',     ilot: 'portail',     niveau: 'senior',    traits: ['reviseur', 'rigoureux'],       accessoire: 'pile-papiers',
+      tagline: 'Tout le monde veut sa revue. Elle est le goulot incarné.' },
+    { id: 'sebastien', nom: 'Sébastien', ilot: 'portail',     niveau: 'senior',    traits: ['securite', 'mesure'],          accessoire: 'cadenas',
+      tagline: 'Architecte sécurité. Voit la triade létale avant tout le monde.' },
+  ];
+
+  // Champs de contenu complétés par l'agent de contenu (D1) :
+  //   replique : phrase d'accueil dans la fiche
+  //   bulles : { code: [], revue: [], incident: [], fatigue: [], formation: [], attente: [], conge: [] }
+  //   reactions : [{ levier, valeurs: [...], moral: +0,01 (par semaine où le levier effectif de son îlot est dans valeurs), bulle }]
+  LTP.donnees.devs.forEach(function (d) {
+    if (d.replique === undefined) d.replique = null;
+    if (!d.bulles) d.bulles = {};
+    if (!d.reactions) d.reactions = [];
+  });
+
+  // --- Personnages secondaires ---
+  LTP.donnees.personnages = {
+    ginette:   { id: 'ginette',   nom: 'Ginette',       role: 'Technicienne senior, TI',            teinte: 285,
+                 tagline: '27 ans de service, trois « révolutions » et zéro panique.' },
+    kevin:     { id: 'kevin',     nom: 'Kevin',         role: 'Marketing, développeur du dimanche', teinte: 25,
+                 tagline: 'Carte de crédit corporative et un abonnement à tout.' },
+    regis:     { id: 'regis',     nom: 'Régis',         role: 'VP Finances',                        teinte: 210,
+                 tagline: 'Veut un chiffre. Un seul. Et petit.' },
+    berube:    { id: 'berube',    nom: 'Me Bérubé',     role: 'Contentieux et conformité',          teinte: 150,
+                 tagline: 'Ne se déplace jamais sans un PDF de 300 pages.' },
+    lavigueur: { id: 'lavigueur', nom: 'Mme Lavigueur', role: 'Présidente-directrice générale',     teinte: 340,
+                 tagline: 'Pose une question. Attend une réponse. Pas un acronyme.' },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 12-donnees-leviers.js */
+/* Tous les leviers du joueur : contrat entre le moteur (qui lit les valeurs avec LTP.q.levier)
+   et l'interface (qui génère les panneaux à partir de cette table).
+   - panneau : onglet de l'interface ; trimestre : trimestre de déblocage
+   - surchargeable : le levier peut prendre une valeur différente par îlot (◆ dans la conception)
+   - delai : semaines avant que le changement prenne effet (0 : immédiat)
+   - valeurs[].v : valeur lue par le moteur (nombre, texte ou booléen) */
+(function (LTP) {
+  'use strict';
+
+  LTP.donnees.panneaux = [
+    { id: 'pratiques',    libelle: 'Pratiques',            trimestre: 1 },
+    { id: 'ia',           libelle: 'Utilisation de l\'IA', trimestre: 1 },
+    { id: 'produit',      libelle: 'Produit',              trimestre: 1 },
+    { id: 'registre',     libelle: 'Registre',             trimestre: 2 },
+    { id: 'gouvernance',  libelle: 'Données et sécurité',  trimestre: 3 },
+    { id: 'organisation', libelle: 'Organisation',         trimestre: 4 },
+  ];
+
+  function L(def) { return def; }
+
+  LTP.donnees.leviers = [
+    // --- Pratiques d'ingénierie (T1) ---
+    L({ id: 'pair', panneau: 'pratiques', trimestre: 1, surchargeable: false, delai: 0, defaut: 'aucun',
+      libelle: 'Pair programming',
+      aide: 'Deux têtes sur le même code : plus de compréhension, moins de débit brut.',
+      valeurs: [
+        { v: 'aucun',    libelle: 'Aucun' },
+        { v: 'humain',   libelle: 'Humain avec humain' },
+        { v: 'ia',       libelle: 'Humain avec l\'IA' },
+        { v: 'rotation', libelle: 'Rotation (une semaine sur deux)' },
+      ] }),
+    L({ id: 'reviseurs', panneau: 'pratiques', trimestre: 1, surchargeable: true, delai: 0, defaut: 1,
+      libelle: 'Réviseurs par PR',
+      aide: 'Plus de regards attrapent plus de défauts, mais la file de revue s\'allonge.',
+      valeurs: [{ v: 0, libelle: 'Aucun' }, { v: 1, libelle: 'Un' }, { v: 2, libelle: 'Deux' }] }),
+    L({ id: 'approbation', panneau: 'pratiques', trimestre: 1, surchargeable: false, delai: 0, defaut: 'humain',
+      libelle: 'Approbation des PR',
+      aide: 'Qui a le dernier mot avant la fusion.',
+      valeurs: [
+        { v: 'auto',         libelle: 'Automatique (revue par l\'IA)' },
+        { v: 'humain',       libelle: 'Un humain' },
+        { v: 'proprietaire', libelle: 'Le propriétaire du code' },
+      ] }),
+    L({ id: 'taillePR', panneau: 'pratiques', trimestre: 1, surchargeable: false, delai: 0, defaut: 'libre',
+      libelle: 'Taille maximale des PR',
+      aide: 'Une petite PR se relit vraiment. Une grosse se survole.',
+      valeurs: [{ v: 'libre', libelle: 'Libre' }, { v: 400, libelle: '400 lignes' }, { v: 200, libelle: '200 lignes' }] }),
+    L({ id: 'ci', panneau: 'pratiques', trimestre: 1, surchargeable: true, delai: 0, defaut: 'build',
+      libelle: 'Intégration et déploiement continus',
+      aide: 'Chaque marche du pipeline attrape des défauts plus tôt, et coûte un peu de temps.',
+      valeurs: [
+        { v: 'aucune',  libelle: 'Aucune' },
+        { v: 'build',   libelle: 'Compilation' },
+        { v: 'tests',   libelle: 'Compilation et tests' },
+        { v: 'complet', libelle: 'Pipeline complet et déploiement continu' },
+      ] }),
+    L({ id: 'lint', panneau: 'pratiques', trimestre: 1, surchargeable: false, delai: 0, defaut: 'formatage',
+      libelle: 'Lint et formatage',
+      aide: 'Moins de bruit en revue. Verrouillé : l\'agent ne peut pas désactiver une règle pour passer la CI.',
+      valeurs: [
+        { v: 'aucun',      libelle: 'Aucun' },
+        { v: 'formatage',  libelle: 'Formatage automatique' },
+        { v: 'strict',     libelle: 'Lint strict' },
+        { v: 'verrouille', libelle: 'Lint strict et verrouillé' },
+      ] }),
+    L({ id: 'tests', panneau: 'pratiques', trimestre: 1, surchargeable: true, delai: 0, defaut: 'unitaires',
+      libelle: 'Tests',
+      aide: 'Les tests de mutation démasquent les tests qui ne vérifient rien.',
+      valeurs: [
+        { v: 'aucun',       libelle: 'Aucun' },
+        { v: 'unitaires',   libelle: 'Unitaires' },
+        { v: 'integration', libelle: 'Unitaires et intégration' },
+        { v: 'mutation',    libelle: 'Avec tests de mutation' },
+      ] }),
+    L({ id: 'revuesExplication', panneau: 'pratiques', trimestre: 1, surchargeable: false, delai: 0, defaut: 'non',
+      libelle: 'Revues d\'explication',
+      aide: 'La personne explique son code sans l\'IA. Mesure et restaure la compréhension.',
+      valeurs: [
+        { v: 'non',       libelle: 'Non' },
+        { v: 'mensuelles', libelle: 'Mensuelles' },
+        { v: 'majeures',  libelle: 'À chaque PR majeure' },
+      ] }),
+
+    // --- Utilisation de l'IA ---
+    L({ id: 'autonomie', panneau: 'ia', trimestre: 1, surchargeable: true, delai: 0, defaut: 1,
+      libelle: 'Niveau d\'autonomie des agents',
+      aide: 'Plus d\'autonomie, plus de débit. Moins de regards humains, moins de compréhension.',
+      valeurs: [
+        { v: 0, libelle: '0 · Autocomplétion' },
+        { v: 1, libelle: '1 · Clavardage' },
+        { v: 2, libelle: '2 · Agent avec approbation à chaque étape' },
+        { v: 3, libelle: '3 · Agent qui ouvre des PR' },
+        { v: 4, libelle: '4 · Agent qui fusionne seul' },
+      ] }),
+    L({ id: 'sessionsMax', panneau: 'ia', trimestre: 1, surchargeable: false, delai: 0, defaut: 1,
+      libelle: 'Sessions d\'agent par personne',
+      aide: 'Le multi-Clauding : plus de débit, en rendement décroissant, et plus de fatigue.',
+      valeurs: [1, 2, 3, 4, 5, 6].map(function (n) { return { v: n, libelle: n === 1 ? '1 session' : n + ' sessions' }; }) }),
+    L({ id: 'modele', panneau: 'ia', trimestre: 1, surchargeable: false, delai: 0, defaut: 'intermediaire',
+      libelle: 'Modèle par défaut',
+      aide: 'Un bon modèle coûte plus cher par jeton, mais se trompe moins. Le modèle local garde les données à l\'interne.',
+      valeurs: [
+        { v: 'economique',    libelle: 'Économique' },
+        { v: 'intermediaire', libelle: 'Intermédiaire' },
+        { v: 'haut',          libelle: 'Haut de gamme' },
+        { v: 'local',         libelle: 'Local (sur le serveur GPU)' },
+      ] }),
+    L({ id: 'modeleParTache', panneau: 'ia', trimestre: 2, surchargeable: false, delai: 0, defaut: false,
+      libelle: 'Modèle choisi selon la tâche',
+      aide: 'Un petit modèle pour le lint et la documentation, un gros pour l\'architecture.',
+      valeurs: [{ v: false, libelle: 'Non' }, { v: true, libelle: 'Oui' }] }),
+    L({ id: 'formation', panneau: 'ia', trimestre: 2, surchargeable: false, delai: 4, defaut: 'aucune',
+      libelle: 'Programme de formation',
+      aide: 'Coûte du temps et de l\'argent tout de suite, rapporte dans un mois.',
+      valeurs: [
+        { v: 'aucune',    libelle: 'Aucune' },
+        { v: 'atelier',   libelle: 'Un atelier' },
+        { v: 'programme', libelle: 'Programme complet' },
+        { v: 'mentorat',  libelle: 'Programme et mentorat' },
+      ] }),
+    L({ id: 'plafondJetons', panneau: 'ia', trimestre: 2, surchargeable: true, delai: 0, defaut: 'aucun',
+      libelle: 'Plafond de jetons',
+      aide: 'Coupe les boucles d\'agent. Trop strict, il bloque le travail.',
+      valeurs: [{ v: 'aucun', libelle: 'Aucun' }, { v: 'souple', libelle: 'Souple (alerte)' }, { v: 'strict', libelle: 'Strict (coupure)' }] }),
+
+    // --- Produit ---
+    L({ id: 'disciplineNon', panneau: 'produit', trimestre: 1, surchargeable: true, delai: 0, defaut: 'normale',
+      libelle: 'Discipline du « non »',
+      aide: 'Quand coder devient « pas cher », les demandes se multiplient. Savoir dire non évite le gonflement fonctionnel.',
+      valeurs: [{ v: 'laxiste', libelle: 'Laxiste' }, { v: 'normale', libelle: 'Normale' }, { v: 'ferme', libelle: 'Ferme' }] }),
+    L({ id: 'specs', panneau: 'produit', trimestre: 1, surchargeable: false, delai: 0, defaut: 'non',
+      libelle: 'Specs avant le code',
+      aide: 'Un agent fait exactement ce qu\'on lui demande. Encore faut-il savoir quoi demander.',
+      valeurs: [{ v: 'non', libelle: 'Non' }, { v: 'legeres', libelle: 'Légères' }, { v: 'obligatoires', libelle: 'Obligatoires' }] }),
+
+    // --- Données et sécurité (T3) ---
+    L({ id: 'catalogue', panneau: 'gouvernance', trimestre: 3, surchargeable: false, delai: 4, defaut: 'aucun',
+      libelle: 'Catalogue de données',
+      aide: 'Savoir quelle source est la bonne. Prérequis du MCP du catalogue.',
+      valeurs: [{ v: 'aucun', libelle: 'Aucun' }, { v: 'inventaire', libelle: 'Inventaire' }, { v: 'sources', libelle: 'Catalogue avec sources officielles' }] }),
+    L({ id: 'classification', panneau: 'gouvernance', trimestre: 3, surchargeable: false, delai: 2, defaut: 'non',
+      libelle: 'Classification des données sensibles',
+      aide: 'On ne protège bien que ce qu\'on a étiqueté.',
+      valeurs: [{ v: 'non', libelle: 'Non' }, { v: 'manuelle', libelle: 'Manuelle' }, { v: 'auto', libelle: 'Automatique' }] }),
+    L({ id: 'bacASable', panneau: 'gouvernance', trimestre: 3, surchargeable: true, delai: 0, defaut: 'aucun',
+      libelle: 'Bac à sable des agents',
+      aide: 'L\'agent travaille dans une boîte : un paquet malveillant ou une injection y reste enfermé.',
+      valeurs: [{ v: 'aucun', libelle: 'Aucun' }, { v: 'conteneur', libelle: 'Conteneur' }, { v: 'filtre', libelle: 'Conteneur et réseau filtré' }] }),
+    L({ id: 'accesProd', panneau: 'gouvernance', trimestre: 3, surchargeable: true, delai: 0, defaut: 'oui',
+      libelle: 'Accès des agents à la production',
+      aide: 'Diagnostiquer vite, ou ne rien casser.',
+      valeurs: [{ v: 'oui', libelle: 'Lecture et écriture' }, { v: 'lecture', libelle: 'Lecture seule' }, { v: 'non', libelle: 'Aucun' }] }),
+    L({ id: 'approbationSorties', panneau: 'gouvernance', trimestre: 3, surchargeable: true, delai: 0, defaut: false,
+      libelle: 'Approbation humaine des sorties externes',
+      aide: 'Courriels, requêtes web, billets externes : un humain confirme. Casse la troisième branche de la triade.',
+      valeurs: [{ v: false, libelle: 'Non' }, { v: true, libelle: 'Oui' }] }),
+    L({ id: 'politiqueRegistre', panneau: 'gouvernance', trimestre: 3, surchargeable: false, delai: 0, defaut: 'libre',
+      libelle: 'Politique du registre',
+      aide: 'Qui peut installer quoi, et qui en répond.',
+      valeurs: [
+        { v: 'libre',        libelle: 'Libre-service' },
+        { v: 'listeBlanche', libelle: 'Liste blanche' },
+        { v: 'proprietaires', libelle: 'Liste blanche et propriétaire obligatoire' },
+      ] }),
+    L({ id: 'passerelleMCP', panneau: 'gouvernance', trimestre: 3, surchargeable: false, delai: 2, defaut: false,
+      libelle: 'Passerelle MCP',
+      aide: 'Tous les appels d\'outils passent par un point journalisé, en lecture seule par défaut.',
+      valeurs: [{ v: false, libelle: 'Non' }, { v: true, libelle: 'Oui' }] }),
+    L({ id: 'politiqueNonTI', panneau: 'gouvernance', trimestre: 3, surchargeable: false, delai: 0, defaut: 'ignorer',
+      libelle: 'Développement hors TI',
+      aide: 'Kevin code. La question est de savoir avec quels garde-fous.',
+      valeurs: [
+        { v: 'ignorer',  libelle: 'Ignorer' },
+        { v: 'interdire', libelle: 'Interdire' },
+        { v: 'encadrer', libelle: 'Encadrer (registre approuvé et accompagnement)' },
+      ] }),
+
+    // --- Organisation (T4) ---
+    L({ id: 'observabilite', panneau: 'organisation', trimestre: 4, surchargeable: false, delai: 3, defaut: 'aucune',
+      libelle: 'Observabilité',
+      aide: 'Ce qu\'on ne mesure pas, on ne le voit pas.',
+      valeurs: [{ v: 'aucune', libelle: 'Aucune' }, { v: 'base', libelle: 'De base' }, { v: 'complete', libelle: 'Complète' }] }),
+    L({ id: 'embauche', panneau: 'organisation', trimestre: 4, surchargeable: false, delai: 0, defaut: 'normale',
+      libelle: 'Embauche de juniors',
+      aide: 'Si personne n\'apprend aujourd\'hui, qui sera senior dans cinq ans ?',
+      valeurs: [{ v: 'gel', libelle: 'Gel' }, { v: 'normale', libelle: 'Normale' }, { v: 'releve', libelle: 'Programme de relève' }] }),
+    L({ id: 'objectif', panneau: 'organisation', trimestre: 4, surchargeable: false, delai: 0, defaut: 'aucun',
+      libelle: 'Objectif de la direction',
+      aide: 'Quand une mesure devient une cible, elle cesse d\'être une bonne mesure.',
+      valeurs: [
+        { v: 'aucun',        libelle: 'Aucun' },
+        { v: 'pr',           libelle: 'Nombre de PR' },
+        { v: 'delai',        libelle: 'Délai de livraison' },
+        { v: 'satisfaction', libelle: 'Satisfaction' },
+        { v: 'incidents',    libelle: 'Nombre d\'incidents' },
+      ] }),
+  ];
+
+  LTP.donnees.leviersParId = {};
+  LTP.donnees.leviers.forEach(function (l) { LTP.donnees.leviersParId[l.id] = l; });
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 13-donnees-capacites.js */
+/* Skills et serveurs MCP du Registre (CONCEPTION §4.9). Contenu écrit par l'agent D2.
+   Forme d'une carte :
+   {
+     id, type: 'skill' | 'mcp', nom, provenance: 'maison' | 'fournisseur' | 'communaute' | 'personnelle',
+     trimestre,                       // trimestre où la carte apparaît dans le registre
+     disponible: 'depart' | 'evenement' | 'developpement',
+                                      // evenement : découverte par un effet { carte, op: 'decouvrir' }
+                                      // developpement : doit être développée (coutDev semaines d'un développeur)
+     auteur: devId | null,            // personnelle ou maison : l'auteur est le propriétaire par défaut
+     coutDev: 0,                      // semaines de travail avant disponibilité (cartes maison)
+     ilotsSuggeres: [ilotId],
+     description,                     // une ou deux phrases, ton du jeu
+     gains: { debit, tauxDefaut, jetons, mttr, comprehension, adequationPile, couverture, verbosite },
+                                      // mêmes clés que ilot.mods (20-etat.js) : additifs pour debit, comprehension,
+                                      // adequationPile, couverture ; multiplicatifs pour les autres
+     ilotsGains: { [ilotId]: { …gains } },   // facultatif : gains propres à certains îlots
+     poidsContexte: 0.05,
+     branches: ['prive', 'nonFiable', 'sortie'],
+     risque: { type, proba },         // type : exfiltration · injection · destruction · abandon ·
+                                      //   changementSilencieux · tarif · typosquat · perime · aucun
+     declencheur: null | 'tests' | 'deploy' | …,   // deux skills au même déclencheur dans un îlot = conflit
+     prerequis: { levier, valeurs: [...] } | null,
+   } */
+(function (LTP) {
+  'use strict';
+  LTP.donnees.capacites = [
+    { id: 'conventions-gpu', type: 'skill', nom: 'conventions-gpu', provenance: 'maison', trimestre: 2, disponible: 'developpement',
+      auteur: null, coutDev: 2, ilotsSuggeres: ['portail', 'web', 'inspections', 'operations'],
+      description: 'Les conventions de code du GPU, écrites une fois pour tous les agents.',
+      gains: { tauxDefaut: 0.85, jetons: 0.92 }, poidsContexte: 0.04, branches: [], risque: { type: 'perime', proba: 0.01 },
+      declencheur: 'conventions', prerequis: null },
+    { id: 'mcp-catalogue', type: 'mcp', nom: 'mcp-catalogue', provenance: 'maison', trimestre: 3, disponible: 'developpement',
+      auteur: null, coutDev: 6, ilotsSuggeres: ['appro', 'iot', 'portail'],
+      description: 'Les agents interrogent la source officielle plutôt que la troisième copie Excel.',
+      gains: { tauxDefaut: 0.8 }, poidsContexte: 0.06, branches: ['prive'], risque: { type: 'aucun', proba: 0 },
+      declencheur: null, prerequis: { levier: 'catalogue', valeurs: ['sources'] } },
+    { id: 'mcp-courriel-fournisseurs', type: 'mcp', nom: 'mcp-courriel-fournisseurs', provenance: 'maison', trimestre: 3, disponible: 'depart',
+      auteur: 'yannick', coutDev: 0, ilotsSuggeres: ['appro'],
+      description: 'L\'agent lit les courriels des fournisseurs et y répond. Pratique. Très pratique.',
+      gains: { debit: 0.1 }, poidsContexte: 0.05, branches: ['nonFiable', 'sortie'], risque: { type: 'injection', proba: 0.02 },
+      declencheur: null, prerequis: null },
+  ];
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 14-donnees-evenements.js */
+/* Cartes d'événement (CONCEPTION §6). Contenu écrit par l'agent D2.
+   Forme d'une carte :
+   {
+     id, theme, trimestres: [1, 2], poids: 1, delaiRetirage: 8, unique: false,
+     personnage: 'ginette' | 'regis' | 'berube' | 'lavigueur' | 'kevin' | devId | 'direction',
+     condition: function (etat, q) → booléen,          // facultatif
+     choisirCible: function (etat, q, rng) → { ilot?, dev? },   // facultatif ; sinon cible au hasard pondéré
+     titre, texte,                                     // chaînes, ou fonctions (etat, q, ref) → chaîne ; {ilot} et {dev} remplacés
+     choix: [{ id, libelle, effets: [ … effets déclaratifs (19-effets.js) … ], consequence }],
+   }
+   Seules condition, choisirCible et les champs de texte peuvent être des fonctions. */
+(function (LTP) {
+  'use strict';
+  LTP.donnees.evenements = [
+    { id: 'pr-geante', theme: 'revue', trimestres: [1, 2], poids: 1, delaiRetirage: 10, unique: false,
+      personnage: 'nadia',
+      condition: function (etat, q) { return q.levier(etat, 'taillePR') === 'libre'; },
+      choisirCible: function () { return { ilot: 'portail', dev: 'mathieu' }; },
+      titre: 'La PR de 4 000 lignes',
+      texte: 'Mathieu a ouvert une PR de 4 000 lignes générée en une nuit. Nadia la regarde comme on regarde une facture d\'Hydro en janvier.',
+      choix: [
+        { id: 'approuver', libelle: 'On fait confiance, on fusionne', consequence: 'Fusionnée en 12 minutes. Personne ne l\'a vraiment lue.',
+          effets: [{ cible: 'ilot', chemin: 'codebase.defautsLatents', op: 'add', valeur: 12 }, { cible: 'dev:nadia', chemin: 'moral', op: 'add', valeur: -0.05 }] },
+        { id: 'decouper', libelle: 'Exiger qu\'elle soit découpée', consequence: 'Mathieu soupire. Huit PR plus tard, Nadia respire.',
+          effets: [{ cible: 'dev:mathieu', chemin: 'moral', op: 'add', valeur: -0.04 }, { cible: 'ilot', chemin: 'fileRevue', op: 'add', valeur: 3 }] },
+      ] },
+  ];
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 15-donnees-comites.js */
+/* Questions des comités trimestriels (CONCEPTION §7). Contenu écrit par l'agent D1 ; sélection par 32-fin.js.
+   Forme :
+   {
+     id, personnage: 'regis' | 'berube' | 'lavigueur' | 'direction', trimestres: [1, 2, 3], poids: 1,
+     condition: function (etat, q) → booléen,          // facultatif
+     question,                                         // chaîne ou fonction (etat, q) → chaîne
+     reponses: [{
+       id, texte,                                      // chaîne ou fonction (etat, q) → chaîne
+       evaluer: function (etat, q) → nombre de −1 à 1, // la justesse dépend des vrais chiffres
+       reaction,                                       // réplique du personnage ; chaîne ou fonction (etat, q, score)
+     }],
+   } */
+(function (LTP) {
+  'use strict';
+  LTP.donnees.comites = [];
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 16-donnees-dialogues.js */
+/* Tutoriel, indices de Ginette et bulles génériques. Contenu écrit par l'agent D1.
+   LTP.donnees.tutoriel : [{ id, region: 'openspace' | 'panneau' | 'tableau' | 'hud' | 'journal', personnage, texte, action? }]
+   LTP.donnees.indices.leviers : { [levierId]: { [valeur]: texte } }   // commentaire de Ginette quand on choisit cette valeur
+   LTP.donnees.indices.trimestres : { [n]: texte }                       // ouverture de chaque trimestre
+   LTP.donnees.bulles : { code: [], revue: [], incident: [], fatigue: [], formation: [], attente: [], conge: [] }
+                        // bulles génériques, utilisées quand un développeur n'a pas de bulle propre pour son état */
+(function (LTP) {
+  'use strict';
+  LTP.donnees.tutoriel = [];
+  LTP.donnees.indices = { leviers: {}, trimestres: {} };
+  LTP.donnees.bulles = { code: ['Je code.'], revue: ['Je relis.'], incident: ['Ça brûle.'], fatigue: ['Café.'], formation: ['J\'apprends.'], attente: ['J\'attends une revue.'], conge: ['En congé.'] };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 17-donnees-fins.js */
+/* Profils de fin et textes du bilan (CONCEPTION §2.3). Les ids sont un contrat avec 32-fin.js (qui choisit le profil).
+   Textes écrits par l'agent D1 : titre, sousTitre, texte (chaîne ou fonction (etat, q) → chaîne), replique de Mme Lavigueur. */
+(function (LTP) {
+  'use strict';
+  LTP.donnees.fins = [
+    { id: 'reussie',  titre: 'La transition réussie',  sousTitre: '', texte: '', replique: '' },
+    { id: 'usine',    titre: 'L\'usine à PR',          sousTitre: '', texte: '', replique: '' },
+    { id: 'musee',    titre: 'Le musée',               sousTitre: '', texte: '', replique: '' },
+    { id: 'farwest',  titre: 'Le Far West',            sousTitre: '', texte: '', replique: '' },
+    { id: 'facture',  titre: 'La facture salée',       sousTitre: '', texte: '', replique: '' },
+    { id: 'chateau',  titre: 'Le château de cartes',   sousTitre: '', texte: '', replique: '' },
+    { id: 'congedie', titre: 'Merci pour votre contribution', sousTitre: '', texte: '', replique: '' },
+  ];
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 18-donnees-metriques.js */
+/* Définition des métriques du tableau de bord : contrat entre 30-metriques.js (qui calcule
+   etat.metriques et etat.historique) et 44-ui-tableau-bord.js (qui les affiche).
+   - unite : nb · semaines · h · $ · jetons · kLOC · ratio (0–1, affiché en %) · score (0–100)
+   - sens : 'haut' si une valeur haute est bonne, 'bas' si une valeur basse est bonne, 'neutre' (piège)
+   - cachee : invisible tant que la condition de visibilite (calculée par 30-metriques) n'est pas remplie
+   - indice : ce que Ginette dit quand on survole la métrique cachée */
+(function (LTP) {
+  'use strict';
+
+  LTP.donnees.groupesMetriques = [
+    { id: 'livraison', libelle: 'Livraison' },
+    { id: 'qualite',   libelle: 'Qualité' },
+    { id: 'couts',     libelle: 'Coûts' },
+    { id: 'risques',   libelle: 'Risques' },
+    { id: 'personnes', libelle: 'Personnes' },
+  ];
+
+  LTP.donnees.metriques = [
+    { id: 'prFusionnees',       groupe: 'livraison', unite: 'nb',       sens: 'haut',   libelle: 'PR fusionnées par semaine' },
+    { id: 'pointsLivres',       groupe: 'livraison', unite: 'nb',       sens: 'haut',   libelle: 'Valeur livrée (points)' },
+    { id: 'delai',              groupe: 'livraison', unite: 'semaines', sens: 'bas',    libelle: 'Délai de livraison' },
+    { id: 'frequenceDeploiement', groupe: 'livraison', unite: 'nb',     sens: 'haut',   libelle: 'Déploiements par semaine', cachee: true,
+      indice: 'Sans pipeline de déploiement, personne ne compte les mises en production.' },
+    { id: 'backlog',            groupe: 'livraison', unite: 'nb',       sens: 'bas',    libelle: 'Demandes en attente (points)' },
+    { id: 'satisfaction',       groupe: 'livraison', unite: 'ratio',    sens: 'haut',   libelle: 'Satisfaction des directions' },
+
+    { id: 'bogues',             groupe: 'qualite',   unite: 'nb',       sens: 'bas',    libelle: 'Bogues en production' },
+    { id: 'incidents',          groupe: 'qualite',   unite: 'nb',       sens: 'bas',    libelle: 'Incidents' },
+    { id: 'tauxEchec',          groupe: 'qualite',   unite: 'ratio',    sens: 'bas',    libelle: 'Taux d\'échec des changements', cachee: true,
+      indice: 'Il faut une CI qui teste pour savoir quels changements cassent.' },
+    { id: 'mttr',               groupe: 'qualite',   unite: 'h',        sens: 'bas',    libelle: 'Temps moyen de rétablissement' },
+    { id: 'volumeCode',         groupe: 'qualite',   unite: 'kLOC',     sens: 'neutre', libelle: 'Volume de code' },
+    { id: 'couvertureApparente', groupe: 'qualite',  unite: 'ratio',    sens: 'haut',   libelle: 'Couverture de tests (affichée)' },
+    { id: 'couvertureReelle',   groupe: 'qualite',   unite: 'ratio',    sens: 'haut',   libelle: 'Couverture réelle', cachee: true,
+      indice: 'Des tests de mutation, et on saurait lesquels vérifient vraiment quelque chose.' },
+    { id: 'comprehension',      groupe: 'qualite',   unite: 'ratio',    sens: 'haut',   libelle: 'Compréhension du code', cachee: true,
+      indice: 'Demande-leur d\'expliquer leur code sans l\'IA. Tu verrais.' },
+
+    { id: 'jetonsSemaine',      groupe: 'couts',     unite: 'jetons',   sens: 'bas',    libelle: 'Jetons consommés par semaine' },
+    { id: 'coutSemaine',        groupe: 'couts',     unite: '$',        sens: 'bas',    libelle: 'Coût de l\'IA et des outils par semaine' },
+    { id: 'budgetRestant',      groupe: 'couts',     unite: '$',        sens: 'haut',   libelle: 'Budget restant' },
+    { id: 'retard',             groupe: 'couts',     unite: 'ratio',    sens: 'bas',    libelle: 'Projets en retard' },
+
+    { id: 'surfaceAttaque',     groupe: 'risques',   unite: 'score',    sens: 'bas',    libelle: 'Surface d\'attaque', cachee: true,
+      indice: 'Sans passerelle ni propriétaires, on ne sait même pas ce qui est installé.' },
+    { id: 'expositionLoi25',    groupe: 'risques',   unite: 'score',    sens: 'bas',    libelle: 'Exposition Loi 25', cachee: true,
+      indice: 'On ne peut pas protéger des données qu\'on n\'a pas classées. Me Bérubé le répète assez.' },
+    { id: 'applisFantomes',     groupe: 'risques',   unite: 'nb',       sens: 'bas',    libelle: 'Applications hors TI connues' },
+    { id: 'cartesOrphelines',   groupe: 'risques',   unite: 'nb',       sens: 'bas',    libelle: 'Skills et MCP sans propriétaire', cachee: true,
+      indice: 'Exige un propriétaire pour chaque carte du registre, et tu sauras.' },
+
+    { id: 'moral',              groupe: 'personnes', unite: 'ratio',    sens: 'haut',   libelle: 'Moral moyen' },
+    { id: 'fatigue',            groupe: 'personnes', unite: 'ratio',    sens: 'bas',    libelle: 'Fatigue moyenne' },
+    { id: 'releve',             groupe: 'personnes', unite: 'ratio',    sens: 'haut',   libelle: 'Relève' },
+    { id: 'connaissanceCapturee', groupe: 'personnes', unite: 'ratio',  sens: 'haut',   libelle: 'Connaissance capturée' },
+    { id: 'confiance',          groupe: 'personnes', unite: 'score',    sens: 'haut',   libelle: 'Confiance de la direction' },
+  ];
+
+  LTP.donnees.metriquesParId = {};
+  LTP.donnees.metriques.forEach(function (m) { LTP.donnees.metriquesParId[m.id] = m; });
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 19-effets.js */
+/* Effets déclaratifs : le seul moyen pour le contenu (événements, comités, capacités) de modifier l'état.
+   Forme d'un effet (voir ARCHITECTURE.md §4.4) :
+     { cible, chemin, op, valeur, pendant?, dans?, filtre? }
+       cible : 'org' | 'ilot' | 'dev' | 'ilots' | 'devs' | 'ilot:<id>' | 'dev:<id>'
+               'ilot' et 'dev' désignent la référence courante (cible de l'événement)
+       op : 'add' | 'mul' | 'set' ; pendant : n semaines puis annulé ; dans : appliqué dans n semaines
+       filtre (pour 'ilots' et 'devs') : { ilot, trait, niveau, sauf }
+     { drapeau: 'nom', valeur?: true }
+     { carte: 'id', op: 'decouvrir' | 'retirer' | 'equiper', ilot? }
+     { incident: { gravite, cause }, ilot? }
+     { levier: 'id', valeur, ilot? }                 // force un levier (sans délai)
+     { journal: 'cle', vars? }
+     { evenement: 'id', dans?: n }                   // planifie un événement de suite
+     { confiance: +5 }  { budget: -20000 }           // raccourcis vers org */
+(function (LTP) {
+  'use strict';
+  var O = LTP.outils;
+
+  function bornesDe(type, chemin) {
+    var b = LTP.etat.BORNES[type];
+    return b ? b[chemin] : undefined;
+  }
+
+  function entites(etat, cible, ref, filtre) {
+    var c = String(cible || 'org');
+    if (c === 'org') return [{ type: 'org', obj: etat.org }];
+    if (c === 'ilot') return ref && ref.ilot && etat.ilots[ref.ilot] ? [{ type: 'ilot', obj: etat.ilots[ref.ilot] }] : [];
+    if (c === 'dev') return ref && ref.dev && etat.devs[ref.dev] ? [{ type: 'dev', obj: etat.devs[ref.dev] }] : [];
+    if (c.indexOf('ilot:') === 0) { var i = etat.ilots[c.slice(5)]; return i ? [{ type: 'ilot', obj: i }] : []; }
+    if (c.indexOf('dev:') === 0) { var d = etat.devs[c.slice(4)]; return d ? [{ type: 'dev', obj: d }] : []; }
+    if (c === 'ilots') {
+      return LTP.q.ilots(etat).filter(function (x) {
+        return !filtre || ((!filtre.ilot || x.id === filtre.ilot) && (!filtre.sauf || x.id !== filtre.sauf));
+      }).map(function (x) { return { type: 'ilot', obj: x }; });
+    }
+    if (c === 'devs') {
+      return LTP.q.devsPresents(etat).filter(function (x) {
+        if (!filtre) return true;
+        if (filtre.ilot && x.ilot !== (filtre.ilot === 'courant' ? ref && ref.ilot : filtre.ilot)) return false;
+        if (filtre.trait && x.traits.indexOf(filtre.trait) < 0) return false;
+        if (filtre.niveau && x.niveau !== filtre.niveau) return false;
+        if (filtre.sauf && x.id === filtre.sauf) return false;
+        return true;
+      }).map(function (x) { return { type: 'dev', obj: x }; });
+    }
+    return [];
+  }
+
+  function appliquerValeur(ent, chemin, op, valeur) {
+    var avant = O.lireChemin(ent.obj, chemin);
+    var apres;
+    if (op === 'set') apres = valeur;
+    else if (op === 'mul') apres = (typeof avant === 'number' ? avant : 0) * valeur;
+    else apres = (typeof avant === 'number' ? avant : 0) + valeur;
+    if (typeof apres === 'number') {
+      var b = bornesDe(ent.type, chemin);
+      if (b) apres = O.borner(apres, b[0], b[1]);
+      else if (!(LTP.etat.NEGATIFS_PERMIS[ent.type] || {})[chemin] && apres < 0) apres = 0;
+      if (!isFinite(apres)) apres = 0;
+    }
+    O.ecrireChemin(ent.obj, chemin, apres);
+    return { avant: avant, apres: apres };
+  }
+
+  // Applique une liste d'effets. ref = { ilot, dev, source }. ctx (facultatif) = contexte de la boucle.
+  function appliquer(etat, effets, ref, ctx) {
+    (effets || []).forEach(function (e) { appliquerUn(etat, e, ref || {}, ctx); });
+  }
+
+  function appliquerUn(etat, e, ref, ctx) {
+    if (!e) return;
+    if (e.dans > 0) {
+      var copie = O.cloner(e);
+      delete copie.dans;
+      etat.differes.push({ semaine: etat.semaine + e.dans, effets: [copie], ref: O.cloner(ref) });
+      return;
+    }
+    if (e.confiance != null) return appliquerUn(etat, { cible: 'org', chemin: 'confiance', op: 'add', valeur: e.confiance }, ref, ctx);
+    if (e.budget != null) return appliquerUn(etat, { cible: 'org', chemin: 'budget', op: 'add', valeur: e.budget }, ref, ctx);
+    if (e.drapeau) { etat.org.drapeaux[e.drapeau] = e.valeur === undefined ? true : e.valeur; return; }
+    if (e.journal) { noter(etat, ctx, 'evenement', e.journal, e.vars || {}, ref); return; }
+    if (e.evenement) {
+      etat.evenementsForces.push({ id: e.evenement, semaine: etat.semaine + (e.dans || 1), ref: O.cloner(ref) });
+      return;
+    }
+    if (e.levier) {
+      if (e.ilot) {
+        etat.leviers.surcharges[e.ilot] = etat.leviers.surcharges[e.ilot] || {};
+        etat.leviers.surcharges[e.ilot][e.levier] = e.valeur;
+      } else etat.leviers.global[e.levier] = e.valeur;
+      if (e.levier === 'objectif') etat.org.objectif = e.valeur;
+      return;
+    }
+    if (e.incident) {
+      var il = e.ilot === 'ilot' || !e.ilot ? ref.ilot : e.ilot;
+      if (il) LTP.q.creerIncident(etat, { ilot: il, gravite: e.incident.gravite, cause: e.incident.cause }, ctx);
+      return;
+    }
+    if (e.carte) {
+      var etc = etat.capacites[e.carte];
+      if (!etc) return;
+      var ilotCarte = e.ilot === 'ilot' || (!e.ilot && e.op === 'equiper') ? ref.ilot : e.ilot;
+      if (e.op === 'decouvrir') etc.decouverte = true;
+      else if (e.op === 'retirer') {
+        (ilotCarte ? [ilotCarte] : etc.equipeeSur.slice()).forEach(function (iid) { retirerCarte(etat, e.carte, iid); });
+      } else if (e.op === 'equiper' && ilotCarte) {
+        etc.decouverte = true;
+        if (etc.equipeeSur.indexOf(ilotCarte) < 0) etc.equipeeSur.push(ilotCarte);
+        if (etat.ilots[ilotCarte].capacites.indexOf(e.carte) < 0) etat.ilots[ilotCarte].capacites.push(e.carte);
+      }
+      return;
+    }
+    if (e.chemin) {
+      var op = e.op || 'add';
+      entites(etat, e.cible, ref, e.filtre).forEach(function (ent) {
+        var r = appliquerValeur(ent, e.chemin, op, e.valeur);
+        if (e.pendant > 0 && typeof r.apres === 'number') {
+          var inverse;
+          if (op === 'add') inverse = { op: 'add', valeur: -(r.apres - (typeof r.avant === 'number' ? r.avant : 0)) };
+          else if (op === 'mul') inverse = e.valeur ? { op: 'mul', valeur: 1 / e.valeur } : { op: 'set', valeur: r.avant };
+          else inverse = { op: 'set', valeur: r.avant };
+          var cibleInv = ent.type === 'org' ? 'org' : ent.type + ':' + ent.obj.id;
+          etat.differes.push({
+            semaine: etat.semaine + e.pendant,
+            effets: [{ cible: cibleInv, chemin: e.chemin, op: inverse.op, valeur: inverse.valeur }],
+            ref: O.cloner(ref),
+          });
+        }
+      });
+    }
+  }
+
+  function retirerCarte(etat, carteId, ilotId) {
+    var etc = etat.capacites[carteId], il = etat.ilots[ilotId];
+    if (etc) etc.equipeeSur = etc.equipeeSur.filter(function (x) { return x !== ilotId; });
+    if (il) il.capacites = il.capacites.filter(function (x) { return x !== carteId; });
+  }
+
+  function noter(etat, ctx, type, cle, vars, ref) {
+    if (ctx && ctx.noter) ctx.noter(type, cle, vars, ref);
+    else etat.journal.push({ semaine: etat.semaine, type: type, cle: cle, vars: vars || {}, ilot: ref && ref.ilot, dev: ref && ref.dev });
+  }
+
+  // Étape 1 de la boucle : applique les effets différés arrivés à échéance.
+  function differes(etat, ctx) {
+    var restants = [], echus = [];
+    etat.differes.forEach(function (d) { (d.semaine <= etat.semaine ? echus : restants).push(d); });
+    etat.differes = restants;
+    echus.forEach(function (d) { appliquer(etat, d.effets, d.ref, ctx); });
+  }
+
+  // Liste des chemins numériques d'une entité (pour valider les effets du contenu).
+  function cheminsNumeriques(obj, prefixe, acc) {
+    acc = acc || [];
+    for (var k in obj) {
+      if (!Object.prototype.hasOwnProperty.call(obj, k)) continue;
+      var v = obj[k], p = prefixe ? prefixe + '.' + k : k;
+      if (typeof v === 'number' || typeof v === 'boolean') acc.push(p);
+      else if (v && typeof v === 'object' && !Array.isArray(v)) cheminsNumeriques(v, p, acc);
+    }
+    return acc;
+  }
+
+  LTP.effets = { appliquer: appliquer, retirerCarte: retirerCarte, cheminsNumeriques: cheminsNumeriques, entites: entites };
+  LTP.systemes.effets = { differes: differes };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 20-etat.js */
+/* Schéma de l'état du jeu, création d'une partie et requêtes (LTP.q).
+   L'état est du JSON pur : pas de fonctions, pas de références circulaires, pas de Date. */
+(function (LTP) {
+  'use strict';
+  var O = LTP.outils;
+
+  LTP.K.etat = {
+    semainesParTrimestre: 13,
+    semainesTotal: 52,
+    niveaux: {
+      stagiaire: { competence: 0.3,  competenceIA: 0.35, adhesion: 0.6,  rigueur: 0.4,  comprehension: 0.5 },
+      junior:    { competence: 0.45, competenceIA: 0.3,  adhesion: 0.55, rigueur: 0.45, comprehension: 0.6 },
+      inter:     { competence: 0.62, competenceIA: 0.3,  adhesion: 0.5,  rigueur: 0.55, comprehension: 0.72 },
+      senior:    { competence: 0.8,  competenceIA: 0.25, adhesion: 0.45, rigueur: 0.65, comprehension: 0.8 },
+    },
+    devDepart: { fatigue: 0.2, moral: 0.65 },
+    org: {
+      budgetAnnuel: 650000,   // $ pour l'IA, les outils et la formation
+      confiance: 60,          // 0–100
+      donnees: { qualite: 0.6, duplication: 0.4, fraicheur: 0.6, classification: 0.1 },
+      menace: 0.2,
+      releve: 0.5,
+    },
+    couvertureDepart: 0.35,
+    conventionsDepart: 0.3,
+    journalMax: 200,
+  };
+
+  // Bornes des champs normalisés : les effets et les systèmes doivent les respecter.
+  // Les chemins sont relatifs à l'entité (dev, îlot, org). Tout autre nombre doit rester fini et ≥ 0,
+  // sauf org.budget, qui peut devenir négatif (dépassement).
+  LTP.etat = LTP.etat || {};
+  LTP.etat.BORNES = {
+    dev: { competence: [0, 1], competenceIA: [0, 1], adhesion: [0, 1], rigueur: [0, 1], comprehension: [0, 1], fatigue: [0, 1], moral: [0, 1] },
+    ilot: {
+      criticite: [0, 1], sensibilite: [0, 1], volatilite: [0, 1], adequationPile: [0, 1], satisfaction: [0, 1],
+      'codebase.couvertureApparente': [0, 1], 'codebase.couvertureReelle': [0, 1], 'codebase.conventions': [0, 1],
+    },
+    org: {
+      confiance: [0, 100], menace: [0, 1], observabilite: [0, 1], releve: [0, 1],
+      'donnees.qualite': [0, 1], 'donnees.duplication': [0, 1], 'donnees.fraicheur': [0, 1], 'donnees.classification': [0, 1],
+    },
+  };
+  LTP.etat.NEGATIFS_PERMIS = { org: { budget: true } };
+
+  // Statistiques de la dernière semaine, remises à zéro par la boucle au début de chaque semaine.
+  LTP.etat.derniereIlotVide = function () {
+    return {
+      points: 0, pointsLivres: 0, code: 0, pr: 0, prFusionnees: 0, deploiements: 0,
+      defautsInjectes: 0, defautsEchappes: 0, bogues: 0, incidents: 0,
+      jetons: 0, cout: 0, delai: 0, attention: 1, lgtm: 0, demandes: 0, demandesRefusees: 0,
+    };
+  };
+  LTP.etat.derniereDevVide = function () {
+    return { points: 0, code: 0, pr: 0, revues: 0, lgtm: 0, jetons: 0, ecritSoiMeme: 0, luEnRevue: 0 };
+  };
+  // Modificateurs agrégés d'un îlot, recalculés chaque semaine par 26-registre.js (étape 3) et lus par les autres systèmes.
+  LTP.etat.modsIlotNeutres = function () {
+    return {
+      debit: 0,          // fraction additive sur le gain de l'IA (0,1 = +10 %)
+      tauxDefaut: 1,     // multiplicatif
+      jetons: 1,         // multiplicatif
+      mttr: 1,           // multiplicatif
+      comprehension: 0,  // additif par semaine
+      adequationPile: 0, // additif
+      couverture: 0,     // additif sur la couverture réelle produite
+      verbosite: 1,      // multiplicatif sur le volume de code
+      poidsContexte: 0,  // somme des poids des cartes équipées
+      incoherence: 0,    // 0–1 : conflits de skills
+    };
+  };
+
+  function statsDepart(def) {
+    var K = LTP.K.etat;
+    var base = O.cloner(K.niveaux[def.niveau] || K.niveaux.inter);
+    base.fatigue = K.devDepart.fatigue;
+    base.moral = K.devDepart.moral;
+    (def.traits || []).forEach(function (tid) {
+      var tr = LTP.donnees.traits[tid];
+      if (!tr || !tr.init) return;
+      for (var k in tr.init) base[k] = (base[k] || 0) + tr.init[k];
+    });
+    for (var k in base) base[k] = O.borner(base[k]);
+    return base;
+  }
+
+  function creerEtat(graine, options) {
+    var K = LTP.K.etat, opts = options || {};
+    var g = LTP.rng.graineDe(graine);
+    var etat = {
+      version: 1,
+      graine: g,
+      rngEtat: g,
+      semaine: 0,
+      trimestre: 1,
+      phase: 'accueil',
+      options: { animateur: !!opts.animateur, toutDebloque: !!opts.toutDebloque, serveurAchete: !!opts.serveurAchete },
+      leviers: { global: {}, surcharges: {}, enAttente: [] },
+      org: {
+        budgetAnnuel: K.org.budgetAnnuel,
+        budget: K.org.budgetAnnuel,
+        jetonsSemaine: 0, jetonsCumul: 0, coutSemaine: 0, coutCumul: 0,
+        confiance: K.org.confiance,
+        donnees: O.cloner(K.org.donnees),
+        menace: K.org.menace,
+        observabilite: 0,
+        releve: K.org.releve,
+        objectif: 'aucun',
+        drapeaux: {},
+      },
+      ilots: {},
+      ordreIlots: [],
+      devs: {},
+      capacites: {},
+      incidents: [],
+      differes: [],
+      evenementEnAttente: null,
+      evenementsForces: [],
+      evenementsVus: {},
+      comite: null,
+      resultat: null,
+      metriques: {},
+      historique: {},
+      journal: [],
+      compteurs: { incidents: 0 },
+    };
+
+    LTP.donnees.leviers.forEach(function (l) { etat.leviers.global[l.id] = l.defaut; });
+
+    LTP.donnees.ilots.slice().sort(function (a, b) { return a.ordre - b.ordre; }).forEach(function (d) {
+      etat.ordreIlots.push(d.id);
+      etat.ilots[d.id] = {
+        id: d.id,
+        criticite: d.criticite, sensibilite: d.sensibilite, volatilite: d.volatilite, adequationPile: d.adequationPile,
+        backlog: d.backlogInitial, satisfaction: d.satisfactionInitiale, applisFantomes: 0,
+        codebase: {
+          volume: d.volumeInitial, defautsLatents: Math.round(d.volumeInitial * 0.05),
+          couvertureApparente: K.couvertureDepart, couvertureReelle: K.couvertureDepart * 0.8,
+          conventions: K.conventionsDepart,
+        },
+        fileRevue: 0,
+        capacites: [],
+        triade: { prive: !!d.exposition.prive, nonFiable: !!d.exposition.nonFiable, sortie: !!d.exposition.sortie },
+        mods: LTP.etat.modsIlotNeutres(),
+        derniere: LTP.etat.derniereIlotVide(),
+      };
+    });
+
+    LTP.donnees.devs.forEach(function (d) {
+      var s = statsDepart(d);
+      etat.devs[d.id] = {
+        id: d.id, ilot: d.ilot, niveau: d.niveau, traits: d.traits.slice(),
+        competence: s.competence, competenceIA: s.competenceIA, adhesion: s.adhesion, rigueur: s.rigueur,
+        comprehension: s.comprehension, fatigue: s.fatigue, moral: s.moral,
+        sessions: 1, etat: 'code', indisponibleJusqua: 0, present: true,
+        derniere: LTP.etat.derniereDevVide(),
+      };
+    });
+
+    (LTP.donnees.capacites || []).forEach(function (c) {
+      etat.capacites[c.id] = {
+        equipeeSur: [], proprietaire: c.auteur || null, fraicheur: 1,
+        disponibleSemaine: null, enDeveloppementPar: null,
+        decouverte: c.disponible !== 'evenement',
+      };
+    });
+
+    // Chaque système peut ajouter ses champs propres.
+    LTP.moteur && LTP.moteur.ORDRE_INIT && LTP.moteur.ORDRE_INIT.forEach(function (nom) {
+      var s = LTP.systemes[nom];
+      if (s && s.initialiser) s.initialiser(etat);
+    });
+    return etat;
+  }
+
+  // --- Requêtes ---
+  var q = LTP.q;
+
+  q.defLevier = function (id) { return LTP.donnees.leviersParId[id]; };
+
+  // Valeur effective d'un levier, avec la surcharge de l'îlot si elle existe.
+  q.levier = function (etat, id, ilotId) {
+    if (ilotId && etat.leviers.surcharges[ilotId] && Object.prototype.hasOwnProperty.call(etat.leviers.surcharges[ilotId], id)) {
+      return etat.leviers.surcharges[ilotId][id];
+    }
+    if (Object.prototype.hasOwnProperty.call(etat.leviers.global, id)) return etat.leviers.global[id];
+    var d = q.defLevier(id);
+    return d ? d.defaut : undefined;
+  };
+  // Rang d'une valeur dans la liste du levier (0 = première) : pratique pour les leviers ordonnés.
+  q.rangLevier = function (etat, id, ilotId) {
+    var d = q.defLevier(id), v = q.levier(etat, id, ilotId);
+    for (var i = 0; i < d.valeurs.length; i++) if (d.valeurs[i].v === v) return i;
+    return 0;
+  };
+  q.levierDebloque = function (etat, id) {
+    var d = q.defLevier(id);
+    return !!d && (etat.options.toutDebloque || d.trimestre <= etat.trimestre);
+  };
+  q.panneauDebloque = function (etat, id) {
+    var p = (LTP.donnees.panneaux || []).filter(function (x) { return x.id === id; })[0];
+    return !!p && (etat.options.toutDebloque || p.trimestre <= etat.trimestre);
+  };
+  q.enAttente = function (etat, id, ilotId) {
+    return etat.leviers.enAttente.filter(function (a) { return a.id === id && (a.ilot || null) === (ilotId || null); })[0] || null;
+  };
+
+  q.ilots = function (etat) { return etat.ordreIlots.map(function (id) { return etat.ilots[id]; }); };
+  q.devs = function (etat) { return Object.keys(etat.devs).map(function (id) { return etat.devs[id]; }); };
+  q.devsPresents = function (etat) { return q.devs(etat).filter(function (d) { return d.present; }); };
+  q.devsDe = function (etat, ilotId) { return q.devsPresents(etat).filter(function (d) { return d.ilot === ilotId; }); };
+  q.disponible = function (etat, dev) { return dev.present && dev.indisponibleJusqua <= etat.semaine && dev.etat !== 'conge'; };
+  q.ilotDe = function (etat, devId) { var d = etat.devs[devId]; return d ? etat.ilots[d.ilot] : null; };
+  q.aTrait = function (dev, trait) { return dev.traits.indexOf(trait) >= 0; };
+  // Produit (mult) ou somme (add) d'un modificateur de trait sur un développeur.
+  q.modTrait = function (dev, cle, neutre) {
+    var mult = neutre === undefined ? 1 : neutre, v = mult;
+    dev.traits.forEach(function (t) {
+      var tr = LTP.donnees.traits[t];
+      if (tr && tr.mods && tr.mods[cle] != null) v = (mult === 1) ? v * tr.mods[cle] : v + tr.mods[cle];
+    });
+    return v;
+  };
+  q.defDev = function (id) { return (LTP.donnees.devs || []).filter(function (d) { return d.id === id; })[0]; };
+  q.defIlot = function (id) { return (LTP.donnees.ilots || []).filter(function (d) { return d.id === id; })[0]; };
+  q.defCapacite = function (id) { return (LTP.donnees.capacites || []).filter(function (d) { return d.id === id; })[0]; };
+  q.defEvenement = function (id) { return (LTP.donnees.evenements || []).filter(function (d) { return d.id === id; })[0]; };
+  q.triadeComplete = function (etat, ilotId) { var t = etat.ilots[ilotId].triade; return !!(t.prive && t.nonFiable && t.sortie); };
+  q.moyenne = function (liste, champ) { return O.moyenne(liste, champ); };
+  q.drapeau = function (etat, nom) { return !!etat.org.drapeaux[nom]; };
+  q.metriqueVisible = function (etat, id) {
+    if (etat.options.animateur && etat.options.voirCachees) return true;
+    var s = LTP.systemes.metriques;
+    if (s && s.visible) return s.visible(etat, id);
+    var m = LTP.donnees.metriquesParId[id];
+    return !!m && !m.cachee;
+  };
+
+  // Crée un incident ; la durée vient du système de dette (MTTR) s'il est présent.
+  q.creerIncident = function (etat, spec, ctx) {
+    var ilot = etat.ilots[spec.ilot];
+    if (!ilot) return null;
+    etat.compteurs.incidents += 1;
+    var gravite = O.borner(spec.gravite == null ? 0.5 : spec.gravite);
+    var heures = LTP.systemes.dette && LTP.systemes.dette.mttr ? LTP.systemes.dette.mttr(etat, spec.ilot, gravite) : 8;
+    var inc = {
+      id: 'inc' + etat.compteurs.incidents, ilot: spec.ilot, gravite: gravite, cause: spec.cause || 'bogue',
+      debut: etat.semaine, mttrHeures: heures, finSemaine: etat.semaine + Math.max(0, Math.ceil(heures / 40) - 1), resolu: false,
+    };
+    etat.incidents.push(inc);
+    ilot.derniere.incidents += 1;
+    if (ctx && ctx.noter) ctx.noter('incident', 'incident.' + inc.cause, { ilot: spec.ilot, gravite: gravite }, { ilot: spec.ilot });
+    return inc;
+  };
+  q.incidentsActifs = function (etat, ilotId) {
+    return etat.incidents.filter(function (i) { return !i.resolu && (!ilotId || i.ilot === ilotId); });
+  };
+
+  LTP.etat.creer = creerEtat;
+  LTP.etat.statsDepart = statsDepart;
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 21-production.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent A. Production des points, du code et des PR (CONCEPTION §4.4). */
+(function (LTP) {
+  'use strict';
+  LTP.K.production = {};
+  LTP.systemes.production = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 22-qualite.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent A. Revue, cascade de défauts, couverture, agent qui triche (CONCEPTION §4.4). */
+(function (LTP) {
+  'use strict';
+  LTP.K.qualite = {};
+  LTP.systemes.qualite = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 23-dette.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent A. Compréhension, MTTR et cycle de vie des incidents (CONCEPTION §4.5). */
+(function (LTP) {
+  'use strict';
+  LTP.K.dette = {};
+  LTP.systemes.dette = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+    // Étape 9 : transforme des défauts latents en bogues et incidents, résout les incidents échus.
+    incidents: function (etat, ctx) {
+      etat.incidents.forEach(function (i) { if (!i.resolu && i.finSemaine <= etat.semaine) i.resolu = true; });
+    },
+    // Durée de rétablissement prévue, en heures.
+    mttr: function (etat, ilotId, gravite) { return 8; },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 24-couts.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent A. Jetons, coûts et budget (CONCEPTION §4.6). */
+(function (LTP) {
+  'use strict';
+  LTP.K.couts = {};
+  LTP.systemes.couts = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 25-donnees-secu.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent B. Données, triade létale, risques de sécurité (CONCEPTION §4.7, §4.8). */
+(function (LTP) {
+  'use strict';
+  LTP.K.donneesSecu = {};
+  LTP.systemes.donneesSecu = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 26-registre.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent B. Capacités (skills et MCP) : modificateurs d'îlot,
+   triade, conflits, saturation, péremption, développement maison (CONCEPTION §4.9). */
+(function (LTP) {
+  'use strict';
+  LTP.K.registre = {};
+  LTP.systemes.registre = {
+    initialiser: function (etat) {},
+    // Étape 3 : recalcule ilot.mods et ilot.triade.
+    semaine: function (etat, ctx) {
+      LTP.q.ilots(etat).forEach(function (il) { il.mods = LTP.etat.modsIlotNeutres(); });
+    },
+    // Actions du joueur : equiper, desequiper, developper, proprietaire. Renvoie un code d'erreur ou null.
+    action: function (etat, a, ctx) {
+      var c = etat.capacites[a.carte];
+      if (!c) return 'carte-inconnue';
+      if (a.type === 'equiper') {
+        if (!etat.ilots[a.ilot]) return 'ilot-inconnu';
+        if (c.equipeeSur.indexOf(a.ilot) < 0) c.equipeeSur.push(a.ilot);
+        if (etat.ilots[a.ilot].capacites.indexOf(a.carte) < 0) etat.ilots[a.ilot].capacites.push(a.carte);
+        return null;
+      }
+      if (a.type === 'desequiper') { LTP.effets.retirerCarte(etat, a.carte, a.ilot); return null; }
+      if (a.type === 'proprietaire') { c.proprietaire = a.dev || null; return null; }
+      return 'non-implemente';
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 27-personnes.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent C. Disponibilité, fatigue, moral, compétence,
+   départs, relève, réactions aux leviers (CONCEPTION §4.10). */
+(function (LTP) {
+  'use strict';
+  LTP.K.personnes = {};
+  LTP.systemes.personnes = {
+    initialiser: function (etat) {},
+    // Étape 2 : congés, formation, retours.
+    disponibilite: function (etat, ctx) {},
+    // Étape 11 : fatigue, moral, compétence, départs.
+    semaine: function (etat, ctx) {},
+    // Appelé par la boucle quand le joueur change un levier.
+    reactionLevier: function (etat, action, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 28-demandes.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent B. Backlog, portée, satisfaction, non-TI, Goodhart (CONCEPTION §4.11, §4.12). */
+(function (LTP) {
+  'use strict';
+  LTP.K.demandes = {};
+  LTP.systemes.demandes = {
+    initialiser: function (etat) {},
+    semaine: function (etat, ctx) {},
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 29-evenements.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent C. Tirage des cartes d'événement et résolution des choix
+   (CONCEPTION §6). Les effets sont appliqués par LTP.effets (19-effets.js). */
+(function (LTP) {
+  'use strict';
+  LTP.K.evenements = {};
+  LTP.systemes.evenements = {
+    initialiser: function (etat) {},
+    // Étape 12 : au plus un événement par semaine dans etat.evenementEnAttente = { id, ref: { ilot, dev }, vars }.
+    tirage: function (etat, ctx) {},
+    // Résout le choix du joueur. Renvoie un code d'erreur ou null.
+    resoudre: function (etat, choixId, ctx) {
+      var att = etat.evenementEnAttente;
+      var def = LTP.q.defEvenement(att.id);
+      var choix = def && (def.choix || []).filter(function (c) { return c.id === choixId; })[0];
+      if (!choix) return 'choix-inconnu';
+      LTP.effets.appliquer(etat, choix.effets, att.ref || {}, ctx);
+      etat.evenementsVus[att.id] = etat.semaine;
+      etat.evenementEnAttente = null;
+      return null;
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 30-metriques.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent C. Calcul de etat.metriques, historique,
+   visibilité des métriques cachées (CONCEPTION §5, 18-donnees-metriques.js). */
+(function (LTP) {
+  'use strict';
+  LTP.K.metriques = {};
+  LTP.systemes.metriques = {
+    initialiser: function (etat) { LTP.systemes.metriques.semaine(etat); },
+    semaine: function (etat, ctx) {
+      var q = LTP.q, O = LTP.outils, ilots = q.ilots(etat), devs = q.devsPresents(etat);
+      var m = {
+        prFusionnees: O.somme(ilots, function (i) { return i.derniere.prFusionnees; }),
+        pointsLivres: O.somme(ilots, function (i) { return i.derniere.pointsLivres; }),
+        backlog: O.somme(ilots, 'backlog'),
+        satisfaction: O.moyenne(ilots, 'satisfaction'),
+        incidents: q.incidentsActifs(etat).length,
+        volumeCode: O.somme(ilots, function (i) { return i.codebase.volume; }),
+        jetonsSemaine: etat.org.jetonsSemaine,
+        coutSemaine: etat.org.coutSemaine,
+        budgetRestant: etat.org.budget,
+        moral: O.moyenne(devs, 'moral'),
+        fatigue: O.moyenne(devs, 'fatigue'),
+        comprehension: O.moyenne(devs, 'comprehension'),
+        confiance: etat.org.confiance,
+        releve: etat.org.releve,
+      };
+      etat.metriques = m;
+      for (var k in m) {
+        etat.historique[k] = etat.historique[k] || [];
+        etat.historique[k][etat.semaine] = m[k];
+      }
+    },
+    // Une métrique cachée devient visible selon les leviers (voir CONCEPTION §5).
+    visible: function (etat, id) {
+      var d = LTP.donnees.metriquesParId[id];
+      return !!d && !d.cachee;
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 31-boucle.js */
+/* La boucle du moteur : semaine(), action(), trimestres et fin de partie.
+   Les fonctions publiques ne mutent jamais l'état reçu : elles travaillent sur une copie. */
+(function (LTP) {
+  'use strict';
+  var O = LTP.outils, q = LTP.q;
+
+  // Ordre des étapes d'une semaine : [système, méthode]. Une méthode absente est ignorée.
+  var ORDRE = [
+    ['effets', 'differes'],
+    ['personnes', 'disponibilite'],
+    ['registre', 'semaine'],
+    ['production', 'semaine'],
+    ['qualite', 'semaine'],
+    ['dette', 'semaine'],
+    ['couts', 'semaine'],
+    ['donneesSecu', 'semaine'],
+    ['dette', 'incidents'],
+    ['demandes', 'semaine'],
+    ['personnes', 'semaine'],
+    ['evenements', 'tirage'],
+    ['metriques', 'semaine'],
+  ];
+  // Ordre d'appel des initialiser(etat) à la création d'une partie.
+  var ORDRE_INIT = ['registre', 'production', 'qualite', 'dette', 'couts', 'donneesSecu', 'demandes', 'personnes', 'evenements', 'metriques', 'fin'];
+
+  function creerContexte(etat) {
+    var journal = [];
+    var ctx = {
+      rng: LTP.rng.creer(etat),
+      K: LTP.K,
+      q: q,
+      journal: journal,
+      // type : 'info' | 'alerte' | 'incident' | 'evenement' | 'levier' | 'personne' | 'comite' ; cle : clé de texte
+      noter: function (type, cle, vars, ref) {
+        var e = { semaine: etat.semaine, type: type, cle: cle, vars: vars || {} };
+        if (ref && ref.ilot) e.ilot = ref.ilot;
+        if (ref && ref.dev) e.dev = ref.dev;
+        journal.push(e);
+        return e;
+      },
+    };
+    return ctx;
+  }
+
+  function archiverJournal(etat, journal) {
+    for (var i = 0; i < journal.length; i++) etat.journal.push(journal[i]);
+    var max = LTP.K.etat.journalMax;
+    if (etat.journal.length > max) etat.journal = etat.journal.slice(etat.journal.length - max);
+  }
+
+  function appliquerLeviersEnAttente(etat, ctx) {
+    var restants = [];
+    etat.leviers.enAttente.forEach(function (a) {
+      if (a.semaine <= etat.semaine) {
+        ecrireLevier(etat, a.id, a.valeur, a.ilot);
+        ctx.noter('levier', 'levier.effectif', { levier: a.id, valeur: a.valeur }, { ilot: a.ilot });
+      } else restants.push(a);
+    });
+    etat.leviers.enAttente = restants;
+  }
+
+  function ecrireLevier(etat, id, valeur, ilotId) {
+    if (ilotId) {
+      etat.leviers.surcharges[ilotId] = etat.leviers.surcharges[ilotId] || {};
+      etat.leviers.surcharges[ilotId][id] = valeur;
+    } else etat.leviers.global[id] = valeur;
+    if (id === 'objectif') etat.org.objectif = valeur;
+  }
+
+  function creer(graine, options) {
+    return LTP.etat.creer(graine, options);
+  }
+
+  // Avance d'une semaine. Refuse d'avancer hors de la phase d'exécution ou si un événement attend une décision.
+  function semaine(etatEntree) {
+    if (etatEntree.phase !== 'execution' || etatEntree.evenementEnAttente) return { etat: etatEntree, journal: [], avance: false };
+    var etat = O.cloner(etatEntree);
+    etat.semaine += 1;
+    var ctx = creerContexte(etat);
+
+    LTP.q.ilots(etat).forEach(function (i) { i.derniere = LTP.etat.derniereIlotVide(); });
+    LTP.q.devs(etat).forEach(function (d) { d.derniere = LTP.etat.derniereDevVide(); });
+    appliquerLeviersEnAttente(etat, ctx);
+
+    for (var i = 0; i < ORDRE.length; i++) {
+      var s = LTP.systemes[ORDRE[i][0]];
+      var f = s && s[ORDRE[i][1]];
+      if (typeof f === 'function') f.call(s, etat, ctx);
+    }
+
+    finDeSemaine(etat, ctx);
+    archiverJournal(etat, ctx.journal);
+    return { etat: etat, journal: ctx.journal, avance: true };
+  }
+
+  function finDeSemaine(etat, ctx) {
+    var K = LTP.K.etat, fin = LTP.systemes.fin;
+    var seuil = fin && fin.seuilConfiance != null ? fin.seuilConfiance : 15;
+    if (etat.org.confiance < seuil) {
+      terminer(etat, ctx, 'confiance');
+    } else if (etat.semaine >= K.semainesTotal) {
+      terminer(etat, ctx, 'annee');
+    } else if (etat.semaine % K.semainesParTrimestre === 0) {
+      etat.phase = 'comite';
+      if (fin && fin.preparerComite) fin.preparerComite(etat, ctx);
+      else etat.comite = { trimestre: etat.trimestre, questions: [], reponses: {} };
+      ctx.noter('comite', 'comite.convoque', { trimestre: etat.trimestre });
+    }
+  }
+
+  function terminer(etat, ctx, raison) {
+    etat.phase = 'fin';
+    etat.evenementEnAttente = null;
+    var fin = LTP.systemes.fin;
+    if (fin && fin.calculerResultat) etat.resultat = fin.calculerResultat(etat, ctx, raison);
+    else etat.resultat = { raison: raison, profil: null, etoiles: 0, score: 0, criteres: {} };
+    ctx.noter('info', 'partie.fin', { raison: raison });
+  }
+
+  var TRANSITIONS = {
+    accueil: ['tutoriel', 'planification'],
+    tutoriel: ['planification'],
+    planification: ['execution'],
+    execution: ['planification'],
+    comite: ['planification'],
+    fin: [],
+  };
+
+  // Applique une action du joueur. Renvoie { etat, journal, erreur? }.
+  function action(etatEntree, a) {
+    var etat = O.cloner(etatEntree);
+    var ctx = creerContexte(etat);
+    var erreur = null;
+    try {
+      erreur = appliquerAction(etat, a, ctx);
+    } catch (e) {
+      erreur = 'exception:' + (e && e.message);
+    }
+    if (erreur) return { etat: etatEntree, journal: [], erreur: erreur };
+    archiverJournal(etat, ctx.journal);
+    return { etat: etat, journal: ctx.journal };
+  }
+
+  function appliquerAction(etat, a, ctx) {
+    if (!a || !a.type) return 'action-invalide';
+    switch (a.type) {
+      case 'levier': {
+        var d = q.defLevier(a.id);
+        if (!d) return 'levier-inconnu';
+        if (!q.levierDebloque(etat, a.id)) return 'levier-verrouille';
+        if (!d.valeurs.some(function (x) { return x.v === a.valeur; })) return 'valeur-invalide';
+        if (a.ilot && !d.surchargeable) return 'levier-non-surchargeable';
+        if (a.ilot && !etat.ilots[a.ilot]) return 'ilot-inconnu';
+        if (etat.phase === 'fin') return 'partie-terminee';
+        var ilot = a.ilot || null;
+        etat.leviers.enAttente = etat.leviers.enAttente.filter(function (x) { return !(x.id === a.id && (x.ilot || null) === ilot); });
+        if (d.delai > 0 && q.levier(etat, a.id, ilot) !== a.valeur) {
+          etat.leviers.enAttente.push({ id: a.id, valeur: a.valeur, ilot: ilot, semaine: etat.semaine + d.delai });
+          ctx.noter('levier', 'levier.programme', { levier: a.id, valeur: a.valeur, delai: d.delai }, { ilot: ilot });
+        } else {
+          ecrireLevier(etat, a.id, a.valeur, ilot);
+          ctx.noter('levier', 'levier.change', { levier: a.id, valeur: a.valeur }, { ilot: ilot });
+        }
+        appelerReaction(etat, ctx, a);
+        return null;
+      }
+      case 'retirerSurcharge': {
+        if (etat.leviers.surcharges[a.ilot]) delete etat.leviers.surcharges[a.ilot][a.id];
+        etat.leviers.enAttente = etat.leviers.enAttente.filter(function (x) { return !(x.id === a.id && x.ilot === a.ilot); });
+        return null;
+      }
+      case 'equiper': case 'desequiper': case 'developper': case 'proprietaire': {
+        var reg = LTP.systemes.registre;
+        if (!reg || !reg.action) return 'registre-indisponible';
+        return reg.action(etat, a, ctx) || null;
+      }
+      case 'choix': {
+        if (!etat.evenementEnAttente) return 'aucun-evenement';
+        var ev = LTP.systemes.evenements;
+        if (!ev || !ev.resoudre) return 'evenements-indisponibles';
+        return ev.resoudre(etat, a.choix, ctx) || null;
+      }
+      case 'comite': {
+        if (etat.phase !== 'comite') return 'pas-de-comite';
+        var fin = LTP.systemes.fin;
+        if (!fin || !fin.repondreComite) return 'comite-indisponible';
+        return fin.repondreComite(etat, a.question, a.reponse, ctx) || null;
+      }
+      case 'phase': {
+        var permis = TRANSITIONS[etat.phase] || [];
+        if (permis.indexOf(a.phase) < 0) return 'transition-interdite';
+        if (etat.phase === 'comite') {
+          var f2 = LTP.systemes.fin;
+          if (f2 && f2.comiteTermine && !f2.comiteTermine(etat)) return 'comite-incomplet';
+          etat.trimestre += 1;
+          etat.comite = null;
+          ctx.noter('info', 'trimestre.debut', { trimestre: etat.trimestre });
+          if (f2 && f2.debutTrimestre) f2.debutTrimestre(etat, ctx);
+        }
+        etat.phase = a.phase;
+        return null;
+      }
+      case 'option': {
+        if (!etat.options.animateur && a.cle !== 'serveurAchete') return 'animateur-requis';
+        etat.options[a.cle] = a.valeur;
+        return null;
+      }
+      default:
+        return 'action-inconnue';
+    }
+  }
+
+  function appelerReaction(etat, ctx, a) {
+    var p = LTP.systemes.personnes;
+    if (p && p.reactionLevier) p.reactionLevier(etat, a, ctx);
+  }
+
+  // Joue n semaines en résolvant tout seul les décisions. strategie (facultative) :
+  //   { leviers(etat) → [actions], choix(etat, evenement) → idChoix, comite(etat, question) → idReponse }
+  // Appelé au début de chaque trimestre pour les leviers. Sert aux tests, à l'équilibrage et au mode animateur.
+  function simuler(etatEntree, n, strategie) {
+    var etat = etatEntree, s = strategie || {};
+    var journal = [];
+    var garde = 0;
+    function agir(a) {
+      var r = action(etat, a);
+      if (!r.erreur) { etat = r.etat; journal = journal.concat(r.journal); }
+      return r;
+    }
+    var semainesJouees = 0;
+    var trimestreLeviers = -1;
+    while (semainesJouees < n && etat.phase !== 'fin' && garde++ < n * 20 + 50) {
+      if (etat.phase === 'accueil' || etat.phase === 'tutoriel') { agir({ type: 'phase', phase: 'planification' }); continue; }
+      if (etat.phase === 'comite') {
+        (etat.comite && etat.comite.questions || []).forEach(function (qq) {
+          if (etat.comite.reponses && etat.comite.reponses[qq.id] != null) return;
+          var rep = s.comite ? s.comite(etat, qq) : (qq.reponses && qq.reponses[0] && qq.reponses[0].id);
+          agir({ type: 'comite', question: qq.id, reponse: rep });
+        });
+        var r = agir({ type: 'phase', phase: 'planification' });
+        if (r.erreur) break;
+        continue;
+      }
+      if (etat.phase === 'planification') {
+        if (s.leviers && trimestreLeviers !== etat.trimestre) {
+          trimestreLeviers = etat.trimestre;
+          (s.leviers(etat) || []).forEach(agir);
+        }
+        agir({ type: 'phase', phase: 'execution' });
+        continue;
+      }
+      if (etat.evenementEnAttente) {
+        var def = q.defEvenement(etat.evenementEnAttente.id);
+        var choix = s.choix ? s.choix(etat, def) : (def && def.choix && def.choix[0] && def.choix[0].id);
+        var rc = agir({ type: 'choix', choix: choix });
+        if (rc.erreur) { etat = O.cloner(etat); etat.evenementEnAttente = null; }
+        continue;
+      }
+      var res = semaine(etat);
+      etat = res.etat;
+      journal = journal.concat(res.journal);
+      semainesJouees += 1;
+    }
+    return { etat: etat, journal: journal };
+  }
+
+  LTP.moteur = {
+    ORDRE: ORDRE, ORDRE_INIT: ORDRE_INIT,
+    creer: creer, semaine: semaine, action: action, simuler: simuler,
+    creerContexte: creerContexte, ecrireLevier: ecrireLevier,
+  };
+
+  LTP.enregistrerTextes({
+    'levier.change': 'Levier modifié : {levier}.',
+    'levier.programme': 'Changement programmé : {levier}, effectif dans {delai} semaines.',
+    'levier.effectif': 'Changement en vigueur : {levier}.',
+    'comite.convoque': 'Fin du trimestre {trimestre} : le comité de direction vous attend.',
+    'trimestre.debut': 'Début du trimestre {trimestre}.',
+    'partie.fin': 'Fin de la partie.',
+  });
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 32-fin.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent C. Comités trimestriels, score et profil de fin
+   (CONCEPTION §2.3, §7 ; contenu dans 15-donnees-comites.js et 17-donnees-fins.js). */
+(function (LTP) {
+  'use strict';
+  LTP.K.fin = {};
+  LTP.systemes.fin = {
+    seuilConfiance: 15,
+    initialiser: function (etat) {},
+    // Remplit etat.comite = { trimestre, questions: [{ id, ... }], reponses: { [questionId]: reponseId } }.
+    preparerComite: function (etat, ctx) {
+      etat.comite = { trimestre: etat.trimestre, questions: [], reponses: {} };
+    },
+    repondreComite: function (etat, questionId, reponseId, ctx) {
+      etat.comite.reponses[questionId] = reponseId;
+      return null;
+    },
+    comiteTermine: function (etat) {
+      return !etat.comite || etat.comite.questions.every(function (x) { return etat.comite.reponses[x.id] != null; });
+    },
+    debutTrimestre: function (etat, ctx) {},
+    // Renvoie { raison, profil, etoiles (0–5), score (0–100), criteres: { [nom]: 0–1 } }.
+    calculerResultat: function (etat, ctx, raison) {
+      return { raison: raison, profil: 'reussie', etoiles: 3, score: 50, criteres: {} };
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 35-demo.js */
+/* États de démonstration pour développer et tester l'interface sans dépendre de l'équilibre du moteur.
+   LTP.demo.etat(nom) → état complet et plausible. Chargé dans la page : ?demo=<nom>.
+   Les valeurs sont injectées à la main ; elles ne prétendent pas sortir de la simulation. */
+(function (LTP) {
+  'use strict';
+  var O = LTP.outils;
+
+  var NOMS = ['debut', 't2-tendu', 'triade-appro', 'evenement', 'comite', 'fin-usine'];
+
+  // Contenu de secours, ajouté seulement s'il n'existe pas déjà dans les données.
+  function assurerContenuDemo() {
+    if (!LTP.q.defEvenement('pr-geante')) {
+      LTP.donnees.evenements.push({
+        id: 'pr-geante', theme: 'revue', trimestres: [1, 2], poids: 0, personnage: 'nadia',
+        titre: 'La PR de 4 000 lignes', texte: 'Mathieu a ouvert une PR de 4 000 lignes.',
+        choix: [
+          { id: 'approuver', libelle: 'On fusionne', consequence: 'Personne ne l\'a lue.', effets: [] },
+          { id: 'decouper', libelle: 'On découpe', consequence: 'Nadia respire.', effets: [] },
+        ],
+      });
+    }
+    if (!(LTP.donnees.comites || []).some(function (c) { return c.id === 'demo-regis'; })) {
+      LTP.donnees.comites = LTP.donnees.comites || [];
+      LTP.donnees.comites.push({
+        id: 'demo-regis', personnage: 'regis', trimestres: [], poids: 0,
+        question: 'La facture de jetons a doublé ce trimestre. Je résume : on paie deux fois plus pour la même chose ?',
+        reponses: [
+          { id: 'a', texte: 'Non : le débit a augmenté de 60 % et voici le coût par point livré.', evaluer: function () { return 1; }, reaction: 'Un chiffre. Enfin.' },
+          { id: 'b', texte: 'C\'est un investissement stratégique.', evaluer: function () { return -0.5; }, reaction: 'Tout le monde dit ça.' },
+          { id: 'c', texte: 'Ce n\'est pas vraiment le double.', evaluer: function () { return -1; }, reaction: 'J\'ai la facture sous les yeux.' },
+        ],
+      });
+    }
+  }
+
+  // Historique synthétique : n semaines autour d'une tendance, avec un peu de bruit.
+  function serie(rng, n, depart, arrivee, bruit, entier) {
+    var s = [];
+    for (var i = 0; i <= n; i++) {
+      var v = O.lerp(depart, arrivee, n ? i / n : 1) + rng.bruit(bruit);
+      v = Math.max(0, v);
+      s.push(entier ? Math.round(v) : v);
+    }
+    return s;
+  }
+
+  function remplir(etat, semaine, p) {
+    var rng = LTP.rng.creer({ rngEtat: 777 + semaine });
+    etat.semaine = semaine;
+    etat.trimestre = Math.min(4, Math.floor((semaine - 1) / 13) + 1 || 1);
+    var etats = ['code', 'code', 'code', 'revue', 'code', 'attente', 'code'];
+    LTP.q.devs(etat).forEach(function (d, i) {
+      d.sessions = Math.max(1, Math.min(6, Math.round(1 + p.sessions * rng.suivant() + (LTP.q.aTrait(d, 'multiClauding') || LTP.q.aTrait(d, 'dixX') ? 2 : 0))));
+      d.fatigue = O.borner(0.2 + p.fatigue * rng.suivant() + (d.sessions > 3 ? 0.2 : 0));
+      d.moral = O.borner(0.7 - p.fatigue * 0.4 * rng.suivant());
+      d.comprehension = O.borner(d.comprehension - p.dette * rng.suivant());
+      d.competenceIA = O.borner(d.competenceIA + 0.2 * p.sessions / 4);
+      d.etat = etats[i % etats.length];
+      if (d.fatigue > 0.85) d.etat = 'conge';
+      d.derniere = { points: 4 + rng.entier(0, 6), code: 0.5 + rng.suivant() * 3 * p.sessions, pr: rng.entier(1, 3 + p.sessions * 2),
+        revues: rng.entier(0, 4), lgtm: rng.entier(0, p.lgtm), jetons: Math.round(2e5 * d.sessions * (1 + rng.suivant())), ecritSoiMeme: 0.4, luEnRevue: 0.5 };
+    });
+    LTP.q.ilots(etat).forEach(function (il) {
+      il.fileRevue = Math.round(p.file * (0.5 + rng.suivant()) * (il.id === 'portail' ? 2 : 1));
+      il.backlog = Math.round(il.backlog * (0.7 + rng.suivant() * 0.8));
+      il.satisfaction = O.borner(il.satisfaction + rng.bruit(0.1));
+      il.codebase.volume = Math.round(il.codebase.volume * (1 + p.croissance * rng.suivant()));
+      il.codebase.couvertureApparente = O.borner(il.codebase.couvertureApparente + p.croissance * 0.5);
+      il.codebase.couvertureReelle = O.borner(il.codebase.couvertureReelle + p.croissance * 0.15);
+      var pts = Math.round(15 + 20 * p.sessions * rng.suivant());
+      il.derniere = { points: pts, pointsLivres: Math.round(pts * 0.8), code: pts * 0.3, pr: rng.entier(3, 6 + p.sessions * 5), prFusionnees: rng.entier(3, 5 + p.sessions * 4),
+        deploiements: rng.entier(1, 6), defautsInjectes: rng.entier(2, 12), defautsEchappes: rng.entier(0, 5), bogues: rng.entier(0, 4), incidents: 0,
+        jetons: Math.round(8e5 * (1 + p.sessions) * rng.suivant()), cout: Math.round(800 * (1 + p.sessions) * rng.suivant()),
+        delai: O.arrondir(1 + p.file * 0.2 * rng.suivant(), 1), attention: O.borner(1 - p.lgtm * 0.1), lgtm: rng.entier(0, p.lgtm), demandes: 15, demandesRefusees: 2 };
+    });
+    for (var k = 0; k < p.incidents; k++) {
+      var il = etat.ordreIlots[(k * 3 + 1) % etat.ordreIlots.length];
+      etat.incidents.push({ id: 'demo' + k, ilot: il, gravite: 0.4 + 0.2 * k, cause: k ? 'injection' : 'bogue', debut: semaine, mttrHeures: 14, finSemaine: semaine + 1, resolu: false });
+      var dev = LTP.q.devsDe(etat, il)[0];
+      if (dev) dev.etat = 'incident';
+    }
+    etat.org.jetonsSemaine = O.somme(LTP.q.ilots(etat), function (i) { return i.derniere.jetons; });
+    etat.org.coutSemaine = O.somme(LTP.q.ilots(etat), function (i) { return i.derniere.cout; });
+    etat.org.budget = etat.org.budgetAnnuel * (1 - semaine / 52 * p.depense);
+    etat.org.confiance = p.confiance;
+
+    // Métriques et historique synthétiques
+    var n = semaine;
+    var h = {
+      prFusionnees: serie(rng, n, 20, 20 + 60 * p.sessions / 4, 4, true),
+      pointsLivres: serie(rng, n, 95, 95 + 50 * p.sessions / 4, 6, true),
+      delai: serie(rng, n, 1.5, 1.5 + p.file * 0.25, 0.2),
+      frequenceDeploiement: serie(rng, n, 4, 12, 1, true),
+      backlog: serie(rng, n, 215, 215 + 40 * p.dette, 8, true),
+      satisfaction: serie(rng, n, 0.55, 0.55 + 0.1 - p.dette * 0.3, 0.03),
+      bogues: serie(rng, n, 4, 4 + 10 * p.dette, 1.5, true),
+      incidents: serie(rng, n, 0, p.incidents, 0.6, true),
+      tauxEchec: serie(rng, n, 0.12, 0.12 + 0.2 * p.dette, 0.02),
+      mttr: serie(rng, n, 6, 6 + 14 * p.dette, 1),
+      volumeCode: serie(rng, n, 700, 700 * (1 + p.croissance), 5, true),
+      couvertureApparente: serie(rng, n, 0.35, 0.35 + p.croissance * 0.5, 0.01),
+      couvertureReelle: serie(rng, n, 0.28, 0.28 + p.croissance * 0.15, 0.01),
+      comprehension: serie(rng, n, 0.75, 0.75 - p.dette * 0.5, 0.01),
+      jetonsSemaine: serie(rng, n, 1e6, etat.org.jetonsSemaine, 2e5, true),
+      coutSemaine: serie(rng, n, 1200, etat.org.coutSemaine, 200, true),
+      budgetRestant: serie(rng, n, etat.org.budgetAnnuel, etat.org.budget, 0, true),
+      retard: serie(rng, n, 0.2, 0.2 + p.dette * 0.3, 0.02),
+      surfaceAttaque: serie(rng, n, 15, 15 + 60 * p.risque, 2, true),
+      expositionLoi25: serie(rng, n, 20, 20 + 50 * p.risque, 2, true),
+      applisFantomes: serie(rng, n, 0, 6 * p.risque, 0.3, true),
+      cartesOrphelines: serie(rng, n, 0, 5 * p.risque, 0.3, true),
+      moral: serie(rng, n, 0.65, 0.65 - p.fatigue * 0.3, 0.02),
+      fatigue: serie(rng, n, 0.2, 0.2 + p.fatigue * 0.5, 0.02),
+      releve: serie(rng, n, 0.5, 0.5 - p.dette * 0.2, 0.01),
+      connaissanceCapturee: serie(rng, n, 0.1, 0.1 + 0.3 * (1 - p.risque), 0.01),
+      confiance: serie(rng, n, 60, p.confiance, 2, true),
+    };
+    etat.historique = h;
+    etat.metriques = {};
+    for (var key in h) etat.metriques[key] = h[key][h[key].length - 1];
+    etat.metriques.incidents = LTP.q.incidentsActifs(etat).length;
+  }
+
+  function equiper(etat, carteId, ilotId) {
+    if (!etat.capacites[carteId]) return;
+    etat.capacites[carteId].decouverte = true;
+    etat.capacites[carteId].equipeeSur.push(ilotId);
+    etat.ilots[ilotId].capacites.push(carteId);
+  }
+
+  function etatDemo(nom) {
+    assurerContenuDemo();
+    var etat = LTP.moteur.creer(42, { animateur: true });
+    etat.phase = 'planification';
+    var L = etat.leviers.global;
+    switch (nom) {
+      case 't2-tendu':
+        L.autonomie = 3; L.sessionsMax = 4; L.modele = 'haut';
+        etat.leviers.surcharges.iot = { autonomie: 1 };
+        etat.leviers.enAttente.push({ id: 'formation', valeur: 'programme', ilot: null, semaine: 23 });
+        remplir(etat, 20, { sessions: 3, fatigue: 0.4, dette: 0.35, lgtm: 6, file: 8, croissance: 0.3, incidents: 2, risque: 0.4, depense: 1.3, confiance: 48 });
+        equiper(etat, 'conventions-gpu', 'portail');
+        etat.phase = 'execution';
+        break;
+      case 'triade-appro':
+        L.autonomie = 3; L.sessionsMax = 3;
+        remplir(etat, 30, { sessions: 2, fatigue: 0.3, dette: 0.25, lgtm: 3, file: 5, croissance: 0.25, incidents: 1, risque: 0.7, depense: 1.1, confiance: 55 });
+        equiper(etat, 'mcp-courriel-fournisseurs', 'appro');
+        etat.ilots.appro.triade = { prive: true, nonFiable: true, sortie: true };
+        etat.ilots.web.triade = { prive: false, nonFiable: true, sortie: true };
+        etat.phase = 'execution';
+        break;
+      case 'evenement':
+        L.autonomie = 2; L.sessionsMax = 2;
+        remplir(etat, 8, { sessions: 1, fatigue: 0.2, dette: 0.1, lgtm: 2, file: 4, croissance: 0.1, incidents: 0, risque: 0.2, depense: 1, confiance: 60 });
+        etat.phase = 'execution';
+        etat.evenementEnAttente = { id: 'pr-geante', ref: { ilot: 'portail', dev: 'mathieu' }, vars: {} };
+        break;
+      case 'comite':
+        L.autonomie = 3; L.sessionsMax = 3;
+        remplir(etat, 26, { sessions: 2, fatigue: 0.35, dette: 0.3, lgtm: 4, file: 6, croissance: 0.25, incidents: 1, risque: 0.4, depense: 1.4, confiance: 52 });
+        etat.trimestre = 2;
+        etat.phase = 'comite';
+        etat.comite = { trimestre: 2, questions: [{ id: 'demo-regis' }], reponses: {} };
+        break;
+      case 'fin-usine':
+        L.autonomie = 4; L.sessionsMax = 6; L.reviseurs = 0;
+        remplir(etat, 52, { sessions: 4, fatigue: 0.6, dette: 0.6, lgtm: 10, file: 12, croissance: 0.8, incidents: 3, risque: 0.8, depense: 1.6, confiance: 34 });
+        etat.trimestre = 4;
+        etat.phase = 'fin';
+        etat.resultat = { raison: 'annee', profil: 'usine', etoiles: 2, score: 41,
+          criteres: { livraison: 0.85, qualite: 0.3, couts: 0.35, risques: 0.4, personnes: 0.35 } };
+        break;
+      default: // debut
+        break;
+    }
+    return etat;
+  }
+
+  LTP.demo = { noms: NOMS, etat: etatDemo };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 40-ui-dom.js */
+/* Fondations de l'interface : fabrication du DOM et du SVG, état de l'application (LTP.app),
+   routage des écrans selon la phase, régions et planification du rendu.
+   Chaque module d'interface enregistre une région (LTP.ui.regions[nom]) ou un écran (LTP.ui.ecrans[nom])
+   et ne touche qu'à sa racine DOM. */
+(function (LTP) {
+  'use strict';
+
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  function ajouterEnfants(el, enfants) {
+    for (var i = 0; i < enfants.length; i++) {
+      var c = enfants[i];
+      if (c == null || c === false || c === true) continue;
+      if (Array.isArray(c)) { ajouterEnfants(el, c); continue; }
+      el.appendChild(typeof c === 'object' && c.nodeType ? c : document.createTextNode(String(c)));
+    }
+  }
+
+  function appliquerAttributs(el, attrs, estSvg) {
+    if (!attrs) return;
+    for (var k in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, k)) continue;
+      var v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class' || k === 'className') { if (estSvg) el.setAttribute('class', v); else el.className = v; }
+      else if (k === 'style' && typeof v === 'object') { for (var s in v) if (v[s] != null) el.style.setProperty(s, v[s]); }
+      else if (k === 'html') el.innerHTML = v;
+      else if (k.slice(0, 2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
+      else if (v === true) el.setAttribute(k, '');
+      else el.setAttribute(k, String(v));
+    }
+  }
+
+  // h('div', { class: 'x', onclick: fn, 'data-dev': 'mathieu' }, 'texte', autreNoeud, [liste])
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    appliquerAttributs(el, attrs, false);
+    ajouterEnfants(el, Array.prototype.slice.call(arguments, 2));
+    return el;
+  }
+  function svg(tag, attrs) {
+    var el = document.createElementNS(SVGNS, tag);
+    appliquerAttributs(el, attrs, true);
+    ajouterEnfants(el, Array.prototype.slice.call(arguments, 2));
+    return el;
+  }
+  function vider(el) { while (el && el.firstChild) el.removeChild(el.firstChild); return el; }
+  function remplacer(el) { vider(el); ajouterEnfants(el, Array.prototype.slice.call(arguments, 1)); return el; }
+
+  function annoncer(texte) {
+    var live = document.getElementById('live');
+    if (!live) return;
+    live.textContent = '';
+    setTimeout(function () { live.textContent = texte; }, 30);
+  }
+
+  // Libellés utiles à plusieurs régions.
+  function libelleLevier(id) { var d = LTP.q.defLevier(id); return d ? d.libelle : id; }
+  function libelleValeur(id, v) {
+    var d = LTP.q.defLevier(id);
+    if (!d) return String(v);
+    for (var i = 0; i < d.valeurs.length; i++) if (d.valeurs[i].v === v) return d.valeurs[i].libelle;
+    return String(v);
+  }
+  function nomDev(id) { var d = LTP.q.defDev(id); return d ? d.nom : id; }
+  function nomIlot(id) { var d = LTP.q.defIlot(id); return d ? d.court : id; }
+  function texteJournal(e) {
+    var vars = {};
+    for (var k in e.vars) vars[k] = e.vars[k];
+    if (vars.levier) { vars.valeurLibelle = libelleValeur(vars.levier, vars.valeur); vars.levier = libelleLevier(vars.levier) + (vars.valeur !== undefined ? ' → ' + vars.valeurLibelle : ''); }
+    if (vars.ilot && typeof vars.ilot === 'string') vars.ilot = nomIlot(vars.ilot);
+    if (e.ilot && vars.ilot == null) vars.ilot = nomIlot(e.ilot);
+    if (vars.dev && typeof vars.dev === 'string') vars.dev = nomDev(vars.dev);
+    if (e.dev && vars.dev == null) vars.dev = nomDev(e.dev);
+    return LTP.t(e.cle, vars);
+  }
+  // Texte d'un champ de contenu qui peut être une chaîne ou une fonction (etat, q, ref).
+  function texteContenu(val, etat, ref) {
+    var s = typeof val === 'function' ? val(etat, LTP.q, ref || {}) : val;
+    if (s == null) return '';
+    var vars = {};
+    if (ref && ref.ilot) vars.ilot = nomIlot(ref.ilot);
+    if (ref && ref.dev) vars.dev = nomDev(ref.dev);
+    return LTP.gabarit(String(s), vars);
+  }
+
+  LTP.ui = {
+    h: h, svg: svg, vider: vider, remplacer: remplacer, annoncer: annoncer,
+    libelleLevier: libelleLevier, libelleValeur: libelleValeur, nomDev: nomDev, nomIlot: nomIlot,
+    texteJournal: texteJournal, texteContenu: texteContenu,
+    regions: {},  // nom → { monter(racine, app), rendre(etat, ui, precedent, app) }
+    ecrans: {},   // nom → { monter(racine, app), rendre(etat, ui, precedent, app) }
+  };
+
+  // --- Application ---
+  LTP.K.ui = { dureeSemaineMs: 3000 };
+
+  var montees = {};      // région → racine montée
+  var ecranCourant = null;
+  var rendreDemande = false;
+
+  function ecranPour(phase) {
+    if (phase === 'accueil') return 'accueil';
+    if (phase === 'fin') return 'fin';
+    return 'jeu';
+  }
+
+  function monterEcranJeu(racine) {
+    var h_ = LTP.ui.h;
+    LTP.ui.remplacer(racine,
+      h_('div', { class: 'jeu' },
+        h_('section', { class: 'zone zone-openspace', 'data-region': 'openspace', 'aria-label': 'Open space' }),
+        h_('aside', { class: 'zone zone-panneau', 'data-region': 'panneau', 'aria-label': 'Leviers et registre' }),
+        h_('section', { class: 'zone zone-tableau', 'data-region': 'tableau', 'aria-label': 'Tableau de bord' }),
+        h_('section', { class: 'zone zone-journal', 'data-region': 'journal', 'aria-label': 'Journal' })));
+  }
+
+  function rendreTout() {
+    rendreDemande = false;
+    var app = LTP.app, etat = app.etat;
+    if (!etat) return;
+    var racineApp = document.getElementById('app');
+    var nomEcran = ecranPour(etat.phase);
+    if (nomEcran !== ecranCourant) {
+      ['openspace', 'panneau', 'tableau', 'journal'].forEach(function (r) { delete montees[r]; });
+      ecranCourant = nomEcran;
+      if (nomEcran === 'jeu') monterEcranJeu(racineApp);
+      else {
+        LTP.ui.vider(racineApp);
+        var ec = LTP.ui.ecrans[nomEcran];
+        if (ec && ec.monter) ec.monter(racineApp, app);
+      }
+    }
+    if (nomEcran !== 'jeu') {
+      var e2 = LTP.ui.ecrans[nomEcran];
+      if (e2 && e2.rendre) e2.rendre(etat, app.ui, app.precedent, app);
+    }
+    // Régions fixes (hors écran) et régions de l'écran de jeu.
+    var fixes = { hud: document.getElementById('hud'), modale: document.getElementById('modale-racine') };
+    var noms = Object.keys(LTP.ui.regions);
+    for (var i = 0; i < noms.length; i++) {
+      var nom = noms[i], reg = LTP.ui.regions[nom];
+      var racine = fixes[nom] || (nomEcran === 'jeu' ? racineApp.querySelector('[data-region="' + nom + '"]') : null);
+      if (!racine) continue;
+      if (montees[nom] !== racine) {
+        montees[nom] = racine;
+        if (reg.monter) reg.monter(racine, app);
+      }
+      if (reg.rendre) {
+        try { reg.rendre(etat, app.ui, app.precedent, app); }
+        catch (e) { if (typeof console !== 'undefined') console.error('Région ' + nom, e); }
+      }
+    }
+  }
+
+  function notifier() {
+    if (rendreDemande) return;
+    rendreDemande = true;
+    (typeof requestAnimationFrame === 'function' ? requestAnimationFrame : function (f) { return setTimeout(f, 16); })(rendreTout);
+  }
+
+  function sauvegarder() {
+    if (LTP.sauvegarde && LTP.sauvegarde.enregistrer) {
+      try { LTP.sauvegarde.enregistrer(LTP.app.etat); } catch (e) { /* stockage indisponible */ }
+    }
+  }
+
+  function remplacerEtat(nouvel, journal) {
+    var app = LTP.app;
+    var anciennePhase = app.etat && app.etat.phase;
+    app.precedent = app.etat;
+    app.etat = nouvel;
+    app.dernierJournal = journal || [];
+    if (nouvel.phase !== 'execution' && anciennePhase === 'execution') app.ui.vitesse = 0;
+    sauvegarder();
+    notifier();
+  }
+
+  LTP.app = {
+    etat: null,
+    precedent: null,
+    dernierJournal: [],
+    // vitesse : 0 (pause), 1, 2, 4 ; selection : { type: 'dev' | 'ilot', id } ; panneau : onglet ouvert
+    // ilotEdition : îlot dont on édite les surcharges (null = réglages globaux)
+    // modale : null | { type: 'fiche', id } | { type: 'ilot', id } | { type: 'aide', … }
+    ui: { vitesse: 0, selection: null, panneau: 'pratiques', ilotEdition: null, modale: null, vue: 'normale' },
+    demarrer: function (etat) { remplacerEtat(etat, []); },
+    dispatch: function (action) {
+      var r = LTP.moteur.action(LTP.app.etat, action);
+      if (r.erreur) { notifier(); return r; }
+      remplacerEtat(r.etat, r.journal);
+      return r;
+    },
+    avancer: function () {
+      var r = LTP.moteur.semaine(LTP.app.etat);
+      if (!r.avance) return false;
+      remplacerEtat(r.etat, r.journal);
+      return true;
+    },
+    // Pour les tests et le mode animateur : joue n semaines en prenant le premier choix partout.
+    simuler: function (n, strategie) {
+      var r = LTP.moteur.simuler(LTP.app.etat, n, strategie);
+      remplacerEtat(r.etat, r.journal);
+      return r.etat;
+    },
+    nouvellePartie: function (graine, options) {
+      LTP.app.ui.vitesse = 0;
+      LTP.app.ui.selection = null;
+      LTP.app.ui.modale = null;
+      remplacerEtat(LTP.moteur.creer(graine == null ? Date.now() : graine, options), []);
+    },
+    setUI: function (patch) {
+      for (var k in patch) LTP.app.ui[k] = patch[k];
+      notifier();
+    },
+    notifier: notifier,
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 41-ui-avatars.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent E. Avatars SVG paramétriques et déterministes. */
+(function (LTP) {
+  'use strict';
+  // avatar(devId, { taille }) → élément SVG
+  LTP.ui.avatar = function (devId, opts) {
+    var s = LTP.ui.svg, t = (opts && opts.taille) || 32, hue = Math.round(LTP.outils.hachage(devId) * 360);
+    return s('svg', { viewBox: '0 0 32 32', width: t, height: t, class: 'avatar', 'aria-hidden': 'true' },
+      s('circle', { cx: 16, cy: 12, r: 7, fill: 'hsl(30 40% 70%)' }),
+      s('rect', { x: 6, y: 20, width: 20, height: 12, rx: 6, fill: 'hsl(' + hue + ' 50% 50%)' }));
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 42-ui-open-space.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent E. Vue de haut de l'open space, signaux d'état. */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.regions.openspace = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      LTP.ui.remplacer(this._racine,
+        h('div', { class: 'os-provisoire' }, LTP.q.ilots(etat).map(function (il) {
+          return h('div', { class: 'os-ilot', 'data-ilot': il.id },
+            h('strong', null, LTP.ui.nomIlot(il.id)),
+            LTP.q.devsDe(etat, il.id).map(function (d) {
+              return h('button', { type: 'button', class: 'os-dev', 'data-dev': d.id,
+                onclick: function () { app.setUI({ selection: { type: 'dev', id: d.id }, modale: { type: 'fiche', id: d.id } }); } },
+                LTP.ui.avatar(d.id, { taille: 24 }), ' ', LTP.ui.nomDev(d.id), ' · ', d.sessions, ' écran(s)');
+            }));
+        })));
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 43-ui-leviers.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Panneau des leviers (et onglet Registre via 45). */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.regions.panneau = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      var leviers = LTP.donnees.leviers.filter(function (l) { return LTP.q.levierDebloque(etat, l.id); });
+      LTP.ui.remplacer(this._racine, h('div', { class: 'leviers-provisoire' }, leviers.map(function (l) {
+        var v = LTP.q.levier(etat, l.id);
+        return h('label', { class: 'levier', 'data-levier': l.id }, l.libelle, ' ',
+          h('select', { onchange: function (ev) {
+              var val = l.valeurs[ev.target.selectedIndex].v;
+              app.dispatch({ type: 'levier', id: l.id, valeur: val });
+            } },
+            l.valeurs.map(function (x) { return h('option', { selected: x.v === v }, x.libelle); })));
+      })));
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 44-ui-tableau-bord.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Tableau de bord des métriques. */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.regions.tableau = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat) {
+      LTP.ui.remplacer(this._racine, h('dl', { class: 'tableau-provisoire' }, LTP.donnees.metriques.map(function (m) {
+        var vis = LTP.q.metriqueVisible(etat, m.id), v = etat.metriques[m.id];
+        return [h('dt', null, m.libelle), h('dd', { 'data-metrique': m.id }, vis ? LTP.format.nombre(v) : 'non mesuré')];
+      })));
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 45-ui-registre.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Registre des skills et MCP, voyants de triade. */
+(function (LTP) {
+  'use strict';
+  LTP.ui.registre = { rendre: function (racine, etat, ui, app) {} };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 46-ui-modales.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Fiche de développeur et carte d'événement. */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.regions.modale = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      var r = this._racine;
+      var att = etat.evenementEnAttente;
+      if (att && etat.phase === 'execution') {
+        var def = LTP.q.defEvenement(att.id) || { titre: att.id, texte: '', choix: [] };
+        LTP.ui.remplacer(r, h('div', { class: 'modale carte-evenement', role: 'dialog', 'aria-modal': 'true' },
+          h('h2', null, LTP.ui.texteContenu(def.titre, etat, att.ref)),
+          h('p', null, LTP.ui.texteContenu(def.texte, etat, att.ref)),
+          (def.choix || []).map(function (c) {
+            return h('button', { type: 'button', 'data-choix': c.id, onclick: function () { app.dispatch({ type: 'choix', choix: c.id }); } }, c.libelle);
+          })));
+        return;
+      }
+      if (ui.modale && ui.modale.type === 'fiche') {
+        var d = etat.devs[ui.modale.id], def2 = LTP.q.defDev(ui.modale.id);
+        LTP.ui.remplacer(r, h('div', { class: 'modale fiche', role: 'dialog', 'aria-modal': 'true' },
+          h('h2', null, def2.nom), h('p', null, def2.tagline),
+          h('button', { type: 'button', class: 'fermer', onclick: function () { app.setUI({ modale: null }); } }, 'Fermer')));
+        return;
+      }
+      LTP.ui.vider(r);
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 47-ui-comite.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Comité trimestriel (région) et bilan annuel (écran « fin »). */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.regions.comite = {
+    monter: function (racine) {},
+    rendre: function () {},
+  };
+  LTP.ui.ecrans.fin = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      var res = etat.resultat || {};
+      var fin = (LTP.donnees.fins || []).filter(function (f) { return f.id === res.profil; })[0] || {};
+      LTP.ui.remplacer(this._racine, h('section', { class: 'bilan' },
+        h('h1', { class: 'profil-fin' }, fin.titre || 'Fin'),
+        h('p', null, (res.etoiles || 0) + ' / 5'),
+        h('button', { type: 'button', onclick: function () { app.nouvellePartie(); } }, LTP.t('action.recommencer'))));
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 48-ui-ecrans.js */
+/* BOUCHON de la phase 0 — à remplacer par l'agent F. Accueil, tutoriel, HUD et journal. */
+(function (LTP) {
+  'use strict';
+  var h = LTP.ui.h;
+  LTP.ui.ecrans.accueil = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      LTP.ui.remplacer(this._racine, h('section', { class: 'accueil' },
+        h('h1', { class: 'titre-jeu' }, LTP.t('jeu.titre')),
+        h('p', null, LTP.t('jeu.sousTitre')),
+        h('button', { type: 'button', id: 'btn-commencer', onclick: function () { app.dispatch({ type: 'phase', phase: 'planification' }); } }, LTP.t('action.commencer'))));
+    },
+  };
+  LTP.ui.regions.hud = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat, ui, precedent, app) {
+      var enJeu = etat.phase === 'planification' || etat.phase === 'execution';
+      LTP.ui.remplacer(this._racine, h('div', { class: 'hud-inner' },
+        h('a', { class: 'tool tool--back', href: '/projets/' }, '← julien-riel.com'),
+        h('span', { class: 'hud-titre' }, LTP.t('jeu.titre')),
+        h('span', { class: 'hud-semaine' }, LTP.t('hud.trimestre', etat), ' · ', LTP.t('hud.semaine', etat)),
+        enJeu ? h('button', { type: 'button', id: 'btn-lecture', onclick: function () {
+          if (etat.phase === 'planification') app.dispatch({ type: 'phase', phase: 'execution' });
+          app.setUI({ vitesse: ui.vitesse ? 0 : 1 });
+        } }, ui.vitesse ? LTP.t('action.pause') : LTP.t('action.jouer')) : null,
+        enJeu ? h('button', { type: 'button', id: 'btn-semaine', onclick: function () {
+          if (etat.phase === 'planification') app.dispatch({ type: 'phase', phase: 'execution' });
+          app.avancer();
+        } }, LTP.t('action.semaine')) : null,
+        etat.phase === 'comite' ? h('button', { type: 'button', id: 'btn-continuer', onclick: function () { app.dispatch({ type: 'phase', phase: 'planification' }); } }, LTP.t('action.continuer')) : null));
+    },
+  };
+  LTP.ui.regions.journal = {
+    monter: function (racine) { this._racine = racine; },
+    rendre: function (etat) {
+      LTP.ui.remplacer(this._racine, h('ol', { class: 'journal', reversed: true },
+        etat.journal.slice(-12).reverse().map(function (e) { return h('li', null, 'S' + e.semaine + ' · ', LTP.ui.texteJournal(e)); })));
+    },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 49-ui-sauvegarde.js */
+/* Sauvegarde automatique dans localStorage, protégée (navigation privée, stockage bloqué). Propriétaire : agent F. */
+(function (LTP) {
+  'use strict';
+  var CLE = 'livrer-a-tout-prix:v1';
+  LTP.sauvegarde = {
+    enregistrer: function (etat) {
+      try { if (etat && etat.phase !== 'accueil') localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) { /* ignoré */ }
+    },
+    charger: function () {
+      try {
+        var s = localStorage.getItem(CLE);
+        if (!s) return null;
+        var etat = JSON.parse(s);
+        return etat && etat.version === 1 ? etat : null;
+      } catch (e) { return null; }
+    },
+    effacer: function () { try { localStorage.removeItem(CLE); } catch (e) { /* ignoré */ } },
+  };
+})(globalThis.LTP = globalThis.LTP || {});
+
+/* 90-main.js */
+/* Démarrage : paramètres d'URL, sauvegarde, horloge de lecture, raccourcis clavier globaux.
+   ?graine=123 · ?animateur=1 · ?demo=<nom> · ?neuf=1 (ignore la sauvegarde) */
+(function (LTP) {
+  'use strict';
+
+  function parametres() {
+    var p = {};
+    try { new URLSearchParams(location.search).forEach(function (v, k) { p[k] = v; }); } catch (e) { /* ignoré */ }
+    return p;
+  }
+
+  var minuterie = null;
+  function planifierTic() {
+    clearTimeout(minuterie);
+    var ui = LTP.app.ui;
+    var delai = ui.vitesse ? LTP.K.ui.dureeSemaineMs / ui.vitesse : 250;
+    minuterie = setTimeout(tic, delai);
+  }
+  function tic() {
+    var app = LTP.app, etat = app.etat;
+    if (app.ui.vitesse && etat && etat.phase === 'execution' && !etat.evenementEnAttente && !app.ui.modaleBloquante) app.avancer();
+    planifierTic();
+  }
+
+  function demarrer() {
+    var p = parametres();
+    var etat = null;
+    var options = { animateur: p.animateur === '1', toutDebloque: p.animateur === '1' && p.tout === '1' };
+    if (p.demo && LTP.demo) etat = LTP.demo.etat(p.demo);
+    else if (!p.graine && p.neuf !== '1' && LTP.sauvegarde) etat = LTP.sauvegarde.charger();
+    if (!etat) etat = LTP.moteur.creer(p.graine != null ? p.graine : Date.now(), options);
+    LTP.app.demarrer(etat);
+
+    document.addEventListener('keydown', function (ev) {
+      if (ev.target && /input|select|textarea|button/i.test(ev.target.tagName)) return;
+      if (ev.key === ' ' && LTP.app.etat.phase === 'execution') {
+        ev.preventDefault();
+        LTP.app.setUI({ vitesse: LTP.app.ui.vitesse ? 0 : 1 });
+      }
+      if (ev.key === 'Escape' && LTP.app.ui.modale) LTP.app.setUI({ modale: null });
+    });
+    planifierTic();
+  }
+
+  if (typeof document === 'undefined') return;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})(globalThis.LTP = globalThis.LTP || {});
+
+{% endraw %}
+</script>
+</body>
+</html>

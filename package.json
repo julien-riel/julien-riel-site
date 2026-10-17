@@ -5,14 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "npm run clean && eleventy && node scripts/generate-feed.js && node scripts/generate-og-images.js && node scripts/generate-sitemap.js",
+    "build": "npm run clean && npm run build:livrer && eleventy && node scripts/generate-feed.js && node scripts/generate-og-images.js && node scripts/generate-sitemap.js",
     "build:prod": "NODE_ENV=production npm run build",
     "clean": "rm -rf _site",
     "preview": "npx serve _site -p 3000",
     "lint": "echo 'No linter configured'",
     "test": "npx playwright test",
     "lighthouse": "npx lhci autorun",
-    "lighthouse:ci": "npm run build:prod && npm run lighthouse"
+    "lighthouse:ci": "npm run build:prod && npm run lighthouse",
+    "build:livrer": "node scripts/build-livrer-a-tout-prix.js",
+    "test:livrer": "node --test 'jeux/livrer-a-tout-prix/tests/*.test.js' && node scripts/build-livrer-a-tout-prix.js --check"
   },
   "repository": {
     "type": "git",

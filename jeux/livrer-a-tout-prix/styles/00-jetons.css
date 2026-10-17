@@ -1,0 +1,21 @@
+/* 00-jetons.css */
+/* Jetons de design. Propriétaire : agent F (direction visuelle complète en phase 1). */
+:root {
+  color-scheme: light dark;
+  --bg: #f4efe6;
+  --surface: #fffaf1;
+  --fg: #1f1a14;
+  --muted: #6b6155;
+  --line: #d8cdbb;
+  --accent: #c2410c;
+  --ok: #1f7a3f;
+  --warn: #b26b00;
+  --crit: #c0261c;
+  --font-titre: 'Chakra Petch', system-ui, sans-serif;
+  --font-texte: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
+}
+:root[data-theme="dark"] { --bg: #17140f; --surface: #221d16; --fg: #f3ece0; --muted: #b3a792; --line: #3a3228; }
