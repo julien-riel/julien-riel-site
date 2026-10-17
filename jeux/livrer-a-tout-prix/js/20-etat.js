@@ -52,6 +52,9 @@
       jetons: 0, cout: 0, delai: 0, attention: 1, lgtm: 0, demandes: 0, demandesRefusees: 0,
     };
   };
+  // Fractions du temps d'un développeur réservées par d'autres systèmes, remises à zéro chaque semaine par la boucle :
+  // registre (26, développement d'une carte maison ou entretien), formation (27). La production (21) les soustrait.
+  LTP.etat.occupationVide = function () { return { registre: 0, formation: 0 }; };
   LTP.etat.derniereDevVide = function () {
     return { points: 0, code: 0, pr: 0, revues: 0, lgtm: 0, jetons: 0, ecritSoiMeme: 0, luEnRevue: 0 };
   };
@@ -68,6 +71,8 @@
       verbosite: 1,      // multiplicatif sur le volume de code
       poidsContexte: 0,  // somme des poids des cartes équipées
       incoherence: 0,    // 0–1 : conflits de skills
+      taillePR: 1,       // multiplicatif sur la taille des PR (Goodhart « nombre de PR » : < 1)
+      attention: 1,      // multiplicatif sur l'attention en revue (Goodhart « délai » : < 1)
     };
   };
 
@@ -118,6 +123,7 @@
       evenementEnAttente: null,
       evenementsForces: [],
       evenementsVus: {},
+      derniereDecision: null, // { evenement, choix, semaine } : posé par 29-evenements.resoudre, affiché par l'interface
       comite: null,
       resultat: null,
       metriques: {},
@@ -154,6 +160,7 @@
         competence: s.competence, competenceIA: s.competenceIA, adhesion: s.adhesion, rigueur: s.rigueur,
         comprehension: s.comprehension, fatigue: s.fatigue, moral: s.moral,
         sessions: 1, etat: 'code', indisponibleJusqua: 0, present: true,
+        occupation: LTP.etat.occupationVide(),
         derniere: LTP.etat.derniereDevVide(),
       };
     });

@@ -80,7 +80,7 @@
     var ctx = creerContexte(etat);
 
     LTP.q.ilots(etat).forEach(function (i) { i.derniere = LTP.etat.derniereIlotVide(); });
-    LTP.q.devs(etat).forEach(function (d) { d.derniere = LTP.etat.derniereDevVide(); });
+    LTP.q.devs(etat).forEach(function (d) { d.derniere = LTP.etat.derniereDevVide(); d.occupation = LTP.etat.occupationVide(); });
     appliquerLeviersEnAttente(etat, ctx);
 
     for (var i = 0; i < ORDRE.length; i++) {

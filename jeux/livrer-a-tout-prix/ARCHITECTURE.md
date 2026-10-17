@@ -190,7 +190,8 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
     backlog, satisfaction, applisFantomes,
     codebase: { volume, defautsLatents, couvertureApparente, couvertureReelle, conventions },
     fileRevue, capacites: [carteId], triade: { prive, nonFiable, sortie },
-    mods: { debit, tauxDefaut, jetons, mttr, comprehension, adequationPile, couverture, verbosite, poidsContexte, incoherence },
+    mods: { debit, tauxDefaut, jetons, mttr, comprehension, adequationPile, couverture, verbosite, poidsContexte, incoherence,
+            taillePR, attention },
                                              // calculés par 26-registre à l'étape 3, lus par 21–25 (voir 20-etat.js)
     derniere: { points, pointsLivres, code, pr, prFusionnees, deploiements, defautsInjectes, defautsEchappes,
                 bogues, incidents, jetons, cout, delai, attention, lgtm, demandes, demandesRefusees },
@@ -200,6 +201,9 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
     id, ilot, niveau, traits: [...],
     competence, competenceIA, adhesion, rigueur, comprehension, fatigue, moral,
     sessions, etat, indisponibleJusqua, present: true,
+    occupation: { registre, formation },     // temps réservé par 26 et 27, soustrait par 21 ; remis à zéro chaque semaine
+                                             // etat : 'conge' | 'formation' | 'absent' posés par 27 (étape 2) ;
+                                             //        'code' | 'revue' | 'attente' par 21 (étape 4) ; 'incident' par 23 (étape 9)
     derniere: { points, code, pr, revues, lgtm, jetons, ecritSoiMeme, luEnRevue },
   } },
   capacites: { [carteId]: { equipeeSur: [ilotId], proprietaire, fraicheur, disponibleSemaine, decouverte } },
@@ -208,6 +212,7 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
   evenementEnAttente: null | { id, ref: { ilot?, dev? }, vars },
   evenementsForces: [{ id, semaine, ref }],   // suites planifiées par l'effet { evenement }
   evenementsVus: { [id]: semaine },
+  derniereDecision: null | { evenement, choix, semaine, ref },   // posé par 29.resoudre, affiché par l'interface
   comite: null | { questions, reponses },
   historique: { [metrique]: [valeurParSemaine] },
   journal: [{ semaine, type, cle, vars, ilot?, dev? }],  // 200 dernières entrées

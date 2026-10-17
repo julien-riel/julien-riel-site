@@ -16,6 +16,7 @@
       if (!choix) return 'choix-inconnu';
       LTP.effets.appliquer(etat, choix.effets, att.ref || {}, ctx);
       etat.evenementsVus[att.id] = etat.semaine;
+      etat.derniereDecision = { evenement: att.id, choix: choixId, semaine: etat.semaine, ref: att.ref || {} };
       etat.evenementEnAttente = null;
       return null;
     },
