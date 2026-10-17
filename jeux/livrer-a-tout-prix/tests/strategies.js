@@ -18,8 +18,19 @@ function actionsLeviers(LTP, etat, reglages, surcharges = {}) {
   const actions = [];
   const valide = (id, v) => {
     const d = LTP.donnees.leviersParId[id];
-    return d && LTP.q.levierDebloque(etat, id) && d.valeurs.some((x) => x.v === v);
+    return d && LTP.q.valeurDebloquee(etat, id, v);
   };
+  // Une valeur pas encore débloquée (niveaux d'autonomie, sessions) : on prend la plus proche en dessous.
+  const permise = (id, v) => {
+    const d = LTP.donnees.leviersParId[id];
+    if (!d || !LTP.q.levierDebloque(etat, id)) return v;
+    let i = d.valeurs.findIndex((x) => x.v === v);
+    while (i > 0 && !LTP.q.valeurDebloquee(etat, id, d.valeurs[i].v)) i--;
+    return i >= 0 ? d.valeurs[i].v : v;
+  };
+  reglages = Object.fromEntries(Object.entries(reglages).map(([id, v]) => [id, permise(id, v)]));
+  surcharges = Object.fromEntries(Object.entries(surcharges).map(([il, r]) =>
+    [il, Object.fromEntries(Object.entries(r).map(([id, v]) => [id, permise(id, v)]))]));
   for (const [id, v] of Object.entries(reglages)) {
     // Pas de nouvelle action si la valeur est déjà en vigueur ou déjà programmée (leviers à délai).
     const attente = LTP.q.enAttente(etat, id, null);
@@ -151,7 +162,7 @@ function autonomieSelonCriticite(etat) {
 }
 
 const REGLAGES_EQUILIBRES = {
-  pair: "rotation", reviseurs: 1, approbation: "humain", taillePR: 400, ci: "complet", lint: "verrouille", tests: "mutation",
+  licences: "tous", pair: "rotation", reviseurs: 1, approbation: "humain", taillePR: 400, ci: "complet", lint: "verrouille", tests: "mutation",
   revuesExplication: "mensuelles", autonomie: 2, sessionsMax: 2, modele: "intermediaire",
   modeleParTache: true, formation: "programme", plafondJetons: "souple",
   disciplineNon: "normale", specs: "legeres",
@@ -168,7 +179,7 @@ export function creerStrategie(LTP, nom, graine = 1) {
         nom,
         leviers(etat) {
           const actions = actionsLeviers(LTP, etat, {
-            autonomie: 4, sessionsMax: 6, reviseurs: 1, approbation: "humain", taillePR: "libre", ci: "aucune", lint: "aucun",
+            licences: "tous", autonomie: 4, sessionsMax: 6, reviseurs: 1, approbation: "humain", taillePR: "libre", ci: "aucune", lint: "aucun",
             tests: "aucun", revuesExplication: "non", pair: "ia", modele: "haut", modeleParTache: false, formation: "aucune",
             plafondJetons: "aucun", disciplineNon: "laxiste", specs: "non",
             catalogue: "aucun", classification: "non", bacASable: "aucun", accesProd: "oui", approbationSorties: false,
@@ -243,6 +254,7 @@ export function creerStrategie(LTP, nom, graine = 1) {
       const choisir = (l) => l[Math.floor(hasard() * l.length)];
       return {
         nom,
+        suivreCalendrier: false,
         leviers(etat) {
           const actions = [];
           for (const l of LTP.donnees.leviers) {

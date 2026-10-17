@@ -49,23 +49,24 @@
   // --- Développeurs ---
   // niveau : stagiaire · junior · inter · senior
   // accessoire : objet signature sur le bureau (dessiné par 41-ui-avatars.js)
+  // pilote : volontaire du groupe pilote (une personne par îlot) qui reçoit la licence Copilot dès la semaine 1
   // apparence : optionnelle ; sinon dérivée de l'id de façon déterministe
   LTP.donnees.devs = [
     { id: 'raymond',   nom: 'Raymond',   ilot: 'appro',       niveau: 'senior',    traits: ['legacy', 'sceptique'],         accessoire: 'terminal-vert',
       tagline: '31 ans sur l\'AS/400. « L\'IA ? J\'ai vu passer le 4GL aussi. »' },
     { id: 'lucie',     nom: 'Lucie',     ilot: 'appro',       niveau: 'inter',     traits: ['donnees', 'rigoureux'],        accessoire: 'classeurs',
       tagline: 'Connaît par cœur les trois listes de fournisseurs, et laquelle est la bonne.' },
-    { id: 'yannick',   nom: 'Yannick',   ilot: 'appro',       niveau: 'inter',     traits: ['curieux', 'integrateur'],      accessoire: 'cables',
+    { id: 'yannick',   nom: 'Yannick',   ilot: 'appro',       niveau: 'inter',     traits: ['curieux', 'integrateur'],      pilote: true, accessoire: 'cables',
       tagline: 'Branche tout sur tout. Premier à installer un MCP trouvé sur un forum.' },
 
     { id: 'benoit',    nom: 'Benoît',    ilot: 'operations',  niveau: 'senior',    traits: ['garde', 'stoique'],            accessoire: 'tasse',
       tagline: 'De garde la nuit depuis 2009. Son téléphone vibre, il soupire.' },
-    { id: 'marieeve',  nom: 'Marie-Ève', ilot: 'operations',  niveau: 'senior',    traits: ['sre', 'mesure'],               accessoire: 'tableau-bord',
+    { id: 'marieeve',  nom: 'Marie-Ève', ilot: 'operations',  niveau: 'senior',    traits: ['sre', 'mesure'],               pilote: true, accessoire: 'tableau-bord',
       tagline: 'SRE. Ne croit que ce qui a un tableau de bord.' },
     { id: 'tommy',     nom: 'Tommy',     ilot: 'operations',  niveau: 'junior',    traits: ['apprenant'],                   accessoire: 'carnet',
       tagline: 'Apprend vite, mais seulement ce qu\'on lui laisse faire.' },
 
-    { id: 'steve',     nom: 'Steve',     ilot: 'bureautique', niveau: 'inter',     traits: ['automatiseur', 'enthousiaste'], accessoire: 'organigramme',
+    { id: 'steve',     nom: 'Steve',     ilot: 'bureautique', niveau: 'inter',     traits: ['automatiseur', 'enthousiaste'], pilote: true, accessoire: 'organigramme',
       tagline: 'Roi du Power Automate. Voisin de bureau de Kevin : ils s\'inspirent mutuellement.' },
     { id: 'diane',     nom: 'Diane',     ilot: 'bureautique', niveau: 'senior',    traits: ['vba', 'refractaire'],          accessoire: 'plante',
       tagline: 'Ses macros Excel font tourner la paie depuis 2007. Ne veut rien savoir.' },
@@ -74,7 +75,7 @@
 
     { id: 'sophie',    nom: 'Sophie',    ilot: 'inspections', niveau: 'senior',    traits: ['tdd', 'rigoureux'],            accessoire: 'cactus',
       tagline: 'Pas de code sans test rouge d\'abord. Lente au T1, imbattable au T3.' },
-    { id: 'karim',     nom: 'Karim',     ilot: 'inspections', niveau: 'inter',     traits: ['mobile', 'pragmatique'],       accessoire: 'telephones',
+    { id: 'karim',     nom: 'Karim',     ilot: 'inspections', niveau: 'inter',     traits: ['mobile', 'pragmatique'],       pilote: true, accessoire: 'telephones',
       tagline: 'L\'application terrain hors ligne, c\'est lui.' },
     { id: 'jeremy',    nom: 'Jérémy',    ilot: 'inspections', niveau: 'stagiaire', traits: ['natifIA', 'apprenant'],        accessoire: 'boisson-energie',
       tagline: 'N\'a jamais codé sans IA. Brillant ou perdu selon vos choix.' },
@@ -83,17 +84,17 @@
       tagline: 'Firmware des capteurs. Sait qu\'un capteur ne pardonne pas.' },
     { id: 'luc',       nom: 'Luc',       ilot: 'iot',         niveau: 'inter',     traits: ['electronicien'],               accessoire: 'fer-a-souder',
       tagline: 'Électronicien devenu développeur. Parle aux capteurs.' },
-    { id: 'hugo',      nom: 'Hugo',      ilot: 'iot',         niveau: 'inter',     traits: ['donnees', 'curieux'],          accessoire: 'graphique',
+    { id: 'hugo',      nom: 'Hugo',      ilot: 'iot',         niveau: 'inter',     traits: ['donnees', 'curieux'],          pilote: true, accessoire: 'graphique',
       tagline: 'Pipelines Python de télémétrie. Deux millions de mesures par jour.' },
 
-    { id: 'chloe',     nom: 'Chloé',     ilot: 'web',         niveau: 'inter',     traits: ['designer', 'natifIA'],         accessoire: 'tablette-dessin',
+    { id: 'chloe',     nom: 'Chloé',     ilot: 'web',         niveau: 'inter',     traits: ['designer', 'natifIA'],         pilote: true, accessoire: 'tablette-dessin',
       tagline: 'Designer devenue développeuse grâce à l\'IA.' },
     { id: 'patrick',   nom: 'Patrick',   ilot: 'web',         niveau: 'senior',    traits: ['wordpress', 'pragmatique'],    accessoire: 'mug-wp',
       tagline: '14 sites WordPress, dont 3 qu\'il aimerait oublier.' },
     { id: 'laurence',  nom: 'Laurence',  ilot: 'web',         niveau: 'junior',    traits: ['multiClauding', 'enthousiaste'], accessoire: 'ecrans',
       tagline: 'Quatre écrans, quatre sessions, zéro pause.' },
 
-    { id: 'mathieu',   nom: 'Mathieu',   ilot: 'portail',     niveau: 'senior',    traits: ['dixX', 'shipIt'],              accessoire: 'casque',
+    { id: 'mathieu',   nom: 'Mathieu',   ilot: 'portail',     niveau: 'senior',    traits: ['dixX', 'shipIt'],              pilote: true, accessoire: 'casque',
       tagline: '« 10x » autoproclamé. Des PR de 4 000 lignes.' },
     { id: 'nadia',     nom: 'Nadia',     ilot: 'portail',     niveau: 'senior',    traits: ['reviseur', 'rigoureux'],       accessoire: 'pile-papiers',
       tagline: 'Tout le monde veut sa revue. Elle est le goulot incarné.' },

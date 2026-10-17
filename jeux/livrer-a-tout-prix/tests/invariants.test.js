@@ -82,8 +82,77 @@ test("les leviers à délai prennent effet après le délai", () => {
 test("un levier verrouillé est refusé, une surcharge par îlot est lue", () => {
   let etat = LTP.moteur.creer(5);
   assert.equal(LTP.moteur.action(etat, { type: "levier", id: "observabilite", valeur: "base" }).erreur, "levier-verrouille");
+  assert.equal(LTP.moteur.action(etat, { type: "levier", id: "autonomie", valeur: 1 }).erreur, "levier-verrouille", "autonomie : semaine 3");
+  etat = LTP.moteur.creer(5, { toutDebloque: true });
   etat = LTP.moteur.action(etat, { type: "levier", id: "autonomie", valeur: 3, ilot: "web" }).etat;
   assert.equal(LTP.q.levier(etat, "autonomie", "web"), 3);
-  assert.equal(LTP.q.levier(etat, "autonomie", "iot"), 1);
+  assert.equal(LTP.q.levier(etat, "autonomie", "iot"), 0);
   assert.equal(LTP.moteur.action(etat, { type: "levier", id: "modele", valeur: "haut", ilot: "web" }).erreur, "levier-non-surchargeable");
+});
+
+test("calendrier : les leviers et les niveaux d'autonomie arrivent un à un", () => {
+  const cal = LTP.donnees.calendrier;
+  const semaines = cal.map((c) => c.semaine);
+  assert.equal(new Set(semaines).size, semaines.length, "une nouveauté par semaine au plus");
+  for (const l of LTP.donnees.leviers) assert.ok(l.semaine >= 1 && l.semaine <= 52, l.id);
+  assert.equal(LTP.q.defLevier("licences").semaine, 1);
+  // Semaine 1 : seules les licences ; le panneau de l'IA est le seul ouvert.
+  let etat = LTP.moteur.action(LTP.moteur.creer(6), { type: "phase", phase: "planification" }).etat;
+  const ouverts = LTP.donnees.leviers.filter((l) => LTP.q.levierDebloque(etat, l.id)).map((l) => l.id);
+  assert.equal(ouverts.join(","), "licences");
+  assert.equal(LTP.donnees.panneaux.filter((p) => LTP.q.panneauDebloque(etat, p.id)).map((p) => p.id).join(","), "ia");
+  assert.equal(etat.nouveaute && etat.nouveaute.semaine, 1, "note de service de la semaine 1");
+  // Semaine 3 : autonomie 0 et 1, mais pas 2.
+  etat = JSON.parse(JSON.stringify(etat));
+  etat.semaine = 2;
+  assert.equal(LTP.moteur.action(etat, { type: "levier", id: "autonomie", valeur: 1 }).erreur, undefined);
+  assert.equal(LTP.moteur.action(etat, { type: "levier", id: "autonomie", valeur: 2 }).erreur, "valeur-verrouillee");
+  etat.semaine = 9;
+  assert.equal(LTP.moteur.action(etat, { type: "levier", id: "autonomie", valeur: 2 }).erreur, undefined);
+});
+
+test("licences : sans licence, ni session ni jeton ; le groupe pilote compte une personne par îlot", () => {
+  const pilotes = LTP.donnees.devs.filter((d) => d.pilote);
+  assert.equal(pilotes.length, 7);
+  assert.equal(new Set(pilotes.map((d) => d.ilot)).size, 7);
+  let etat = LTP.moteur.action(LTP.moteur.creer(8), { type: "phase", phase: "planification" }).etat;
+  etat = LTP.moteur.action(etat, { type: "phase", phase: "execution" }).etat;
+  etat = LTP.moteur.semaine(etat).etat;
+  for (const d of Object.values(etat.devs)) {
+    if (d.pilote) assert.equal(d.sessions, 1, d.id);
+    else { assert.equal(d.sessions, 0, d.id); assert.equal(d.derniere.jetons, 0, d.id); }
+  }
+});
+
+test("journées : quatre jours calmes, le vendredi calcule la semaine ; une carte attend un jour de la semaine suivante", () => {
+  let etat = LTP.moteur.action(LTP.moteur.creer(9), { type: "phase", phase: "planification" }).etat;
+  etat = LTP.moteur.action(etat, { type: "phase", phase: "execution" }).etat;
+  for (let j = 0; j < 4; j++) {
+    const r = LTP.moteur.jour(etat);
+    assert.ok(r.avance && !r.finSemaine);
+    etat = r.etat;
+    assert.equal(etat.semaine, 0);
+    assert.equal(etat.jour, j + 1);
+    assert.ok(etat.reflexions.liste.length > 0, "des réflexions chaque jour");
+  }
+  const r = LTP.moteur.jour(etat);
+  assert.ok(r.finSemaine);
+  assert.equal(r.etat.semaine, 1);
+  assert.equal(r.etat.jour, 0);
+  // Une carte tirée le vendredi n'arrive pas tout de suite.
+  const e2 = JSON.parse(JSON.stringify(r.etat));
+  e2.jour = 4;
+  e2.evenementEnAttente = null;
+  e2.evenementProgramme = null;
+  const LTP2 = charger();
+  LTP2.K.evenements.probabilite = 1;
+  LTP2.K.evenements.espacementMin = 0;
+  LTP2.K.evenements.semainesDebut = 0;
+  const r2 = LTP2.moteur.jour(e2);
+  assert.equal(r2.etat.evenementEnAttente, null, "pas de carte le lundi matin");
+  assert.ok(r2.etat.evenementProgramme && r2.etat.evenementProgramme.jour >= 1, "carte programmée");
+  let e3 = r2.etat;
+  for (let j = 0; j < 4 && !e3.evenementEnAttente; j++) e3 = LTP2.moteur.jour(e3).etat;
+  assert.ok(e3.evenementEnAttente, "la carte arrive dans la semaine");
+  assert.equal(e3.semaine, 2, "avant le calcul du vendredi suivant");
 });

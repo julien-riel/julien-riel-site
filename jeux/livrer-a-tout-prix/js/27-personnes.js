@@ -435,6 +435,7 @@
     semaine: semaine,
     reactionLevier: reactionLevier,
     bulle: bulle,
+    etatBulle: etatBulle,
     // Outils exposés pour les autres systèmes et les tests.
     capture: capture,
     cartesDe: cartesDe,

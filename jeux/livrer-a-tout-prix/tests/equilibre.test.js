@@ -24,7 +24,8 @@ function jouerDetaille(nom, graine) {
     etat = r.etat;
     if (etat.semaine === avant) continue;
     detail.file[etat.semaine] = LTP.q.ilots(etat).reduce((a, il) => a + (il.fileRevue || 0), 0);
-    detail.journalSemaine.push(r.journal.filter((e) => e.semaine === etat.semaine && e.type !== "levier" && e.type !== "comite").length);
+    // Ce que la semaine raconte d'elle-même : sans les décisions du joueur (leviers, cartes équipées) ni le comité.
+    detail.journalSemaine.push(r.journal.filter((e) => e.semaine === etat.semaine && !e.joueur && e.type !== "levier" && e.type !== "comite").length);
     if (LTP.q.metriqueVisible(etat, "tauxEchec")) detail.tauxEchec.push(etat.metriques.tauxEchec);
     if (etat.trimestre <= 2) detail.secuT12 = (etat.cumuls && etat.cumuls.incidentsSecurite) || 0;
   }
@@ -136,7 +137,8 @@ test("musée : profil « musee » dans au moins 70 % des graines, satisfaction l
   for (const nom of INTENTIONNELLES.filter((n) => n !== "musee")) {
     assert.ok(s("musee").satisfaction < s(nom).satisfaction, `satisfaction musee (${s("musee").satisfaction}) ≥ ${nom} (${s(nom).satisfaction})`);
   }
-  assert.ok(s("musee").score <= s("equilibree").score - 12, `score musee ${s("musee").score}, equilibree ${s("equilibree").score}`);
+  // 10 points : avec le calendrier, l'IA n'arrive que progressivement et l'écart se creuse moins vite qu'avant.
+  assert.ok(s("musee").score <= s("equilibree").score - 10, `score musee ${s("musee").score}, equilibree ${s("equilibree").score}`);
   assert.ok(s("musee").fantomes >= 4, `applications hors TI au musée : ${s("musee").fantomes}`);
 });
 

@@ -6,12 +6,16 @@ import { charger } from "./charger.js";
 export const LTP = charger();
 export const M = LTP.moteur;
 
+// Réglages de référence des tests de systèmes : toute l'équipe a une licence, et l'autonomie de départ
+// est le clavardage (niveau 1). Les leviers passés à partie() les remplacent.
+export const REFERENCE = [{ id: "licences", valeur: "tous" }, { id: "autonomie", valeur: 1 }];
+
 // Partie en exécution, tout débloqué, avec des actions de leviers appliquées.
 // options.preparer(etat) : retouche l'état (JSON) avant la première semaine.
 export function partie(graine, leviers = [], options = {}) {
   let e = M.creer(graine, { toutDebloque: true, serveurAchete: !!options.serveurAchete });
   e = M.action(e, { type: "phase", phase: "planification" }).etat;
-  for (const a of leviers) {
+  for (const a of [...REFERENCE, ...leviers]) {
     const r = M.action(e, { type: "levier", ...a });
     if (r.erreur) throw new Error(`levier ${a.id}=${a.valeur} : ${r.erreur}`);
     e = r.etat;
@@ -37,7 +41,14 @@ export function avancer(e, n, { avant, apres } = {}) {
       e.evenementEnAttente = null;
       if (avant) avant(e);
     }
-    e = M.semaine(e).etat;
+    // Une semaine complète, du jour courant au vendredi, en écartant les cartes qui arrivent en chemin.
+    for (let j = 0; j < 10; j++) {
+      if (e.evenementEnAttente) { e = JSON.parse(JSON.stringify(e)); e.evenementEnAttente = null; }
+      const r = M.jour(e);
+      if (!r.avance) break;
+      e = r.etat;
+      if (r.finSemaine) break;
+    }
     if (apres) apres(e, s);
   }
   return e;

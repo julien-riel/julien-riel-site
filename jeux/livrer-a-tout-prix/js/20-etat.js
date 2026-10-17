@@ -8,6 +8,9 @@
   LTP.K.etat = {
     semainesParTrimestre: 13,
     semainesTotal: 52,
+    // Le joueur avance d'une journée ouvrable à la fois ; le calcul de la semaine se fait le vendredi.
+    joursParSemaine: 5,
+    changementsMax: 40,     // changements de leviers gardés (réflexions, marques sur les courbes)
     niveaux: {
       stagiaire: { competence: 0.3,  competenceIA: 0.35, adhesion: 0.6,  rigueur: 0.4,  comprehension: 0.5 },
       junior:    { competence: 0.45, competenceIA: 0.3,  adhesion: 0.55, rigueur: 0.45, comprehension: 0.6 },
@@ -94,14 +97,16 @@
     var K = LTP.K.etat, opts = options || {};
     var g = LTP.rng.graineDe(graine);
     var etat = {
-      version: 1,
+      version: 2,
       graine: g,
       rngEtat: g,
-      semaine: 0,
+      semaine: 0,             // semaines entièrement jouées (calculées le vendredi)
+      jour: 0,                // jour en cours dans la semaine suivante : 0 = lundi … 4 = vendredi
       trimestre: 1,
       phase: 'accueil',
       options: { animateur: !!opts.animateur, toutDebloque: !!opts.toutDebloque, serveurAchete: !!opts.serveurAchete },
-      leviers: { global: {}, surcharges: {}, enAttente: [] },
+      // changements : [{ id, valeur, ilot, semaine, jour }] gardés pour les réflexions et le tableau de bord
+      leviers: { global: {}, surcharges: {}, enAttente: [], changements: [] },
       org: {
         budgetAnnuel: K.org.budgetAnnuel,
         budget: K.org.budgetAnnuel,
@@ -121,6 +126,9 @@
       incidents: [],
       differes: [],
       evenementEnAttente: null,
+      evenementProgramme: null, // { id, ref, vars, jour } : carte tirée le vendredi, montrée un jour de la semaine suivante
+      nouveaute: null,          // { semaine, vue } : note de service du calendrier à montrer (31-boucle)
+      reflexions: { semaine: 0, jour: 0, liste: [], fil: [] }, // réflexions du jour et fil récent (33-reflexions)
       evenementsForces: [],
       evenementsVus: {},
       derniereDecision: null, // { evenement, choix, semaine } : posé par 29-evenements.resoudre, affiché par l'interface
@@ -156,7 +164,7 @@
     LTP.donnees.devs.forEach(function (d) {
       var s = statsDepart(d);
       etat.devs[d.id] = {
-        id: d.id, ilot: d.ilot, niveau: d.niveau, traits: d.traits.slice(),
+        id: d.id, ilot: d.ilot, niveau: d.niveau, traits: d.traits.slice(), pilote: !!d.pilote,
         competence: s.competence, competenceIA: s.competenceIA, adhesion: s.adhesion, rigueur: s.rigueur,
         comprehension: s.comprehension, fatigue: s.fatigue, moral: s.moral,
         sessions: 1, etat: 'code', indisponibleJusqua: 0, present: true,
@@ -201,13 +209,43 @@
     for (var i = 0; i < d.valeurs.length; i++) if (d.valeurs[i].v === v) return i;
     return 0;
   };
+  // Semaine en cours du point de vue du joueur : la semaine qu'il est en train de jouer (1 à 52).
+  // Pendant le comité et à la fin, c'est la semaine qui vient de se terminer.
+  q.semaineCourante = function (etat) {
+    var total = LTP.K.etat.semainesTotal;
+    if (etat.phase === 'comite' || etat.phase === 'fin') return Math.max(1, Math.min(total, etat.semaine));
+    return Math.max(1, Math.min(total, etat.semaine + 1));
+  };
   q.levierDebloque = function (etat, id) {
     var d = q.defLevier(id);
-    return !!d && (etat.options.toutDebloque || d.trimestre <= etat.trimestre);
+    return !!d && (etat.options.toutDebloque || (d.semaine || 1) <= q.semaineCourante(etat));
+  };
+  // Une valeur peut arriver après son levier (le calendrier ouvre les niveaux d'autonomie un à un).
+  q.valeurDebloquee = function (etat, id, v) {
+    var d = q.defLevier(id);
+    if (!d || !q.levierDebloque(etat, id)) return false;
+    var x = d.valeurs.filter(function (y) { return y.v === v; })[0];
+    return !!x && (etat.options.toutDebloque || (x.semaine || d.semaine || 1) <= q.semaineCourante(etat));
   };
   q.panneauDebloque = function (etat, id) {
     var p = (LTP.donnees.panneaux || []).filter(function (x) { return x.id === id; })[0];
-    return !!p && (etat.options.toutDebloque || p.trimestre <= etat.trimestre);
+    return !!p && (etat.options.toutDebloque || (p.semaine || 1) <= q.semaineCourante(etat));
+  };
+  // Entrée du calendrier d'une semaine, et prochaine entrée après la semaine courante.
+  q.deblocage = function (semaine) {
+    return (LTP.donnees.calendrier || []).filter(function (c) { return c.semaine === semaine; })[0] || null;
+  };
+  q.prochainDeblocage = function (etat) {
+    var s = q.semaineCourante(etat);
+    return (LTP.donnees.calendrier || []).filter(function (c) { return c.semaine > s; })
+      .sort(function (a, b) { return a.semaine - b.semaine; })[0] || null;
+  };
+  // Licence Copilot d'un développeur, selon le levier des licences et le groupe pilote.
+  q.aLicence = function (etat, dev) {
+    var l = q.levier(etat, 'licences');
+    if (l === 'tous') return true;
+    if (l === 'pilote') return !!dev.pilote;
+    return l == null;
   };
   q.enAttente = function (etat, id, ilotId) {
     return etat.leviers.enAttente.filter(function (a) { return a.id === id && (a.ilot || null) === (ilotId || null); })[0] || null;

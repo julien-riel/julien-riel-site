@@ -38,6 +38,7 @@ export function strategieAleatoire(LTP, graine) {
   const hasard = () => ((s = (Math.imul(s, 1103515245) + 12345) >>> 0) / 4294967296);
   const choisir = (l) => l[Math.floor(hasard() * l.length)];
   return {
+    suivreCalendrier: false,
     leviers(etat) {
       const actions = [];
       for (const l of LTP.donnees.leviers) {

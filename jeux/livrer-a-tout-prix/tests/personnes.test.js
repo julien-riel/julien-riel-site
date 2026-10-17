@@ -79,7 +79,7 @@ test("changer un levier : choc de moral immédiat et bulle du personnage au jour
   for (const d of LTP.donnees.devs) d.reactions = [];
   LTP.donnees.devs.find((d) => d.id === "sophie").reactions = [{ levier: "tests", valeurs: ["mutation"], moral: 0.015, bulle: "Enfin des vrais tests !" }];
   LTP.donnees.devs.find((d) => d.id === "mathieu").reactions = [{ levier: "tests", valeurs: ["mutation"], moral: -0.005, bulle: "Ça va ralentir." }];
-  let etat = LTP.moteur.creer(2);
+  let etat = LTP.moteur.creer(2, { toutDebloque: true });
   etat = LTP.moteur.action(etat, { type: "phase", phase: "planification" }).etat;
   const avant = etat.devs.sophie.moral;
   const r = LTP.moteur.action(etat, { type: "levier", id: "tests", valeur: "mutation" });

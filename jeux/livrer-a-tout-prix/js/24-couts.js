@@ -32,7 +32,8 @@
     // Plafond par développeur présent (millions de jetons par semaine) ; souple : alerte au-delà.
     plafondParDev: 60,
     // Coûts fixes hebdomadaires ($).
-    licenceParDev: 100,        // postes d'agent, IDE et outils, par développeur présent
+    licenceParDev: 100,        // licence Copilot, postes d'agent et outils, par développeur présent qui a une licence
+    outilsParDev: 20,          // IDE et outils, par développeur présent sans licence
     formation: { aucune: 0, atelier: 400, programme: 1200, mentorat: 2000 },
     ciParIlot: { aucune: 0, build: 40, tests: 100, complet: 200 },
     mutationParIlot: 40,
@@ -95,7 +96,7 @@
   function coutsFixes(etat) {
     var K = LTP.K.couts, q = LTP.q;
     var org = 0, parIlot = {};
-    org += K.licenceParDev * q.devsPresents(etat).length;
+    q.devsPresents(etat).forEach(function (d) { org += q.aLicence(etat, d) ? K.licenceParDev : K.outilsParDev; });
     org += K.formation[levierPaye(etat, 'formation')] || 0;
     org += K.observabilite[levierPaye(etat, 'observabilite')] || 0;
     if (levierPaye(etat, 'passerelleMCP')) org += K.passerelleMCP;

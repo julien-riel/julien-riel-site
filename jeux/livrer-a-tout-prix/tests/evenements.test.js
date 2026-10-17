@@ -63,7 +63,7 @@ test("trimestres et conditions filtrent ; une condition qui lève est ignorée",
     carte("t3", { trimestres: [3] }),
     carte("faux", { condition: () => false }),
     carte("boum", { condition: () => { throw new Error("contenu fautif"); } }),
-    carte("ok", { condition: (etat, q) => q.levier(etat, "autonomie") === 1 }),
+    carte("ok", { condition: (etat, q) => q.levier(etat, "autonomie") === 0 }),
   ];
   const etat = neuf(LTP);
   const ids = tirages(LTP, etat, 50);

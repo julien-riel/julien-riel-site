@@ -136,9 +136,11 @@
     return h;
   }
 
-  // Envie de sessions d'un développeur, plafonnée par le levier.
+  // Envie de sessions d'un développeur, plafonnée par le levier. Sans licence Copilot : aucune session,
+  // donc aucun gain de l'IA ni aucun jeton (le développeur code comme avant).
   function sessionsVoulues(etat, dev, a) {
     var K = LTP.K.production;
+    if (!LTP.q.aLicence(etat, dev)) return 0;
     var max = LTP.q.levier(etat, 'sessionsMax');
     max = typeof max === 'number' ? max : 1;
     var envie = 1 + K.envieSessions * dev.adhesion * K.envieAutonomie[a] + LTP.q.modTrait(dev, 'sessions', 0);
@@ -225,12 +227,15 @@
       calc.forEach(function (c) {
         var d = c.dev, dd = d.derniere;
         var points = (c.humain + c.ia) * echelle;
-        var code = points * K.lignesParPoint * verbIlot * q.modTrait(d, 'verbosite') / 1000;
+        // Sans licence (aucune session), on code comme avant : verbosité et part écrite à la main du niveau 0.
+        var sansIA = !(d.sessions > 0);
+        var verbDev = sansIA ? verbIlot * K.verbositeAutonomie[0] / K.verbositeAutonomie[a] : verbIlot;
+        var code = points * K.lignesParPoint * verbDev * q.modTrait(d, 'verbosite') / 1000;
         var taille = taillePR(etat, d, ilot);
         var pr = code > 0.001 ? Math.ceil(code * 1000 / taille) : 0;
         // Part écrite à la main : la base de l'autonomie, diluée par tout ce que l'agent ajoute.
         var partHumaine = c.humain + c.ia > 0 ? c.humain / (c.humain + c.ia) : 1;
-        var ecrit = K.ecritMain[a] * partHumaine;
+        var ecrit = K.ecritMain[sansIA ? 0 : a] * partHumaine;
         if (q.levier(etat, 'pair') === 'humain') ecrit += K.ecritPairHumain * (1 - ecrit);
         else if (q.levier(etat, 'pair') === 'rotation') ecrit += 0.5 * K.ecritPairHumain * (1 - ecrit);
 
@@ -275,6 +280,7 @@
     cleModele: cleModele,
     qualiteModele: qualiteModele,
     autonomie: autonomie,
+    sessionsVoulues: sessionsVoulues,
     taillePR: taillePR,
     semainesDepuis: semainesDepuis,
   };
