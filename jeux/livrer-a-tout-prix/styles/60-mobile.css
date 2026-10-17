@@ -117,6 +117,8 @@
   .hud:not([data-phase="accueil"]) .hud-nom { display: none; }
   .hud .tool--back { font-size: 0; padding: 6px 4px; min-width: 28px; }
   .hud .tool--back::before { content: "←"; font-size: var(--fs-l); }
+  .hud .tool--langue { font-size: var(--fs-xs); min-width: 0; padding: 6px 2px; }
+  .hud .tool--langue::before { content: none; }
   .hud-phase { display: none; }
   .hud-temps { min-width: 84px; gap: 3px; }
   .hud-quand { gap: 4px; }

@@ -1,6 +1,6 @@
 # Livrer à tout prix — document de conception
 
-> Titre de travail. Slug : `livrer-a-tout-prix`. Édition anglaise prévue plus tard : *Ship at Any Price*.
+> Slug : `livrer-a-tout-prix`. Édition anglaise : *Ship at Any Price* (`/en/projets/ship-at-any-price/`, surcouches dans `en/`).
 > Deuxième jeu sérieux dans l'univers du Groupe Polyvalent Universel inc. (GPU), après « Serveur à tout prix ».
 
 ## 1. Intention
@@ -559,7 +559,6 @@ ne changent rien à la simulation. En pause ou en avance manuelle, les réflexio
 
 ## 9. Hors périmètre (pour l'instant)
 
-- Édition anglaise (prévue : l'architecture isole les textes).
 - Multijoueur, classements en ligne.
 - Missions courtes indépendantes de la campagne (possible ensuite, en réutilisant le moteur avec des
   états de départ préréglés).

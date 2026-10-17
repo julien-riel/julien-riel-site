@@ -12,7 +12,7 @@ pour que plusieurs sous-agents puissent développer en parallèle sans se marche
 | Langage | JavaScript classique (pas de modules ES), un espace de noms global `LTP` | Concaténation triviale ; chargement facile dans Node pour les tests |
 | Moteur | Pur, déterministe, sans DOM, graine aléatoire (mulberry32) | Tests sans navigateur, équilibrage par simulation, parties rejouables |
 | Rendu | DOM et SVG à la main, rendu ciblé par région | Pas de framework ; l'open space SVG est mis à jour par différences |
-| Textes | Interface dans `05-textes.fr.js` ; contenu narratif dans les fichiers de données, indexé par `id` | L'édition anglaise sera une surcouche de fichiers `*.en.js` |
+| Textes | Interface dans `05-textes.fr.js` (aucune chaîne en dur dans `19–49`) ; contenu narratif dans les fichiers de données, indexé par `id` | L'édition anglaise est une surcouche : les fichiers de `en/` (§4.8) |
 | Persistance | `localStorage` sous try/catch, versionné | Même approche que le premier jeu |
 | Nunjucks | Le script enveloppe le JS dans `{% raw %}…{% endraw %}` | `htmlTemplateEngine` vaut `njk` : un `{{` dans le JS casserait le build |
 
@@ -23,6 +23,12 @@ jeux/livrer-a-tout-prix/
 ├── CONCEPTION.md
 ├── ARCHITECTURE.md
 ├── page.fr.html                  # coquille : front matter, <head>, marqueurs @styles et @scripts
+├── page.en.html                  # coquille de l'édition anglaise (lang="en", permalink /en/projets/ship-at-any-price/)
+├── sources.js                    # ordre des fichiers JS d'une édition (assemblage et tests)
+├── en/                           # surcouches de l'édition anglaise (voir en/LISEZMOI.md et §4.8)
+│   ├── 00-langue.js              # LTP.langue = 'en', chargé avant 00-noyau.js
+│   ├── 05-textes.js              # toutes les clés de 05-textes.fr.js, en anglais
+│   └── NN-nom.js                 # un fichier par fichier traduit, chargé juste après lui
 ├── styles/
 │   ├── 00-jetons.css             # couleurs, espacements, typo (clair et sombre)
 │   ├── 10-base.css
@@ -79,8 +85,9 @@ jeux/livrer-a-tout-prix/
     ├── <systeme>.test.js         # un fichier par système
     └── equilibre.test.js         # stratégies scriptées × graines
 
-scripts/build-livrer-a-tout-prix.js   # assemble → src/projets/livrer-a-tout-prix.html
+scripts/build-livrer-a-tout-prix.js   # assemble → src/projets/livrer-a-tout-prix.html et ship-at-any-price.html
 tests/livrer-a-tout-prix.spec.js      # Playwright (bout en bout)
+tests/ship-at-any-price.spec.js       # Playwright, édition anglaise
 ```
 
 Règle de numérotation : `00–39` ne touchent jamais au DOM et sont chargés dans Node ; `40–99` sont l'interface.
@@ -91,15 +98,19 @@ Les tests Node sont dans `jeux/…/tests/` et non dans `tests/`, sinon Playwrigh
 
 `scripts/build-livrer-a-tout-prix.js` :
 
-1. lit `page.fr.html` ;
-2. concatène `styles/*.css` et `js/*.js` en ordre lexical, avec un commentaire `/* nom-du-fichier */` avant chaque fichier ;
-3. remplace `<!-- @styles -->` et `<!-- @scripts -->` ; enveloppe le script dans `{% raw %}` ;
-4. écrit `src/projets/livrer-a-tout-prix.html` avec un en-tête « fichier généré, ne pas éditer ».
+1. lit `page.fr.html` (ou `page.en.html`) ;
+2. concatène `styles/*.css` en ordre lexical, puis les fichiers JS dans l'ordre donné par `sources.js`
+   (`js/*.js` ; pour l'anglais, `en/*.js` intercalés), avec un commentaire `/* nom-du-fichier */` avant chaque fichier ;
+3. remplace `<!-- @styles -->` et `<!-- @scripts -->` ; enveloppe le script dans `{% raw %}` ; minifie avec esbuild ;
+4. écrit les deux éditions avec un en-tête « fichier généré, ne pas éditer » :
+   `src/projets/livrer-a-tout-prix.html` (`/projets/livrer-a-tout-prix/`) et
+   `src/projets/ship-at-any-price.html` (`/en/projets/ship-at-any-price/`).
 
 Options :
 
-- `--check` : échoue si le fichier généré n'est pas à jour (utilisé par les tests).
-- `--autonome <chemin>` : écrit une version sans front matter ni `{% raw %}`, ouvrable en `file://`.
+- `--check` : échoue si l'une des deux pages générées n'est pas à jour (utilisé par les tests).
+- `--autonome <chemin> [--langue en]` : écrit une version sans front matter ni `{% raw %}`, non minifiée, ouvrable en `file://`
+  (française par défaut, anglaise avec `--langue en`).
   Chaque sous-agent d'interface produit la sienne dans son propre chemin, ce qui évite que deux agents
   lancent Eleventy sur le même port ou écrivent `_site` en même temps.
 
@@ -262,6 +273,8 @@ La liste à jour est dans `20-etat.js`.
 **Textes du journal** : un système note `ctx.noter(type, cle, vars, ref)` et enregistre lui-même le gabarit
 de ses clés avec `LTP.enregistrerTextes({ '<systeme>.<cle>': '…' })` dans son propre fichier.
 Les identifiants (`levier`, `ilot`, `dev`) passés dans `vars` sont convertis en libellés par l'interface.
+Une clé enregistrée par un système remplace celle de `05` du même nom (le système se charge après) :
+les libellés d'interface ne doivent donc pas réutiliser une clé de journal (`registre.proprietaireLib`, pas `registre.proprietaire`).
 
 ### 4.4 Effets déclaratifs (19-effets.js)
 
@@ -317,6 +330,31 @@ pour développer l'interface avant que le moteur soit complet.
 - Identifiants stables pour les tests : `#btn-lecture`, `#btn-jour`, `.echos`, `.note-service`, `#btn-note-voir`, `#btn-note-compris`, `[data-dev="<id>"]`, `[data-ilot="<id>"]`,
   `[data-levier="<id>"]`, `.carte-evenement`, `[data-choix]`, `.comite`, `.bilan`, `.profil-fin`.
 
+### 4.8 Textes et édition anglaise
+
+Le français est la source ; l'édition anglaise (*Ship at Any Price*) ne change que des textes.
+
+- **Aucune chaîne affichable en dur** dans le moteur (`19–35`) ni l'interface (`40–49`, `90`) : libellés, `aria-label`,
+  `title`, jours, « S14 », pluriels, élisions et ponctuation (« : », « ; », « » ») passent par `t('cle', vars)`.
+  Toute nouvelle clé d'interface va dans `05-textes.fr.js` (même si le moteur l'utilise), sous un préfixe
+  qui dit où elle sert (`hud.`, `os.` pour l'open space, `triade.`, `divers.`…). Les gabarits génériques :
+  `divers.etiquette` (« {libelle} : {valeur} »), `divers.deuxPoints`, `divers.pointVirgule`, `divers.ou`,
+  `echos.citation` (« {texte} »), `unite.semaines` / `unite.h` / `unite.kLOC` / `unite.pts` (`{n}` et l'unité).
+- **Nombres** : toujours `LTP.format` (`nombre`, `argent`, `pourcent`, `jetons`), qui lit `LTP.langue` à chaque appel
+  (fr-CA : 1 234,5 $ · 12 % ; en-CA : $1,234.5 · 12%). Jamais de « ' $' » ni de « ' %' » collé à la main.
+- **Typographie française** : `typo()` de `05` pose les espaces insécables à l'enregistrement ; l'anglais n'en a pas.
+- **Surcouches** (`en/`, détail dans `en/LISEZMOI.md`) : `en/00-langue.js` pose `LTP.langue = 'en'` avant `00-noyau.js` ;
+  `en/05-textes.js` enregistre toutes les clés de `05` avec `LTP.enregistrerTextes({…}, 'en')` ; chaque `en/NN-nom.js`
+  se charge juste après le fichier qu'il traduit et appelle `LTP.traduire(chemin, patch)` pour le contenu de `LTP.donnees`
+  (fusion en place, par `id` ou par `v` ; les erreurs vont dans `LTP.erreursTraduction`).
+- **Repli** : une clé absente en anglais retombe sur le français et est relevée dans `LTP.textesManquants`
+  (vérifié par `traduction.test.js` et par `tests/ship-at-any-price.spec.js`). Une clé absente partout s'affiche `⟦cle⟧`.
+- **Contenu créé à l'exécution** : ce qui est ajouté aux données après le chargement (contenu de secours de `35-demo.js`)
+  prend ses textes dans `t()` (clés `demo.*`), puisque les surcouches sont déjà passées.
+- **Sauvegarde** : une clé par édition (`livrer-a-tout-prix:v2`, `ship-at-any-price:v2`), car l'état garde des textes rendus.
+- **Liens** : le HUD porte le lien de retour (`hud.retourUrl` : `/projets/` ou `/en/projets/`) et le lien vers l'autre
+  édition (`.tool--langue`, « EN » ou « FR », avec `hreflang` et `lang`) ; les `<link rel="alternate" hreflang>` sont dans les coquilles.
+
 ## 5. Tests
 
 | Niveau | Fichier | Ce qui est vérifié |
@@ -325,7 +363,9 @@ pour développer l'interface avant que le moteur soit complet.
 | Invariants | `invariants.test.js` | 100 parties aléatoires : aucune valeur hors bornes ni NaN, 52 semaines en moins de 200 ms |
 | Contrats | `contrats.test.js` | Toute référence dans les données existe (ids de devs, d'îlots, de cartes, de leviers, de clés de texte, chemins d'effets) |
 | Équilibrage | `equilibre.test.js` | Stratégies scriptées × 30 graines (voir ci-dessous) |
+| Traduction | `traduction.test.js` | Surcouches sans erreur ; toutes les clés de `t()` ont leur anglais ; aucun texte de données resté en français ; même graine, même partie dans les deux langues ; journal et réflexions en anglais en cours de partie (`PORTEE=` limite à des préfixes) |
 | Bout en bout | `tests/livrer-a-tout-prix.spec.js` | Accueil sans erreur ; tutoriel ; un trimestre jusqu'au comité ; un événement résolu ; fiche de dev ; équiper un MCP allume un voyant ; bilan via le mode animateur ; 375 px sans défilement horizontal ; `--check` à jour |
+| Édition anglaise | `tests/ship-at-any-price.spec.js` | `lang="en"`, liens de langue et de retour dans les deux sens ; visite guidée, journées, onglets, registre, fiche, note de service, triade, tableau de bord, comité et bilan sans « ⟦ », sans repli sur le français ni français visible ; sauvegarde distincte ; 375 px |
 
 Stratégies d'équilibrage, qui servent de **critères d'acceptation** du modèle :
 
@@ -398,8 +438,7 @@ de données pour le tableau de bord.
 
 ### Phase 5 — Plus tard
 
-- Édition anglaise : `page.en.html` et des fichiers `*.en.js` qui remplacent les textes par `id` ;
-  un sous-agent de traduction, comme pour *Server at Any Price*.
+- ~~Édition anglaise~~ : faite (§4.8, `en/`).
 - Missions courtes construites sur des états de départ préréglés.
 
 ## 7. Budget et risques

@@ -24,7 +24,7 @@
       var g = GAINS[k] || { bon: 1, mult: false };
       var delta = g.mult ? v - 1 : v;
       if (Math.abs(delta) < 1e-9) return;
-      var texte = (delta > 0 ? '+' : '−') + f.nombre(Math.abs(delta) * 100, 0) + (g.mult || k === 'debit' ? f.NNBSP + '%' : f.NBSP + 'pts');
+      var texte = (delta > 0 ? '+' : '−') + (g.mult || k === 'debit' ? f.pourcent(Math.abs(delta), 0) : t('unite.pts', { n: f.nombre(Math.abs(delta) * 100, 0) }));
       var bon = (delta > 0) === (g.bon > 0);
       res.push(h('span', { class: 'puce puce--' + (bon ? 'ok' : 'crit') },
         h('span', { 'aria-hidden': 'true' }, bon ? '▲ ' : '▼ '), LTP.aTexte('gain.' + k) ? t('gain.' + k) : k, ' ', h('b', { class: 'mono' }, texte)));
@@ -81,7 +81,7 @@
 
   function agir(app, carteId, action) {
     var r = app.dispatch(action);
-    if (r && r.erreur) { etat_.erreurs[carteId] = r.erreur; LTP.ui.annoncer(t('erreur.titre') + ' : ' + F.erreur(r.erreur)); app.notifier(); }
+    if (r && r.erreur) { etat_.erreurs[carteId] = r.erreur; LTP.ui.annoncer(t('divers.etiquette', { libelle: t('erreur.titre'), valeur: F.erreur(r.erreur) })); app.notifier(); }
     else { delete etat_.erreurs[carteId]; }
     return r;
   }
@@ -103,7 +103,7 @@
       prerequis = h('p', { class: 'cap-prerequis' + (ok ? ' is-ok' : ' is-manque') },
         h('span', { 'aria-hidden': 'true' }, ok ? '✓ ' : '! '),
         t('registre.prerequis', { levier: LTP.ui.libelleLevier(def.prerequis.levier),
-          valeurs: (def.prerequis.valeurs || []).map(function (v) { return LTP.ui.libelleValeur(def.prerequis.levier, v); }).join(' ou ') }));
+          valeurs: (def.prerequis.valeurs || []).map(function (v) { return LTP.ui.libelleValeur(def.prerequis.levier, v); }).join(t('divers.ou')) }));
     }
 
     var actions = [];
@@ -153,9 +153,9 @@
         h('div', null, h('dt', null, t('registre.risque')), h('dd', { class: risque.type && risque.type !== 'aucun' ? 'cap-risque' : 'muted' },
           t(LTP.aTexte('risque.' + risque.type) ? 'risque.' + risque.type : 'risque.aucun'),
           risque.proba ? h('span', { class: 'mono' }, ' · ' + t('risque.parSemaine', { p: LTP.format.pourcent(risque.proba, risque.proba < 0.1 ? 1 : 0) })) : null)),
-        h('div', null, h('dt', null, t('registre.proprietaire')), h('dd', { class: proprio ? '' : 'cap-orpheline' },
+        h('div', null, h('dt', null, t('registre.proprietaireLib')), h('dd', { class: proprio ? '' : 'cap-orpheline' },
           proprio ? LTP.ui.nomDev(proprio) : h('span', null, h('span', { 'aria-hidden': 'true' }, '⚠ '), t('registre.orpheline')))),
-        h('div', null, h('dt', null, t('registre.fraicheur')), h('dd', null, F.jauge(fraicheur, { sens: 'haut', texte: fraicheur < 0.4 ? t('registre.perimee') : null })))),
+        h('div', null, h('dt', null, t('registre.fraicheur')), h('dd', null, F.jauge(fraicheur, { sens: 'haut', texte: fraicheur < 0.4 ? t('registre.perimeeLib') : null })))),
       def.declencheur ? h('p', { class: 'cap-note mono' }, t('registre.declencheur', { declencheur: def.declencheur })) : null,
       prerequis,
       h('p', { class: 'cap-equipee' }, equipee.length ? t('registre.equipeeSur', { liste: equipee.join(', ') }) : h('span', { class: 'muted' }, t('registre.nonEquipee'))),
@@ -191,7 +191,7 @@
       complete ? h('p', { class: 'apercu-alerte', role: 'alert' }, h('span', { 'aria-hidden': 'true' }, '⚠ '), t('triade.complete')) : null,
       h('div', { class: 'apercu-contexte' },
         F.jauge(Math.min(1, poids / (seuil * 1.5)), { libelle: t('registre.contexteIlot'), sens: 'bas', texte: LTP.format.nombre(poids, 2) + ' / ' + LTP.format.nombre(seuil, 2) }),
-        poids > seuil ? h('p', { class: 'apercu-sature' }, t('registre.saturation')) : null),
+        poids > seuil ? h('p', { class: 'apercu-sature' }, t('registre.saturationLib')) : null),
       alertes.length ? h('ul', { class: 'apercu-alertes' }, alertes.map(function (a) { return h('li', null, a); })) : null);
   }
 

@@ -102,22 +102,6 @@
     ecrans: {},   // nom → { monter(racine, app), rendre(etat, ui, precedent, app) }
   };
 
-  // Textes propres à l'interface (ajoutés ici pour ne pas toucher aux modules du moteur).
-  //   : espace insécable (avant « : » et dans les guillemets) ;   : espace fine insécable.
-  LTP.enregistrerTextes({
-    'jeu.allerLeviers': 'Aller aux leviers',
-    // Le journal nomme l'événement (29-evenements note { evenement: id } ; texteJournal ajoute { titre }).
-    'evenements.tire': function (v) {
-      return v && v.titre ? 'Événement : « ' + v.titre + ' »' : 'Un événement demande votre attention.';
-    },
-    'tableau.vs': function (v) {
-      return v && v.n > 1 ? 'moyenne des ' + v.n + ' dernières semaines comparée aux ' + v.n + ' précédentes' : 'cette semaine comparée à la précédente';
-    },
-    'tuto.fait': 'C\'est fait.',
-    'fin.totalAnnee': 'total de l\'année',
-    'fin.finAnnee': 'en fin d\'année',
-  });
-
   // --- Application ---
   // Une journée ouvrable dure dureeJourMs à la vitesse ×1 (le vendredi publie le rapport de la semaine).
   LTP.K.ui = { dureeJourMs: 4000 };
@@ -147,13 +131,13 @@
     LTP.ui.remplacer(racine,
       evitement,
       h_('div', { class: 'jeu' },
-        h_('section', { class: 'zone zone-openspace', 'data-region': 'openspace', 'aria-label': 'Open space' }),
-        h_('aside', { class: 'zone zone-panneau', 'data-region': 'panneau', 'aria-label': 'Leviers et registre' }),
-        h_('section', { class: 'zone zone-tableau', 'data-region': 'tableau', 'aria-label': 'Tableau de bord' }),
+        h_('section', { class: 'zone zone-openspace', 'data-region': 'openspace', 'aria-label': LTP.t('zone.openspace') }),
+        h_('aside', { class: 'zone zone-panneau', 'data-region': 'panneau', 'aria-label': LTP.t('panneau.poignee') }),
+        h_('section', { class: 'zone zone-tableau', 'data-region': 'tableau', 'aria-label': LTP.t('tableau.titre') }),
         // « Ce qu'on entend » (réflexions des développeurs) au-dessus du journal, dans la même colonne.
         h_('div', { class: 'zone zone-journal' },
-          h_('section', { class: 'zone-echos', 'data-region': 'echos', 'aria-label': 'Ce qu\'on entend' }),
-          h_('section', { class: 'zone-journal-liste', 'data-region': 'journal', 'aria-label': 'Journal' }))));
+          h_('section', { class: 'zone-echos', 'data-region': 'echos', 'aria-label': LTP.t('echos.titre') }),
+          h_('section', { class: 'zone-journal-liste', 'data-region': 'journal', 'aria-label': LTP.t('journal.titre') }))));
   }
 
   function rendreTout() {
@@ -217,11 +201,9 @@
     notifier();
   }
 
-  // Jours ouvrables (0 = lundi … 4 = vendredi).
-  var JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
-  var JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.'];
-  LTP.ui.nomJour = function (j) { return JOURS[Math.max(0, Math.min(4, j || 0))]; };
-  LTP.ui.jourCourt = function (j) { return JOURS_COURTS[Math.max(0, Math.min(4, j || 0))]; };
+  // Jours ouvrables (0 = lundi … 4 = vendredi), textes jour.N et jourCourt.N de 05-textes.fr.js.
+  LTP.ui.nomJour = function (j) { return LTP.t('jour.' + Math.max(0, Math.min(4, j || 0))); };
+  LTP.ui.jourCourt = function (j) { return LTP.t('jourCourt.' + Math.max(0, Math.min(4, j || 0))); };
 
   LTP.app = {
     etat: null,

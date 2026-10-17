@@ -117,7 +117,7 @@
     var texte = opts.texte || LTP.format.pourcent(v);
     return h('div', { class: 'jauge jauge--' + ton },
       opts.libelle ? h('span', { class: 'jauge-lib' }, opts.libelle) : null,
-      h('span', { class: 'jauge-piste', role: 'img', 'aria-label': (opts.libelle ? opts.libelle + ' : ' : '') + texte },
+      h('span', { class: 'jauge-piste', role: 'img', 'aria-label': opts.libelle ? t('divers.etiquette', { libelle: opts.libelle, valeur: texte }) : texte },
         h('span', { class: 'jauge-rempli', style: { width: Math.round(v * 100) + '%' } })),
       h('span', { class: 'jauge-val mono' }, texte));
   };
@@ -128,7 +128,7 @@
     triade = triade || {};
     var branches = ['prive', 'nonFiable', 'sortie'];
     var n = branches.filter(function (b) { return triade[b]; }).length;
-    var resume = t('triade.titre') + ' : ' + branches.map(function (b) { return t('triade.' + b) + ' ' + (triade[b] ? t('triade.allume') : t('triade.eteint')); }).join(', ');
+    var resume = t('divers.etiquette', { libelle: t('triade.titre'), valeur: branches.map(function (b) { return t('triade.' + b) + ' ' + (triade[b] ? t('triade.allume') : t('triade.eteint')); }).join(', ') });
     return h('div', { class: 'voyants' + (n === 3 ? ' is-complete' : '') + (opts.etiquettes ? ' voyants--etiquettes' : ''), role: 'img', 'aria-label': resume, title: opts.etiquettes ? null : resume },
       branches.map(function (b) {
         return h('span', { class: 'voyant' + (triade[b] ? ' is-on' : ''), 'data-branche': b },
@@ -140,55 +140,51 @@
   // Reprend la règle de 26-registre : exposition de l'îlot (nature du travail), branches des cartes équipées,
   // accès des agents à la production (données privées), approbation humaine des sorties (coupe la sortie).
   // → { branches: [{ b, allume, sources: [texte] }], lignes: [texte], quand: texte, resume: texte }
-  var NATURE = {
-    prive: 'le travail touche des données personnelles ou financières',
-    nonFiable: 'les agents lisent du contenu venu de l\'extérieur',
-    sortie: 'le travail publie ou envoie vers l\'extérieur',
-  };
   F.originesTriade = function (etat, ilotId) {
     var il = etat.ilots[ilotId] || {}, def = LTP.q.defIlot(ilotId) || {};
     var expo = def.exposition || {}, triade = il.triade || {};
-    var N = LTP.format.NBSP;
     var res = { branches: [], lignes: [] };
     var accesProd = LTP.q.levier(etat, 'accesProd', ilotId) === 'oui';
     var approbation = LTP.q.levier(etat, 'approbationSorties', ilotId) === true;
     ['prive', 'nonFiable', 'sortie'].forEach(function (b) {
       var sources = [];
-      if (expo[b]) sources.push('nature du travail (' + NATURE[b] + ')');
+      if (expo[b]) sources.push(t('triade.sourceNature', { nature: t('triade.nature.' + b) }));
       (il.capacites || []).forEach(function (cid) {
         var c = LTP.q.defCapacite ? LTP.q.defCapacite(cid) : null;
-        if (c && (c.branches || []).indexOf(b) >= 0) sources.push('carte «' + N + (c.nom || cid) + N + '»');
+        if (c && (c.branches || []).indexOf(b) >= 0) sources.push(t('triade.sourceCarte', { nom: c.nom || cid }));
       });
-      if (b === 'prive' && accesProd) sources.push('accès des agents à la production');
+      if (b === 'prive' && accesProd) sources.push(t('triade.sourceAcces'));
       res.branches.push({ b: b, allume: !!triade[b], sources: sources });
-      if (triade[b]) res.lignes.push(t('triade.' + b) + N + ': ' + (sources.length ? sources.join(', ') : 'réglages de l\'îlot') + '.');
-      else if (b === 'sortie' && approbation && sources.length) res.lignes.push(t('triade.sortie') + N + ': coupée par l\'approbation humaine des sorties.');
+      if (triade[b]) res.lignes.push(t('triade.ligne', { branche: t('triade.' + b), sources: sources.length ? sources.join(', ') : t('triade.sourceReglages') }));
+      else if (b === 'sortie' && approbation && sources.length) res.lignes.push(t('triade.coupee', { branche: t('triade.sortie') }));
     });
-    var dAcces = LTP.q.defLevier('accesProd'), dSorties = LTP.q.defLevier('approbationSorties');
+    var dSorties = LTP.q.defLevier('approbationSorties');
+    var ongletSecu = (LTP.donnees.panneaux || []).filter(function (p) { return p.id === 'gouvernance'; })[0];
     var ouvert = LTP.q.levierDebloque(etat, 'approbationSorties');
     var nb = res.branches.filter(function (x) { return x.allume; }).length;
     if (!nb) res.quand = '';
     else if (!ouvert) {
-      res.quand = 'Vous pourrez couper une branche à la semaine ' + ((dSorties && dSorties.semaine) || 30) + ' (onglet Données et sécurité)' + N + ': «' + N + (dSorties ? dSorties.libelle : 'approbation des sorties') + N + '» et «' + N + (dAcces ? dAcces.libelle : 'accès à la production') + N + '».' + (nb < 3 ? ' D\'ici là, évitez d\'équiper des cartes qui allument la branche manquante.' : '');
+      res.quand = t('triade.quandPlusTard', { semaine: (dSorties && dSorties.semaine) || 30, onglet: ongletSecu ? ongletSecu.libelle : 'gouvernance',
+        sorties: LTP.ui.libelleLevier('approbationSorties'), acces: LTP.ui.libelleLevier('accesProd'), manque: nb < 3 });
     } else {
-      res.quand = 'Pour couper une branche' + N + ': l\'approbation humaine des sorties, l\'accès à la production en lecture seule, ou retirer une carte.';
+      res.quand = t('triade.quandMaintenant');
     }
-    res.resume = (nb === 3 ? t('triade.complete') : nb ? nb + ' branche' + (nb > 1 ? 's' : '') + ' sur 3 allumée' + (nb > 1 ? 's' : '') + '.' : t('triade.eteinte') + '.') +
+    res.resume = (nb === 3 ? t('triade.complete') : nb ? t('triade.allumees', { n: nb }) : t('triade.eteinte') + '.') +
       (res.lignes.length ? ' ' + res.lignes.join(' ') : '') + (res.quand ? ' ' + res.quand : '');
     return res;
   };
 
   // Valeur d'une métrique selon son unité.
   F.formatMetrique = function (v, unite) {
-    var f = LTP.format, N = f.NBSP;
+    var f = LTP.format;
     if (v == null || typeof v !== 'number' || isNaN(v)) return '—';
     switch (unite) {
       case 'ratio': return f.pourcent(v);
       case '$': return f.argent(v);
       case 'jetons': return f.jetons(v);
-      case 'semaines': return f.nombre(v, 1) + N + t('unite.semaines');
-      case 'h': return f.nombre(v, v < 10 ? 1 : 0) + N + t('unite.h');
-      case 'kLOC': return f.nombre(v, 0) + N + t('unite.kLOC');
+      case 'semaines': return t('unite.semaines', { n: f.nombre(v, 1) });
+      case 'h': return t('unite.h', { n: f.nombre(v, v < 10 ? 1 : 0) });
+      case 'kLOC': return t('unite.kLOC', { n: f.nombre(v, 0) });
       case 'score': return f.nombre(v, 0);
       default: return f.nombre(v, Math.abs(v) >= 10 || Math.round(v) === v ? 0 : 1);
     }
@@ -276,9 +272,10 @@
   //   situation → son libellé (repli : rien).
   F.causeReflexion = function (r) {
     if (!r || !r.motif) return null;
-    var N = LTP.format.NBSP;
     if ((r.motif === 'levier' || r.motif === 'reaction') && r.levier && LTP.q.defLevier(r.levier)) {
-      return { type: 'levier', levier: r.levier, texte: '↳ ' + LTP.ui.libelleLevier(r.levier) + (r.valeur !== undefined ? N + ': ' + LTP.ui.libelleValeur(r.levier, r.valeur) : '') };
+      return { type: 'levier', levier: r.levier, texte: r.valeur !== undefined
+        ? t('echos.causeLevier', { levier: LTP.ui.libelleLevier(r.levier), valeur: LTP.ui.libelleValeur(r.levier, r.valeur) })
+        : '↳ ' + LTP.ui.libelleLevier(r.levier) };
     }
     if (r.motif === 'nouveaute') return { type: 'nouveaute', levier: r.levier || null, texte: '↳ ' + t('echos.note') };
     if (String(r.motif).indexOf('situation:') === 0) {
@@ -310,7 +307,6 @@
   // Une réflexion en ligne : visage, nom, îlot, texte entre guillemets et cause. opts : { taille, quand, classe }
   F.ligneReflexion = function (r, etat, opts) {
     opts = opts || {};
-    var N = LTP.format.NBSP;
     var cause = F.causeReflexion(r);
     var nom = LTP.ui.nomDev(r.dev);
     var texte = F.texteReflexion(r, etat);
@@ -319,7 +315,7 @@
       h('div', { class: 'echo-corps' },
         h('p', { class: 'echo-qui' }, h('b', null, nom), h('span', { class: 'echo-ilot' }, ' · ' + LTP.ui.nomIlot(r.ilot)),
           opts.quand ? h('span', { class: 'echo-quand mono' }, opts.quand) : null),
-        h('p', { class: 'echo-texte' }, '«' + N + texte + N + '»'),
+        h('p', { class: 'echo-texte' }, t('echos.citation', { texte: texte })),
         cause ? h('p', { class: 'echo-cause echo-cause--' + cause.type }, cause.texte,
           r.immediat ? h('span', { class: 'echo-immediat' }, ' · ' + t('echos.immediat')) : null) : null));
   };
@@ -417,7 +413,6 @@
     var m = modeDe(def);
     var idLib = 'lev-' + def.id;
 
-    var N = LTP.format.NBSP;
     // Valeurs pas encore permises : visibles, désactivées, avec la semaine où elles arrivent.
     var nouvellesValeurs = [];
     var valeurs = (def.valeurs || []).map(function (x) {
@@ -495,7 +490,7 @@
           etat_.indice = texte ? { id: def.id, valeur: v, texte: texte } : null;
           var r = app.dispatch(action);
           if (r && r.erreur) { etat_.erreur = { id: def.id, code: r.erreur }; etat_.indice = null; }
-          else if (texte) LTP.ui.annoncer('Ginette : ' + texte);
+          else if (texte) LTP.ui.annoncer(t('divers.etiquette', { libelle: F.personne('ginette').nom, valeur: texte }));
         },
       }),
       m.court ? h('p', { class: 'levier-courant' }, LTP.ui.libelleValeur(def.id, courant)) : null,

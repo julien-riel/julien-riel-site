@@ -14,15 +14,17 @@
 
   var NOMS = ['debut', 't2-tendu', 'triade-appro', 'evenement', 'comite', 'fin-usine', 'reflexions', 'note'];
 
-  // Contenu de secours, ajouté seulement s'il n'existe pas déjà dans les données.
+  // Contenu de secours, ajouté seulement s'il n'existe pas déjà dans les données. Il est créé à l'exécution
+  // (après les surcouches de traduction) : ses textes passent donc par t() (clés demo.* de 05-textes.fr.js).
   function assurerContenuDemo() {
+    var t = LTP.t;
     if (!LTP.q.defEvenement('pr-geante')) {
       LTP.donnees.evenements.push({
         id: 'pr-geante', theme: 'revue', trimestres: [1, 2], poids: 0, personnage: 'nadia',
-        titre: 'La PR de 4 000 lignes', texte: 'Mathieu a ouvert une PR de 4 000 lignes.',
+        titre: t('demo.prGeante.titre'), texte: t('demo.prGeante.texte'),
         choix: [
-          { id: 'approuver', libelle: 'On fusionne', consequence: 'Personne ne l\'a lue.', effets: [] },
-          { id: 'decouper', libelle: 'On découpe', consequence: 'Nadia respire.', effets: [] },
+          { id: 'approuver', libelle: t('demo.prGeante.approuver'), consequence: t('demo.prGeante.approuverConsequence'), effets: [] },
+          { id: 'decouper', libelle: t('demo.prGeante.decouper'), consequence: t('demo.prGeante.decouperConsequence'), effets: [] },
         ],
       });
     }
@@ -30,11 +32,11 @@
       LTP.donnees.comites = LTP.donnees.comites || [];
       LTP.donnees.comites.push({
         id: 'demo-regis', personnage: 'regis', trimestres: [], poids: 0,
-        question: 'La facture de jetons a doublé ce trimestre. Je résume : on paie deux fois plus pour la même chose ?',
+        question: t('demo.regis.question'),
         reponses: [
-          { id: 'a', texte: 'Non : le débit a augmenté de 60 % et voici le coût par point livré.', evaluer: function () { return 1; }, reaction: 'Un chiffre. Enfin.' },
-          { id: 'b', texte: 'C\'est un investissement stratégique.', evaluer: function () { return -0.5; }, reaction: 'Tout le monde dit ça.' },
-          { id: 'c', texte: 'Ce n\'est pas vraiment le double.', evaluer: function () { return -1; }, reaction: 'J\'ai la facture sous les yeux.' },
+          { id: 'a', texte: t('demo.regis.a'), evaluer: function () { return 1; }, reaction: t('demo.regis.aReaction') },
+          { id: 'b', texte: t('demo.regis.b'), evaluer: function () { return -0.5; }, reaction: t('demo.regis.bReaction') },
+          { id: 'c', texte: t('demo.regis.c'), evaluer: function () { return -1; }, reaction: t('demo.regis.cReaction') },
         ],
       });
     }

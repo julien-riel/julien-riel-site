@@ -15,7 +15,7 @@
    Au téléphone (< 700 px), la même structure devient une liste d'îlots repliables (voir 30-open-space.css). */
 (function (LTP) {
   'use strict';
-  var h = LTP.ui.h, s = LTP.ui.svg, O = LTP.outils, F = LTP.format;
+  var h = LTP.ui.h, s = LTP.ui.svg, O = LTP.outils, F = LTP.format, t = LTP.t;
 
   LTP.K.openspace = {
     seuilSueur: 0.55,       // fatigue à partir de laquelle la goutte de sueur apparaît
@@ -30,10 +30,8 @@
   var K = LTP.K.openspace;
 
   var ETATS_ACTIFS = { code: 1, revue: 1, attente: 1, incident: 1 };
-  var LIBELLES_ETAT = {
-    code: 'code avec ses agents', revue: 'fait de la revue', attente: 'attend une revue', incident: 'gère un incident',
-    formation: 'en formation', conge: 'en congé', absent: 'hors du bureau',
-  };
+  // Libellé de l'état d'un développeur pour le nom accessible (textes os.etat.* de 05-textes.fr.js).
+  function libelleEtat(et) { return LTP.aTexte('os.etat.' + et) ? t('os.etat.' + et) : et; }
 
   // --- Petits outils de mise à jour par différence ---
   function attr(el, k, v) {
@@ -50,7 +48,6 @@
     el.style.setProperty(k, v);
   }
   function classe(el, nom, oui) { if (el.classList.contains(nom) !== !!oui) el.classList.toggle(nom, !!oui); }
-  function pluriel(n, un, plusieurs) { return n + ' ' + (n > 1 ? plusieurs : un); }
 
   // --- Icônes ---
   function icone(nom) {
@@ -256,11 +253,11 @@
         h('span', { class: 'os-postit' }, h('span', { class: 'os-postit-nom' }, def.court)),
         ilot.triade),
       h('span', { class: 'os-etiquette-bas', 'aria-hidden': 'true' },
-        h('span', { class: 'os-compteur' }, ilot.compteurVal, h('span', { class: 'os-compteur-u' }, 'jetons'), ilot.compteurBarre),
+        h('span', { class: 'os-compteur' }, ilot.compteurVal, h('span', { class: 'os-compteur-u' }, t('os.jetons')), ilot.compteurBarre),
         h('span', { class: 'os-badges' }, ilot.badgeSurcharge, ilot.badgeCap, ilot.badgeInc)),
       ilot.resume);
     ilot.replier = h('button', { type: 'button', class: 'os-replier', 'aria-expanded': 'true', 'aria-controls': idBureaux,
-      'aria-label': 'Replier ' + def.nom }, icone('chevron'));
+      'aria-label': t('os.replier', { ilot: def.nom }) }, icone('chevron'));
     ilot.conteneurBureaux = h('div', { class: 'os-bureaux', id: idBureaux });
     var sieges = vue.siegesParIlot[def.id];
     sieges.forEach(function (devId, i) {
@@ -327,25 +324,17 @@
     });
     svg.appendChild(g);
     c.legende = h('span', { class: 'os-cafe-legende' });
-    c.el = h('div', { class: 'os-cafe', role: 'img' }, svg, h('span', { class: 'os-cafe-titre', 'aria-hidden': 'true' }, 'Coin café'), c.legende);
+    c.el = h('div', { class: 'os-cafe', role: 'img' }, svg, h('span', { class: 'os-cafe-titre', 'aria-hidden': 'true' }, t('os.cafe')), c.legende);
     return c;
   }
 
   function legende() {
     function ligne(cls, txt) { return h('li', null, h('span', { class: 'os-leg-ico os-leg-ico--' + cls, 'aria-hidden': 'true' }), txt); }
     return h('details', { class: 'os-legende' },
-      h('summary', null, 'Lire l\'open space'),
-      h('ul', null,
-        ligne('ecrans', 'Écrans allumés : sessions d\'agent en parallèle'),
-        ligne('licence', 'Pastille étoilée : licence Copilot. Sans licence, pas de lueur d\'agent : on code comme avant'),
-        ligne('pile', 'Pile de papiers : PR qui attendent la revue de cette personne'),
-        ligne('brouillard', 'Brouillard : dette cognitive (uniforme tant qu\'on ne la mesure pas)'),
-        ligne('flamme', 'Flamme : incident en cours'),
-        ligne('sueur', 'Goutte de sueur, puis tête sur le bureau : fatigue'),
-        ligne('valise', 'Valise : congé · boîte : départ · livre : formation'),
-        ligne('compteur', 'Compteur : jetons consommés par l\'îlot cette semaine'),
-        ligne('triade', 'Trois voyants : triade létale (données privées, contenu non fiable, sortie externe)'),
-        ligne('losange', 'Losange : réglages propres à l\'îlot · prise : skills et MCP équipés')));
+      h('summary', null, t('os.legende')),
+      h('ul', null, ['ecrans', 'licence', 'pile', 'brouillard', 'flamme', 'sueur', 'valise', 'compteur', 'triade', 'losange'].map(function (k) {
+        return ligne(k, t('os.legende.' + k));
+      })));
   }
 
   // --- Données dérivées ---
@@ -547,10 +536,10 @@
     }
   }
   function niveauFatigue(f) {
-    if (f >= K.seuilEpuise) return 'épuisement';
-    if (f >= K.seuilSueur) return 'fatigue élevée';
-    if (f >= 0.35) return 'fatigue modérée';
-    return 'fatigue faible';
+    if (f >= K.seuilEpuise) return t('os.fatigue.epuise');
+    if (f >= K.seuilSueur) return t('os.fatigue.elevee');
+    if (f >= 0.35) return t('os.fatigue.moderee');
+    return t('os.fatigue.faible');
   }
 
   // --- Mise à jour d'un bureau ---
@@ -590,7 +579,7 @@
     classe(el, 'os-b--pile', pile > 0);
     classe(el, 'os-b--licence', licence);
     classe(el, 'os-b--sans-licence', present && !licence);
-    attr(b.licence, 'title', licence ? (d.pilote ? 'Groupe pilote : licence Copilot' : 'Licence Copilot') : null);
+    attr(b.licence, 'title', licence ? (d.pilote ? t('fiche.licence.pilote') : t('fiche.licence.oui')) : null);
     classe(el, 'os-b--choisi', !!(ui.selection && ui.selection.type === 'dev' && ui.selection.id === devId));
     // Petit rebond quand l'état change d'une semaine à l'autre (deux classes alternées relancent l'animation).
     if (ctx.semaineChangee && ctx.precedent && ctx.precedent.devs && ctx.precedent.devs[devId] && ctx.precedent.devs[devId].etat !== et) {
@@ -612,9 +601,9 @@
         classe(e.g, 'on', on);
         classe(e.lueur, 'on', on);
         if (on) {
-          var t = 'translate(' + pos[i][0] + 'px, ' + pos[i][1] + 'px)';
-          style(e.g, 'transform', t);
-          style(e.lueur, 'transform', t);
+          var tr = 'translate(' + pos[i][0] + 'px, ' + pos[i][1] + 'px)';
+          style(e.g, 'transform', tr);
+          style(e.lueur, 'transform', tr);
         }
       });
       style(sc.flaque, 'opacity', String(Math.min(1, 0.35 + sessions * 0.13)));
@@ -635,23 +624,22 @@
     classe(el, 'os-b--flou-inconnu', present && !ctx.comprehensionVisible);
 
     // Textes de la plaque (téléphone) et nom accessible
-    var etatLib = LIBELLES_ETAT[et] || et;
-    var court = absent && !present ? 'parti' : conge ? 'congé' : formation ? 'formation' : incident ? 'incident' : et === 'revue' ? 'revue' : et === 'attente' ? 'attend' : 'code';
-    var plaque = actif ? court + ' · ' + (licence ? pluriel(agents, 'écran', 'écrans') : 'sans agent') : court;
-    if (pile > 0) plaque += ' · ' + pile + ' PR';
+    var court = t('os.court.' + (absent && !present ? 'parti' : conge ? 'conge' : formation ? 'formation' : incident ? 'incident' : et === 'revue' ? 'revue' : et === 'attente' ? 'attente' : 'code'));
+    var plaque = actif ? court + ' · ' + (licence ? t('os.ecrans', { n: agents }) : t('os.sansAgent')) : court;
+    if (pile > 0) plaque += ' · ' + t('os.plaquePR', { n: pile });
     texte(b.etatTexte, plaque);
     var nom = (d && d.nom) || LTP.ui.nomDev(devId);
     var parts = [nom];
-    if (!present) parts.push('a quitté son poste');
+    if (!present) parts.push(t('os.parti'));
     else {
-      parts.push(etatLib === LIBELLES_ETAT.code && !licence ? 'code' : etatLib);
-      parts.push(licence ? 'avec licence Copilot' : 'sans licence Copilot');
-      if (actif && licence) parts.push(pluriel(agents, 'session d\'agent', 'sessions d\'agent'));
-      if (pile > 0) parts.push(pluriel(pile, 'PR à relire', 'PR à relire'));
+      parts.push(et === 'code' && !licence ? t('os.etat.codeSansLicence') : libelleEtat(et));
+      parts.push(licence ? t('os.avecLicence') : t('os.sansLicence'));
+      if (actif && licence) parts.push(t('os.sessions', { n: agents }));
+      if (pile > 0) parts.push(t('os.aRelire', { n: pile }));
       if (!conge) parts.push(niveauFatigue(fatigue));
-      if (ctx.comprehensionVisible && d.comprehension != null) parts.push('compréhension du code ' + F.pourcent(d.comprehension));
+      if (ctx.comprehensionVisible && d.comprehension != null) parts.push(t('os.comprehension', { p: F.pourcent(d.comprehension) }));
     }
-    attr(el, 'aria-label', parts.join(', ') + '. Ouvrir la fiche.');
+    attr(el, 'aria-label', t('os.ouvrirFiche', { description: parts.join(', ') }));
   }
 
   // --- Mise à jour d'un îlot ---
@@ -665,11 +653,11 @@
     var jetons = (e.derniere && e.derniere.jetons) || 0;
     texte(il.compteurVal, F.jetons(jetons));
     style(il.compteurBarre, '--os-part', ctx.jetonsMax > 0 ? (jetons / ctx.jetonsMax).toFixed(3) : '0');
-    var t = e.triade || {};
-    classe(il.voyants.prive, 'allume', !!t.prive);
-    classe(il.voyants.nonFiable, 'allume', !!t.nonFiable);
-    classe(il.voyants.sortie, 'allume', !!t.sortie);
-    var complete = !!(t.prive && t.nonFiable && t.sortie);
+    var tri = e.triade || {};
+    classe(il.voyants.prive, 'allume', !!tri.prive);
+    classe(il.voyants.nonFiable, 'allume', !!tri.nonFiable);
+    classe(il.voyants.sortie, 'allume', !!tri.sortie);
+    var complete = !!(tri.prive && tri.nonFiable && tri.sortie);
     classe(il.el, 'os-ilot--triade', complete);
     var sur = Object.keys((etat.leviers.surcharges || {})[il.id] || {}).length;
     var cap = (e.capacites || []).length;
@@ -677,34 +665,32 @@
     texte(il.badgeSurcharge.lastChild, sur); classe(il.badgeSurcharge, 'on', sur > 0);
     texte(il.badgeCap.lastChild, cap); classe(il.badgeCap, 'on', cap > 0);
     texte(il.badgeInc.lastChild, inc); classe(il.badgeInc, 'on', inc > 0);
-    attr(il.badgeSurcharge, 'title', sur ? pluriel(sur, 'réglage propre à l\'îlot', 'réglages propres à l\'îlot') : null);
-    attr(il.badgeCap, 'title', cap ? pluriel(cap, 'capacité équipée', 'capacités équipées') : null);
-    attr(il.badgeInc, 'title', inc ? pluriel(inc, 'incident en cours', 'incidents en cours') : null);
+    attr(il.badgeSurcharge, 'title', sur ? t('os.reglagesIlot', { n: sur }) : null);
+    attr(il.badgeCap, 'title', cap ? t('os.capacites', { n: cap }) : null);
+    attr(il.badgeInc, 'title', inc ? t('os.incidents', { n: inc }) : null);
     var file = Math.round(e.fileRevue || 0);
     var sessions = O.somme(occ, function (id) { var d = etat.devs[id]; return d && d.present && ETATS_ACTIFS[d.etat] && LTP.q.aLicence(etat, d) ? Math.max(1, Math.round(d.sessions || 1)) : 0; });
-    texte(il.resume, pluriel(sessions, 'session', 'sessions') + (file ? ' · ' + file + ' PR à relire' : ''));
+    texte(il.resume, t('os.resumeSessions', { n: sessions }) + (file ? ' · ' + t('os.aRelire', { n: file }) : ''));
     var choisi = (ui.selection && ui.selection.type === 'ilot' && ui.selection.id === il.id) || ui.ilotEdition === il.id;
     classe(il.el, 'os-ilot--choisi', !!choisi);
 
-    var triadeTexte = 'données privées ' + (t.prive ? 'oui' : 'non') + ', contenu non fiable ' + (t.nonFiable ? 'oui' : 'non') +
-      ', sortie externe ' + (t.sortie ? 'oui' : 'non');
-    var lib = il.def.nom + ' : ' + F.jetons(jetons) + ' jetons cette semaine' +
-      (file ? ', ' + file + ' PR à relire' : '') +
-      (complete ? '. Triade létale complète' : '. Triade létale') + ' (' + triadeTexte + ')' +
-      (cap ? ', ' + pluriel(cap, 'capacité équipée', 'capacités équipées') : '') +
-      (sur ? ', ' + pluriel(sur, 'réglage propre', 'réglages propres') : '') +
-      (inc ? ', ' + pluriel(inc, 'incident en cours', 'incidents en cours') : '') +
-      '. Ouvrir les réglages de l\'îlot.';
+    var triadeTexte = t('os.triadeTexte', { prive: !!tri.prive, nonFiable: !!tri.nonFiable, sortie: !!tri.sortie });
+    var lib = t('os.ilotJetons', { ilot: il.def.nom, jetons: F.jetons(jetons) }) +
+      (file ? ', ' + t('os.aRelire', { n: file }) : '') +
+      '. ' + (complete ? t('os.triadeComplete') : t('os.triade')) + ' (' + triadeTexte + ')' +
+      (cap ? ', ' + t('os.capacites', { n: cap }) : '') +
+      (sur ? ', ' + t('os.reglages', { n: sur }) : '') +
+      (inc ? ', ' + t('os.incidents', { n: inc }) : '');
     // D'où viennent les branches allumées, et quand on pourra agir (infobulle et nom accessible).
     var F_ = LTP.ui.F, origines = null;
-    if (F_ && F_.originesTriade && (t.prive || t.nonFiable || t.sortie)) { try { origines = F_.originesTriade(etat, il.id); } catch (err) { origines = null; } }
-    if (origines) lib = lib.replace(/\. Ouvrir les réglages de l'îlot\.$/, '. ' + origines.lignes.join(' ') + (origines.quand ? ' ' + origines.quand : '') + ' Ouvrir les réglages de l\'îlot.');
+    if (F_ && F_.originesTriade && (tri.prive || tri.nonFiable || tri.sortie)) { try { origines = F_.originesTriade(etat, il.id); } catch (err) { origines = null; } }
+    lib += '. ' + (origines ? origines.lignes.join(' ') + (origines.quand ? ' ' + origines.quand : '') + ' ' : '') + t('os.ouvrirReglages');
     attr(il.etiquette, 'aria-label', lib);
     attr(il.triade, 'title', origines ? origines.resume : null);
     attr(il.etiquette, 'title', origines ? origines.resume : null);
-    attr(il.voyants.prive, 'title', 'Données privées : ' + (t.prive ? 'oui' : 'non'));
-    attr(il.voyants.nonFiable, 'title', 'Contenu non fiable : ' + (t.nonFiable ? 'oui' : 'non'));
-    attr(il.voyants.sortie, 'title', 'Sortie externe : ' + (t.sortie ? 'oui' : 'non'));
+    ['prive', 'nonFiable', 'sortie'].forEach(function (b) {
+      attr(il.voyants[b], 'title', t('divers.etiquette', { libelle: t('triade.' + b), valeur: (tri[b] ? t('divers.oui') : t('divers.non')).toLowerCase() }));
+    });
   }
 
   LTP.ui.regions.openspace = {
@@ -713,7 +699,7 @@
         bulles: { items: [], jour: null, mode: null, compteur: 0, minuterie: null } };
       this._vue = vue;
       vue.sommaire = h('p', { class: 'os-sommaire' });
-      vue.toutReplier = h('button', { type: 'button', class: 'os-tout-replier' }, 'Tout replier');
+      vue.toutReplier = h('button', { type: 'button', class: 'os-tout-replier' }, t('os.toutReplier'));
       vue.plancher = h('div', { class: 'os-plancher' });
       (LTP.donnees.ilots || []).slice().sort(function (a, b) { return a.ordre - b.ordre; }).forEach(function (def) {
         var il = construireIlot(def, vue);
@@ -725,7 +711,7 @@
       vue.racine = h('div', { class: 'os' },
         definitions(),
         h('div', { class: 'os-entete' },
-          h('h2', { class: 'os-titre' }, 'L\'open space'),
+          h('h2', { class: 'os-titre' }, t('os.titre')),
           vue.sommaire,
           vue.toutReplier,
           legende()),
@@ -790,14 +776,13 @@
       });
       LTP.q.ilots(etat).forEach(function (il) { file += Math.round(il.fileRevue || 0); });
       var inc = LTP.q.incidentsActifs(etat).length;
-      texte(vue.sommaire, presents + ' au bureau · ' + pluriel(licences, 'licence Copilot', 'licences Copilot') + ' · ' + pluriel(sessions, 'session d\'agent', 'sessions d\'agent') + ' · ' +
-        pluriel(file, 'PR en attente', 'PR en attente') + (inc ? ' · ' + pluriel(inc, 'incident', 'incidents') : ''));
+      texte(vue.sommaire, t('os.sommaire', { presents: presents, licences: licences, sessions: sessions, file: file, incidents: inc }));
 
       // Coin café : applications hors TI
       var fantomes = Math.round(O.somme(LTP.q.ilots(etat), function (il) { return il.applisFantomes || 0; }));
       vue.cafe.fantomes.forEach(function (f, i) { classe(f, 'on', i < fantomes); });
-      attr(vue.cafe.el, 'aria-label', 'Coin café, hors de la zone TI' + (fantomes ? ' : ' + pluriel(fantomes, 'application faite hors TI', 'applications faites hors TI') + ' sur la table' : ''));
-      texte(vue.cafe.legende, fantomes ? pluriel(fantomes, 'appli hors TI', 'applis hors TI') : '');
+      attr(vue.cafe.el, 'aria-label', t('os.cafeLibelle', { n: fantomes }));
+      texte(vue.cafe.legende, fantomes ? t('os.cafeApplis', { n: fantomes }) : '');
     },
   };
 
@@ -807,8 +792,8 @@
     if (!il) return;
     classe(il.el, 'os-ilot--replie', replie);
     attr(il.replier, 'aria-expanded', replie ? 'false' : 'true');
-    attr(il.replier, 'aria-label', (replie ? 'Déplier ' : 'Replier ') + il.def.nom);
+    attr(il.replier, 'aria-label', t(replie ? 'os.deplier' : 'os.replier', { ilot: il.def.nom }));
     var tous = vue.ilots.every(function (x) { return vue.replies[x.id]; });
-    texte(vue.toutReplier, tous ? 'Tout déplier' : 'Tout replier');
+    texte(vue.toutReplier, tous ? t('os.toutDeplier') : t('os.toutReplier'));
   }
 })(globalThis.LTP = globalThis.LTP || {});

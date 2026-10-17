@@ -118,7 +118,7 @@
               var rr = reponseDonnee(ap, q.id);
               var sc = rr ? scoreDe(ap, q, def, rr) : null;
               var texte = texteReaction(r, ap, sc, ref);
-              LTP.ui.annoncer(perso.nom + ' : ' + texte);
+              LTP.ui.annoncer(t('divers.etiquette', { libelle: perso.nom, valeur: texte }));
             } },
             h('span', { class: 'reponse-cle mono', 'aria-hidden': 'true' }, LETTRES.charAt(j)),
             h('span', null, F.texte(r.texte, etat, ref)));
@@ -128,7 +128,7 @@
         h('div', null,
           h('p', { class: 'reaction-tete' }, h('b', null, perso.nom), v ? h('span', { class: 'verdict verdict--' + v.cls }, v.texte) : null),
           h('p', { class: 'bulle' }, texteReaction(repDef, etat, score, ref) || '…'),
-          avant != null ? h('p', { class: 'reaction-confiance' }, t('comite.confiance'), ' : ', chiffreConfiance(avant, etat.org.confiance)) : null)) : null);
+          avant != null ? h('p', { class: 'reaction-confiance' }, t('comite.confiance'), t('divers.deuxPoints'), chiffreConfiance(avant, etat.org.confiance)) : null)) : null);
   }
 
   LTP.ui.comite = {
@@ -180,7 +180,7 @@
               return h('li', null, F.visage(p.id, 28), h('span', { class: 'resume-q' }, h('b', null, p.nom), ' · ', F.texte(def.question, etat, q.ref || {})),
                 v ? h('span', { class: 'verdict verdict--' + v.cls }, v.texte) : null);
             })) : h('p', { class: 'comite-aucune' }, t('comite.aucune')),
-            h('p', { class: 'comite-total' }, t('comite.confiance'), ' : ', chiffreConfiance(etat_.debut[trim], etat.org.confiance)),
+            h('p', { class: 'comite-total' }, t('comite.confiance'), t('divers.deuxPoints'), chiffreConfiance(etat_.debut[trim], etat.org.confiance)),
             etat_.erreur ? h('p', { class: 'erreur', role: 'alert' }, F.erreur(etat_.erreur)) : null,
             h('div', { class: 'comite-actions' },
               h('button', { type: 'button', class: 'btn btn--primaire btn--grand', id: 'btn-trimestre-suivant', 'data-cle': 'comite-passer', disabled: toutes ? null : true,
@@ -287,7 +287,7 @@
     [13, 26, 39, 52].forEach(function (w, k) {
       if (w > sMax) return;
       el.appendChild(s('line', { x1: x(w), x2: x(w), y1: HT, y2: H - B, class: 'courbe-trim' }));
-      el.appendChild(s('text', { x: x(w - 6.5), y: H - 6, class: 'courbe-axe', 'text-anchor': 'middle' }, 'T' + (k + 1)));
+      el.appendChild(s('text', { x: x(w - 6.5), y: H - 6, class: 'courbe-axe', 'text-anchor': 'middle' }, t('hud.trimestre', { trimestre: k + 1 })));
     });
     var d = pts.map(function (p, j) { return (j ? 'L' : 'M') + x(p.semaine).toFixed(1) + ' ' + y(p.v).toFixed(1); }).join(' ');
     el.appendChild(s('path', { d: d, class: 'courbe-ligne' }));
@@ -308,7 +308,7 @@
       curseurL.setAttribute('x1', cx); curseurL.setAttribute('x2', cx); curseurL.style.display = '';
       curseurP.setAttribute('cx', cx); curseurP.setAttribute('cy', cy); curseurP.style.display = '';
       bulle.hidden = false;
-      bulle.textContent = 'S' + best.semaine + ' · ' + F.formatMetrique(best.v, def.unite);
+      bulle.textContent = t('hud.semaineCourt', { semaine: best.semaine }) + ' · ' + F.formatMetrique(best.v, def.unite);
       bulle.style.left = (cx / L * 100) + '%';
       bulle.style.top = (cy / H * 100) + '%';
     });

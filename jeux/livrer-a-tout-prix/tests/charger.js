@@ -1,22 +1,18 @@
 // Charge les modules du moteur et des données (fichiers 00 à 39) dans un contexte vm isolé, sans DOM.
 // Chaque appel renvoie un LTP neuf : les tests ne se contaminent pas entre eux.
+// charger({ langue: 'en' }) ajoute les surcouches de l'édition anglaise (en/), dans l'ordre de l'assemblage.
 import vm from "node:vm";
-import { readFileSync, readdirSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+import { fichiersJs } from "../sources.js";
 
-const dossierJs = join(dirname(fileURLToPath(import.meta.url)), "../js");
-
-export function fichiersMoteur() {
-  return readdirSync(dossierJs)
-    .filter((f) => /^\d\d-.*\.js$/.test(f) && parseInt(f, 10) < 40)
-    .sort();
+export function fichiersMoteur(langue = "fr") {
+  return fichiersJs(langue, { moteurSeulement: true }).map((f) => (f.dossier === "js" ? f.fichier : `${f.dossier}/${f.fichier}`));
 }
 
-export function charger() {
+export function charger({ langue = "fr" } = {}) {
   const contexte = vm.createContext({ console });
-  for (const f of fichiersMoteur()) {
-    vm.runInContext(readFileSync(join(dossierJs, f), "utf8"), contexte, { filename: f });
+  for (const f of fichiersJs(langue, { moteurSeulement: true })) {
+    vm.runInContext(readFileSync(f.chemin, "utf8"), contexte, { filename: f.dossier === "js" ? f.fichier : `${f.dossier}/${f.fichier}` });
   }
   return contexte.LTP;
 }

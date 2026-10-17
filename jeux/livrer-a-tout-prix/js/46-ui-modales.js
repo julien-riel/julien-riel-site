@@ -61,7 +61,6 @@
   function noteService(etat, app) {
     var nv = etat.nouveaute;
     var c = LTP.q.deblocage(nv.semaine) || { titre: '', texte: '' };
-    var N = LTP.format.NBSP;
     var signataire = F.personne(c.signataire || 'ginette');
     var compris = function () { app.dispatch({ type: 'nouveauteVue' }); };
     var levier = levierDeNote(c);
@@ -76,7 +75,7 @@
       var d = LTP.q.defLevier(x.levier);
       if (!d) return;
       disponibles.push(h('li', { class: 'note-dispo' },
-        h('b', null, d.libelle + N + ': ' + (x.v || []).map(function (v) { return LTP.ui.libelleValeur(x.levier, v); }).join(', ')),
+        h('b', null, t('divers.etiquette', { libelle: d.libelle, valeur: (x.v || []).map(function (v) { return LTP.ui.libelleValeur(x.levier, v); }).join(', ') })),
         d.aide ? h('span', null, d.aide) : null));
     });
     (c.panneaux || []).forEach(function (pid) {
@@ -184,9 +183,9 @@
           var aime = (r.moral || 0) >= 0;
           return h('li', { class: aime ? 'is-aime' : 'is-naime' },
             h('span', { class: 'reaction-signe', 'aria-hidden': 'true' }, aime ? '+' : '−'),
-            h('span', null, h('b', null, aime ? t('fiche.aime') : t('fiche.naimePas')), ' : ', LTP.ui.libelleLevier(r.levier), ' (',
+            h('span', null, h('b', null, aime ? t('fiche.aime') : t('fiche.naimePas')), t('divers.deuxPoints'), LTP.ui.libelleLevier(r.levier), ' (',
               (r.valeurs || []).map(function (v) { return LTP.ui.libelleValeur(r.levier, v); }).join(', '), ')',
-              r.bulle ? h('em', null, ' « ' + F.texte(r.bulle, etat, { dev: id }) + ' »') : null));
+              r.bulle ? h('em', null, ' ' + t('echos.citation', { texte: F.texte(r.bulle, etat, { dev: id }) })) : null));
         }))) : null);
   }
 
@@ -340,7 +339,9 @@
       });
 
       // Le jeu reste en pause tant qu'une modale le bloque.
-      var tutoActif = !!(LTP.ui.tutoriel && LTP.ui.tutoriel.actif && LTP.ui.tutoriel.actif(etat, ui));
+      // Une étape interactive de la visite (« jouez une journée ») laisse le jeu avancer.
+      var tutoActif = !!(LTP.ui.tutoriel && LTP.ui.tutoriel.actif && LTP.ui.tutoriel.actif(etat, ui)) &&
+        !(LTP.ui.tutoriel.interactif && LTP.ui.tutoriel.interactif());
       var bloquante = !!(cle || tutoActif || etat.phase === 'comite');
       if (!!ui.modaleBloquante !== bloquante) app.setUI({ modaleBloquante: bloquante });
       self._racine.classList.toggle('a-dialogue', !!cle);

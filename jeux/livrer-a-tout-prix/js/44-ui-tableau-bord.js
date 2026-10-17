@@ -67,7 +67,7 @@
     var stable = { sens: 'stable', texte: t('tableau.stable'), fleche: '→', n: k };
     if (def.unite === 'ratio') {
       relatif = Math.abs(d);
-      texte = (d >= 0 ? '+' : '−') + f.nombre(Math.abs(d) * 100, 0) + f.NBSP + 'pts';
+      texte = (d >= 0 ? '+' : '−') + t('unite.pts', { n: f.nombre(Math.abs(d) * 100, 0) });
       if (relatif < 0.01) return stable;
     } else {
       var base = Math.max(Math.abs(a), 1e-9);
@@ -75,13 +75,13 @@
       if (def.unite === 'nb' && Math.abs(a) < 5) {
         // Petits comptes (incidents, applications…) : un pourcentage exagérerait ; on montre l'écart moyen par semaine.
         if (Math.abs(d) < 0.1) return stable;
-        texte = (d >= 0 ? '+' : '−') + f.nombre(Math.abs(d), 1) + f.NNBSP + '/sem.';
+        texte = (d >= 0 ? '+' : '−') + t('tableau.deltaParSemaine', { n: f.nombre(Math.abs(d), 1) });
       } else if (Math.abs(a) < 1e-9) {
         if (Math.abs(d) < 1e-9) return stable;
         texte = (d >= 0 ? '+' : '−') + F.formatMetrique(Math.abs(d), def.unite);
       } else {
         if (relatif < 0.03) return stable;
-        texte = (d >= 0 ? '+' : '−') + f.nombre(Math.min(relatif, 9.99) * 100, 0) + f.NNBSP + '%';
+        texte = (d >= 0 ? '+' : '−') + f.pourcent(Math.min(relatif, 9.99), 0);
       }
     }
     var fleche = d > 0 ? '↗' : '↘';
@@ -137,7 +137,7 @@
     var cle = 'met-' + def.id;
     var surv = ctx.surveillance && ctx.surveillance.ids[def.id] ? ctx.surveillance.entree : null;
     var survTitre = surv ? t('tableau.surveillerAide', { titre: surv.titre || '', semaine: surv.semaine }) : null;
-    var survEl = surv ? h('span', { class: 'met-surveiller', title: survTitre }, t('tableau.surveiller'), h('span', { class: 'sr-only' }, ' : ' + survTitre)) : null;
+    var survEl = surv ? h('span', { class: 'met-surveiller', title: survTitre }, t('tableau.surveiller'), h('span', { class: 'sr-only' }, t('divers.deuxPoints') + survTitre)) : null;
     if (!visible) {
       var idInd = 'ind-' + def.id;
       var indice = def.indice || t('tableau.indiceDefaut');
@@ -145,7 +145,7 @@
         h('span', { class: 'met-lib' }, def.libelle, survEl),
         h('span', { class: 'met-val met-val--cache' }, t('tableau.nonMesure')),
         h('span', { class: 'spark spark--hachure', 'aria-hidden': 'true' }),
-        h('span', { class: 'met-indice', id: idInd, role: 'tooltip' }, F.visage('ginette', 22), h('span', null, h('b', null, 'Ginette'), ' ', indice)));
+        h('span', { class: 'met-indice', id: idInd, role: 'tooltip' }, F.visage('ginette', 22), h('span', null, h('b', null, F.personne('ginette').nom), ' ', indice)));
     }
     var v = (etat.metriques || {})[def.id];
     var pts = serie(etat, def.id, FENETRE);
@@ -156,11 +156,12 @@
     var scrubEl = h('span', { class: 'met-scrub mono', 'aria-hidden': 'true' });
     var min = null, max = null;
     pts.forEach(function (p) { if (min == null || p.v < min) min = p.v; if (max == null || p.v > max) max = p.v; });
-    var resumeTendance = pts.length >= 2 ? t('tableau.tendance', { n: pts.length }) + ' : ' + t('tableau.min', { v: F.formatMetrique(min, def.unite) }) + ', ' + t('tableau.max', { v: F.formatMetrique(max, def.unite) }) : '';
+    var resumeTendance = pts.length >= 2 ? t('divers.etiquette', { libelle: t('tableau.tendance', { n: pts.length }),
+      valeur: t('tableau.min', { v: F.formatMetrique(min, def.unite) }) + ', ' + t('tableau.max', { v: F.formatMetrique(max, def.unite) }) }) : '';
     // Changements de leviers pendant la fenêtre de la courbe.
     var debut = pts.length ? pts[0].semaine : Infinity;
     var marques = pts.length >= 2 ? ctx.changements.filter(function (c) { return c.semaine >= debut && c.semaine <= pts[pts.length - 1].semaine + 1; }) : [];
-    var texteChang = marques.length ? t('tableau.changements', { liste: marques.map(function (c) { return c.textes.join(', '); }).join(' ; ') }) : '';
+    var texteChang = marques.length ? t('tableau.changements', { liste: marques.map(function (c) { return c.textes.join(', '); }).join(t('divers.pointVirgule')) }) : '';
     var titre = [survTitre, resumeTendance, texteChang].filter(Boolean).join('. ');
     var deltaEl = varia ? h('span', { class: 'met-delta met-delta--' + varia.sens, title: (varia.sens === 'neutre' ? t('tableau.neutre') + ' · ' : '') + t('tableau.vs', { n: varia.n }) },
       h('span', { 'aria-hidden': 'true' }, varia.fleche), ' ', varia.texte,

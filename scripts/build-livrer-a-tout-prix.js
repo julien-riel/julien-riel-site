@@ -1,10 +1,11 @@
-// Assemble « Livrer à tout prix » en une seule page HTML.
-// Sources : jeux/livrer-a-tout-prix/{page.fr.html, styles/*.css, js/*.js}
-// Sortie : src/projets/livrer-a-tout-prix.html (versionnée, traitée par Eleventy)
+// Assemble « Livrer à tout prix » et son édition anglaise « Ship at Any Price », chacune en une seule page HTML.
+// Sources : jeux/livrer-a-tout-prix/{page.fr.html, page.en.html, styles/*.css, js/*.js, en/*.js}
+// Sorties : src/projets/livrer-a-tout-prix.html et src/projets/ship-at-any-price.html (versionnées, traitées par Eleventy)
+// L'édition anglaise ajoute les surcouches de en/ (voir en/LISEZMOI.md) ; l'ordre est fixé par jeux/livrer-a-tout-prix/sources.js.
 //
-//   node scripts/build-livrer-a-tout-prix.js              écrit la page du site
-//   node scripts/build-livrer-a-tout-prix.js --check      échoue si la page n'est pas à jour
-//   node scripts/build-livrer-a-tout-prix.js --autonome <chemin.html>
+//   node scripts/build-livrer-a-tout-prix.js              écrit les deux pages du site
+//   node scripts/build-livrer-a-tout-prix.js --check      échoue si une page n'est pas à jour
+//   node scripts/build-livrer-a-tout-prix.js --autonome <chemin.html> [--langue en]
 //                                                         écrit une page ouvrable en file://
 //                                                         (sans front matter ni balises Nunjucks, non minifiée)
 //
@@ -13,16 +14,24 @@ import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from 
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { transformSync } from "esbuild";
+import { fichiersJs, langues } from "../jeux/livrer-a-tout-prix/sources.js";
 
 const racine = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sources = join(racine, "jeux/livrer-a-tout-prix");
-const sortie = join(racine, "src/projets/livrer-a-tout-prix.html");
+const sorties = {
+  fr: join(racine, "src/projets/livrer-a-tout-prix.html"),
+  en: join(racine, "src/projets/ship-at-any-price.html"),
+};
+
+function etiqueter(nom, contenu) {
+  return `/* ${nom} */\n` + contenu.replace(/^\/\* [^*]+? \*\/\n/, "");
+}
 
 function lireDossier(dossier, extension) {
   return readdirSync(join(sources, dossier))
     .filter((f) => f.endsWith(extension))
     .sort()
-    .map((f) => `/* ${f} */\n` + readFileSync(join(sources, dossier, f), "utf8").replace(/^\/\* [^*]+? \*\/\n/, ""));
+    .map((f) => etiqueter(f, readFileSync(join(sources, dossier, f), "utf8")));
 }
 
 function minifier(code, loader) {
@@ -30,10 +39,12 @@ function minifier(code, loader) {
   return transformSync(code, { loader, minify: true, charset: "utf8", legalComments: "none", target: "es2018" }).code.trim();
 }
 
-export function assembler({ autonome = false } = {}) {
-  let page = readFileSync(join(sources, "page.fr.html"), "utf8");
+export function assembler({ autonome = false, langue = "fr" } = {}) {
+  let page = readFileSync(join(sources, `page.${langue}.html`), "utf8");
   let css = lireDossier("styles", ".css").join("\n");
-  let js = lireDossier("js", ".js").join("\n");
+  let js = fichiersJs(langue)
+    .map((f) => etiqueter(f.dossier === "js" ? f.fichier : `${f.dossier}/${f.fichier}`, readFileSync(f.chemin, "utf8")))
+    .join("\n");
   if (!autonome) {
     css = minifier(css, "css");
     js = minifier(js, "js");
@@ -52,21 +63,29 @@ export function assembler({ autonome = false } = {}) {
 }
 
 const args = process.argv.slice(2);
+const option = (nom) => (args.indexOf(nom) >= 0 ? args[args.indexOf(nom) + 1] : undefined);
+const relatif = (chemin) => chemin.slice(racine.length + 1);
 if (args[0] === "--check") {
-  const attendu = assembler();
-  const actuel = existsSync(sortie) ? readFileSync(sortie, "utf8") : "";
-  if (attendu !== actuel) {
-    console.error("src/projets/livrer-a-tout-prix.html n'est pas à jour : lancez npm run build:livrer");
-    process.exit(1);
+  let ok = true;
+  for (const langue of langues) {
+    const actuel = existsSync(sorties[langue]) ? readFileSync(sorties[langue], "utf8") : "";
+    if (assembler({ langue }) !== actuel) {
+      console.error(`${relatif(sorties[langue])} n'est pas à jour : lancez npm run build:livrer`);
+      ok = false;
+    }
   }
-  console.log("Livrer à tout prix : page à jour.");
+  if (!ok) process.exit(1);
+  console.log("Livrer à tout prix : pages à jour (fr, en).");
 } else if (args[0] === "--autonome") {
-  const chemin = resolve(args[1] || join(racine, "_livrer-autonome.html"));
+  const langue = option("--langue") || "fr";
+  const chemin = resolve(args[1] && !args[1].startsWith("--") ? args[1] : join(racine, `_livrer-autonome.${langue}.html`));
   mkdirSync(dirname(chemin), { recursive: true });
-  writeFileSync(chemin, assembler({ autonome: true }));
-  console.log(`Livrer à tout prix (autonome) : ${chemin}`);
+  writeFileSync(chemin, assembler({ autonome: true, langue }));
+  console.log(`Livrer à tout prix (autonome, ${langue}) : ${chemin}`);
 } else {
-  const page = assembler();
-  writeFileSync(sortie, page);
-  console.log(`Livrer à tout prix : ${sortie} (${Math.round(page.length / 1024)} Ko)`);
+  for (const langue of langues) {
+    const page = assembler({ langue });
+    writeFileSync(sorties[langue], page);
+    console.log(`Livrer à tout prix (${langue}) : ${relatif(sorties[langue])} (${Math.round(page.length / 1024)} Ko)`);
+  }
 }

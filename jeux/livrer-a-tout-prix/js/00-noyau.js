@@ -1,5 +1,6 @@
 /* 00-noyau.js */
-/* Espace de noms, hasard déterministe, outils numériques, formatage fr-CA et textes.
+/* Espace de noms, hasard déterministe, outils numériques, formatage (fr-CA ou en-CA selon LTP.langue),
+   textes et surcouches de traduction.
    Aucun accès au DOM : ce fichier est aussi chargé dans Node pour les tests. */
 (function (LTP) {
   'use strict';
@@ -9,6 +10,7 @@
   LTP.donnees = LTP.donnees || {};   // contenu : îlots, personnages, leviers, cartes, événements…
   LTP.textes = LTP.textes || { fr: {} };
   LTP.langue = LTP.langue || 'fr';
+  LTP.textesManquants = LTP.textesManquants || {};
   LTP.q = LTP.q || {};               // requêtes sur l'état (voir 20-etat.js)
 
   var NBSP = ' ';
@@ -112,26 +114,34 @@
     obj[parts[parts.length - 1]] = valeur;
   }
 
-  // --- Formatage fr-CA ---
+  // --- Formatage fr-CA (1 234,5 $ · 12 %) ou en-CA ($1,234.5 · 12%) selon LTP.langue, lue à chaque appel ---
+  function anglais() { return LTP.langue === 'en'; }
   function nombre(n, d) {
     if (n === Infinity) return '∞';
     if (n == null || isNaN(n)) return '—';
     var dd = d == null ? (Math.abs(n) >= 100 ? 0 : Math.abs(n) >= 10 ? 1 : 2) : d;
-    return Number(n).toLocaleString('fr-CA', { maximumFractionDigits: dd, minimumFractionDigits: 0 }).replace(/^-/, '−');
+    return Number(n).toLocaleString(anglais() ? 'en-CA' : 'fr-CA', { maximumFractionDigits: dd, minimumFractionDigits: 0 }).replace(/^-/, '−');
   }
   function argent(n) {
     if (n == null || isNaN(n)) return '—';
     var a = Math.abs(n);
+    if (anglais()) {
+      var signe = n < 0 ? '−' : '';
+      if (a >= 1e6) return signe + '$' + nombre(a / 1e6, 2) + 'M';
+      if (a >= 1e4) return signe + '$' + nombre(a / 1e3, 0) + 'k';
+      return signe + '$' + nombre(Math.round(a), 0);
+    }
     if (a >= 1e6) return nombre(n / 1e6, 2) + NBSP + 'M$';
     if (a >= 1e4) return nombre(n / 1e3, 0) + NBSP + 'k$';
     return nombre(Math.round(n), 0) + NBSP + '$';
   }
-  function pourcent(v, d) { return nombre(v * 100, d == null ? 0 : d) + NNBSP + '%'; }
+  function pourcent(v, d) { return nombre(v * 100, d == null ? 0 : d) + (anglais() ? '' : NNBSP) + '%'; }
   function jetons(n) {
     if (n == null || isNaN(n)) return '—';
-    if (n >= 1e9) return nombre(n / 1e9, 1) + NBSP + 'G';
-    if (n >= 1e6) return nombre(n / 1e6, 1) + NBSP + 'M';
-    if (n >= 1e3) return nombre(n / 1e3, 0) + NBSP + 'k';
+    var sep = anglais() ? '' : NBSP;
+    if (n >= 1e9) return nombre(n / 1e9, 1) + sep + (anglais() ? 'B' : 'G');
+    if (n >= 1e6) return nombre(n / 1e6, 1) + sep + 'M';
+    if (n >= 1e3) return nombre(n / 1e3, 0) + sep + 'k';
     return nombre(n, 0);
   }
 
@@ -140,7 +150,10 @@
   function t(cle, vars) {
     var dict = LTP.textes[LTP.langue] || {};
     var s = dict[cle];
-    if (s == null) s = (LTP.textes.fr || {})[cle];
+    if (s == null && LTP.langue !== 'fr') {
+      s = (LTP.textes.fr || {})[cle];
+      if (s != null) LTP.textesManquants[cle] = true; // repli sur le français : relevé par les tests de l'édition anglaise
+    }
     if (s == null) return '⟦' + cle + '⟧';
     if (typeof s === 'function') return s(vars || {});
     if (Array.isArray(s)) s = s[0];
@@ -160,6 +173,67 @@
     for (var k in dict) if (Object.prototype.hasOwnProperty.call(dict, k)) LTP.textes[l][k] = dict[k];
   }
 
+  // --- Surcouches de traduction (dossier en/ : voir en/LISEZMOI.md) ---
+  // LTP.traduire('ilots', { appro: { nom: 'Procurement' } }) fusionne le patch dans LTP.donnees.ilots, en place :
+  // - une chaîne ou une fonction remplace la valeur ; posée sur un objet qui a un champ texte, elle remplace ce texte ;
+  // - un tableau se fusionne élément par élément (même longueur exigée ; null garde l'élément) ;
+  // - un objet posé sur un tableau désigne ses éléments par id (ou par v, pour les valeurs d'un levier) ;
+  // - une clé absente de la cible est une erreur : le français a changé, la traduction doit suivre.
+  // Les erreurs sont gardées dans LTP.erreursTraduction (vérifiées par tests/traduction.test.js).
+  LTP.erreursTraduction = LTP.erreursTraduction || [];
+  function estObjet(x) { return x !== null && typeof x === 'object' && !Array.isArray(x); }
+  function trouver(liste, cle) {
+    for (var i = 0; i < liste.length; i++) {
+      var e = liste[i];
+      if (e && typeof e === 'object' && (e.id === cle || (e.id === undefined && e.v !== undefined && String(e.v) === cle))) return i;
+    }
+    return -1;
+  }
+  function fusionner(cible, patch, chemin) {
+    if (typeof patch === 'string' || typeof patch === 'function') {
+      if (estObjet(cible) && cible.texte !== undefined) { cible.texte = patch; return cible; }
+      if (cible !== undefined && typeof cible !== 'string' && typeof cible !== 'function') {
+        LTP.erreursTraduction.push(chemin + ' : un texte remplacerait une valeur de type ' + (Array.isArray(cible) ? 'tableau' : typeof cible));
+        return cible;
+      }
+      return patch;
+    }
+    if (Array.isArray(patch)) {
+      if (!Array.isArray(cible)) { LTP.erreursTraduction.push(chemin + ' : tableau attendu dans la cible'); return cible; }
+      if (patch.length !== cible.length) LTP.erreursTraduction.push(chemin + ' : ' + patch.length + ' éléments traduits pour ' + cible.length + ' en français');
+      for (var i = 0; i < Math.min(patch.length, cible.length); i++) {
+        if (patch[i] !== null && patch[i] !== undefined) cible[i] = fusionner(cible[i], patch[i], chemin + '[' + i + ']');
+      }
+      return cible;
+    }
+    if (estObjet(patch)) {
+      if (Array.isArray(cible)) {
+        for (var cle in patch) {
+          if (!Object.prototype.hasOwnProperty.call(patch, cle)) continue;
+          var j = trouver(cible, cle);
+          if (j < 0) { LTP.erreursTraduction.push(chemin + '.' + cle + ' : élément introuvable'); continue; }
+          cible[j] = fusionner(cible[j], patch[cle], chemin + '.' + cle);
+        }
+        return cible;
+      }
+      if (!estObjet(cible)) { LTP.erreursTraduction.push(chemin + ' : objet attendu dans la cible'); return cible; }
+      for (var k in patch) {
+        if (!Object.prototype.hasOwnProperty.call(patch, k)) continue;
+        if (cible[k] === undefined) { LTP.erreursTraduction.push(chemin + '.' + k + ' : clé absente du français'); continue; }
+        cible[k] = fusionner(cible[k], patch[k], chemin + '.' + k);
+      }
+      return cible;
+    }
+    LTP.erreursTraduction.push(chemin + ' : valeur de traduction non prise en charge');
+    return cible;
+  }
+  function traduire(chemin, patch) {
+    var cible = lireChemin(LTP.donnees, chemin);
+    if (cible === undefined) { LTP.erreursTraduction.push(chemin + ' : absent de LTP.donnees'); return; }
+    var r = fusionner(cible, patch, chemin);
+    if (r !== cible) ecrireChemin(LTP.donnees, chemin, r);
+  }
+
   LTP.rng = { creer: creerRng, graineDe: graineDe };
   LTP.outils = {
     borner: borner, lerp: lerp, somme: somme, moyenne: moyenne, arrondir: arrondir, cloner: cloner,
@@ -170,4 +244,5 @@
   LTP.gabarit = gabarit;
   LTP.aTexte = aTexte;
   LTP.enregistrerTextes = enregistrerTextes;
+  LTP.traduire = traduire;
 })(globalThis.LTP = globalThis.LTP || {});

@@ -29,6 +29,8 @@
   LTP.typo = typo;
 
   function pluriel(n, un, plusieurs) { return (Math.abs(n) >= 2 ? plusieurs : un); }
+  // « 3 sessions », « 1 session », « 0 session » : le nombre tel quel, puis le mot accordé.
+  function nb(n, un, plusieurs) { return n + ' ' + pluriel(n, un, plusieurs); }
 
   enregistrer({
     // --- Jeu ---
@@ -39,6 +41,12 @@
     'jeu.univers': 'Au Groupe Polyvalent Universel inc., le serveur GPU ronronne déjà au sous-sol. Reste à savoir ce que 21 développeurs vont en faire.',
     'jeu.equipe': 'L\'équipe',
     'jeu.equipeNote': 'Sept lignes d\'affaires, trois développeurs chacune.',
+    'jeu.allerLeviers': 'Aller aux leviers',
+    'zone.openspace': 'Open space',
+
+    // --- Jours ouvrables (0 = lundi … 4 = vendredi) ---
+    'jour.0': 'lundi', 'jour.1': 'mardi', 'jour.2': 'mercredi', 'jour.3': 'jeudi', 'jour.4': 'vendredi',
+    'jourCourt.0': 'lun.', 'jourCourt.1': 'mar.', 'jourCourt.2': 'mer.', 'jourCourt.3': 'jeu.', 'jourCourt.4': 'ven.',
 
     // --- HUD ---
     'hud.semaine': 'Semaine {semaine}',
@@ -62,6 +70,11 @@
     'hud.phase.fin': 'Bilan annuel',
     'hud.retour': '← julien-riel.com',
     'hud.retourAide': 'Retour aux projets',
+    'hud.retourUrl': '/projets/',
+    'hud.langue': 'EN',
+    'hud.langueAide': 'English version',
+    'hud.langueUrl': '/en/projets/ship-at-any-price/',
+    'hud.langueCode': 'en',
     'hud.aide': 'Aide',
     'hud.aideLong': 'Visite guidée avec Ginette',
     'hud.menu': 'Accueil',
@@ -169,14 +182,14 @@
     'registre.desequiper': 'Retirer de {ilot}',
     'registre.equipeeSur': 'Équipée sur : {liste}',
     'registre.nonEquipee': 'Équipée nulle part',
-    'registre.proprietaire': 'Propriétaire',
+    'registre.proprietaireLib': 'Propriétaire',
     'registre.personne': 'Personne',
     'registre.orpheline': 'Orpheline : personne ne l\'entretient',
     'registre.fraicheur': 'Fraîcheur',
-    'registre.perimee': 'Périmée',
+    'registre.perimeeLib': 'Périmée',
     'registre.contexte': 'Poids de contexte',
     'registre.contexteIlot': 'Contexte de l\'îlot',
-    'registre.saturation': 'Saturé : chaque carte de plus nuit aux autres.',
+    'registre.saturationLib': 'Saturé : chaque carte de plus nuit aux autres.',
     'registre.risque': 'Risque',
     'registre.gains': 'Effets',
     'registre.branches': 'Branches de la triade',
@@ -205,6 +218,21 @@
     'triade.eteinte': 'Aucune branche allumée',
     'triade.allume': 'allumé',
     'triade.eteint': 'éteint',
+    'triade.allumees': function (v) { return nb(v.n, 'branche', 'branches') + ' sur 3 ' + pluriel(v.n, 'allumée', 'allumées') + '.'; },
+    'triade.nature.prive': 'le travail touche des données personnelles ou financières',
+    'triade.nature.nonFiable': 'les agents lisent du contenu venu de l\'extérieur',
+    'triade.nature.sortie': 'le travail publie ou envoie vers l\'extérieur',
+    'triade.sourceNature': 'nature du travail ({nature})',
+    'triade.sourceCarte': 'carte « {nom} »',
+    'triade.sourceAcces': 'accès des agents à la production',
+    'triade.sourceReglages': 'réglages de l\'îlot',
+    'triade.ligne': '{branche} : {sources}.',
+    'triade.coupee': '{branche} : coupée par l\'approbation humaine des sorties.',
+    'triade.quandPlusTard': function (v) {
+      return 'Vous pourrez couper une branche à la semaine ' + v.semaine + ' (onglet ' + v.onglet + ') : « ' + v.sorties + ' » et « ' + v.acces + ' ».' +
+        (v.manque ? ' D\'ici là, évitez d\'équiper des cartes qui allument la branche manquante.' : '');
+    },
+    'triade.quandMaintenant': 'Pour couper une branche : l\'approbation humaine des sorties, l\'accès à la production en lecture seule, ou retirer une carte.',
 
     // --- Gains ---
     'gain.debit': 'Débit',
@@ -265,7 +293,10 @@
     'tableau.indice': 'Ginette : {indice}',
     'tableau.indiceDefaut': 'Personne ne mesure ça pour l\'instant.',
     'tableau.tendance': 'Tendance sur {n} semaines',
-    'tableau.vs': 'sur {n} sem.',
+    'tableau.vs': function (v) {
+      return v && v.n > 1 ? 'moyenne des ' + v.n + ' dernières semaines comparée aux ' + v.n + ' précédentes' : 'cette semaine comparée à la précédente';
+    },
+    'tableau.deltaParSemaine': '{n}\u202f/sem.',
     'tableau.stable': 'stable',
     'tableau.neutre': 'ni bon ni mauvais en soi',
     'tableau.mieux': 'en amélioration',
@@ -274,9 +305,10 @@
     'tableau.max': 'max. {v}',
     'tableau.semaineAbbr': 'S{n}',
     'tableau.aucuneDonnee': 'Pas encore de données : le premier rapport arrive vendredi.',
-    'unite.semaines': 'sem.',
-    'unite.h': 'h',
-    'unite.kLOC': 'kLOC',
+    'unite.semaines': '{n}\u00a0sem.',
+    'unite.h': '{n}\u00a0h',
+    'unite.kLOC': '{n}\u00a0kLOC',
+    'unite.pts': '{n}\u00a0pts',
     'unite.score': '/100',
 
     // --- Journal ---
@@ -286,6 +318,7 @@
     'journal.quand': 'S{semaine} · {jour}',
     'journal.quandLong': 'Semaine {semaine}, {jour}',
     'journal.joueur': 'Votre décision',
+    'journal.evenementTitre': 'Événement : « {titre} »',
     'journal.type.info': 'Information',
     'journal.type.alerte': 'Alerte',
     'journal.type.incident': 'Incident',
@@ -323,6 +356,8 @@
     'echos.note': 'Note de service',
     'echos.cause': 'Cause',
     'echos.immediat': 'en réaction à votre décision',
+    'echos.causeLevier': '↳ {levier} : {valeur}',
+    'echos.citation': '« {texte} »',
 
     // --- Fiche de développeur ---
     'fiche.eyebrow': 'Fiche · {ilot}',
@@ -395,6 +430,8 @@
     'fin.raison.confiance': 'Partie terminée au T{trimestre} : la confiance de la direction est tombée sous 15.',
     'fin.raison.annee': 'Les 52 semaines sont écoulées.',
     'fin.profilInconnu': 'Une année bien remplie',
+    'fin.totalAnnee': 'total de l\'année',
+    'fin.finAnnee': 'en fin d\'année',
     'critere.livraison': 'Livraison',
     'critere.qualite': 'Qualité',
     'critere.couts': 'Coûts',
@@ -407,6 +444,7 @@
     // --- Tutoriel (secours, si LTP.donnees.tutoriel est vide) ---
     'tuto.titre': 'Visite guidée',
     'tuto.etape': 'Étape {n} sur {total}',
+    'tuto.fait': 'C\'est fait.',
     'tuto.defaut.1': 'Bienvenue ! Moi, c\'est Ginette. 27 ans de service, trois « révolutions », zéro panique. Je te fais faire le tour.',
     'tuto.defaut.2': 'L\'open space. Vingt et un développeurs, sept îlots. Pour commencer, sept d\'entre eux ont une licence Copilot : une personne par îlot. Clique sur quelqu\'un pour voir sa fiche.',
     'tuto.defaut.3': 'Tes leviers. Au début, il n\'y a que les licences. Les autres arrivent un à un, par notes de service : tu auras le temps de voir ce que chacun change.',
@@ -431,6 +469,92 @@
     'divers.semaines': function (v) { return v.n + ' ' + pluriel(v.n, 'semaine', 'semaines'); },
     'divers.oui': 'Oui',
     'divers.non': 'Non',
+    'divers.etiquette': '{libelle} : {valeur}',
+    'divers.deuxPoints': ' : ',
+    'divers.pointVirgule': ' ; ',
+    'divers.ou': ' ou ',
+
+    // --- Open space (42-ui-open-space.js) ---
+    'os.titre': 'L\'open space',
+    'os.legende': 'Lire l\'open space',
+    'os.legende.ecrans': 'Écrans allumés : sessions d\'agent en parallèle',
+    'os.legende.licence': 'Pastille étoilée : licence Copilot. Sans licence, pas de lueur d\'agent : on code comme avant',
+    'os.legende.pile': 'Pile de papiers : PR qui attendent la revue de cette personne',
+    'os.legende.brouillard': 'Brouillard : dette cognitive (uniforme tant qu\'on ne la mesure pas)',
+    'os.legende.flamme': 'Flamme : incident en cours',
+    'os.legende.sueur': 'Goutte de sueur, puis tête sur le bureau : fatigue',
+    'os.legende.valise': 'Valise : congé · boîte : départ · livre : formation',
+    'os.legende.compteur': 'Compteur : jetons consommés par l\'îlot cette semaine',
+    'os.legende.triade': 'Trois voyants : triade létale (données privées, contenu non fiable, sortie externe)',
+    'os.legende.losange': 'Losange : réglages propres à l\'îlot · prise : skills et MCP équipés',
+    'os.etat.code': 'code avec ses agents',
+    'os.etat.codeSansLicence': 'code',
+    'os.etat.revue': 'fait de la revue',
+    'os.etat.attente': 'attend une revue',
+    'os.etat.incident': 'gère un incident',
+    'os.etat.formation': 'en formation',
+    'os.etat.conge': 'en congé',
+    'os.etat.absent': 'hors du bureau',
+    'os.court.parti': 'parti',
+    'os.court.conge': 'congé',
+    'os.court.formation': 'formation',
+    'os.court.incident': 'incident',
+    'os.court.revue': 'revue',
+    'os.court.attente': 'attend',
+    'os.court.code': 'code',
+    'os.ecrans': function (v) { return nb(v.n, 'écran', 'écrans'); },
+    'os.sansAgent': 'sans agent',
+    'os.plaquePR': '{n} PR',
+    'os.parti': 'a quitté son poste',
+    'os.avecLicence': 'avec licence Copilot',
+    'os.sansLicence': 'sans licence Copilot',
+    'os.sessions': function (v) { return nb(v.n, 'session d\'agent', 'sessions d\'agent'); },
+    'os.aRelire': function (v) { return v.n + ' PR à relire'; },
+    'os.fatigue.epuise': 'épuisement',
+    'os.fatigue.elevee': 'fatigue élevée',
+    'os.fatigue.moderee': 'fatigue modérée',
+    'os.fatigue.faible': 'fatigue faible',
+    'os.comprehension': 'compréhension du code {p}',
+    'os.ouvrirFiche': '{description}. Ouvrir la fiche.',
+    'os.jetons': 'jetons',
+    'os.replier': 'Replier {ilot}',
+    'os.deplier': 'Déplier {ilot}',
+    'os.toutReplier': 'Tout replier',
+    'os.toutDeplier': 'Tout déplier',
+    'os.cafe': 'Coin café',
+    'os.cafeLibelle': function (v) { return 'Coin café, hors de la zone TI' + (v.n ? ' : ' + nb(v.n, 'application faite hors TI', 'applications faites hors TI') + ' sur la table' : ''); },
+    'os.cafeApplis': function (v) { return nb(v.n, 'appli hors TI', 'applis hors TI'); },
+    'os.reglagesIlot': function (v) { return nb(v.n, 'réglage propre à l\'îlot', 'réglages propres à l\'îlot'); },
+    'os.reglages': function (v) { return nb(v.n, 'réglage propre', 'réglages propres'); },
+    'os.capacites': function (v) { return nb(v.n, 'capacité équipée', 'capacités équipées'); },
+    'os.incidents': function (v) { return nb(v.n, 'incident en cours', 'incidents en cours'); },
+    'os.resumeSessions': function (v) { return nb(v.n, 'session', 'sessions'); },
+    'os.ilotJetons': '{ilot} : {jetons} jetons cette semaine',
+    'os.triade': 'Triade létale',
+    'os.triadeComplete': 'Triade létale complète',
+    'os.triadeTexte': function (v) {
+      return 'données privées ' + (v.prive ? 'oui' : 'non') + ', contenu non fiable ' + (v.nonFiable ? 'oui' : 'non') + ', sortie externe ' + (v.sortie ? 'oui' : 'non');
+    },
+    'os.ouvrirReglages': 'Ouvrir les réglages de l\'îlot.',
+    'os.sommaire': function (v) {
+      return v.presents + ' au bureau · ' + nb(v.licences, 'licence Copilot', 'licences Copilot') + ' · ' + nb(v.sessions, 'session d\'agent', 'sessions d\'agent') + ' · ' +
+        nb(v.file, 'PR en attente', 'PR en attente') + (v.incidents ? ' · ' + nb(v.incidents, 'incident', 'incidents') : '');
+    },
+
+    // --- Contenu de démonstration (35-demo.js, ?demo=evenement et ?demo=comite) ---
+    'demo.prGeante.titre': 'La PR de 4 000 lignes',
+    'demo.prGeante.texte': 'Mathieu a ouvert une PR de 4 000 lignes.',
+    'demo.prGeante.approuver': 'On fusionne',
+    'demo.prGeante.approuverConsequence': 'Personne ne l\'a lue.',
+    'demo.prGeante.decouper': 'On découpe',
+    'demo.prGeante.decouperConsequence': 'Nadia respire.',
+    'demo.regis.question': 'La facture de jetons a doublé ce trimestre. Je résume : on paie deux fois plus pour la même chose ?',
+    'demo.regis.a': 'Non : le débit a augmenté de 60 % et voici le coût par point livré.',
+    'demo.regis.aReaction': 'Un chiffre. Enfin.',
+    'demo.regis.b': 'C\'est un investissement stratégique.',
+    'demo.regis.bReaction': 'Tout le monde dit ça.',
+    'demo.regis.c': 'Ce n\'est pas vraiment le double.',
+    'demo.regis.cReaction': 'J\'ai la facture sous les yeux.',
 
     // --- Gabarits génériques du journal (les systèmes peuvent les remplacer) ---
     'levier.change': function (v) { return 'Réglage : ' + v.levier + (v.ilot ? ' (' + v.ilot + ')' : '') + '.'; },
@@ -449,11 +573,9 @@
     'partie.debut': 'Première semaine. Le café est frais, les agents aussi.',
     'partie.fin': function (v) { return v.raison === 'confiance' ? 'Fin de la partie : Mme Lavigueur vous remercie pour votre contribution.' : 'Fin de l\'année. Le bilan vous attend.'; },
     'partie.sauvegarde': 'Partie sauvegardée.',
-    'incident.bogue': 'Bogue en production : {ilot}. Quelqu\'un va passer la soirée dessus.',
     'incident.injection': 'Injection de prompt : {ilot}. L\'agent a obéi à un texte caché dans un document.',
     'incident.paquet': 'Paquet halluciné installé : {ilot}. Le nom avait l\'air plausible.',
     'incident.empoisonnement': 'MCP empoisonné : {ilot}. L\'outil faisait plus que ce qu\'il annonçait.',
-    'incident.changementSilencieux': 'Changement silencieux d\'un MCP de fournisseur : {ilot}. Personne n\'a rien vu passer.',
     'incident.destruction': 'Un agent a détruit des données en production : {ilot}. UPDATE sans WHERE.',
     'incident.fuite': 'Fuite de données : {ilot}. Me Bérubé ouvre un dossier.',
     'incident.exfiltration': 'Exfiltration : {ilot}. Des secrets sont partis par la porte d\'en arrière.',

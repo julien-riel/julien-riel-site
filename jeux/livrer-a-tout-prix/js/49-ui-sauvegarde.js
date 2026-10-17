@@ -3,7 +3,8 @@
    API : enregistrer(etat), charger() → etat | null, effacer(), existe() → booléen. */
 (function (LTP) {
   'use strict';
-  var CLE = 'livrer-a-tout-prix:v2';
+  // Une sauvegarde par édition : l'état garde des textes déjà rendus (réflexions, journal).
+  var CLE = LTP.langue === 'en' ? 'ship-at-any-price:v2' : 'livrer-a-tout-prix:v2';
   LTP.sauvegarde = {
     enregistrer: function (etat) {
       try { if (etat && etat.phase !== 'accueil') localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) { /* ignoré */ }

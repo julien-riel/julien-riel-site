@@ -67,7 +67,7 @@
       var sig = JSON.stringify([sauv, !!etat.options.serveurAchete, accueil_.confirmer, accueil_.efface]);
       F.reconstruire(this._racine, sig, function () {
         var trimestres = [1, 2, 3, 4].map(function (n) {
-          return h('li', { class: 'trim-carte' }, h('span', { class: 'trim-num mono' }, 'T' + n),
+          return h('li', { class: 'trim-carte' }, h('span', { class: 'trim-num mono' }, t('hud.trimestre', { trimestre: n })),
             h('b', null, t('accueil.t' + n)), h('span', null, t('accueil.t' + n + 'd')));
         });
         var equipe = (LTP.donnees.ilots || []).slice().sort(function (a, b) { return a.ordre - b.ordre; }).map(function (il) {
@@ -177,7 +177,10 @@
       var self = this;
       this._racine = racine;
       var el = this._el = {};
-      el.retour = h('a', { class: 'tool tool--back', href: '/projets/', title: t('hud.retourAide') }, t('hud.retour'));
+      el.retour = h('a', { class: 'tool tool--back', href: t('hud.retourUrl'), title: t('hud.retourAide') }, t('hud.retour'));
+      // L'autre édition (française ou anglaise), comme dans « Serveur à tout prix ».
+      el.langue = h('a', { class: 'tool tool--back tool--langue', href: t('hud.langueUrl'), hreflang: t('hud.langueCode'), lang: t('hud.langueCode'),
+        title: t('hud.langueAide') }, t('hud.langue'));
       el.titre = h('span', { class: 'hud-titre' }, t('jeu.titre'));
       el.phase = h('span', { class: 'hud-phase' });
       el.tri = h('span', { class: 'hud-tri mono', 'aria-hidden': 'true' });
@@ -248,7 +251,7 @@
       el.tiroir = h('div', { class: 'tiroir-zone' });
 
       LTP.ui.remplacer(racine, h('div', { class: 'hud-inner' },
-        h('div', { class: 'hud-marque' }, el.retour, h('span', { class: 'hud-nom' }, el.titre, el.phase)),
+        h('div', { class: 'hud-marque' }, el.retour, el.langue, h('span', { class: 'hud-nom' }, el.titre, el.phase)),
         el.temps, el.stats, el.commandes, el.outils), el.tiroir);
 
       // Hauteur du HUD, pour coller le panneau juste en dessous.
@@ -362,7 +365,7 @@
           var txt;
           try { txt = LTP.ui.texteJournal(e); } catch (err) { txt = e.cle; }
           var aJour = e.jour != null;
-          var quand = aJour ? t('journal.quand', { semaine: e.semaine, jour: LTP.ui.jourCourt(e.jour) }) : 'S' + e.semaine;
+          var quand = aJour ? t('journal.quand', { semaine: e.semaine, jour: LTP.ui.jourCourt(e.jour) }) : t('hud.semaineCourt', { semaine: e.semaine });
           // Les entrées qui viennent d'une décision du joueur sont atténuées : le reste, c'est ce qui arrive tout seul.
           return h('li', { class: 'entree entree--' + type + (e.semaine === sc ? ' is-semaine' : '') + (e.joueur ? ' is-joueur' : '') },
             h('span', { class: 'entree-icone', title: e.joueur ? t('journal.joueur') : t('journal.type.' + type) }, F.icone(ICONE_TYPE[type], 15),
@@ -447,7 +450,7 @@
   // =====================================================================
   // Chaque étape montre un élément réel de l'écran. Les étapes « attendre » laissent la main au joueur
   // (la bulle n'est alors plus modale) : changer un levier ('levier'), jouer une journée ('jour') ou une semaine ('semaine').
-  var tuto_ = { cle: null, ecoute: false, retourFocus: null, etape: null, depart: null, fait: false, minuterie: null, fin: false };
+  var tuto_ = { cle: null, ecoute: false, retourFocus: null, etape: null, depart: null, fait: false, minuterie: null, fin: false, interactif: false };
 
   function etapes() {
     var d = LTP.donnees.tutoriel;
@@ -548,7 +551,10 @@
 
   LTP.ui.tutoriel = {
     actif: function (etat, ui) { return etat.phase === 'tutoriel' || !!(ui.visite && (etat.phase === 'planification' || etat.phase === 'execution')); },
+    // Étape qui attend une action du joueur (changer un levier, jouer une journée) : la visite ne bloque pas le jeu.
+    interactif: function () { return !!(tuto_.cle && tuto_.interactif); },
     rendre: function (couche, etat, ui, app) {
+      tuto_.interactif = false;
       if (!this.actif(etat, ui)) {
         if (tuto_.cle) {
           tuto_.cle = null;
@@ -582,6 +588,7 @@
       }
       var attend = !!et.attendre;
       var fait = attend && actionFaite(et, etat);
+      tuto_.interactif = attend && !fait;
       if (fait && !tuto_.fait) {
         tuto_.fait = true;
         // L'action est faite : on passe à l'étape suivante après un court instant.
