@@ -1,5 +1,6 @@
 /* 48-ui-ecrans.js */
-/* Accueil (écran « accueil »), HUD (région « hud »), journal (région « journal »), visite guidée avec Ginette
+/* Accueil (écran « accueil »), HUD (région « hud »), « Ce qu'on entend » (région « echos » : les réflexions des
+   développeurs et leur cause), journal (région « journal »), visite guidée avec Ginette
    (couche de la région « modale », LTP.ui.tutoriel) et tiroir du mode animateur (dans le HUD).
    Le HUD est construit une fois puis mis à jour par différences, pour ne jamais perdre le focus.
    Propriétaire : agent F. */
@@ -55,7 +56,8 @@
     if (!LTP.sauvegarde || !LTP.sauvegarde.charger) return null;
     var e = LTP.sauvegarde.charger();
     if (!e || e.phase === 'accueil') return null;
-    return { semaine: e.semaine, trimestre: e.trimestre, phase: e.phase };
+    var enCours = e.phase === 'planification' || e.phase === 'execution';
+    return { semaine: LTP.q.semaineCourante(e), trimestre: e.trimestre, phase: e.phase, jour: enCours ? LTP.ui.nomJour(e.jour || 0) : '' };
   }
 
   LTP.ui.ecrans.accueil = {
@@ -115,6 +117,7 @@
             h('div', { class: 'accueil-illu' }, illustration())),
           h('section', { class: 'accueil-annee', 'aria-labelledby': 'acc-annee' },
             h('h2', { id: 'acc-annee', class: 'h-sec' }, t('accueil.trimestres')),
+            h('p', { class: 'accueil-rythme' }, t('accueil.rythme')),
             h('ol', { class: 'trims' }, trimestres)),
           h('section', { class: 'accueil-equipe', 'aria-labelledby': 'acc-equipe' },
             h('h2', { id: 'acc-equipe', class: 'h-sec' }, t('jeu.equipe'), ' ', h('span', { class: 'muted' }, t('jeu.equipeNote'))),
@@ -177,8 +180,16 @@
       el.retour = h('a', { class: 'tool tool--back', href: '/projets/', title: t('hud.retourAide') }, t('hud.retour'));
       el.titre = h('span', { class: 'hud-titre' }, t('jeu.titre'));
       el.phase = h('span', { class: 'hud-phase' });
-      el.tri = h('span', { class: 'hud-tri mono' });
-      el.sem = h('span', { class: 'hud-sem' });
+      el.tri = h('span', { class: 'hud-tri mono', 'aria-hidden': 'true' });
+      // Semaine et jour en toutes lettres (versions courtes au téléphone) ; une phrase complète pour les lecteurs d'écran.
+      el.semLong = h('span', { class: 'hud-long' });
+      el.semCourt = h('span', { class: 'hud-court' });
+      el.jourLong = h('span', { class: 'hud-long' });
+      el.jourCourt = h('span', { class: 'hud-court' });
+      el.jourSep = h('span', { class: 'hud-sep' }, ' · ');
+      el.jour = h('span', { class: 'hud-jour' }, el.jourSep, el.jourLong, el.jourCourt);
+      el.semLu = h('span', { class: 'sr-only' });
+      el.sem = h('span', { class: 'hud-sem' }, h('span', { 'aria-hidden': 'true' }, el.semLong, el.semCourt, el.jour), el.semLu);
       el.anneeRempli = h('span', { class: 'annee-rempli' });
       el.annee = h('span', { class: 'annee', role: 'img' }, el.anneeRempli,
         h('i', { style: { left: '25%' } }), h('i', { style: { left: '50%' } }), h('i', { style: { left: '75%' } }));
@@ -215,15 +226,17 @@
         el.vitesses.appendChild(b);
         return b;
       });
-      el.semaine = h('button', { type: 'button', id: 'btn-semaine', class: 'btn btn--semaine',
+      // « +1 jour » : met en pause et avance d'une journée (le vendredi publie le rapport de la semaine).
+      el.jourBtn = h('button', { type: 'button', id: 'btn-jour', class: 'btn btn--jour', 'aria-label': t('action.jour'), title: t('action.jourAide'), 'aria-keyshortcuts': 'J',
         onclick: function () {
           var e = LTP.app.etat;
+          if (LTP.app.ui.modaleBloquante) return;
           if (e.phase === 'planification') { var r = app.dispatch({ type: 'phase', phase: 'execution' }); if (r.erreur) return; }
           app.setUI({ vitesse: 0 });
           app.avancer();
-        } }, F.icone('suivant', 14), h('span', { class: 'btn-lib' }, t('action.semaine')));
+        } }, F.icone('suivant', 14), h('span', { class: 'btn-lib' }, t('action.jour')), h('span', { class: 'btn-court', 'aria-hidden': 'true' }, t('action.jourCourt')));
       el.attente = h('span', { class: 'hud-attente', role: 'status' }, t('hud.evenementAttend'));
-      el.commandes = h('div', { class: 'hud-commandes' }, el.lecture, el.vitesses, el.semaine, el.attente);
+      el.commandes = h('div', { class: 'hud-commandes' }, el.lecture, el.vitesses, el.jourBtn, el.attente);
 
       el.aide = h('button', { type: 'button', class: 'ibtn', 'aria-label': t('hud.aideLong'), title: t('hud.aideLong'),
         onclick: function () { app.setUI({ visite: { etape: 0 }, vitesse: 0 }); } }, F.icone('aide', 18));
@@ -256,10 +269,21 @@
       texte(el.phase, t('hud.phase.' + ph));
       cacher(el.temps, !enJeu && ph !== 'fin');
       cacher(el.stats, !enJeu && ph !== 'fin');
+      // La semaine que le joueur est en train de jouer, et le jour ouvrable (pas de jour au comité ni au bilan).
+      var sc = LTP.q.semaineCourante(etat);
+      var avecJour = ph === 'planification' || ph === 'execution';
+      var jour = avecJour ? LTP.ui.nomJour(etat.jour || 0) : '';
       texte(el.tri, t('hud.trimestre', etat));
-      texte(el.sem, t('hud.semaine', etat));
-      el.anneeRempli.style.width = Math.min(100, etat.semaine / 52 * 100) + '%';
-      el.annee.setAttribute('aria-label', t('hud.annee', etat));
+      texte(el.semLong, t('hud.semaine', { semaine: sc }));
+      texte(el.semCourt, t('hud.semaineCourt', { semaine: sc }));
+      texte(el.jourLong, jour);
+      texte(el.jourCourt, avecJour ? LTP.ui.jourCourt(etat.jour || 0) : '');
+      cacher(el.jour, !avecJour);
+      texte(el.semLu, t('hud.quand', { trimestre: etat.trimestre, semaine: sc, jour: jour }));
+      // Progression de l'année, jour par jour (52 × 5 journées).
+      var jours = avecJour ? (sc - 1) * 5 + (etat.jour || 0) : etat.semaine * 5;
+      el.anneeRempli.style.width = Math.max(0, Math.min(100, jours / 260 * 100)).toFixed(2) + '%';
+      el.annee.setAttribute('aria-label', t('hud.annee', { semaine: sc, jour: jour }));
 
       var org = etat.org || {};
       texte(el.budget._val, LTP.format.argent(org.budget));
@@ -289,7 +313,7 @@
       el.lecture.setAttribute('aria-pressed', exec && ui.vitesse ? 'true' : 'false');
       el.lecture.title = planif ? t('hud.planifNote') : '';
       el.lecture.disabled = exec && attente;
-      el.semaine.disabled = exec && attente;
+      el.jourBtn.disabled = (exec && attente) || !!ui.modaleBloquante;
       var vit = ui.vitesse || 0;
       el.vitBoutons.forEach(function (b) {
         var v = parseInt(b.getAttribute('data-vitesse'), 10);
@@ -328,7 +352,8 @@
     rendre: function (etat, ui, precedent, app) {
       var j = etat.journal || [];
       var dernier = j[j.length - 1];
-      var sig = j.length + ':' + (dernier ? dernier.semaine + dernier.cle : '') + ':' + etat.semaine;
+      var sc = LTP.q.semaineCourante(etat);
+      var sig = j.length + ':' + (dernier ? dernier.semaine + ':' + dernier.jour + dernier.cle : '') + ':' + sc;
       F.reconstruire(this._liste, sig, function () {
         var entrees = j.slice(-14).reverse();
         if (!entrees.length) return h('li', { class: 'entree entree--vide' }, t('journal.vide'));
@@ -336,16 +361,22 @@
           var type = ICONE_TYPE[e.type] ? e.type : 'info';
           var txt;
           try { txt = LTP.ui.texteJournal(e); } catch (err) { txt = e.cle; }
-          return h('li', { class: 'entree entree--' + type + (e.semaine === etat.semaine ? ' is-semaine' : '') },
-            h('span', { class: 'entree-icone', title: t('journal.type.' + type) }, F.icone(ICONE_TYPE[type], 15), h('span', { class: 'sr-only' }, t('journal.type.' + type))),
-            h('span', { class: 'entree-sem mono' }, 'S' + e.semaine),
+          var aJour = e.jour != null;
+          var quand = aJour ? t('journal.quand', { semaine: e.semaine, jour: LTP.ui.jourCourt(e.jour) }) : 'S' + e.semaine;
+          // Les entrées qui viennent d'une décision du joueur sont atténuées : le reste, c'est ce qui arrive tout seul.
+          return h('li', { class: 'entree entree--' + type + (e.semaine === sc ? ' is-semaine' : '') + (e.joueur ? ' is-joueur' : '') },
+            h('span', { class: 'entree-icone', title: e.joueur ? t('journal.joueur') : t('journal.type.' + type) }, F.icone(ICONE_TYPE[type], 15),
+              h('span', { class: 'sr-only' }, e.joueur ? t('journal.joueur') : t('journal.type.' + type))),
+            h('span', { class: 'entree-sem mono' }, h('span', { 'aria-hidden': 'true' }, quand),
+              h('span', { class: 'sr-only' }, aJour ? t('journal.quandLong', { semaine: e.semaine, jour: LTP.ui.nomJour(e.jour) }) : quand)),
             h('span', { class: 'entree-texte' }, txt));
         });
       });
-      // Annonce des incidents et alertes de la semaine écoulée.
+      // Annonce des incidents et alertes du jour (pas chaque journée : seulement ce qui demande l'attention ;
+      // les cartes d'événement et les notes de service s'annoncent elles-mêmes).
       var neufs = (app.dernierJournal || []).filter(function (e) { return e.type === 'incident' || e.type === 'alerte'; });
       if (neufs.length) {
-        var cle = etat.semaine + ':' + neufs.length + ':' + neufs[0].cle;
+        var cle = sc + ':' + (etat.jour || 0) + ':' + neufs.length + ':' + neufs[0].cle;
         if (journal_.annonce !== cle) {
           journal_.annonce = cle;
           try { LTP.ui.annoncer(neufs.map(LTP.ui.texteJournal).slice(0, 2).join(' ')); } catch (e) { /* ignoré */ }
@@ -355,10 +386,67 @@
   };
 
   // =====================================================================
+  // Ce qu'on entend : les réflexions des développeurs, avec leur cause
+  // =====================================================================
+  // Aujourd'hui (etat.reflexions.liste), puis hier, avant-hier et plus tôt (etat.reflexions.fil), environ 8 entrées.
+  // Sélecteur stable pour la visite guidée : .echos
+  var ECHOS_MAX = 8;
+  function echosAMontrer(etat) {
+    var R = etat.reflexions || {};
+    var F_ = F;
+    var auj = F_.aujourdhui(etat);
+    var aujourdhui = (R.liste || []).filter(function (r) { return r && r.texte; });
+    var vus = {};
+    aujourdhui.forEach(function (r) { vus[r.dev + '|' + r.texte + '|' + r.semaine + '|' + r.jour] = true; });
+    var avant = (R.fil || []).filter(function (r) {
+      return r && r.texte && F_.jourAbsolu(r.semaine, r.jour) < auj && !vus[r.dev + '|' + r.texte + '|' + r.semaine + '|' + r.jour];
+    }).slice().reverse();
+    var liste = aujourdhui.concat(avant).slice(0, ECHOS_MAX);
+    var groupes = [];
+    liste.forEach(function (r) {
+      var ecart = auj - F_.jourAbsolu(r.semaine, r.jour);
+      var cle = ecart <= 0 ? 'aujourdhui' : ecart === 1 ? 'hier' : ecart === 2 ? 'avantHier' : 'plusTot';
+      var g = groupes[groupes.length - 1];
+      if (!g || g.cle !== cle) groupes.push(g = { cle: cle, items: [] });
+      g.items.push(r);
+    });
+    return groupes;
+  }
+
+  LTP.ui.regions.echos = {
+    monter: function (racine) {
+      this._liste = h('div', { class: 'echos-groupes' });
+      LTP.ui.remplacer(racine, h('div', { class: 'echos' },
+        h('div', { class: 'echos-tete' }, h('h2', { class: 'zone-titre', id: 'echos-titre' }, t('echos.titre')),
+          h('p', { class: 'echos-intro' }, t('echos.intro'))),
+        this._liste));
+    },
+    rendre: function (etat) {
+      var R = etat.reflexions || {};
+      var fil = R.fil || [];
+      var dernier = fil[fil.length - 1];
+      var sig = JSON.stringify([etat.graine, LTP.q.semaineCourante(etat), etat.jour || 0, fil.length, dernier ? dernier.dev + dernier.texte : '',
+        (R.liste || []).map(function (r) { return r.dev + (r.immediat ? '!' : ''); })]);
+      F.reconstruire(this._liste, sig, function () {
+        var groupes = echosAMontrer(etat);
+        if (!groupes.length) return h('p', { class: 'echos-vide' }, t('echos.vide'));
+        return groupes.map(function (g) {
+          var idG = 'echos-' + g.cle;
+          return h('section', { class: 'echos-groupe echos-groupe--' + g.cle, 'aria-labelledby': idG },
+            h('h3', { class: 'echos-quand eyebrow', id: idG }, t('echos.' + g.cle)),
+            h('ul', { class: 'echos-liste' }, g.items.map(function (r) {
+              return F.ligneReflexion(r, etat, { quand: g.cle === 'plusTot' ? t('journal.quand', { semaine: r.semaine, jour: LTP.ui.jourCourt(r.jour) }) : null });
+            })));
+        });
+      });
+    },
+  };
+
+  // =====================================================================
   // Visite guidée avec Ginette
   // =====================================================================
   // Chaque étape montre un élément réel de l'écran. Les étapes « attendre » laissent la main au joueur
-  // (la bulle n'est alors plus modale) : changer un levier, puis jouer une vraie semaine.
+  // (la bulle n'est alors plus modale) : changer un levier ('levier'), jouer une journée ('jour') ou une semaine ('semaine').
   var tuto_ = { cle: null, ecoute: false, retourFocus: null, etape: null, depart: null, fait: false, minuterie: null, fin: false };
 
   function etapes() {
@@ -369,7 +457,7 @@
       { id: 'd2', region: 'openspace', personnage: 'ginette', texte: t('tuto.defaut.2') },
       { id: 'd3', region: 'panneau', personnage: 'ginette', texte: t('tuto.defaut.3') },
       { id: 'd4', region: 'tableau', personnage: 'ginette', texte: t('tuto.defaut.4') },
-      { id: 'd5', region: 'journal', personnage: 'ginette', texte: t('tuto.defaut.5') },
+      { id: 'd5', cibles: ['.echos'], region: 'journal', personnage: 'ginette', texte: t('tuto.defaut.5') },
       { id: 'd6', region: 'hud', personnage: 'ginette', texte: t('tuto.defaut.6') },
     ];
   }
@@ -441,11 +529,13 @@
     if (!et.attendre || !tuto_.depart) return true;
     if (et.attendre === 'levier') return JSON.stringify(etat.leviers) !== tuto_.depart.leviers;
     if (et.attendre === 'semaine') return etat.semaine > tuto_.depart.semaine && !etat.evenementEnAttente;
+    // Une journée de plus (ou une semaine : le vendredi fait passer au lundi suivant).
+    if (et.attendre === 'jour') return (etat.semaine !== tuto_.depart.semaine || (etat.jour || 0) !== tuto_.depart.jour) && !etat.evenementEnAttente;
     return true;
   }
 
   function entrerEtape(et, etat, app) {
-    tuto_.depart = { leviers: JSON.stringify(etat.leviers), semaine: etat.semaine };
+    tuto_.depart = { leviers: JSON.stringify(etat.leviers), semaine: etat.semaine, jour: etat.jour || 0 };
     tuto_.fait = false;
     if (et.panneau) {
       var patch = {};
@@ -465,10 +555,12 @@
           tuto_.etape = null;
           var r = tuto_.retourFocus; tuto_.retourFocus = null;
           var finie = tuto_.fin; tuto_.fin = false;
-          // Fin de visite : retour en haut et focus sur « Lancer le trimestre » (ou « Jouer »).
+          // Fin de visite : retour en haut et focus sur « Lancer le trimestre » (ou « Jouer »), sauf si une note de service s'ouvre.
           if (finie) {
             try { window.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { window.scrollTo(0, 0); }
             setTimeout(function () {
+              // Une note de service (ou une carte) qui s'ouvre à la fin de la visite garde le focus.
+              if (document.querySelector('#modale-racine .couche-dialogue [role="dialog"]')) return;
               var b = document.getElementById('btn-lecture');
               if (b && !b.disabled && b.offsetParent !== null) focaliser(b); else if (r && document.contains(r)) focaliser(r);
             }, 40);

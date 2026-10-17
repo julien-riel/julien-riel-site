@@ -8,6 +8,10 @@
      écrans allumés = dev.sessions · pile de papiers = PR à relire (ilot.fileRevue réparti sur les réviseurs)
      brouillard = 1 − compréhension (uniforme si la métrique n'est pas visible) · flamme = incident
      goutte, puis tête sur le bureau = fatigue · valise = congé · boîte = départ ou absence · livre = formation
+     pastille ✦ près du nom = licence Copilot ; sans licence, l'écran n'a pas de lueur d'agent (on code comme avant)
+   Bulles : les réflexions du jour (etat.reflexions.liste, 33-reflexions) apparaissent en décalé, étalées sur la
+   journée, et restent lisibles environ 8 s quelle que soit la vitesse (au plus 4 à la fois ; les plus importantes
+   passent devant). En pause ou en avance manuelle, toutes les réflexions du jour restent affichées.
    Au téléphone (< 700 px), la même structure devient une liste d'îlots repliables (voir 30-open-space.css). */
 (function (LTP) {
   'use strict';
@@ -16,9 +20,11 @@
   LTP.K.openspace = {
     seuilSueur: 0.55,       // fatigue à partir de laquelle la goutte de sueur apparaît
     seuilEpuise: 0.8,       // fatigue à partir de laquelle la tête tombe sur le bureau
-    seuilBulleFatigue: 0.7, // au-delà, la bulle parle de fatigue plutôt que de l'activité
     feuillesMax: 7,         // feuilles dessinées dans une pile (le nombre exact est écrit sur le post-it)
-    bullesMax: 2,
+    bullesMax: 4,           // bulles visibles à la fois pendant la lecture
+    bulleDureeMs: 8000,     // une bulle reste lisible environ 8 s, quelle que soit la vitesse
+    bulleMinMs: 2600,       // une bulle plus importante peut en remplacer une autre affichée depuis au moins ce temps
+    bulleAttenteMs: 6000,   // une réflexion qui n'a pas trouvé de place à temps est abandonnée (elle reste dans « Ce qu'on entend »)
     brouillardInconnu: 0.32,
   };
   var K = LTP.K.openspace;
@@ -258,14 +264,17 @@
     ilot.conteneurBureaux = h('div', { class: 'os-bureaux', id: idBureaux });
     var sieges = vue.siegesParIlot[def.id];
     sieges.forEach(function (devId, i) {
-      var b = { index: i, occupant: null, cleBulle: null };
+      var b = { index: i, occupant: null };
       b.scene = construireScene(def.id + ':' + i);
       b.nom = h('span', { class: 'os-nom', 'aria-hidden': 'true' });
+      // Repère générique de licence Copilot (pas de logo de marque) : une petite pastille étoilée.
+      b.licence = h('span', { class: 'os-licence', 'aria-hidden': 'true' },
+        s('svg', { viewBox: '0 0 12 12', focusable: 'false' }, s('path', { d: 'M6 0.6 C6.4 4 8 5.6 11.4 6 C8 6.4 6.4 8 6 11.4 C5.6 8 4 6.4 0.6 6 C4 5.6 5.6 4 6 0.6 Z' })));
       b.etatTexte = h('span', { class: 'os-etat-texte', 'aria-hidden': 'true' });
       b.bulle = h('span', { class: 'os-bulle', 'aria-hidden': 'true' });
       b.el = h('button', { type: 'button', class: 'os-bureau os-bureau--' + i },
         h('span', { class: 'os-scene-cadre' }, b.scene.svg),
-        h('span', { class: 'os-plaque' }, b.nom, b.etatTexte),
+        h('span', { class: 'os-plaque' }, h('span', { class: 'os-nom-ligne' }, b.licence, b.nom), b.etatTexte),
         b.bulle);
       ilot.bureaux.push(b);
       ilot.conteneurBureaux.appendChild(b.el);
@@ -327,7 +336,8 @@
     return h('details', { class: 'os-legende' },
       h('summary', null, 'Lire l\'open space'),
       h('ul', null,
-        ligne('ecrans', 'Écrans allumés : sessions d\'agent en parallèle'),
+        ligne('ecrans', 'Écrans allumés : sessions d\'agent en parallèle'),
+        ligne('licence', 'Pastille étoilée : licence Copilot. Sans licence, pas de lueur d\'agent : on code comme avant'),
         ligne('pile', 'Pile de papiers : PR qui attendent la revue de cette personne'),
         ligne('brouillard', 'Brouillard : dette cognitive (uniforme tant qu\'on ne la mesure pas)'),
         ligne('flamme', 'Flamme : incident en cours'),
@@ -392,60 +402,150 @@
     return res;
   }
 
-  function cleBulle(d) {
-    if (!d || !d.present) return null;
-    if (d.fatigue >= K.seuilBulleFatigue && ETATS_ACTIFS[d.etat] && d.etat !== 'incident') return 'fatigue';
-    return d.etat;
-  }
-  function texteBulle(etat, id) {
-    var d = etat.devs[id];
-    var P = LTP.systemes.personnes;
-    if (P && typeof P.bulle === 'function') {
-      try { var t = P.bulle(etat, id); if (t) return LTP.ui.texteContenu(t, etat, { dev: id, ilot: d && d.ilot }); } catch (e) { /* repli */ }
-    }
-    var cle = cleBulle(d);
-    if (!cle) return '';
-    var def = LTP.q.defDev(id);
-    var liste = (def && def.bulles && def.bulles[cle]) || (LTP.donnees.bulles && LTP.donnees.bulles[cle]);
-    if ((!liste || !liste.length) && cle === 'fatigue') liste = (def && def.bulles && def.bulles[d.etat]) || (LTP.donnees.bulles || {})[d.etat];
-    if (!liste) return '';
-    if (!Array.isArray(liste)) liste = [liste];
-    if (!liste.length) return '';
-    var val = liste[Math.floor(O.hachage(id + ':' + etat.semaine) * liste.length)];
-    return LTP.ui.texteContenu(val, etat, { dev: id, ilot: d.ilot });
-  }
+  // =====================================================================
+  // Bulles de réflexion
+  // =====================================================================
+  // Une entrée par réflexion à montrer : { cle, r, rang, eligible, debut, fin, statut: 'attente' | 'vue' | 'finie' }
+  function cleReflexion(r) { return r.dev + '|' + r.semaine + '|' + r.jour + '|' + (r.immediat ? '!' : '') + r.texte; }
+  function lectureEnCours(etat, ui) { return !!(ui.vitesse && etat.phase === 'execution' && !ui.modaleBloquante && !etat.evenementEnAttente); }
+  function maintenant() { return Date.now(); }
 
-  // Une ou deux bulles visibles : celles des personnes dont l'état a changé cette semaine, sinon une rotation.
-  function choisirBulles(etat, precedent, ids) {
-    var prio = { incident: 5, conge: 4, absent: 0, formation: 3, attente: 2, revue: 1, code: 1 };
-    var candidats = [];
-    var semaineChangee = precedent && precedent.semaine !== etat.semaine;
-    ids.forEach(function (id) {
-      var d = etat.devs[id];
-      if (!d || !d.present) return;
-      var avant = precedent && precedent.devs && precedent.devs[id];
-      var change = semaineChangee ? (avant && avant.etat !== d.etat) : (!precedent && d.etat === 'incident');
-      if (change) candidats.push([id, (prio[d.etat] || 1) + O.hachage(id + etat.semaine)]);
+  // Met à jour la liste des bulles d'après les réflexions du jour (sans toucher au DOM).
+  function synchroniserBulles(vue, etat, ui) {
+    var R = etat.reflexions || {};
+    var liste = (R.liste || []).filter(function (r) { return r && r.dev && r.texte; });
+    var jour = etat.graine + ':' + LTP.q.semaineCourante(etat) + ':' + (etat.jour || 0);
+    var lecture = lectureEnCours(etat, ui);
+    var now = maintenant();
+    var b = vue.bulles;
+    var connues = {};
+    b.items.forEach(function (it) { connues[it.cle] = it; });
+    var duJour = {};
+    var nouvelles = [];
+    liste.forEach(function (r) {
+      var cle = cleReflexion(r);
+      duJour[cle] = true;
+      if (!connues[cle]) nouvelles.push(r);
     });
-    candidats.sort(function (a, b) { return b[1] - a[1]; });
-    var choisis = [], ilotsPris = {};
-    candidats.forEach(function (c) {
-      var il = etat.devs[c[0]].ilot;
-      if (choisis.length < K.bullesMax && !ilotsPris[il]) { choisis.push(c[0]); ilotsPris[il] = true; }
+    var jourChange = b.jour !== jour;
+    b.jour = jour;
+    // Une réflexion du jour remplacée par une réaction (33-reflexions) disparaît si elle attendait encore.
+    b.items = b.items.filter(function (it) {
+      if (it.jour === jour && !duJour[it.cle] && it.statut === 'attente') return false;
+      return it.statut !== 'finie' || it.jour === jour;
     });
-    if (!choisis.length) {
-      var presents = ids.filter(function (id) { var d = etat.devs[id]; return d && d.present && cleBulle(d); });
-      if (presents.length) {
-        choisis.push(presents[(etat.semaine * 5) % presents.length]);
-        var autre = presents[(etat.semaine * 5 + 11) % presents.length];
-        if (etat.semaine % 2 === 0 && autre && etat.devs[autre].ilot !== etat.devs[choisis[0]].ilot) choisis.push(autre);
+    // Les réflexions du jour s'étalent sur la durée de la journée ; les réactions immédiates passent tout de suite.
+    var dureeJour = LTP.K.ui.dureeJourMs / (ui.vitesse || 1);
+    var nonImm = nouvelles.filter(function (r) { return !r.immediat; });
+    nouvelles.forEach(function (r) {
+      var i = nonImm.indexOf(r);
+      var decal = r.immediat || !jourChange ? 0 : Math.round(i * dureeJour / Math.max(1, nonImm.length));
+      b.items.push({ cle: cleReflexion(r), r: r, jour: jour, rang: LTP.ui.F ? LTP.ui.F.rangReflexion(r) : (r.immediat ? 4 : 1),
+        eligible: now + decal, debut: null, fin: null, statut: 'attente', ordre: b.compteur++ });
+    });
+    // Passage de la lecture à la pause (ou l'inverse).
+    var mode = lecture ? 'lecture' : 'tout';
+    if (mode !== b.mode) {
+      if (mode === 'lecture' && b.mode === 'tout') {
+        // On reprend : on garde au plus bullesMax bulles, les plus importantes, encore quelques secondes.
+        var visibles = b.items.filter(function (it) { return it.jour === jour; }).sort(function (x, y) { return y.rang - x.rang || x.ordre - y.ordre; });
+        visibles.forEach(function (it, k) {
+          if (k < K.bullesMax) { it.statut = 'vue'; it.debut = now - K.bulleMinMs; it.fin = now + 2500 + k * 600; }
+          else it.statut = 'finie';
+        });
       }
+      b.mode = mode;
     }
-    var m = {};
-    choisis.forEach(function (id) { m[id] = true; });
-    return m;
+    if (mode === 'tout') {
+      // En pause : toutes les réflexions du jour, et rien d'autre.
+      b.items.forEach(function (it) {
+        if (it.jour === jour && duJour[it.cle]) { if (it.statut !== 'vue') { it.statut = 'vue'; it.debut = now; } it.fin = null; }
+        else if (it.statut !== 'finie') it.statut = 'finie';
+      });
+    }
   }
 
+  // Une étape de l'ordonnanceur pendant la lecture : expire, abandonne, montre. Renvoie le prochain instant utile.
+  function ordonnancer(vue, now) {
+    var b = vue.bulles;
+    if (b.mode !== 'lecture') return null;
+    b.items.forEach(function (it) {
+      if (it.statut === 'vue' && it.fin != null && it.fin <= now) it.statut = 'finie';
+      else if (it.statut === 'attente' && it.eligible + K.bulleAttenteMs <= now) it.statut = 'finie';
+    });
+    var prets = b.items.filter(function (it) { return it.statut === 'attente' && it.eligible <= now; })
+      .sort(function (x, y) { return y.rang - x.rang || x.eligible - y.eligible || x.ordre - y.ordre; });
+    prets.forEach(function (it) {
+      var vues = b.items.filter(function (x) { return x.statut === 'vue'; });
+      // Une seule bulle par bureau : la nouvelle remplace l'ancienne de la même personne.
+      var memeDev = vues.filter(function (x) { return x.r.dev === it.r.dev; })[0];
+      if (memeDev) { memeDev.statut = 'finie'; vues = vues.filter(function (x) { return x !== memeDev; }); }
+      if (vues.length >= K.bullesMax) {
+        // Plus de place : on remplace la moins importante, si elle l'est moins et qu'elle a eu le temps d'être lue
+        // (une réaction immédiate n'attend pas).
+        var faible = vues.filter(function (x) { return x.rang < it.rang && (it.rang >= 4 || now - x.debut >= K.bulleMinMs); })
+          .sort(function (x, y) { return x.rang - y.rang || x.debut - y.debut; })[0];
+        if (!faible) return;
+        faible.statut = 'finie';
+      }
+      it.statut = 'vue'; it.debut = now; it.fin = now + K.bulleDureeMs;
+    });
+    var prochain = null;
+    b.items.forEach(function (it) {
+      var tps = it.statut === 'vue' ? it.fin : it.statut === 'attente' ? (it.eligible > now ? it.eligible : now + 400) : null;
+      if (tps != null && (prochain == null || tps < prochain)) prochain = tps;
+    });
+    return prochain;
+  }
+
+  // Réflexion affichée par chaque bureau, et texte de survol (la dernière réflexion déjà entendue).
+  function appliquerBulles(vue) {
+    var etat = vue.etatCourant;
+    if (!etat) return;
+    var b = vue.bulles;
+    var affichees = {};
+    b.items.forEach(function (it) { if (it.statut === 'vue') affichees[it.r.dev] = it; });
+    var R = etat.reflexions || {};
+    var aVenir = {};
+    b.items.forEach(function (it) { if (it.statut === 'attente') aVenir[it.cle] = true; });
+    var fil = (R.fil || []).filter(function (r) { return r && !aVenir[cleReflexion(r)]; });
+    vue.ilots.forEach(function (il) {
+      var visibles = [];
+      il.bureaux.forEach(function (bu) {
+        var id = bu.occupant;
+        var it = id ? affichees[id] : null;
+        var r = it ? it.r : null;
+        if (!r && id) for (var k = fil.length - 1; k >= 0; k--) if (fil[k].dev === id) { r = fil[k]; break; }
+        var txt = r && etat.devs[id] && etat.devs[id].present ? LTP.ui.texteContenu(r.texte, etat, { dev: id, ilot: r.ilot }) : '';
+        texte(bu.bulle, txt);
+        var vu = !!it && !!txt;
+        classe(bu.bulle, 'os-bulle--vue', vu);
+        classe(bu.bulle, 'os-bulle--vide', !txt);
+        classe(bu.bulle, 'os-bulle--plus', !!r && r.ton === 'plus');
+        classe(bu.bulle, 'os-bulle--moins', !!r && r.ton === 'moins');
+        classe(bu.bulle, 'os-bulle--immediat', !!r && !!r.immediat && vu);
+        if (vu) visibles.push(bu);
+      });
+      // Deux bulles dans le même îlot : la deuxième monte au-dessus de la première pour ne pas la cacher.
+      var decal = 0;
+      visibles.forEach(function (bu, k) {
+        var haut = k % 2 === 1;
+        style(bu.bulle, '--os-bulle-decal', haut ? decal + 'px' : '0px');
+        classe(bu.bulle, 'os-bulle--haut', haut);
+        if (!haut) decal = (bu.bulle.offsetHeight || 0) + 8;
+      });
+      il.bureaux.forEach(function (bu) { if (visibles.indexOf(bu) < 0) { classe(bu.bulle, 'os-bulle--haut', false); style(bu.bulle, '--os-bulle-decal', '0px'); } });
+    });
+  }
+
+  function cadencer(vue) {
+    clearTimeout(vue.bulles.minuterie);
+    var prochain = ordonnancer(vue, maintenant());
+    appliquerBulles(vue);
+    if (prochain != null) {
+      vue.bulles.minuterie = setTimeout(function () { cadencer(vue); }, Math.max(60, prochain - maintenant() + 20));
+    }
+  }
   function niveauFatigue(f) {
     if (f >= K.seuilEpuise) return 'épuisement';
     if (f >= K.seuilSueur) return 'fatigue élevée';
@@ -461,7 +561,6 @@
       attr(b.el, 'data-dev', devId);
       habiller(b.scene, devId);
       texte(b.nom, (d && d.nom) || LTP.ui.nomDev(devId));
-      b.cleBulle = null;
     }
     var present = !!(d && d.present);
     var et = present ? d.etat : 'absent';
@@ -473,7 +572,10 @@
     var fatigue = present ? d.fatigue : 0;
     var epuise = actif && fatigue >= K.seuilEpuise;
     var sueur = actif && !epuise && fatigue >= K.seuilSueur;
-    var sessions = present ? Math.max(1, Math.min(6, Math.round(d.sessions || 1))) : 1;
+    // Sans licence Copilot : un seul écran, sans agent (dev.sessions vaut 0).
+    var licence = present && LTP.q.aLicence(etat, d);
+    var agents = licence ? Math.max(1, Math.min(6, Math.round(d.sessions || 1))) : 0;
+    var sessions = Math.max(1, agents);
     var pile = ctx.piles[devId] || 0;
 
     var el = b.el;
@@ -486,6 +588,9 @@
     classe(el, 'os-b--sueur', sueur);
     classe(el, 'os-b--epuise', epuise);
     classe(el, 'os-b--pile', pile > 0);
+    classe(el, 'os-b--licence', licence);
+    classe(el, 'os-b--sans-licence', present && !licence);
+    attr(b.licence, 'title', licence ? (d.pilote ? 'Groupe pilote : licence Copilot' : 'Licence Copilot') : null);
     classe(el, 'os-b--choisi', !!(ui.selection && ui.selection.type === 'dev' && ui.selection.id === devId));
     // Petit rebond quand l'état change d'une semaine à l'autre (deux classes alternées relancent l'animation).
     if (ctx.semaineChangee && ctx.precedent && ctx.precedent.devs && ctx.precedent.devs[devId] && ctx.precedent.devs[devId].etat !== et) {
@@ -532,33 +637,21 @@
     // Textes de la plaque (téléphone) et nom accessible
     var etatLib = LIBELLES_ETAT[et] || et;
     var court = absent && !present ? 'parti' : conge ? 'congé' : formation ? 'formation' : incident ? 'incident' : et === 'revue' ? 'revue' : et === 'attente' ? 'attend' : 'code';
-    var plaque = actif ? court + ' · ' + pluriel(sessions, 'écran', 'écrans') : court;
+    var plaque = actif ? court + ' · ' + (licence ? pluriel(agents, 'écran', 'écrans') : 'sans agent') : court;
     if (pile > 0) plaque += ' · ' + pile + ' PR';
     texte(b.etatTexte, plaque);
     var nom = (d && d.nom) || LTP.ui.nomDev(devId);
     var parts = [nom];
     if (!present) parts.push('a quitté son poste');
     else {
-      parts.push(etatLib);
-      if (actif) parts.push(pluriel(sessions, 'session d\'agent', 'sessions d\'agent'));
+      parts.push(etatLib === LIBELLES_ETAT.code && !licence ? 'code' : etatLib);
+      parts.push(licence ? 'avec licence Copilot' : 'sans licence Copilot');
+      if (actif && licence) parts.push(pluriel(agents, 'session d\'agent', 'sessions d\'agent'));
       if (pile > 0) parts.push(pluriel(pile, 'PR à relire', 'PR à relire'));
       if (!conge) parts.push(niveauFatigue(fatigue));
       if (ctx.comprehensionVisible && d.comprehension != null) parts.push('compréhension du code ' + F.pourcent(d.comprehension));
     }
     attr(el, 'aria-label', parts.join(', ') + '. Ouvrir la fiche.');
-
-    // Bulle de pensée
-    var cle = etat.semaine + '|' + cleBulle(d);
-    if (b.cleBulle !== cle) {
-      b.cleBulle = cle;
-      texte(b.bulle, present ? texteBulle(etat, devId) : '');
-    }
-    // La bulle apparaît, reste quelques secondes puis s'efface ; deux classes alternées relancent l'animation chaque semaine.
-    var vue = !!ctx.bulles[devId] && !!b.bulle.__osT, pair = etat.semaine % 2 === 0;
-    classe(b.bulle, 'os-bulle--vue', vue);
-    classe(b.bulle, 'os-bulle--a', vue && pair);
-    classe(b.bulle, 'os-bulle--b', vue && !pair);
-    classe(b.bulle, 'os-bulle--vide', !b.bulle.__osT);
   }
 
   // --- Mise à jour d'un îlot ---
@@ -588,7 +681,7 @@
     attr(il.badgeCap, 'title', cap ? pluriel(cap, 'capacité équipée', 'capacités équipées') : null);
     attr(il.badgeInc, 'title', inc ? pluriel(inc, 'incident en cours', 'incidents en cours') : null);
     var file = Math.round(e.fileRevue || 0);
-    var sessions = O.somme(occ, function (id) { var d = etat.devs[id]; return d && d.present && ETATS_ACTIFS[d.etat] ? Math.round(d.sessions || 1) : 0; });
+    var sessions = O.somme(occ, function (id) { var d = etat.devs[id]; return d && d.present && ETATS_ACTIFS[d.etat] && LTP.q.aLicence(etat, d) ? Math.max(1, Math.round(d.sessions || 1)) : 0; });
     texte(il.resume, pluriel(sessions, 'session', 'sessions') + (file ? ' · ' + file + ' PR à relire' : ''));
     var choisi = (ui.selection && ui.selection.type === 'ilot' && ui.selection.id === il.id) || ui.ilotEdition === il.id;
     classe(il.el, 'os-ilot--choisi', !!choisi);
@@ -616,7 +709,8 @@
 
   LTP.ui.regions.openspace = {
     monter: function (racine, app) {
-      var vue = { app: app, ilots: [], replies: {}, siegesParIlot: siegesParIlot(), bulles: {}, bullesSemaine: null };
+      var vue = { app: app, ilots: [], replies: {}, siegesParIlot: siegesParIlot(),
+        bulles: { items: [], jour: null, mode: null, compteur: 0, minuterie: null } };
       this._vue = vue;
       vue.sommaire = h('p', { class: 'os-sommaire' });
       vue.toutReplier = h('button', { type: 'button', class: 'os-tout-replier' }, 'Tout replier');
@@ -671,30 +765,32 @@
       var ids = [];
       vue.ilots.forEach(function (il) { ids = ids.concat(occupants(etat, il.id, vue.siegesParIlot[il.id])); });
       var semaineChangee = !!(precedent && precedent.semaine !== etat.semaine);
-      if (vue.bullesSemaine !== etat.semaine || vue.bullesGraine !== etat.graine) {
-        vue.bullesSemaine = etat.semaine;
-        vue.bullesGraine = etat.graine;
-        vue.bulles = choisirBulles(etat, precedent, ids);
-      }
       var jetonsMax = 0;
       LTP.q.ilots(etat).forEach(function (il) { jetonsMax = Math.max(jetonsMax, (il.derniere && il.derniere.jetons) || 0); });
       var ctx = {
-        vue: vue, precedent: precedent, semaineChangee: semaineChangee, bulles: vue.bulles, jetonsMax: jetonsMax,
+        vue: vue, precedent: precedent, semaineChangee: semaineChangee, jetonsMax: jetonsMax,
         comprehensionVisible: LTP.q.metriqueVisible(etat, 'comprehension'),
       };
       vue.ilots.forEach(function (il) { rendreIlot(il, etat, ui, ctx); });
 
+      // Bulles de réflexion : l'ordonnanceur garde sa propre minuterie entre deux rendus.
+      vue.etatCourant = etat;
+      synchroniserBulles(vue, etat, ui);
+      cadencer(vue);
+
       // Sommaire de l'étage
-      var presents = 0, sessions = 0, file = 0;
+      var presents = 0, sessions = 0, file = 0, licences = 0;
       ids.forEach(function (id) {
         var d = etat.devs[id];
         if (!d || !d.present) return;
         if (d.etat !== 'conge' && d.etat !== 'absent') presents++;
-        if (ETATS_ACTIFS[d.etat]) sessions += Math.round(d.sessions || 1);
+        var lic = LTP.q.aLicence(etat, d);
+        if (lic) licences++;
+        if (ETATS_ACTIFS[d.etat] && lic) sessions += Math.max(1, Math.round(d.sessions || 1));
       });
       LTP.q.ilots(etat).forEach(function (il) { file += Math.round(il.fileRevue || 0); });
       var inc = LTP.q.incidentsActifs(etat).length;
-      texte(vue.sommaire, presents + ' au bureau · ' + pluriel(sessions, 'session d\'agent', 'sessions d\'agent') + ' · ' +
+      texte(vue.sommaire, presents + ' au bureau · ' + pluriel(licences, 'licence Copilot', 'licences Copilot') + ' · ' + pluriel(sessions, 'session d\'agent', 'sessions d\'agent') + ' · ' +
         pluriel(file, 'PR en attente', 'PR en attente') + (inc ? ' · ' + pluriel(inc, 'incident', 'incidents') : ''));
 
       // Coin café : applications hors TI

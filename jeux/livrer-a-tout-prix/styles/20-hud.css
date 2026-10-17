@@ -20,6 +20,8 @@
 .hud-quand { display: flex; align-items: baseline; gap: 8px; }
 .hud-tri { font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 0 6px; border-radius: 3px; font-size: var(--fs-s); }
 .hud-sem { font-weight: 600; font-size: var(--fs-s); white-space: nowrap; }
+.hud-jour { font-weight: 500; color: var(--muted); }
+.hud-court { display: none; }
 .annee { position: relative; display: block; height: 5px; border-radius: 3px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
 .annee-rempli { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--soleil), var(--accent)); border-radius: 3px; transition: width .5s ease; }
 .annee i { position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--surface); }
@@ -47,7 +49,8 @@
 .vitesse.is-actif { background: var(--fg); color: var(--bg); }
 .vitesse.is-actif.is-pause { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--fg); }
 .vitesse[disabled] { opacity: .45; cursor: not-allowed; }
-.btn--semaine { font-size: var(--fs-s); }
+.btn--jour { font-size: var(--fs-s); }
+.btn--jour .btn-court { display: none; }
 /* Hors du flux : son apparition ne doit pas changer la hauteur du HUD (ni décaler la page). */
 .hud-attente {
   position: absolute; right: 0; top: calc(100% + 6px); z-index: 1;
@@ -108,6 +111,7 @@
 @keyframes vapeur { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(-3px); opacity: .2; } }
 .art-papier { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1; }
 
+.accueil-rythme { max-width: 70ch; color: var(--muted); margin: -4px 0 14px; }
 .trims { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .trim-carte { display: grid; gap: 4px; padding: 14px 14px 16px; background: var(--paper); border: 1px solid var(--line-strong); border-radius: 2px; position: relative; }
 .trim-carte b { font-family: var(--font-titre); font-size: var(--fs-l); }
@@ -126,10 +130,13 @@
 /* ---------- Journal ---------- */
 .journal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 12px 14px 8px; display: grid; gap: 8px; }
 .journal-liste { list-style: none; display: grid; max-height: 340px; overflow-y: auto; overscroll-behavior: contain; }
-.entree { display: grid; grid-template-columns: 22px 32px minmax(0, 1fr); gap: 6px; align-items: start; padding: 6px 4px; border-top: 1px dotted var(--line); font-size: var(--fs-s); }
+.entree { display: grid; grid-template-columns: 22px 5.6em minmax(0, 1fr); gap: 6px; align-items: start; padding: 6px 4px; border-top: 1px dotted var(--line); font-size: var(--fs-s); }
 .entree:first-child { border-top: 0; }
 .entree-icone { color: var(--muted); padding-top: 1px; }
-.entree-sem { color: var(--muted); font-size: var(--fs-xs); padding-top: 2px; }
+.entree-sem { color: var(--muted); font-size: var(--fs-xs); padding-top: 2px; white-space: nowrap; }
+/* Ce qui vient d'une décision du joueur est atténué : l'œil va d'abord à ce qui arrive tout seul. */
+.entree.is-joueur .entree-texte { color: var(--muted); }
+.entree.is-joueur .entree-icone { opacity: .7; }
 .entree-texte { min-width: 0; overflow-wrap: anywhere; }
 .entree.is-semaine { background: linear-gradient(90deg, var(--accent-soft), transparent 80%); border-radius: 3px; }
 .entree.is-semaine .entree-sem { color: var(--accent); font-weight: 600; }
@@ -138,6 +145,34 @@
 .entree--evenement .entree-icone, .entree--comite .entree-icone { color: var(--accent); }
 .entree--personne .entree-icone { color: var(--ok); }
 .entree--vide { grid-template-columns: 1fr; color: var(--muted); font-style: italic; }
+
+/* ---------- Ce qu'on entend (réflexions des développeurs) ---------- */
+.zone-journal { display: grid; gap: 16px; align-content: start; }
+.echos { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-l); padding: 12px 14px 10px; display: grid; gap: 8px; box-shadow: var(--shadow); }
+.echos-tete { display: grid; gap: 2px; }
+.echos-intro { font-size: var(--fs-xs); color: var(--muted); }
+.echos-groupes { display: grid; gap: 10px; }
+.echos-groupe { display: grid; gap: 4px; }
+.echos-quand { padding-bottom: 2px; border-bottom: 1px solid var(--line); }
+.echos-groupe--aujourdhui .echos-quand { color: var(--accent); border-bottom-color: var(--accent-line); }
+.echos-liste { list-style: none; display: grid; gap: 2px 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.echos-vide { color: var(--muted); font-style: italic; font-size: var(--fs-s); }
+.echo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; padding: 7px 0; border-top: 1px dotted var(--line); }
+.echos-liste > .echo:first-child { border-top: 0; }
+.echo .visage { margin-top: 2px; }
+.echo-corps { display: grid; gap: 2px; min-width: 0; }
+.echo-qui { font-size: var(--fs-xs); color: var(--muted); display: flex; flex-wrap: wrap; gap: 0 4px; align-items: baseline; }
+.echo-qui b { color: var(--fg); font-family: var(--font-titre); font-weight: 600; font-size: var(--fs-s); }
+.echo-quand { margin-left: auto; font-size: .6875rem; }
+.echo-texte { font-size: var(--fs-s); line-height: 1.4; overflow-wrap: anywhere; }
+/* L'étiquette de cause relie la réflexion à ce qui l'a provoquée : un levier, une note de service, une situation. */
+.echo-cause { justify-self: start; margin-top: 2px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); background: var(--surface-2); border-radius: 3px; padding: 1px 7px; overflow-wrap: anywhere; }
+.echo-cause--levier { color: var(--accent); background: var(--accent-soft); }
+.echo-cause--nouveaute { color: var(--postit-fg); background: var(--postit); }
+.echo-immediat { font-weight: 500; }
+.echo--plus .echo-texte { box-shadow: inset 2px 0 0 color-mix(in srgb, var(--ok) 70%, transparent); padding-left: 7px; }
+.echo--moins .echo-texte { box-shadow: inset 2px 0 0 color-mix(in srgb, var(--crit) 60%, transparent); padding-left: 7px; }
+.echo.is-immediat .echo-texte { font-weight: 600; }
 
 /* ---------- Lien d'évitement ---------- */
 .lien-evitement {

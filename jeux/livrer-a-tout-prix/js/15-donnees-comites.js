@@ -43,6 +43,7 @@
   }
   function idsIlots(etat) { return (etat && etat.ordreIlots) || Object.keys((etat && etat.ilots) || {}); }
   function ilot(etat, id) { return (etat && etat.ilots && etat.ilots[id]) || null; }
+  function debloque(etat, id) { try { return !!LTP.q.levierDebloque(etat, id); } catch (e) { return false; } }
   // Îlots où la valeur effective du levier satisfait le prédicat.
   function ilotsOu(etat, q, id, pred) {
     return idsIlots(etat).filter(function (i) { return pred(lev(etat, q, id, i)); });
@@ -170,6 +171,16 @@
       return s >= 0.3 ? bon : s <= -0.3 ? mauvais : moyen;
     };
   }
+  // Points livrés par un pilote, rapportés à ceux d'un non-pilote, la semaine passée (null si incomparable).
+  function rapportPilote(etat) {
+    var p = 0, np = 0, n1 = 0, n2 = 0;
+    devsPresents(etat).forEach(function (d) {
+      var pts = num(d.derniere && d.derniere.points, 0);
+      if (d.pilote) { p += pts; n1++; } else { np += pts; n2++; }
+    });
+    if (!n1 || !n2 || !(np > 0) || !(p > 0)) return null;
+    return (p / n1) / (np / n2);
+  }
   function pluriel(n, un, plusieurs) { return F.nombre(n, 0) + ' ' + (Math.abs(n) >= 2 ? plusieurs : un); }
 
   LTP.donnees.comites = [
@@ -219,8 +230,15 @@
         { id: 'a',
           texte: function (etat) {
             var b = budget(etat);
+            // Le plan ne cite que des leviers déjà débloqués par le calendrier.
+            var plan = [];
+            if (debloque(etat, 'sessionsMax')) plan.push('moins de sessions');
+            if (debloque(etat, 'modeleParTache')) plan.push('le modèle selon la tâche');
+            else if (debloque(etat, 'modele')) plan.push('un modèle moins cher pour les tâches simples');
+            if (debloque(etat, 'plafondJetons')) plan.push('un plafond de jetons');
+            if (!plan.length) plan = ['des licences et une autonomie qui suivent ce que ça rapporte', 'un suivi du coût par point livré chaque vendredi'];
             return 'Je ne peux pas vous rassurer : on dépense ' + F.pourcent(Math.max(0, b.rythme - 1))
-              + ' plus vite que prévu. Mon plan : moins de sessions, le modèle selon la tâche, un plafond de jetons.';
+              + ' plus vite que prévu. Mon plan : ' + plan.join(', ') + '.';
           },
           evaluer: function (etat, q) {
             var s = 0.6;
@@ -238,6 +256,30 @@
         { id: 'c', texte: 'Le budget était sous-estimé dès le départ.',
           evaluer: function () { return -0.4; },
           reaction: 'C\'est moi qui l\'ai estimé. Choisis bien tes prochains mots.' },
+      ],
+    },
+    {
+      id: 'lavigueur-pilote', personnage: 'lavigueur', trimestres: [1], poids: 3,
+      condition: function (etat, q) { return lev(etat, q, 'licences') === 'pilote'; },
+      question: 'Sept licences Copilot depuis janvier. Est-ce que le groupe pilote livre plus que les autres ? Et est-ce qu\'on doit en acheter quatorze de plus ?',
+      reponses: [
+        { id: 'a',
+          texte: function (etat) {
+            var r = rapportPilote(etat);
+            if (r == null) return 'Je n\'ai pas encore de chiffre fiable. Je vous propose de comparer les pilotes à leurs voisins, et pas seulement leur débit : les bogues et la revue aussi.';
+            return 'Les pilotes ont livré ' + (r >= 1 ? F.pourcent(r - 1) + ' de plus' : F.pourcent(1 - r) + ' de moins') + ' que leurs voisins la semaine passée. '
+              + 'Mais ce sont des volontaires, et leur code passe en revue chez les autres. Je recommande d\'élargir en surveillant la file de revue.';
+          },
+          evaluer: function (etat) { return rapportPilote(etat) == null ? 0.5 : 0.85; },
+          reaction: selon('Un chiffre, et ses limites. Vous pouvez acheter les licences. Et surveiller la file.',
+            'Bon. Je veux le même tableau le trimestre prochain.', 'Hmm.') },
+        { id: 'b', texte: 'Oui, sans aucun doute : avec Copilot, chacun livre au moins deux fois plus. Il faut équiper tout le monde dès lundi.',
+          evaluer: function (etat) { var r = rapportPilote(etat); return r != null && r >= 2 ? 0.2 : -0.7; },
+          reaction: selon('Deux fois plus. C\'est aussi ce que dit votre tableau. Bon.', 'Deux fois ? Je vais vérifier.',
+            'Deux fois plus ? Votre propre tableau de bord ne dit pas ça. Je sais lire, vous savez.') },
+        { id: 'c', texte: 'C\'est trop tôt pour le dire. On verra l\'an prochain.',
+          evaluer: function () { return -0.3; },
+          reaction: 'L\'an prochain, j\'aurai un autre conseil d\'administration. Il voudra un chiffre.' },
       ],
     },
     {
@@ -278,7 +320,7 @@
         { id: 'a', texte: 'Parce que le goulot s\'est déplacé : l\'écriture va vite, mais la revue ne suit pas. Les PR attendent sur le bureau des réviseurs.',
           evaluer: function () { return 0.9; },
           reaction: 'Donc le problème n\'est plus d\'écrire, c\'est de relire. Ça, je peux l\'expliquer au conseil.' },
-        { id: 'b', texte: 'Parce qu\'on n\'a pas encore assez d\'agents. On va ajouter des sessions en parallèle pour produire plus vite et vider la file des directions.',
+        { id: 'b', texte: 'Parce qu\'on n\'utilise pas encore assez l\'IA. On va donner plus d\'autonomie aux agents pour produire plus vite et vider la file des directions.',
           evaluer: function () { return -0.7; },
           reaction: 'Plus de code pour une file qui déborde déjà ? Ginette vient de fermer les yeux très fort.' },
         { id: 'c', texte: 'Les directions exagèrent : le délai est correct.',
@@ -331,7 +373,7 @@
       ],
     },
     {
-      id: 'regis-sessions', personnage: 'regis', trimestres: [1, 2], poids: 2,
+      id: 'regis-sessions', personnage: 'regis', trimestres: [2, 3], poids: 2,
       condition: function (etat, q) { return num(lev(etat, q, 'sessionsMax'), 1) >= 4; },
       question: 'Je suis passé aux Sites web. Laurence a quatre écrans et quatre agents qui tournent en même temps. On paie quatre fois ?',
       reponses: [
@@ -379,7 +421,7 @@
       ],
     },
     {
-      id: 'berube-criticite', personnage: 'berube', trimestres: [1, 2], poids: 2,
+      id: 'berube-criticite', personnage: 'berube', trimestres: [2, 3], poids: 2,
       condition: function (etat, q) {
         return ilotsOu(etat, q, 'autonomie', function (v) { return num(v, 0) >= 3; })
           .filter(function (i) { return i === 'iot' || i === 'operations'; }).length > 0;
@@ -407,7 +449,7 @@
       ],
     },
     {
-      id: 'regis-modele-haut', personnage: 'regis', trimestres: [1, 2], poids: 2,
+      id: 'regis-modele-haut', personnage: 'regis', trimestres: [2, 3], poids: 2,
       condition: function (etat, q) { return lev(etat, q, 'modele') === 'haut'; },
       question: 'Le modèle haut de gamme coûte plusieurs fois le prix de l\'économique, par jeton. Pourquoi pas le moins cher ?',
       reponses: [
@@ -424,7 +466,7 @@
       ],
     },
     {
-      id: 'regis-modele-economique', personnage: 'regis', trimestres: [1, 2], poids: 2,
+      id: 'regis-modele-economique', personnage: 'regis', trimestres: [2, 3], poids: 2,
       condition: function (etat, q) { return lev(etat, q, 'modele') === 'economique'; },
       question: 'Le modèle économique, c\'est mon genre de décision. On économise combien, au juste ?',
       reponses: [
@@ -603,7 +645,7 @@
           },
           reaction: selon('Un chiffre mesuré. Même s\'il n\'est pas beau, je préfère ça.', 'Hmm.',
             'Vous ne mesurez pas la compréhension. J\'ai demandé à Ginette. Elle a ri.') },
-        { id: 'b', texte: 'Honnêtement, je ne le sais pas : on ne mesure pas la compréhension. Des revues d\'explication nous le diraient.',
+        { id: 'b', texte: 'Honnêtement, je ne le sais pas : on ne mesure pas la compréhension. Il faudrait demander à chacun d\'expliquer son code, sans l\'IA.',
           evaluer: function (etat, q) { return vis(etat, q, 'comprehension') ? -0.4 : 0.6; },
           reaction: selon('Vous ne savez pas, et vous savez comment le savoir. C\'est déjà beaucoup.', 'Hmm.',
             'Vous la mesurez pourtant. C\'est sur votre tableau de bord.') },

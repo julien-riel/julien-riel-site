@@ -2,9 +2,12 @@
 /* Région « modale » (#modale-racine) : superpose plusieurs couches, chacune reconstruite seulement si elle change.
      - comité trimestriel (rendu par 47-ui-comite.js, LTP.ui.comite.rendre)
      - visite guidée (rendue par 48-ui-ecrans.js, LTP.ui.tutoriel.rendre)
-     - carte d'événement (etat.evenementEnAttente) et fiche de développeur (ui.modale.type === 'fiche')
+     - carte d'événement (etat.evenementEnAttente), puis note de service d'une nouveauté du calendrier
+       (etat.nouveaute non vue), puis fiche de développeur (ui.modale.type === 'fiche')
      - bandeau de conséquence après une décision (etat.derniereDecision)
-   Échap et clic hors de la fiche la ferment ; la carte d'événement exige une décision. Piège du focus.
+   Échap et clic hors de la fiche la ferment ; Échap ferme la note (« Compris ») ; la carte d'événement exige
+   une décision. La carte, la note, le comité et la visite mettent la lecture en pause (ui.modaleBloquante).
+   Piège du focus.
    Propriétaire : agent F. */
 (function (LTP) {
   'use strict';
@@ -29,7 +32,7 @@
     return h('div', { class: 'modale carte-evenement', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'ev-titre', 'aria-describedby': 'ev-texte', 'data-evenement': att.id },
       h('div', { class: 'ev-bande', 'aria-hidden': 'true' }),
       h('header', { class: 'ev-tete' },
-        h('p', { class: 'eyebrow' }, t('evenement.eyebrow', { semaine: etat.semaine }), lieu ? ' · ' + lieu : '', def.theme ? h('span', { class: 'ev-theme mono' }, def.theme) : null),
+        h('p', { class: 'eyebrow' }, t('evenement.eyebrow', { semaine: LTP.q.semaineCourante(etat) }), lieu ? ' · ' + lieu : '', def.theme ? h('span', { class: 'ev-theme mono' }, def.theme) : null),
         h('h2', { id: 'ev-titre', class: 'ev-titre', tabindex: '-1' }, titre)),
       h('div', { class: 'ev-corps' },
         h('figure', { class: 'ev-perso' }, F.visage(perso.id, 64), h('figcaption', null, h('b', null, perso.nom), perso.role ? h('span', null, perso.role) : null)),
@@ -48,6 +51,84 @@
         })));
   }
 
+  // --- Note de service : une nouveauté du calendrier (08-donnees-calendrier) ---
+  // Le levier à montrer avec « Voir le levier » : le premier levier nouveau, sinon celui dont des valeurs arrivent.
+  function levierDeNote(c) {
+    if ((c.leviers || []).length) return c.leviers[0];
+    if ((c.valeurs || []).length) return c.valeurs[0].levier;
+    return null;
+  }
+  function noteService(etat, app) {
+    var nv = etat.nouveaute;
+    var c = LTP.q.deblocage(nv.semaine) || { titre: '', texte: '' };
+    var N = LTP.format.NBSP;
+    var signataire = F.personne(c.signataire || 'ginette');
+    var compris = function () { app.dispatch({ type: 'nouveauteVue' }); };
+    var levier = levierDeNote(c);
+    var panneau = !levier && (c.panneaux || [])[0];
+    var disponibles = [];
+    (c.leviers || []).forEach(function (id) {
+      var d = LTP.q.defLevier(id);
+      if (!d) return;
+      disponibles.push(h('li', { class: 'note-dispo' }, h('b', null, d.libelle), d.aide ? h('span', null, d.aide) : null));
+    });
+    (c.valeurs || []).forEach(function (x) {
+      var d = LTP.q.defLevier(x.levier);
+      if (!d) return;
+      disponibles.push(h('li', { class: 'note-dispo' },
+        h('b', null, d.libelle + N + ': ' + (x.v || []).map(function (v) { return LTP.ui.libelleValeur(x.levier, v); }).join(', ')),
+        d.aide ? h('span', null, d.aide) : null));
+    });
+    (c.panneaux || []).forEach(function (pid) {
+      var p = (LTP.donnees.panneaux || []).filter(function (y) { return y.id === pid; })[0];
+      disponibles.push(h('li', { class: 'note-dispo' }, h('b', null, t('note.panneau', { panneau: p ? p.libelle : pid }))));
+    });
+    var surveiller = (c.surveiller || []).map(function (id) {
+      var m = LTP.donnees.metriquesParId && LTP.donnees.metriquesParId[id];
+      if (!m) return null;
+      var cachee = !LTP.q.metriqueVisible(etat, id);
+      return h('li', { class: cachee ? 'is-cachee' : null }, m.libelle, cachee ? h('span', { class: 'muted' }, ' (' + t('tableau.nonMesure') + ')') : null);
+    }).filter(Boolean);
+    return h('div', { class: 'modale carte-evenement note-service', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'note-titre', 'aria-describedby': 'note-texte', 'data-note': String(nv.semaine) },
+      h('div', { class: 'ev-bande note-bande', 'aria-hidden': 'true' }),
+      h('header', { class: 'ev-tete' },
+        h('p', { class: 'eyebrow' }, t('note.eyebrow', { semaine: nv.semaine })),
+        h('h2', { id: 'note-titre', class: 'ev-titre', tabindex: '-1' }, F.texte(c.titre, etat) || t('trimestre.deblocage'))),
+      h('div', { class: 'ev-corps' },
+        h('figure', { class: 'ev-perso' }, F.visage(signataire.id, 64), h('figcaption', null, h('b', null, signataire.nom), signataire.role ? h('span', null, signataire.role) : null)),
+        h('p', { class: 'ev-texte bulle', id: 'note-texte' }, F.texte(c.texte, etat))),
+      disponibles.length ? h('section', { class: 'note-section', 'aria-labelledby': 'note-dispo-t' },
+        h('h3', { class: 'eyebrow', id: 'note-dispo-t' }, t('note.disponible')),
+        h('ul', { class: 'note-dispos' }, disponibles)) : null,
+      surveiller.length ? h('section', { class: 'note-section', 'aria-labelledby': 'note-surv-t' },
+        h('h3', { class: 'eyebrow', id: 'note-surv-t' }, t('note.surveiller')),
+        h('ul', { class: 'note-surveiller' }, surveiller)) : null,
+      h('div', { class: 'note-actions' },
+        levier || panneau ? h('button', { type: 'button', class: 'btn', id: 'btn-note-voir', 'data-cle': 'note-voir',
+          onclick: function () {
+            compris();
+            if (!LTP.ui.panneau) return;
+            if (levier && LTP.ui.panneau.montrerLevier) LTP.ui.panneau.montrerLevier(levier);
+            else if (panneau && LTP.ui.panneau.montrerPanneau) LTP.ui.panneau.montrerPanneau(panneau);
+          } }, levier ? t('note.voir') : t('note.voirPanneau')) : null,
+        h('button', { type: 'button', class: 'btn btn--primaire', id: 'btn-note-compris', 'data-cle': 'note-compris', onclick: compris }, t('note.compris'))));
+  }
+  // La note s'affiche en planification et en exécution, après la carte d'événement et hors de la visite guidée.
+  function noteAMontrer(etat, ui) {
+    var nv = etat.nouveaute;
+    if (!nv || nv.vue || etat.evenementEnAttente) return false;
+    if (etat.phase !== 'planification' && etat.phase !== 'execution') return false;
+    if (LTP.ui.tutoriel && LTP.ui.tutoriel.actif && LTP.ui.tutoriel.actif(etat, ui)) return false;
+    return !!LTP.q.deblocage(nv.semaine);
+  }
+
+  // Statut de licence Copilot d'un développeur, pour la fiche.
+  function statutLicence(etat, d) {
+    if (!LTP.q.aLicence(etat, d)) return { cle: 'non', texte: t('fiche.licence.non'), aide: t('fiche.licenceAide.non') };
+    if (d.pilote && LTP.q.levier(etat, 'licences') === 'pilote') return { cle: 'pilote', texte: t('fiche.licence.pilote') };
+    return { cle: 'oui', texte: t('fiche.licence.oui') };
+  }
+
   // --- Fiche de développeur ---
   function fiche(etat, id, app) {
     var d = etat.devs[id], def = LTP.q.defDev(id) || { nom: id };
@@ -56,6 +137,12 @@
     var compVisible = LTP.q.metriqueVisible(etat, 'comprehension');
     var reactions = (def.reactions || []).filter(function (r) { return r && r.levier && LTP.q.defLevier(r.levier); });
     var der = d.derniere || {};
+    var lic = statutLicence(etat, d);
+    // Dernières réflexions de la personne ; une réflexion du jour remplacée par une réaction (absente de la liste du jour) est écartée.
+    var R = etat.reflexions || {}, auj = F.aujourdhui(etat);
+    var reflexions = (LTP.systemes.reflexions && LTP.systemes.reflexions.dernieres ? LTP.systemes.reflexions.dernieres(etat, id, 6) : [])
+      .filter(function (r) { return F.jourAbsolu(r.semaine, r.jour) < auj || (R.liste || []).indexOf(r) >= 0 || (R.liste || []).some(function (x) { return x.dev === r.dev && x.texte === r.texte; }); })
+      .slice(0, 3);
     return h('div', { class: 'modale fiche', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'fiche-nom' },
       h('button', { type: 'button', class: 'modale-fermer', 'aria-label': t('action.fermer'), onclick: fermer }, F.icone('fermer', 18)),
       h('header', { class: 'fiche-tete' },
@@ -65,6 +152,8 @@
           h('h2', { id: 'fiche-nom' }, def.nom || id),
           h('p', { class: 'fiche-niveau' }, t('fiche.niveau.' + d.niveau), ' · ',
             h('span', { class: 'fiche-etat etat--' + d.etat }, LTP.aTexte('etat.' + d.etat) ? t('etat.' + d.etat) : d.etat)),
+          h('p', { class: 'fiche-licence licence--' + lic.cle, title: lic.aide || null },
+            h('span', { class: 'fiche-licence-pastille', 'aria-hidden': 'true' }), lic.texte),
           h('ul', { class: 'traits', 'aria-label': t('fiche.traits') }, (d.traits || []).map(function (tr) { return h('li', { class: 'trait' }, nomTrait(tr)); })))),
       !d.present ? h('p', { class: 'fiche-parti' }, t('fiche.parti')) : null,
       def.tagline ? h('p', { class: 'fiche-tagline' }, def.tagline) : null,
@@ -83,6 +172,11 @@
           h('span', { class: 'ecrans', 'aria-label': d.sessions + ' ' + t('fiche.sessions') },
             [0, 1, 2, 3, 4, 5].map(function (i) { return h('i', { class: i < d.sessions ? 'is-on' : '', 'aria-hidden': 'true' }); })),
           h('span', { class: 'jauge-val mono' }, String(d.sessions)))),
+      h('section', { class: 'fiche-reflexions', 'aria-labelledby': 'fiche-refl-t' },
+        h('h3', { id: 'fiche-refl-t', class: 'eyebrow' }, t('fiche.reflexions')),
+        reflexions.length ? h('ul', { class: 'echos-liste' }, reflexions.map(function (r) {
+          return F.ligneReflexion(r, etat, { taille: 28, quand: F.quandReflexion(r, etat), classe: 'echo--fiche' });
+        })) : h('p', { class: 'muted petit' }, t('fiche.reflexionsVide'))),
       der.pr != null ? h('p', { class: 'fiche-semaine mono' }, t('fiche.semaine', { pr: LTP.format.nombre(der.pr || 0, 0), revues: LTP.format.nombre(der.revues || 0, 0), jetons: LTP.format.jetons(der.jetons || 0) })) : null,
       reactions.length ? h('section', { class: 'fiche-reactions' },
         h('h3', { class: 'eyebrow' }, t('fiche.reactions')),
@@ -127,7 +221,7 @@
       if (a && a !== document.body && document.contains(a)) return true;
       if (focusable(r)) { focaliser(r); if (document.activeElement === r) return true; }
       var b = document.getElementById('btn-lecture');
-      if (!focusable(b)) b = document.getElementById('btn-semaine');
+      if (!focusable(b)) b = document.getElementById('btn-jour');
       if (focusable(b)) { focaliser(b); return true; }
       return false;
     };
@@ -148,6 +242,7 @@
         var actif = self._dialogue.querySelector('[role="dialog"]') || self._comite.querySelector('[role="dialog"]') || self._tuto.querySelector('[role="dialog"]');
         if (ev.key === 'Escape') {
           if (self._dialogue.querySelector('.fiche')) { ev.preventDefault(); ev.stopPropagation(); LTP.app.setUI({ modale: null }); }
+          else if (self._dialogue.querySelector('.note-service')) { ev.preventDefault(); ev.stopPropagation(); LTP.app.dispatch({ type: 'nouveauteVue' }); }
           return;
         }
         if (actif && actif.getAttribute('aria-modal') === 'true') F.pieger(actif, ev);
@@ -172,13 +267,28 @@
         try { LTP.ui.tutoriel.rendre(this._tuto, etat, ui, app); } catch (e) { if (typeof console !== 'undefined') console.error('Tutoriel', e); }
       }
 
-      // Dialogue : événement prioritaire, sinon fiche.
+      // Dialogue : événement prioritaire, puis note de service, sinon fiche.
       var att = etat.evenementEnAttente;
       var cle = null;
       if (att && etat.phase === 'execution') cle = 'ev:' + att.id + ':' + etat.semaine;
-      else if (ui.modale && ui.modale.type === 'fiche' && etat.devs[ui.modale.id]) cle = 'fiche:' + ui.modale.id + ':' + etat.semaine;
+      else if (noteAMontrer(etat, ui)) cle = 'note:' + etat.nouveaute.semaine;
+      else if (ui.modale && ui.modale.type === 'fiche' && etat.devs[ui.modale.id]) cle = 'fiche:' + ui.modale.id + ':' + etat.semaine + ':' + (etat.jour || 0) + ':' + ((etat.reflexions && etat.reflexions.fil) || []).length;
       var avant = etat_.cleDialogue;
-      if (cle !== avant) {
+      // La même fiche, un autre jour : on la rafraîchit sans voler le focus ni perdre le défilement.
+      var memeFiche = !!(cle && avant && cle.indexOf('fiche:') === 0 && avant.split(':')[1] === cle.split(':')[1]);
+      if (cle !== avant && memeFiche) {
+        etat_.cleDialogue = cle;
+        var ancienne = this._dialogue.querySelector('.fiche');
+        var defil = ancienne ? ancienne.scrollTop : 0;
+        var avaitFocus = this._dialogue.contains(document.activeElement);
+        var nouvelle = fiche(etat, ui.modale.id, app);
+        if (ancienne && nouvelle) {
+          ancienne.parentNode.replaceChild(nouvelle, ancienne);
+          nouvelle.style.animation = 'none';
+          nouvelle.scrollTop = defil;
+          if (avaitFocus) F.focusPremier(nouvelle, '.modale-fermer');
+        }
+      } else if (cle !== avant) {
         if (cle && !avant) {
           var a = document.activeElement;
           etat_.retourFocus = a && a !== document.body && !this._racine.contains(a) ? a : null;
@@ -189,18 +299,22 @@
           restaurerFocus();
         } else {
           var estEv = cle.indexOf('ev:') === 0;
-          var contenu = estEv ? carteEvenement(etat, app) : fiche(etat, ui.modale.id, app);
+          var estNote = cle.indexOf('note:') === 0;
+          var contenu = estEv ? carteEvenement(etat, app) : estNote ? noteService(etat, app) : fiche(etat, ui.modale.id, app);
           LTP.ui.remplacer(this._dialogue,
-            h('div', { class: 'voile' + (estEv ? ' voile--evenement' : ''), 'aria-hidden': 'true',
-              onclick: estEv ? null : function () { app.setUI({ modale: null }); } }),
+            h('div', { class: 'voile' + (estEv || estNote ? ' voile--evenement' : ''), 'aria-hidden': 'true',
+              onclick: estEv || estNote ? null : function () { app.setUI({ modale: null }); } }),
             contenu);
           if (estEv) {
             var defEv = LTP.q.defEvenement(att.id);
             LTP.ui.annoncer(t('evenement.annonce', { titre: defEv ? F.texte(defEv.titre, etat, att.ref) : t('evenement.inconnu') }));
+          } else if (estNote) {
+            var cal = LTP.q.deblocage(etat.nouveaute.semaine) || {};
+            LTP.ui.annoncer(t('note.annonce', { signataire: F.personne(cal.signataire || 'ginette').nom, titre: F.texte(cal.titre, etat) }));
           }
           var boite = this._dialogue.querySelector('[role="dialog"]');
-          // La carte d'événement focalise son titre : une Espace ou une Entrée ne choisit rien par accident.
-          if (boite) F.focusPremier(boite, estEv ? '#ev-titre' : '.modale-fermer');
+          // La carte d'événement et la note focalisent leur titre : une Espace ou une Entrée ne choisit rien par accident.
+          if (boite) F.focusPremier(boite, estEv ? '#ev-titre' : estNote ? '#note-titre' : '.modale-fermer');
         }
       }
 

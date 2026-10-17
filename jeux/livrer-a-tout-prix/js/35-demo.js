@@ -1,12 +1,18 @@
 /* 35-demo.js */
 /* États de démonstration pour développer et tester l'interface sans dépendre de l'équilibre du moteur.
    LTP.demo.etat(nom) → état complet et plausible. Chargé dans la page : ?demo=<nom>.
-   Les valeurs sont injectées à la main ; elles ne prétendent pas sortir de la simulation. */
+   Les valeurs sont injectées à la main ; elles ne prétendent pas sortir de la simulation.
+   Les leviers réglés respectent le calendrier de déblocage (08-donnees-calendrier) ; la note de service de la
+   semaine est marquée comme lue (sauf dans « note ») pour ne pas masquer ce que la démo montre, et les
+   réflexions du jour sont calculées (33-reflexions).
+   - reflexions : milieu du T1, mercredi ; les licences viennent de passer à toute l'équipe (mardi) et les
+     réviseurs à deux (mercredi) : réactions immédiates, réflexions d'hier et d'aujourd'hui.
+   - note : une note de service non lue (le mode agent arrive, semaine 8). */
 (function (LTP) {
   'use strict';
   var O = LTP.outils;
 
-  var NOMS = ['debut', 't2-tendu', 'triade-appro', 'evenement', 'comite', 'fin-usine'];
+  var NOMS = ['debut', 't2-tendu', 'triade-appro', 'evenement', 'comite', 'fin-usine', 'reflexions', 'note'];
 
   // Contenu de secours, ajouté seulement s'il n'existe pas déjà dans les données.
   function assurerContenuDemo() {
@@ -50,8 +56,10 @@
     etat.semaine = semaine;
     etat.trimestre = Math.min(4, Math.floor((semaine - 1) / 13) + 1 || 1);
     var etats = ['code', 'code', 'code', 'revue', 'code', 'attente', 'code'];
+    var sessionsMax = LTP.q.levier(etat, 'sessionsMax');
     LTP.q.devs(etat).forEach(function (d, i) {
-      d.sessions = Math.max(1, Math.min(6, Math.round(1 + p.sessions * rng.suivant() + (LTP.q.aTrait(d, 'multiClauding') || LTP.q.aTrait(d, 'dixX') ? 2 : 0))));
+      d.sessions = Math.max(1, Math.min(sessionsMax || 6, Math.round(1 + p.sessions * rng.suivant() + (LTP.q.aTrait(d, 'multiClauding') || LTP.q.aTrait(d, 'dixX') ? 2 : 0))));
+      if (!LTP.q.aLicence(etat, d)) d.sessions = 0;   // sans licence Copilot : aucun agent
       d.fatigue = O.borner(0.2 + p.fatigue * rng.suivant() + (d.sessions > 3 ? 0.2 : 0));
       d.moral = O.borner(0.7 - p.fatigue * 0.4 * rng.suivant());
       d.comprehension = O.borner(d.comprehension - p.dette * rng.suivant());
@@ -129,6 +137,20 @@
     etat.ilots[ilotId].capacites.push(carteId);
   }
 
+  // Note de service de la semaine lue, réflexions du jour calculées.
+  function finaliser(etat) {
+    var sc = LTP.q.semaineCourante(etat);
+    if (!etat.nouveaute && LTP.q.deblocage(sc) && (etat.phase === 'planification' || etat.phase === 'execution')) etat.nouveaute = { semaine: sc, vue: true };
+    var R = LTP.systemes.reflexions;
+    if (R && R.assurer && (etat.phase === 'planification' || etat.phase === 'execution')) R.assurer(etat);
+    return etat;
+  }
+  // Applique une action du joueur avec le vrai moteur (garde l'état si elle est refusée).
+  function agir(etat, action) {
+    var r = LTP.moteur.action(etat, action);
+    return r.erreur ? etat : r.etat;
+  }
+
   function etatDemo(nom) {
     assurerContenuDemo();
     var etat = LTP.moteur.creer(42, { animateur: true });
@@ -136,15 +158,17 @@
     var L = etat.leviers.global;
     switch (nom) {
       case 't2-tendu':
-        L.autonomie = 3; L.sessionsMax = 4; L.modele = 'haut';
+        L.licences = 'tous'; L.autonomie = 3; L.sessionsMax = 4; L.modele = 'haut';
         etat.leviers.surcharges.iot = { autonomie: 1 };
-        etat.leviers.enAttente.push({ id: 'formation', valeur: 'programme', ilot: null, semaine: 23 });
-        remplir(etat, 20, { sessions: 3, fatigue: 0.4, dette: 0.35, lgtm: 6, file: 8, croissance: 0.3, incidents: 2, risque: 0.4, depense: 1.3, confiance: 48 });
+        etat.leviers.enAttente.push({ id: 'formation', valeur: 'programme', ilot: null, semaine: 25 });
+        etat.leviers.changements = [{ id: 'modele', valeur: 'haut', ilot: null, semaine: 18, jour: 1 }, { id: 'autonomie', valeur: 1, ilot: 'iot', semaine: 21, jour: 3 },
+          { id: 'sessionsMax', valeur: 4, ilot: null, semaine: 24, jour: 0 }];
+        remplir(etat, 23, { sessions: 3, fatigue: 0.4, dette: 0.35, lgtm: 6, file: 8, croissance: 0.3, incidents: 2, risque: 0.4, depense: 1.3, confiance: 48 });
         equiper(etat, 'conventions-gpu', 'portail');
         etat.phase = 'execution';
         break;
       case 'triade-appro':
-        L.autonomie = 3; L.sessionsMax = 3;
+        L.licences = 'tous'; L.autonomie = 3; L.sessionsMax = 3;
         remplir(etat, 30, { sessions: 2, fatigue: 0.3, dette: 0.25, lgtm: 3, file: 5, croissance: 0.25, incidents: 1, risque: 0.7, depense: 1.1, confiance: 55 });
         equiper(etat, 'mcp-courriel-fournisseurs', 'appro');
         etat.ilots.appro.triade = { prive: true, nonFiable: true, sortie: true };
@@ -152,30 +176,50 @@
         etat.phase = 'execution';
         break;
       case 'evenement':
-        L.autonomie = 2; L.sessionsMax = 2;
+        L.autonomie = 2;
         remplir(etat, 8, { sessions: 1, fatigue: 0.2, dette: 0.1, lgtm: 2, file: 4, croissance: 0.1, incidents: 0, risque: 0.2, depense: 1, confiance: 60 });
         etat.phase = 'execution';
         etat.evenementEnAttente = { id: 'pr-geante', ref: { ilot: 'portail', dev: 'mathieu' }, vars: {} };
         break;
       case 'comite':
-        L.autonomie = 3; L.sessionsMax = 3;
+        L.licences = 'tous'; L.autonomie = 3; L.sessionsMax = 3;
         remplir(etat, 26, { sessions: 2, fatigue: 0.35, dette: 0.3, lgtm: 4, file: 6, croissance: 0.25, incidents: 1, risque: 0.4, depense: 1.4, confiance: 52 });
         etat.trimestre = 2;
         etat.phase = 'comite';
         etat.comite = { trimestre: 2, questions: [{ id: 'demo-regis' }], reponses: {} };
         break;
       case 'fin-usine':
-        L.autonomie = 4; L.sessionsMax = 6; L.reviseurs = 0;
+        L.licences = 'tous'; L.autonomie = 4; L.sessionsMax = 6; L.reviseurs = 0;
         remplir(etat, 52, { sessions: 4, fatigue: 0.6, dette: 0.6, lgtm: 10, file: 12, croissance: 0.8, incidents: 3, risque: 0.8, depense: 1.6, confiance: 34 });
         etat.trimestre = 4;
         etat.phase = 'fin';
         etat.resultat = { raison: 'annee', profil: 'usine', etoiles: 2, score: 41,
           criteres: { livraison: 0.85, qualite: 0.3, couts: 0.35, risques: 0.4, personnes: 0.35 } };
         break;
+      case 'reflexions':
+        // Semaine 7, du lundi au mercredi, avec le vrai moteur : chaque journée fait parler quelques personnes.
+        L.autonomie = 1;
+        remplir(etat, 6, { sessions: 0.5, fatigue: 0.2, dette: 0.08, lgtm: 1, file: 6, croissance: 0.08, incidents: 0, risque: 0.1, depense: 1, confiance: 61 });
+        etat.phase = 'execution';
+        etat.jour = 0;
+        etat.nouveaute = { semaine: 7, vue: true };
+        finaliser(etat);
+        etat = LTP.moteur.jour(etat).etat;                                    // mardi
+        etat = agir(etat, { type: 'levier', id: 'licences', valeur: 'tous' });
+        etat = LTP.moteur.jour(etat).etat;                                    // mercredi
+        etat = agir(etat, { type: 'levier', id: 'reviseurs', valeur: 2 });
+        break;
+      case 'note':
+        L.autonomie = 1;
+        remplir(etat, 7, { sessions: 0.5, fatigue: 0.2, dette: 0.1, lgtm: 1, file: 5, croissance: 0.1, incidents: 0, risque: 0.1, depense: 1, confiance: 60 });
+        etat.phase = 'execution';
+        etat.jour = 0;
+        etat.nouveaute = { semaine: 8, vue: false };                          // « Le mode agent arrive »
+        break;
       default: // debut
         break;
     }
-    return etat;
+    return finaliser(etat);
   }
 
   LTP.demo = { noms: NOMS, etat: etatDemo };

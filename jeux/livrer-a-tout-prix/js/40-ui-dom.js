@@ -119,7 +119,8 @@
   });
 
   // --- Application ---
-  LTP.K.ui = { dureeSemaineMs: 3000 };
+  // Une journée ouvrable dure dureeJourMs à la vitesse ×1 (le vendredi publie le rapport de la semaine).
+  LTP.K.ui = { dureeJourMs: 4000 };
 
   var montees = {};      // région → racine montée
   var ecranCourant = null;
@@ -149,7 +150,10 @@
         h_('section', { class: 'zone zone-openspace', 'data-region': 'openspace', 'aria-label': 'Open space' }),
         h_('aside', { class: 'zone zone-panneau', 'data-region': 'panneau', 'aria-label': 'Leviers et registre' }),
         h_('section', { class: 'zone zone-tableau', 'data-region': 'tableau', 'aria-label': 'Tableau de bord' }),
-        h_('section', { class: 'zone zone-journal', 'data-region': 'journal', 'aria-label': 'Journal' })));
+        // « Ce qu'on entend » (réflexions des développeurs) au-dessus du journal, dans la même colonne.
+        h_('div', { class: 'zone zone-journal' },
+          h_('section', { class: 'zone-echos', 'data-region': 'echos', 'aria-label': 'Ce qu\'on entend' }),
+          h_('section', { class: 'zone-journal-liste', 'data-region': 'journal', 'aria-label': 'Journal' }))));
   }
 
   function rendreTout() {
@@ -159,7 +163,7 @@
     var racineApp = document.getElementById('app');
     var nomEcran = ecranPour(etat.phase);
     if (nomEcran !== ecranCourant) {
-      ['openspace', 'panneau', 'tableau', 'journal'].forEach(function (r) { delete montees[r]; });
+      ['openspace', 'panneau', 'tableau', 'echos', 'journal'].forEach(function (r) { delete montees[r]; });
       ecranCourant = nomEcran;
       if (nomEcran === 'jeu') monterEcranJeu(racineApp);
       else {
@@ -213,6 +217,12 @@
     notifier();
   }
 
+  // Jours ouvrables (0 = lundi … 4 = vendredi).
+  var JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
+  var JOURS_COURTS = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.'];
+  LTP.ui.nomJour = function (j) { return JOURS[Math.max(0, Math.min(4, j || 0))]; };
+  LTP.ui.jourCourt = function (j) { return JOURS_COURTS[Math.max(0, Math.min(4, j || 0))]; };
+
   LTP.app = {
     etat: null,
     precedent: null,
@@ -220,7 +230,7 @@
     // vitesse : 0 (pause), 1, 2, 4 ; selection : { type: 'dev' | 'ilot', id } ; panneau : onglet ouvert
     // ilotEdition : îlot dont on édite les surcharges (null = réglages globaux)
     // modale : null | { type: 'fiche', id } | { type: 'ilot', id } | { type: 'aide', … }
-    ui: { vitesse: 0, selection: null, panneau: 'pratiques', ilotEdition: null, modale: null, vue: 'normale' },
+    ui: { vitesse: 0, selection: null, panneau: 'ia', ilotEdition: null, modale: null, vue: 'normale' },
     demarrer: function (etat) { remplacerEtat(etat, []); },
     dispatch: function (action) {
       var r = LTP.moteur.action(LTP.app.etat, action);
@@ -228,8 +238,9 @@
       remplacerEtat(r.etat, r.journal);
       return r;
     },
+    // Avance d'une journée ouvrable (appelé par l'horloge de 90-main et par « +1 jour »).
     avancer: function () {
-      var r = LTP.moteur.semaine(LTP.app.etat);
+      var r = LTP.moteur.jour(LTP.app.etat);
       if (!r.avance) return false;
       remplacerEtat(r.etat, r.journal);
       return true;

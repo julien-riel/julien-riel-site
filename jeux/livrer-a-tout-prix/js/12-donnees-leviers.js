@@ -87,7 +87,7 @@
     // --- Utilisation de l'IA ---
     L({ id: 'licences', panneau: 'ia', surchargeable: false, delai: 0, defaut: 'pilote',
       libelle: 'Licences Copilot',
-      aide: 'Des licences GitHub Copilot de base. Sans licence, on code comme avant : pas d\'assistant, pas de jetons.',
+      aide: 'Des licences GitHub Copilot de base. Sans licence, on code comme avant : pas d\'assistant, pas de jetons.',
       valeurs: [
         { v: 'aucune', libelle: 'Aucune' },
         { v: 'pilote', libelle: 'Groupe pilote (7)' },

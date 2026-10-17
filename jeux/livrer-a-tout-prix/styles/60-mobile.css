@@ -4,8 +4,20 @@
 
 @media (max-width: 1440px) {
   .hud-inner { gap: 8px 14px; }
-  .btn--semaine .btn-lib { display: none; }
-  .btn--semaine::after { content: "+1 sem."; }
+  .btn--jour .btn-lib { display: none; }
+  .btn--jour .btn-court { display: inline; }
+}
+@media (max-width: 1320px) {
+  /* Le jour en abrégé (« mer. ») pour que le HUD tienne sur une ligne. */
+  .hud-jour .hud-long { display: none; }
+  .hud-jour .hud-court { display: inline; }
+  .hud-stat { padding-left: 8px; padding-right: 8px; }
+  .hud-inner { column-gap: 10px; }
+}
+@media (min-width: 901px) and (max-width: 1240px) {
+  /* « S7 · mer. » : la phrase complète reste lue par les lecteurs d'écran. */
+  .hud-sem .hud-long { display: none; }
+  .hud-sem .hud-court { display: inline; }
 }
 @media (max-width: 1180px) {
   .hud-inner { gap: 8px 12px; }
@@ -115,8 +127,11 @@
   .hud-stat-val { font-size: var(--fs-xs); }
   .hud .ibtn { min-width: 36px; height: 36px; }
   .hud-commandes .btn { min-height: 38px; }
-  .hud-commandes .btn--semaine .btn-lib { display: none; }
-  .btn--semaine::after { content: "+1"; }
+  .hud-long { display: none; }
+  .hud-court { display: inline; }
+}
+@media (max-width: 400px) {
+  .btn--jour .icone { display: none; }
   .cap-attr > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .jauge { grid-template-columns: minmax(0, 1fr) minmax(60px, 1fr) auto; gap: 8px; }
   .trims { grid-template-columns: minmax(0, 1fr); }

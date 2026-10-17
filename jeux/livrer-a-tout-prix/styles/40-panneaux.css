@@ -174,3 +174,30 @@
 }
 .met-indice b { font-family: var(--font-titre); }
 .metrique.is-cachee:hover .met-indice, .metrique.is-cachee:focus .met-indice, .metrique.is-cachee:focus-within .met-indice { opacity: 1; visibility: visible; }
+
+/* ---------- Déblocage progressif (calendrier) ---------- */
+/* Badge « Nouveau » : un levier ou des valeurs arrivés cette semaine ou la précédente. */
+.badge--nouveau { color: var(--postit-fg); background: var(--postit); border-color: var(--postit-line); text-transform: uppercase; letter-spacing: .06em; font-size: .625rem; }
+.onglet-nouveau { width: 7px; height: 7px; border-radius: 50%; background: var(--soleil); box-shadow: 0 0 0 2px var(--paper); }
+.onglet.is-actif .onglet-nouveau { box-shadow: 0 0 0 2px var(--fg); }
+/* Valeur pas encore permise : visible, désactivée, avec la semaine où elle arrive. */
+.choix-opt.is-verrou { color: var(--muted); cursor: not-allowed; background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--hachure) 5px 6px); }
+.choix--segmente .choix-opt.is-verrou:hover { background-color: transparent; }
+.choix--liste .choix-opt.is-verrou:hover { background-color: transparent; border-color: transparent; }
+.choix-opt.is-verrou .choix-marque { font-family: var(--font-mono); font-size: .625rem; font-weight: 600; letter-spacing: .02em; margin-left: 4px; padding: 0 4px; border-radius: 2px; border: 1px solid var(--line-strong); }
+.choix-opt.is-verrou .choix-puce { border-style: dotted; }
+.choix-opt.is-nouveau:not(.is-actif)::after { content: ""; position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: var(--soleil); }
+/* Le levier qu'une note de service vient de montrer. */
+.levier.is-eclaire { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), 0 0 0 1px var(--accent); animation: eclaire 1.4s ease-in-out 2; }
+@keyframes eclaire { 50% { box-shadow: 0 0 0 7px var(--accent-soft), 0 0 0 1px var(--accent); } }
+.prochaine-zone:empty { display: none; }
+.prochaine { display: flex; gap: 6px; align-items: baseline; font-size: var(--fs-xs); color: var(--muted); padding: 8px 2px 0; border-top: 1px dashed var(--line); }
+.prochaine .icone { flex: none; transform: translateY(2px); }
+
+/* ---------- Tableau de bord : rapport du vendredi, « à surveiller », changements de leviers ---------- */
+.tableau-titres { display: grid; gap: 1px; }
+.tableau-rapport { font-size: var(--fs-xs); color: var(--muted); }
+.metrique.is-surveiller { background: linear-gradient(90deg, var(--postit) 0 3px, color-mix(in srgb, var(--postit) 22%, transparent) 3px, transparent 85%); padding-left: 8px; margin-left: -8px; border-radius: 2px; }
+.met-surveiller { display: inline-block; margin-left: 6px; padding: 0 5px; border-radius: 2px; background: var(--postit); color: var(--postit-fg); font-size: .625rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; vertical-align: 1px; white-space: nowrap; }
+.spark-marque { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 2 2; }
+.metrique.is-surveiller .spark-marque { stroke: var(--accent); opacity: .7; }

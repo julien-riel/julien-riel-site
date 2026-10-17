@@ -34,6 +34,8 @@ jeux/livrer-a-tout-prix/
 ├── js/
 │   ├── 00-noyau.js               # espace de noms, rng, outils, t(), bus
 │   ├── 05-textes.fr.js           # chaînes de l'interface
+│   ├── 08-donnees-calendrier.js  # feuille de route : une nouveauté par semaine, notes de service
+│   ├── 09-donnees-reflexions.js  # contenu des réflexions (leviers, notes, situations)
 │   ├── 10-donnees-ilots.js       # 7 lignes d'affaires et leurs paramètres
 │   ├── 11-donnees-personnages.js # 21 développeurs + personnages secondaires
 │   ├── 12-donnees-leviers.js     # définition de tous les leviers (contrat moteur ↔ UI)
@@ -55,8 +57,9 @@ jeux/livrer-a-tout-prix/
 │   ├── 28-demandes.js            # backlog, portée, satisfaction, non-TI, Goodhart
 │   ├── 29-evenements.js          # tirage et résolution des cartes d'événement
 │   ├── 30-metriques.js           # agrégats, visibilité, historique
-│   ├── 31-boucle.js              # semaine(), action(), trimestres, fin
+│   ├── 31-boucle.js              # jour(), semaine(), action(), trimestres, fin
 │   ├── 32-fin.js                 # score et profil
+│   ├── 33-reflexions.js          # réflexions du jour : qui pense quoi, et pourquoi
 │   ├── 35-demo.js                # états de démonstration pour développer l'UI
 │   ├── 40-ui-dom.js              # h(), svg(), app (store), dispatch, planification du rendu
 │   ├── 41-ui-avatars.js
@@ -131,10 +134,11 @@ Chaque système possède **ses constantes** (`LTP.K.<systeme>`), seul endroit qu
 ### 4.2 API du moteur (31-boucle.js)
 
 ```js
-LTP.moteur.creer(graine, options)        // → etat   (options : { serveurAchete, trimestreDepart })
-LTP.moteur.semaine(etat)                 // → { etat, journal }   copie profonde, puis systèmes en ordre
+LTP.moteur.creer(graine, options)        // → etat   (options : { serveurAchete, animateur, toutDebloque })
+LTP.moteur.jour(etat)                    // → { etat, journal, avance, finSemaine }   une journée ouvrable (copie profonde)
+LTP.moteur.semaine(etat)                 // → { etat, journal, avance, finSemaine }   jusqu'au vendredi inclus
 LTP.moteur.action(etat, action)          // → { etat, journal, erreur? }
-LTP.moteur.simuler(etat, n, strategie)   // → etat   utilitaire pour tests et mode animateur
+LTP.moteur.simuler(etat, n, strategie)   // → { etat, journal }   n semaines ; utilitaire pour tests et mode animateur
 ```
 
 Actions :
@@ -148,9 +152,29 @@ Actions :
 { type: 'choix', evenement, choix }            // résout la carte en attente
 { type: 'comite', question, reponse }
 { type: 'phase', phase }                       // planification → execution, comite → planification…
+{ type: 'nouveauteVue' }                       // la note de service de la semaine a été lue
+{ type: 'option', cle, valeur }                // mode animateur (et serveurAchete à l'accueil)
 ```
 
-Ordre des systèmes dans `semaine()` :
+**Journées.** `etat.jour` vaut 0 (lundi) à 4 (vendredi) ; `etat.semaine` compte les semaines calculées, et
+`LTP.q.semaineCourante(etat)` donne la semaine que le joueur est en train de jouer. Du lundi au jeudi, `jour()`
+ne fait qu'avancer la date, poser la carte programmée du jour et calculer les réflexions (`33`). Le vendredi,
+`jour()` calcule la semaine entière avec les systèmes ci-dessous, puis passe au lundi suivant et annonce la
+nouveauté du calendrier s'il y en a une (`etat.nouveaute`). Une carte tirée à l'étape 12 est déplacée dans
+`etat.evenementProgramme` et posée un jour (mardi à vendredi, selon la graine) de la semaine suivante.
+L'équilibrage reste donc hebdomadaire. Les réflexions n'utilisent pas le générateur du moteur.
+`simuler` avance sur sa propre copie, sans recalculer les réflexions avant la fin, et appelle `strategie.leviers`
+au début de chaque trimestre et à chaque nouveauté du calendrier (sauf `suivreCalendrier: false`).
+
+**Calendrier.** `08-donnees-calendrier.js` est la source unique des déblocages ; `12` en tire `levier.semaine`,
+`valeurs[].semaine` et `panneau.semaine` (`trimestre` en découle). Requêtes : `levierDebloque`, `valeurDebloquee`
+(une action sur une valeur trop tôt renvoie `valeur-verrouillee`), `panneauDebloque`, `deblocage(semaine)`,
+`prochainDeblocage`. Les changements de leviers sont gardés dans `etat.leviers.changements`.
+
+**Licences.** Le levier `licences` (aucune · pilote · tous) et `dev.pilote` décident de `q.aLicence(etat, dev)` ;
+sans licence, `21` met `dev.sessions` à 0 : ni gain de l'IA, ni jetons, et `24` facture les outils seulement.
+
+Ordre des systèmes dans le calcul du vendredi (`calculerSemaine`) :
 
 0. remise à zéro de `derniere` (îlots, devs) et leviers à délai arrivés à échéance (`31`)
 1. différés échus (`19-effets`)
@@ -168,17 +192,17 @@ Ordre des systèmes dans `semaine()` :
 13. métriques et historique (`30`)
 14. fin de trimestre → `phase = 'comite'` ; semaine 52 ou confiance < 15 → `phase = 'fin'` (`31`, `32`)
 
-Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvoie l'état inchangé.
+Tant que `etat.evenementEnAttente` existe, `jour()` refuse d'avancer et renvoie l'état inchangé.
 
 ### 4.3 Schéma de l'état (20-etat.js)
 
 ```js
 {
-  version: 1, graine, semaine: 0, trimestre: 1,
+  version: 2, graine, semaine: 0, jour: 0, trimestre: 1,
   phase: 'accueil' | 'tutoriel' | 'planification' | 'execution' | 'comite' | 'fin',
   rngEtat,                                   // état sérialisable du générateur
-  leviers: { global: { [id]: valeur }, surcharges: { [ilotId]: { [id]: valeur } } },
-  debloques: { panneaux: ['pratiques', 'ia'], leviers: [...] },
+  leviers: { global: { [id]: valeur }, surcharges: { [ilotId]: { [id]: valeur } }, enAttente: [...],
+             changements: [{ id, valeur, ilot, semaine, jour, differe? }] },
   org: {
     budget, budgetAnnuel, jetonsSemaine, jetonsCumul, confiance,
     donnees: { qualite, duplication, fraicheur, classification },
@@ -198,7 +222,7 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
                                              // statistiques de la semaine écoulée, remises à zéro par la boucle
   } },
   devs: { [id]: {
-    id, ilot, niveau, traits: [...],
+    id, ilot, niveau, traits: [...], pilote,
     competence, competenceIA, adhesion, rigueur, comprehension, fatigue, moral,
     sessions, etat, indisponibleJusqua, present: true,
     occupation: { registre, formation },     // temps réservé par 26 et 27, soustrait par 21 ; remis à zéro chaque semaine
@@ -210,12 +234,15 @@ Tant que `etat.evenementEnAttente` existe, `semaine()` refuse d'avancer et renvo
   incidents: [{ id, ilot, gravite, debut, mttrPrevu, cause }],
   differes: [{ semaine, effets, source }],
   evenementEnAttente: null | { id, ref: { ilot?, dev? }, vars },
+  evenementProgramme: null | { id, ref, vars, jour, note },   // carte tirée le vendredi, posée un jour de la semaine suivante
+  nouveaute: null | { semaine, vue },                          // note de service du calendrier
+  reflexions: { semaine, jour, liste: [Reflexion], fil: [Reflexion] },   // 33-reflexions
   evenementsForces: [{ id, semaine, ref }],   // suites planifiées par l'effet { evenement }
   evenementsVus: { [id]: semaine },
   derniereDecision: null | { evenement, choix, semaine, ref },   // posé par 29.resoudre, affiché par l'interface
   comite: null | { questions, reponses },
   historique: { [metrique]: [valeurParSemaine] },
-  journal: [{ semaine, type, cle, vars, ilot?, dev? }],  // 200 dernières entrées
+  journal: [{ semaine, jour, type, cle, vars, ilot?, dev?, joueur? }],  // 200 dernières ; joueur : vient d'une décision
 }
 ```
 
@@ -227,7 +254,8 @@ Champs ajoutés par les systèmes dans leur `initialiser` (internes, documentés
 `etat.resultat` contient aussi `faits` (chiffres du bilan) et `affinites` (proximité de chaque profil).
 
 Fonctions utilitaires exposées (`LTP.q`) pour le moteur, les conditions d'événements et l'UI :
-`levier`, `rangLevier`, `levierDebloque`, `devsDe`, `devsPresents`, `disponible`, `ilotDe`, `aTrait`, `modTrait`,
+`levier`, `rangLevier`, `levierDebloque`, `valeurDebloquee`, `panneauDebloque`, `semaineCourante`, `deblocage`,
+`prochainDeblocage`, `aLicence`, `devsDe`, `devsPresents`, `disponible`, `ilotDe`, `aTrait`, `modTrait`,
 `triadeComplete`, `metriqueVisible`, `creerIncident`, `incidentsActifs`, `estIncidentSecurite`, `def*` (définitions de contenu).
 La liste à jour est dans `20-etat.js`.
 
@@ -271,7 +299,7 @@ Ajouter un levier = une entrée ici + sa lecture dans un système. Personne d'au
 ```js
 LTP.app = { etat, ui: { vue, selection, vitesse, panneau, modale } }
 LTP.app.dispatch(action)   // moteur.action → sauvegarde → notifie
-LTP.app.avancer()          // moteur.semaine → animation → notifie (appelé par l'horloge de 90-main)
+LTP.app.avancer()          // moteur.jour → notifie (appelé par l'horloge de 90-main et par « +1 jour »)
 // régions : 'hud', 'openspace', 'panneau' (leviers et registre), 'tableau', 'journal', 'modale' ; écrans : 'accueil', 'fin'
 LTP.ui.h(tag, attrs, ...enfants), LTP.ui.svg(...)
 LTP.ui.regions[region] = { monter(racine), rendre(etat, ui, precedent) }
@@ -286,7 +314,7 @@ pour développer l'interface avant que le moteur soit complet.
 
 - `?graine=123` fixe la graine ; `?animateur=1` active le mode animateur ; `?demo=t2-tendu` charge un état de démonstration.
 - `window.LTP` reste exposé ; les tests Playwright s'en servent pour sauter des semaines (`LTP.app.simuler(n)`).
-- Identifiants stables pour les tests : `#btn-lecture`, `#btn-semaine`, `[data-dev="<id>"]`, `[data-ilot="<id>"]`,
+- Identifiants stables pour les tests : `#btn-lecture`, `#btn-jour`, `.echos`, `.note-service`, `#btn-note-voir`, `#btn-note-compris`, `[data-dev="<id>"]`, `[data-ilot="<id>"]`,
   `[data-levier="<id>"]`, `.carte-evenement`, `[data-choix]`, `.comite`, `.bilan`, `.profil-fin`.
 
 ## 5. Tests

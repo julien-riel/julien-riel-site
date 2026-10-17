@@ -28,6 +28,10 @@
     joursNouveaute: 2,          // la note de service fait parler le lundi et le mardi
     immediatesMax: 2,           // réactions tout de suite après un changement de levier
     poids: { reaction: 6, levier: 5, nouveaute: 4, situation: 3, activite: 1 },
+    // Quand un levier qui touche la personne vient de changer, elle en parle à peu près une fois sur
+    // partLevier (le jour même), puis de moins en moins (− declinLevier par jour ouvrable).
+    partLevier: 0.75,
+    declinLevier: 0.06,
   };
   var K = LTP.K.reflexions;
 
@@ -99,14 +103,14 @@
     (def.reactions || []).forEach(function (r) {
       if (!r || r.levier !== c.id || !Array.isArray(r.valeurs) || r.valeurs.indexOf(c.valeur) < 0 || !r.bulle) return;
       var t = Array.isArray(r.bulle) ? r.bulle[Math.floor(hasard(etat, dev.id + c.id + age) * r.bulle.length)] : r.bulle;
-      res.push({ texte: texteDe(t, etat, dev), poids: K.poids.reaction * decroit * poidsBase, motif: 'reaction', levier: c.id, valeur: c.valeur,
+      res.push({ texte: texteDe(t, etat, dev), poids: K.poids.reaction * decroit * poidsBase, motif: 'reaction', levier: c.id, valeur: c.valeur, age: age,
         ton: (Number(r.moral) || 0) > 0 ? 'plus' : (Number(r.moral) || 0) < 0 ? 'moins' : 'neutre' });
     });
     var parLevier = (LTP.donnees.reflexions && LTP.donnees.reflexions.leviers || {})[c.id] || {};
     var liste = [].concat(parLevier[String(c.valeur)] || [], parLevier['*'] || []);
     liste.forEach(function (e) {
       if (!convient(e, etat, dev, { effet: effet })) return;
-      res.push({ texte: texteDe(e, etat, dev), poids: K.poids.levier * decroit * specificite(e) * poidsBase, motif: 'levier', levier: c.id, valeur: c.valeur, ton: tonDe(e) });
+      res.push({ texte: texteDe(e, etat, dev), poids: K.poids.levier * decroit * specificite(e) * poidsBase, motif: 'levier', levier: c.id, valeur: c.valeur, age: age, ton: tonDe(e) });
     });
     return res;
   }
@@ -189,13 +193,32 @@
     return liste[liste.length - 1];
   }
 
+  // Choix en deux temps : d'abord la cause (un levier, la note, une situation, l'activité), pondérée par son
+  // meilleur poids, puis une phrase de cette cause. Une situation riche en phrases ne l'emporte donc pas
+  // sur un levier qui vient de changer simplement parce qu'elle a plus de lignes.
   function choisirPour(etat, dev, cands, sel) {
     var frais = cands.filter(function (c) { return !ditRecemment(etat, dev.id, c.texte); });
     if (!frais.length) frais = cands;
-    // On garde les candidats de la catégorie la plus forte (un levier qui vient de changer l'emporte sur l'activité).
-    var max = Math.max.apply(null, frais.map(function (c) { return c.poids; }));
-    var forts = frais.filter(function (c) { return c.poids >= max * 0.45; });
-    return tirer(etat, forts, 'choix:' + sel + ':' + dev.id);
+    var causes = {}, ordre = [];
+    frais.forEach(function (c) {
+      var cle = c.motif === 'levier' || c.motif === 'reaction' ? 'levier:' + c.levier + ':' + String(c.valeur) : c.motif;
+      if (!causes[cle]) { causes[cle] = { poids: 0, lignes: [] }; ordre.push(cle); }
+      causes[cle].poids = Math.max(causes[cle].poids, c.poids);
+      causes[cle].lignes.push(c);
+    });
+    var liste = ordre.map(function (cle) { return { cle: cle, poids: causes[cle].poids, lignes: causes[cle].lignes }; });
+    // Un levier qui vient de changer a sa part à lui, quel que soit le nombre de situations possibles.
+    var leviers = liste.filter(function (c) { return c.cle.indexOf('levier:') === 0; });
+    if (leviers.length && leviers.length < liste.length) {
+      var age = Math.min.apply(null, leviers.map(function (c) { return Math.min.apply(null, c.lignes.map(function (l) { return l.age || 0; })); }));
+      var part = Math.max(0, K.partLevier - K.declinLevier * age);
+      liste = hasard(etat, 'part:' + sel + ':' + dev.id) < part ? leviers : liste.filter(function (c) { return c.cle.indexOf('levier:') !== 0; });
+    }
+    // On garde les causes les plus fortes (un levier qui vient de changer l'emporte sur l'activité).
+    var max = Math.max.apply(null, liste.map(function (c) { return c.poids; }));
+    var fortes = liste.filter(function (c) { return c.poids >= max * 0.45; });
+    var cause = tirer(etat, fortes, 'cause:' + sel + ':' + dev.id);
+    return cause ? tirer(etat, cause.lignes, 'choix:' + sel + ':' + dev.id) : null;
   }
 
   function enregistrer(etat, dev, c, immediat) {
@@ -233,7 +256,8 @@
     for (var i = 0; i < parDev.length && r.liste.length < K.parJour; i++) {
       var x = parDev[i];
       if ((parIlot[x.dev.ilot] || 0) >= K.parIlotMax) continue;
-      var cands = x.cands;
+      // Deux personnes ne disent pas la même phrase le même jour.
+      var cands = x.cands.filter(function (c) { return !r.liste.some(function (y) { return y.texte === c.texte; }); });
       if (leviers >= K.leviersMaxParJour) cands = cands.filter(function (c) { return c.motif !== 'levier' && c.motif !== 'reaction'; });
       if (!cands.length) continue;
       var c = choisirPour(etat, x.dev, cands, sel);
@@ -267,8 +291,11 @@
       var cc = choisirPour(etat, choix[i].dev, choix[i].cands, sel);
       if (!cc) continue;
       ilots[choix[i].dev.ilot] = true;
-      // Une réaction remplace la réflexion du jour de cette personne, s'il y en avait une.
+      // Une réaction remplace la réflexion du jour de cette personne, s'il y en avait une (aussi dans le fil :
+      // elle n'a jamais été vue).
+      var remplacees = r.liste.filter(function (x) { return x.dev === choix[i].dev.id; });
       r.liste = r.liste.filter(function (x) { return x.dev !== choix[i].dev.id; });
+      r.fil = r.fil.filter(function (x) { return remplacees.indexOf(x) < 0; });
       r.liste.unshift(enregistrer(etat, choix[i].dev, cc, true));
       faits += 1;
     }

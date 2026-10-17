@@ -1,6 +1,6 @@
 /* 16-donnees-dialogues.js */
 /* Tutoriel, indices de Ginette et bulles génériques. Contenu écrit par l'agent D1.
-   LTP.donnees.tutoriel : [{ id, region: 'openspace' | 'panneau' | 'tableau' | 'hud' | 'journal', personnage, texte, action? }]
+   LTP.donnees.tutoriel : [{ id, cibles?, region: 'openspace' | 'panneau' | 'tableau' | 'hud' | 'journal', panneau?, attendre?, personnage, texte, action?, fait? }]
    LTP.donnees.indices.leviers : { [levierId]: { [valeur]: texte } }   // commentaire de Ginette quand on choisit cette valeur
    LTP.donnees.indices.trimestres : { [n]: texte }                       // ouverture de chaque trimestre
    LTP.donnees.bulles : { code: [], revue: [], incident: [], fatigue: [], formation: [], attente: [], conge: [] }
@@ -9,32 +9,39 @@
 (function (LTP) {
   'use strict';
 
-  // --- Tutoriel : Ginette fait visiter, en montrant de vrais éléments, et fait jouer une semaine ---
+  // --- Tutoriel : Ginette fait visiter, en montrant de vrais éléments, et fait jouer une journée ---
   // cibles : sélecteurs essayés dans l'ordre (le premier visible gagne) ; region : repli.
-  // panneau : onglet de leviers à ouvrir ; attendre : 'levier' (un levier change) ou 'semaine' (la semaine avance) ;
+  // panneau : onglet de leviers à ouvrir ; attendre : 'levier' (un levier change) ou 'jour' (une journée passe) ;
   // action : la consigne affichée tant que l'action n'est pas faite ; fait : la réplique une fois l'action faite.
   LTP.donnees.tutoriel = [
     { id: 'bienvenue', cibles: ['#hud .hud-stats'], region: 'hud', personnage: 'ginette',
-      texte: 'Bienvenue au GPU ! Pendant un an, tu diriges 21 développeurs qui apprennent à travailler avec des agents. Ici : le budget de l\'IA, les jetons de la semaine et la confiance de la direction. Sous 15 de confiance, l\'aventure s\'arrête.' },
-    { id: 'ilot', cibles: ['[data-ilot="portail"]'], region: 'openspace', personnage: 'ginette',
-      texte: 'Voici l\'îlot du Portail client : trois personnes, une ligne d\'affaires. Les écrans allumés sont des sessions d\'agent, la pile de papiers, des PR à relire, la flamme, un incident. Et le brouillard, c\'est du code que plus personne ne comprend.' },
-    { id: 'levier', cibles: ['[data-levier="taillePR"]'], region: 'panneau', panneau: 'pratiques', attendre: 'levier', personnage: 'ginette',
-      texte: 'Voici tes leviers. Essaie celui-ci : limite la taille des PR, à 400 lignes par exemple. Le losange ◆ veut dire qu\'on peut le régler îlot par îlot.',
-      action: 'Change un levier pour continuer.',
-      fait: 'C\'est noté. Quand un choix me fait lever un sourcil, je te le dis en une ligne.' },
-    { id: 'tableau', cibles: ['.zone-tableau .groupe[data-groupe="qualite"]', '[data-region="tableau"]'], region: 'tableau', personnage: 'ginette',
-      texte: 'Le tableau de bord compare tes dernières semaines aux précédentes. Une tuile grisée « non mesuré », c\'est quelque chose que tu ne vois pas encore. Ça ne veut pas dire que ça n\'existe pas.' },
-    { id: 'semaine', cibles: ['#btn-semaine'], region: 'hud', attendre: 'semaine', personnage: 'ginette',
-      texte: 'Joue maintenant une semaine avec « +1 sem. ». Le bouton de lecture, lui, fait défiler les semaines tout seul. Si une carte d\'événement apparaît, tout s\'arrête jusqu\'à ta décision.',
-      action: 'Joue une semaine pour continuer.',
-      fait: 'Une semaine de passée. Il en reste quelques-unes.' },
-    { id: 'journal', cibles: ['[data-region="journal"]'], region: 'journal', personnage: 'ginette',
-      texte: 'Le journal raconte ta semaine. À la fin du trimestre, le comité te pose trois questions sur tes chiffres. Mon conseil : dis la vérité, même quand elle n\'est pas belle. Ils ont le tableau de bord, eux aussi.' },
+      texte: 'Bienvenue au GPU ! Pendant un an, tu accompagnes 21 développeurs qui découvrent l\'IA, une journée ouvrable à la fois. En haut : la semaine et le jour, le budget de l\'IA, les jetons de la semaine et la confiance de la direction. Sous 15 de confiance, l\'aventure s\'arrête.' },
+    { id: 'echos', cibles: ['.echos', '[data-region="openspace"]'], region: 'openspace', personnage: 'ginette',
+      texte: 'Voici l\'open space : sept îlots, sept lignes d\'affaires. Chaque jour, quelques personnes pensent tout haut, et c\'est écrit ici, dans « Ce qu\'on entend », avec la cause à côté. C\'est ton meilleur instrument : quand tu changes quelque chose, ce sont eux qui te le disent en premier.' },
+    { id: 'licences', cibles: ['[data-levier="licences"]'], region: 'panneau', panneau: 'ia', attendre: 'levier', personnage: 'ginette',
+      texte: 'On commence petit : sept licences GitHub Copilot, une personne volontaire par îlot. Tu peux donner Copilot à toute l\'équipe tout de suite, ou garder le groupe pilote quelques semaines pour comparer les pilotes à leurs voisins. Les deux se défendent. Choisis.',
+      action: 'Change le levier des licences (ou remets-le sur le groupe pilote) pour continuer.',
+      fait: 'C\'est noté. Écoute ce qu\'ils en disent dans les prochains jours. Et quand un choix me fait lever un sourcil, je te le dis en une ligne.' },
+    { id: 'tableau', cibles: ['.zone-tableau .is-surveiller', '.zone-tableau .groupe[data-groupe="livraison"]', '[data-region="tableau"]'], region: 'tableau', personnage: 'ginette',
+      texte: 'Le tableau de bord, c\'est le rapport du vendredi : les chiffres changent une fois par semaine, pas avant. Les tuiles « à surveiller » sont celles que la dernière note de service te conseille de regarder. Une tuile grisée « non mesuré », ce n\'est pas une absence de problème : c\'est un problème qu\'on ne voit pas encore.' },
+    { id: 'jour', cibles: ['#btn-jour'], region: 'hud', attendre: 'jour', personnage: 'ginette',
+      texte: 'Joue maintenant une journée. Du lundi au jeudi, l\'open space vit et parle ; le vendredi, la semaine se calcule et le rapport sort. Si une carte d\'événement arrive, tout s\'arrête jusqu\'à ta décision.',
+      action: 'Joue une journée pour continuer.',
+      fait: 'Une journée de passée. Il en reste quelques-unes, crois-moi.' },
+    { id: 'notes', cibles: ['.note-service', '[data-region="journal"]'], region: 'journal', personnage: 'ginette',
+      texte: 'Chaque nouveauté arrive par une note de service, une par semaine au plus : le clavardage, le mode agent, les réviseurs, les tests… Mon conseil : change un seul levier à la fois, puis attends un vendredi ou deux. Sinon, tu ne sauras jamais lequel a fait quoi.' },
+    { id: 'comite', cibles: ['[data-region="journal"]'], region: 'journal', personnage: 'ginette',
+      texte: 'À la fin de chaque trimestre, le comité te pose trois questions sur tes chiffres. Dis la vérité, même quand elle n\'est pas belle : ils ont le tableau de bord, eux aussi. Bon courage. Je suis au bout de l\'open space, à côté de la machine à café.' },
   ];
 
   // --- Indices de Ginette sur les valeurs de leviers ---
   LTP.donnees.indices = {
     leviers: {
+      licences: {
+        aucune: 'Plus de licences du tout ? Tu vas avoir des chiffres sans IA pour comparer. Et quelques visages longs.',
+        pilote: 'Sept pilotes, quatorze témoins : regarde vendredi si les pilotes livrent plus que leurs voisins. Rappelle-toi seulement que ce sont des volontaires, donc déjà convaincus.',
+        tous: 'Copilot pour tout le monde. Ça va écrire plus, et ça va coûter des licences et des jetons. Regarde surtout qui relit tout ce nouveau code.',
+      },
       pair: {
         humain: 'Deux humains, un clavier : ça va moins vite, mais les deux comprennent. Pour les juniors, c\'est de l\'or.',
         ia: 'Humain avec l\'IA, ça va vite. Vérifie juste que l\'humain tient encore le volant.',
@@ -159,21 +166,28 @@
 
     // --- Ouverture des trimestres ---
     trimestres: {
-      1: 'Premier trimestre : l\'euphorie. Tout le monde veut essayer les agents. Tu as les pratiques, l\'utilisation de l\'IA et le produit. Mon conseil : regarde où s\'empilent les PR.',
-      2: 'Deuxième trimestre : la facture. Régis a reçu le relevé des jetons. Tu débloques le modèle choisi selon la tâche, la formation, le plafond de jetons et le registre des skills. Les MCP suivront.',
-      3: 'Troisième trimestre : les fuites. Les agents lisent maintenant des courriels, des factures et des pages web. Tu débloques la gouvernance des données, le bac à sable, l\'accès à la prod, la passerelle MCP et la politique hors TI. Les premiers MCP arrivent au registre.',
-      4: 'Dernier trimestre : la maturité. Tu débloques l\'observabilité, la relève et les objectifs de la direction. Et j\'ai quelque chose à t\'annoncer. Pas tout de suite. Bientôt.',
+      1: 'Premier trimestre : la découverte. On commence avec sept licences Copilot et de l\'autocomplétion. Les nouveautés arrivent une à une, par note de service. Mon conseil : regarde où s\'empilent les PR, et écoute ce qu\'on dit dans l\'open space.',
+      2: 'Deuxième trimestre : la facture. Les agents ouvrent leurs propres PR, le registre des skills ouvre, et Régis a reçu le relevé des jetons. Avant de monter l\'autonomie, demande-toi qui va relire.',
+      3: 'Troisième trimestre : les fuites. Les agents lisent maintenant des courriels, des factures et des pages web, et la production n\'est jamais loin. Regarde les trois voyants de chaque îlot.',
+      4: 'Dernier trimestre : la maturité. On va enfin pouvoir mesurer ce qui était caché. Et j\'ai quelque chose à t\'annoncer. Pas tout de suite. Bientôt.',
     },
   };
 
-  // --- Bulles génériques (cinq par état) ---
+  // --- Bulles génériques (huit par état au moins) ---
   LTP.donnees.bulles = {
-    code: ['L\'agent propose. Je dispose.', 'Encore une petite fonction.', 'Ça compile. Bon signe ?', 'Je relis ce que l\'agent a écrit.', 'Une ligne à la fois.'],
-    revue: ['Je relis. Pour vrai.', 'Ce diff est long.', 'Qui a écrit ça ? Ah, l\'agent.', 'Un commentaire, deux questions.', 'Approuvé… presque.'],
-    incident: ['Ça brûle. Café, puis terminal.', 'Qui comprend ce code ?', 'Les journaux, vite.', 'Ça marchait hier.', 'Je rétablis d\'abord, j\'explique après.'],
-    fatigue: ['Café. Encore.', 'Mes yeux piquent.', 'Trop de sessions, pas assez de moi.', 'Je relis la même ligne.', 'Vivement vendredi.'],
-    formation: ['J\'apprends à mieux écrire mes demandes.', 'Ah, c\'est donc ça, une injection.', 'Je prends des notes.', 'Bon atelier, finalement.', 'J\'essaie ça demain.'],
-    attente: ['J\'attends une revue.', 'Ma PR attend son tour.', 'La file avance. Lentement.', 'En attendant, je documente.', 'Quelqu\'un peut me relire ?'],
-    conge: ['En congé. Enfin.', 'Pas de cellulaire.', 'Au chalet.', 'Vacances méritées.', 'Je reviens lundi. Peut-être.'],
+    code: ['L\'agent propose. Je dispose.', 'Encore une petite fonction.', 'Ça compile. Bon signe ?', 'Je relis ce que l\'agent a écrit.', 'Une ligne à la fois.',
+      'Je nomme mes variables. Pour vrai.', 'Un petit refactor, en passant.', 'Je lis la doc avant de demander.', 'Ça marche. Je vérifie pourquoi.', 'Je découpe la tâche en trois.'],
+    revue: ['Je relis. Pour vrai.', 'Ce diff est long.', 'Qui a écrit ça ? Ah, l\'agent.', 'Un commentaire, deux questions.', 'Approuvé… presque.',
+      'Il manque un test ici.', 'Ce nom de fonction ment un peu.', 'Je lis les tests en premier.', 'Pourquoi ce fichier a changé ?'],
+    incident: ['Ça brûle. Café, puis terminal.', 'Qui comprend ce code ?', 'Les journaux, vite.', 'Ça marchait hier.', 'Je rétablis d\'abord, j\'explique après.',
+      'Retour arrière ? Retour arrière.', 'Qu\'est-ce qui a changé mardi ?', 'J\'appelle qui, à cette heure-ci ?'],
+    fatigue: ['Café. Encore.', 'Mes yeux piquent.', 'Trop de sessions, pas assez de moi.', 'Je relis la même ligne.', 'Vivement vendredi.',
+      'Une pause. Dans cinq minutes.', 'J\'ai oublié de dîner.', 'Mon cerveau est en mode avion.'],
+    formation: ['J\'apprends à mieux écrire mes demandes.', 'Ah, c\'est donc ça, une injection.', 'Je prends des notes.', 'Bon atelier, finalement.', 'J\'essaie ça demain.',
+      'Petites tâches, contexte clair. Noté.', 'Un courriel n\'est pas un ordre. Noté.', 'On relit tout ce qui sort. Noté.'],
+    attente: ['J\'attends une revue.', 'Ma PR attend son tour.', 'La file avance. Lentement.', 'En attendant, je documente.', 'Quelqu\'un peut me relire ?',
+      'Ma PR attend. Je la relis moi-même.', 'Le carnet est vide. Je range.', 'J\'attends. Je nettoie mes branches.'],
+    conge: ['En congé. Enfin.', 'Pas de cellulaire.', 'Au chalet.', 'Vacances méritées.', 'Je reviens lundi. Peut-être.',
+      'Pas de courriel. Promis.', 'Je dors. Pour vrai.', 'Le code attendra.'],
   };
 })(globalThis.LTP = globalThis.LTP || {});

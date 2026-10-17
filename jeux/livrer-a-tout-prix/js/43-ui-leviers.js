@@ -169,7 +169,7 @@
     var nb = res.branches.filter(function (x) { return x.allume; }).length;
     if (!nb) res.quand = '';
     else if (!ouvert) {
-      res.quand = 'Vous pourrez couper une branche au T' + ((dSorties && dSorties.trimestre) || 3) + ' (onglet Données et sécurité)' + N + ': «' + N + (dSorties ? dSorties.libelle : 'approbation des sorties') + N + '» et «' + N + (dAcces ? dAcces.libelle : 'accès à la production') + N + '».' + (nb < 3 ? ' D\'ici là, évitez d\'équiper des cartes qui allument la branche manquante.' : '');
+      res.quand = 'Vous pourrez couper une branche à la semaine ' + ((dSorties && dSorties.semaine) || 30) + ' (onglet Données et sécurité)' + N + ': «' + N + (dSorties ? dSorties.libelle : 'approbation des sorties') + N + '» et «' + N + (dAcces ? dAcces.libelle : 'accès à la production') + N + '».' + (nb < 3 ? ' D\'ici là, évitez d\'équiper des cartes qui allument la branche manquante.' : '');
     } else {
       res.quand = 'Pour couper une branche' + N + ': l\'approbation humaine des sorties, l\'accès à la production en lecture seule, ou retirer une carte.';
     }
@@ -201,15 +201,23 @@
   };
 
   // Groupe de choix accessible (radiogroup). opts :
-  //   { cle, libelle, valeurs: [{ v, libelle, court?, marque? }], courant, mode: 'segmente' | 'liste',
-  //     desactive, onChoisir(v), idLibelle }
+  //   { cle, libelle, valeurs: [{ v, libelle, court?, marque?, marques?: [], marqueTexte?, titre?, desactive?, nomAccessible? }],
+  //     courant, mode: 'segmente' | 'liste', desactive, onChoisir(v), idLibelle }
+  // Une valeur desactive (pas encore permise) reste visible mais ne se choisit pas ; les flèches la sautent.
   F.choix = function (opts) {
     var boutons = [];
+    function permise(i) { var x = opts.valeurs[i]; return !!x && !x.desactive; }
     function choisir(i, focus) {
-      if (opts.desactive) return;
+      if (opts.desactive || !permise(i)) return;
       var x = opts.valeurs[i];
       if (focus && boutons[i]) boutons[i].focus();
       if (x && x.v !== opts.courant) opts.onChoisir(x.v);
+    }
+    // Prochaine valeur permise dans la direction pas (±1), à partir de i.
+    function voisine(i, pas) {
+      var n = opts.valeurs.length;
+      for (var k = 1; k <= n; k++) { var j = ((i + pas * k) % n + n) % n; if (permise(j)) return j; }
+      return null;
     }
     var groupe = h('div', {
       class: 'choix choix--' + (opts.mode || 'segmente') + (opts.desactive ? ' is-desactive' : ''),
@@ -218,23 +226,28 @@
     });
     var indexCourant = -1;
     opts.valeurs.forEach(function (x, i) { if (x.v === opts.courant) indexCourant = i; });
+    var premierPermis = 0;
+    for (var p = 0; p < opts.valeurs.length; p++) if (permise(p)) { premierPermis = p; break; }
     opts.valeurs.forEach(function (x, i) {
       var actif = i === indexCourant;
+      var marques = (x.marques || []).concat(x.marque ? [x.marque] : []);
+      var nomAcc = x.nomAccessible || (x.court && x.court !== x.libelle ? x.libelle : null);
       var b = h('button', {
-        type: 'button', class: 'choix-opt' + (actif ? ' is-actif' : '') + (x.marque ? ' is-' + x.marque : ''),
+        type: 'button', class: 'choix-opt' + (actif ? ' is-actif' : '') + marques.map(function (m) { return ' is-' + m; }).join(''),
         role: 'radio', 'aria-checked': actif ? 'true' : 'false',
-        tabindex: (actif || (indexCourant < 0 && i === 0)) ? '0' : '-1',
+        tabindex: (actif || (indexCourant < 0 && i === premierPermis)) ? '0' : '-1',
         'data-cle': opts.cle + ':' + i, 'data-valeur': String(x.v),
-        'aria-label': x.court && x.court !== x.libelle ? x.libelle : null,
+        'aria-label': nomAcc,
+        'aria-disabled': x.desactive && !opts.desactive ? 'true' : null,
         disabled: opts.desactive ? true : null,
-        title: x.court && x.court !== x.libelle ? x.libelle : null,
+        title: x.titre || (x.court && x.court !== x.libelle ? x.libelle : null),
         onclick: function () { choisir(i, false); },
         onkeydown: function (ev) {
           var n = opts.valeurs.length, j = null;
-          if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') j = (i + 1) % n;
-          else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') j = (i - 1 + n) % n;
-          else if (ev.key === 'Home') j = 0;
-          else if (ev.key === 'End') j = n - 1;
+          if (ev.key === 'ArrowRight' || ev.key === 'ArrowDown') j = voisine(i, 1);
+          else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowUp') j = voisine(i, -1);
+          else if (ev.key === 'Home') j = permise(0) ? 0 : voisine(0, 1);
+          else if (ev.key === 'End') j = permise(n - 1) ? n - 1 : voisine(n - 1, -1);
           if (j != null) { ev.preventDefault(); choisir(j, true); }
         },
       },
@@ -245,6 +258,70 @@
       groupe.appendChild(b);
     });
     return groupe;
+  };
+
+  // --- Réflexions des développeurs (33-reflexions) : texte, cause, moment ---
+  F.texteReflexion = function (r, etat) {
+    return F.texte(r && r.texte, etat, { dev: r && r.dev, ilot: r && r.ilot });
+  };
+  // Situation du contenu (09-donnees-reflexions) d'après le motif 'situation:<id>'.
+  function situationDe(motif) {
+    var id = String(motif || '').slice('situation:'.length);
+    var l = (LTP.donnees.reflexions && LTP.donnees.reflexions.situations) || [];
+    for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) return l[i];
+    return null;
+  }
+  // Ce qui a fait parler la personne, en une étiquette courte (null : l'activité du moment, rien à relier).
+  //   levier ou réaction → « ↳ Réviseurs par PR : Deux » ; note de service → « ↳ Note de service » ;
+  //   situation → son libellé (repli : rien).
+  F.causeReflexion = function (r) {
+    if (!r || !r.motif) return null;
+    var N = LTP.format.NBSP;
+    if ((r.motif === 'levier' || r.motif === 'reaction') && r.levier && LTP.q.defLevier(r.levier)) {
+      return { type: 'levier', levier: r.levier, texte: '↳ ' + LTP.ui.libelleLevier(r.levier) + (r.valeur !== undefined ? N + ': ' + LTP.ui.libelleValeur(r.levier, r.valeur) : '') };
+    }
+    if (r.motif === 'nouveaute') return { type: 'nouveaute', levier: r.levier || null, texte: '↳ ' + t('echos.note') };
+    if (String(r.motif).indexOf('situation:') === 0) {
+      var s = situationDe(r.motif);
+      var lib = s && s.libelle ? F.texte(s.libelle, LTP.app && LTP.app.etat) : '';
+      return lib ? { type: 'situation', levier: s.levier || null, texte: '↳ ' + lib } : null;
+    }
+    return null;
+  };
+  // Rang d'importance d'une réflexion (réaction immédiate > levier, nouveauté, situation > activité).
+  F.rangReflexion = function (r) {
+    if (!r) return 0;
+    if (r.immediat) return 4;
+    if (r.motif === 'reaction' || r.motif === 'levier' || r.motif === 'nouveaute') return 3;
+    if (String(r.motif || '').indexOf('situation:') === 0) return 2;
+    return 1;
+  };
+  // Jour absolu (0 = lundi de la semaine 1) d'une semaine et d'un jour ouvrable.
+  F.jourAbsolu = function (semaine, jour) { return (Math.max(1, semaine || 1) - 1) * 5 + (jour || 0); };
+  F.aujourdhui = function (etat) { return F.jourAbsolu(LTP.q.semaineCourante(etat), etat.jour || 0); };
+  // « Aujourd'hui », « Hier », « Avant-hier » ou « S5 · mar. ».
+  F.quandReflexion = function (r, etat) {
+    var ecart = F.aujourdhui(etat) - F.jourAbsolu(r.semaine, r.jour);
+    if (ecart <= 0) return t('echos.aujourdhui');
+    if (ecart === 1) return t('echos.hier');
+    if (ecart === 2) return t('echos.avantHier');
+    return t('journal.quand', { semaine: r.semaine, jour: LTP.ui.jourCourt(r.jour) });
+  };
+  // Une réflexion en ligne : visage, nom, îlot, texte entre guillemets et cause. opts : { taille, quand, classe }
+  F.ligneReflexion = function (r, etat, opts) {
+    opts = opts || {};
+    var N = LTP.format.NBSP;
+    var cause = F.causeReflexion(r);
+    var nom = LTP.ui.nomDev(r.dev);
+    var texte = F.texteReflexion(r, etat);
+    return h('li', { class: 'echo echo--' + (r.ton || 'neutre') + (r.immediat ? ' is-immediat' : '') + (opts.classe ? ' ' + opts.classe : ''), 'data-echo-dev': r.dev },
+      F.visage(r.dev, opts.taille || 32, 'echo-visage'),
+      h('div', { class: 'echo-corps' },
+        h('p', { class: 'echo-qui' }, h('b', null, nom), h('span', { class: 'echo-ilot' }, ' · ' + LTP.ui.nomIlot(r.ilot)),
+          opts.quand ? h('span', { class: 'echo-quand mono' }, opts.quand) : null),
+        h('p', { class: 'echo-texte' }, '«' + N + texte + N + '»'),
+        cause ? h('p', { class: 'echo-cause echo-cause--' + cause.type }, cause.texte,
+          r.immediat ? h('span', { class: 'echo-immediat' }, ' · ' + t('echos.immediat')) : null) : null));
   };
 
   // Petites icônes en SVG (traits de 1,6 px, héritent de currentColor).
@@ -284,7 +361,16 @@
     erreur: null,          // { id, code }
     ouvertureVue: {},      // trimestre → true quand le mot d'ouverture a été masqué
     derniereSelection: null,
+    eclaire: null,         // { id, jusqua, aFaire } : levier à montrer (bouton « Voir le levier » de la note de service)
   };
+  // Une nouveauté reste « nouvelle » pendant la semaine où elle arrive et la suivante.
+  var FENETRE_NOUVEAU = 2;
+  function estNouveau(etat, semaine) {
+    if (etat.options && etat.options.toutDebloque) return false;
+    var sc = LTP.q.semaineCourante(etat);
+    return semaine != null && semaine <= sc && sc - semaine < FENETRE_NOUVEAU;
+  }
+  function panneauxDebloques(etat) { return panneaux().filter(function (p) { return LTP.q.panneauDebloque(etat, p.id); }); }
 
   function panneaux() { return LTP.donnees.panneaux || []; }
   function leviersDu(panneauId) { return (LTP.donnees.leviers || []).filter(function (l) { return l.panneau === panneauId; }); }
@@ -331,17 +417,37 @@
     var m = modeDe(def);
     var idLib = 'lev-' + def.id;
 
+    var N = LTP.format.NBSP;
+    // Valeurs pas encore permises : visibles, désactivées, avec la semaine où elles arrivent.
+    var nouvellesValeurs = [];
     var valeurs = (def.valeurs || []).map(function (x) {
-      var o = { v: x.v, libelle: x.libelle || String(x.v) };
+      var o = { v: x.v, libelle: x.libelle || String(x.v), marques: [] };
       if (m.court) o.court = String(x.v);
-      if (attente && attente.valeur === x.v) { o.marque = 'programme'; o.marqueTexte = m.mode === 'liste' ? '⏱' : null; }
+      if (attente && attente.valeur === x.v) { o.marques.push('programme'); o.marqueTexte = m.mode === 'liste' ? '⏱' : null; }
+      var sv = x.semaine || def.semaine || 1;
+      if (!LTP.q.valeurDebloquee(etat, def.id, x.v)) {
+        o.desactive = true;
+        o.marques.push('verrou');
+        o.marqueTexte = t('panneau.valeurVerrou', { semaine: sv });
+        o.titre = t('panneau.valeurVerrouAide', { semaine: sv });
+        o.nomAccessible = o.libelle + ' (' + o.titre.toLowerCase() + ')';
+      } else if (sv > (def.semaine || 1) && estNouveau(etat, sv)) {
+        o.marques.push('nouveau');
+        o.nomAccessible = o.libelle + ' (' + t('panneau.nouveau').toLowerCase() + ')';
+        nouvellesValeurs.push({ semaine: sv, libelle: o.libelle });
+      }
       return o;
     });
 
     var badges = [];
+    if (debloque && estNouveau(etat, def.semaine || 1)) {
+      badges.push(h('span', { class: 'badge badge--nouveau', title: t('panneau.nouveauAide', { semaine: def.semaine || 1 }) }, t('panneau.nouveau')));
+    } else if (nouvellesValeurs.length) {
+      badges.push(h('span', { class: 'badge badge--nouveau', title: t('panneau.nouveauValeurs', { semaine: nouvellesValeurs[0].semaine,
+        valeurs: nouvellesValeurs.map(function (x) { return x.libelle; }).join(', ') }) }, t('panneau.nouveau')));
+    }
     if (def.surchargeable) badges.push(h('span', { class: 'badge badge--losange', title: t('panneau.porteeAide') }, '◆'));
     if (surcharge) badges.push(h('span', { class: 'badge badge--accent', title: t('panneau.surchargeAide') }, t('panneau.surcharge')));
-    if (!debloque) badges.push(h('span', { class: 'badge badge--verrou' }, F.icone('cadenas', 12), ' ', t('panneau.levierVerrou', { trimestre: def.trimestre })));
 
     var pied = [];
     if (debloque && def.delai > 0 && !attente) pied.push(h('p', { class: 'levier-note mono' }, t('panneau.delai', { n: def.delai })));
@@ -374,7 +480,9 @@
       pied.push(F.postit(etat_.indice.texte, { classe: 'postit--levier', fermer: function () { etat_.indice = null; app.notifier(); }, cleFermer: 'indice-' + def.id }));
     }
 
-    return h('div', { class: 'levier' + (surcharge ? ' is-surcharge' : '') + (!debloque ? ' is-verrou' : '') + (desactive ? ' is-inactif' : ''), 'data-levier': def.id, role: 'group', 'aria-labelledby': idLib },
+    var eclaire = etat_.eclaire && etat_.eclaire.id === def.id && Date.now() < etat_.eclaire.jusqua;
+    return h('div', { class: 'levier' + (surcharge ? ' is-surcharge' : '') + (!debloque ? ' is-verrou' : '') + (desactive ? ' is-inactif' : '') + (eclaire ? ' is-eclaire' : ''),
+      'data-levier': def.id, role: 'group', 'aria-labelledby': idLib },
       h('div', { class: 'levier-tete' }, h('span', { class: 'levier-nom', id: idLib }, def.libelle || def.id), badges.length ? h('span', { class: 'levier-badges' }, badges) : null),
       def.aide ? h('p', { class: 'levier-aide' }, def.aide) : null,
       F.choix({
@@ -394,11 +502,12 @@
       pied);
   }
 
+  // Repli : un panneau pas encore ouvert (son onglet n'est normalement pas affiché).
   function fabriquerVerrou(p, etat) {
     var prochains = leviersDu(p.id);
     return h('div', { class: 'panneau-verrou' },
       h('div', { class: 'verrou-icone' }, F.icone('cadenas', 28)),
-      h('h3', null, t('panneau.verrouTitre', { trimestre: p.trimestre })),
+      h('h3', null, t('panneau.verrouTitre', { semaine: p.semaine || 1 })),
       p.id === 'registre' ? h('p', null, t('registre.verrou')) : h('p', null, t('panneau.verrouTexte')),
       prochains.length ? h('ul', { class: 'verrou-liste' }, prochains.map(function (l) { return h('li', null, l.libelle); })) : null);
   }
@@ -407,16 +516,23 @@
     var n = etat.trimestre;
     if (etat_.ouvertureVue[n]) return null;
     if (etat.phase !== 'planification' && etat.phase !== 'execution') return null;
+    // Les nouveautés arrivent maintenant une à une par notes de service : le mot d'ouverture ne les énumère plus.
     var texte = LTP.donnees.indices && LTP.donnees.indices.trimestres && LTP.donnees.indices.trimestres[n];
-    var nouveaux = n > 1 ? panneaux().filter(function (p) { return p.trimestre === n; }).map(function (p) { return p.libelle; })
-      .concat((LTP.donnees.leviers || []).filter(function (l) { return l.trimestre === n && !panneaux().some(function (p) { return p.id === l.panneau && p.trimestre === n; }); }).map(function (l) { return l.libelle; })) : [];
-    if (!texte && !nouveaux.length) return null;
+    if (!texte) return null;
     return h('div', { class: 'ouverture', role: 'note' },
       h('p', { class: 'eyebrow' }, t('panneau.ouverture', { trimestre: n })),
-      F.postit(texte ? F.texte(texte, etat) : t('trimestre.deblocage'), {
+      F.postit(F.texte(texte, etat), {
         fermer: function () { etat_.ouvertureVue[n] = true; app.notifier(); }, fermerLibelle: t('panneau.ouvertureFermer'), cleFermer: 'ouverture',
-      }),
-      nouveaux.length ? h('p', { class: 'ouverture-nouveau' }, h('b', null, t('panneau.nouveau')), ' ', nouveaux.join(', ')) : null);
+      }));
+  }
+
+  // Ligne discrète au bas du panneau : la prochaine note de service du calendrier.
+  function fabriquerProchaine(etat) {
+    if (etat.options && etat.options.toutDebloque) return h('p', { class: 'prochaine' }, t('panneau.toutDebloque'));
+    if (etat.phase === 'fin') return null;
+    var p = LTP.q.prochainDeblocage(etat);
+    return h('p', { class: 'prochaine' }, F.icone('evenement', 14), ' ',
+      p ? t('panneau.prochaine', { titre: p.titre || '', semaine: p.semaine }) : t('panneau.prochaineAucune'));
   }
 
   function signatureLeviers(etat, ui, pid) {
@@ -426,13 +542,52 @@
       return [LTP.q.levier(etat, l.id, l.surchargeable && ilotEd ? ilotEd : null), a ? a.valeur + '@' + (a.semaine - etat.semaine) : '',
         JSON.stringify(surchargesDe(etat, l.id)), LTP.q.levierDebloque(etat, l.id)];
     });
-    return JSON.stringify([pid, ilotEd, etat.trimestre, etat.phase === 'fin', vals, etat_.indice, etat_.erreur]);
+    var ecl = etat_.eclaire && Date.now() < etat_.eclaire.jusqua ? etat_.eclaire.id : '';
+    return JSON.stringify([pid, ilotEd, LTP.q.semaineCourante(etat), !!etat.options.toutDebloque, etat.phase === 'fin', vals, etat_.indice, etat_.erreur, ecl]);
   }
 
   LTP.ui.panneau = {
     ouvrir: function () { etat_.feuilleOuverte = true; LTP.app.notifier(); },
     fermer: function () { etat_.feuilleOuverte = false; LTP.app.notifier(); },
+    // Ouvre le panneau et l'onglet d'un levier, le fait défiler jusqu'à lui et le met en évidence un instant.
+    montrerLevier: function (id) {
+      var def = LTP.q.defLevier(id);
+      if (!def) return;
+      etat_.eclaire = { id: id, jusqua: Date.now() + 2800, aFaire: true };
+      etat_.feuilleOuverte = true;
+      LTP.app.setUI({ panneau: def.panneau, ilotEdition: null });
+    },
+    // Ouvre un onglet (le registre, par exemple) sans viser de levier.
+    montrerPanneau: function (pid) {
+      etat_.feuilleOuverte = true;
+      LTP.app.setUI({ panneau: pid, ilotEdition: null });
+      setTimeout(function () {
+        var o = document.querySelector('#panneau-feuille .onglet[data-panneau="' + F.echapper(pid) + '"]');
+        if (o) { try { o.focus({ preventScroll: true }); } catch (e) { o.focus(); } }
+      }, F.etroit() ? 320 : 60);
+    },
   };
+
+  // Après le rendu : défile jusqu'au levier demandé, le met en évidence et y met le focus.
+  function eclairer(conteneur) {
+    var e = etat_.eclaire;
+    if (!e || !e.aFaire) return;
+    var el = conteneur.querySelector('[data-levier="' + F.echapper(e.id) + '"]');
+    if (!el) return;
+    e.aFaire = false;
+    el.classList.add('is-eclaire');
+    setTimeout(function () {
+      try { el.scrollIntoView({ block: F.etroit() ? 'center' : 'nearest', behavior: F.reduit() ? 'auto' : 'smooth' }); } catch (err) { el.scrollIntoView(); }
+      var f = el.querySelector('[aria-checked="true"]') || el.querySelector(FOCUSABLES);
+      if (f) { try { f.focus({ preventScroll: true }); } catch (err) { f.focus(); } }
+    }, F.etroit() ? 320 : 60);
+    var duree = Math.max(0, e.jusqua - Date.now());
+    setTimeout(function () {
+      if (etat_.eclaire === e) etat_.eclaire = null;
+      var cible = document.querySelector('#panneau-feuille [data-levier="' + F.echapper(e.id) + '"]');
+      if (cible) cible.classList.remove('is-eclaire');
+    }, duree);
+  }
 
   LTP.ui.regions.panneau = {
     monter: function (racine, app) {
@@ -464,7 +619,8 @@
       this._ouverture = h('div', { class: 'ouverture-zone' });
       this._leviers = h('div', { class: 'panneau-leviers', id: 'panneau-contenu', role: 'tabpanel' });
       this._registre = h('div', { class: 'panneau-registre', role: 'tabpanel', hidden: true });
-      this._corps = h('div', { class: 'panneau-corps' }, this._triade, this._ouverture, this._leviers, this._registre);
+      this._prochaine = h('div', { class: 'prochaine-zone' });
+      this._corps = h('div', { class: 'panneau-corps' }, this._triade, this._ouverture, this._leviers, this._registre, this._prochaine);
       this._feuille = h('div', { class: 'panneau', id: 'panneau-feuille', 'data-ouvert': 'false' },
         this._poignee,
         h('div', { class: 'panneau-tete' }, h('h2', { class: 'panneau-titre' }, t('panneau.titre')), this._onglets, this._portee),
@@ -491,8 +647,11 @@
         }
       }
 
-      var pid = ui.panneau || 'pratiques';
-      var p = panneaux().filter(function (x) { return x.id === pid; })[0] || panneaux()[0];
+      // Seuls les panneaux débloqués ont un onglet ; un onglet pas encore ouvert bascule sur le premier ouvert.
+      var ouverts = panneauxDebloques(etat);
+      if (!ouverts.length) ouverts = panneaux().slice(0, 1);
+      var pid = ui.panneau || 'ia';
+      var p = ouverts.filter(function (x) { return x.id === pid; })[0] || ouverts[0];
       if (!p) return;
       pid = p.id;
       var debloque = LTP.q.panneauDebloque(etat, pid);
@@ -506,16 +665,16 @@
       if (texteP.textContent !== resumeP) texteP.textContent = resumeP;
 
       // Onglets
-      F.reconstruire(this._onglets, JSON.stringify([pid, etat.trimestre, etat.options.toutDebloque]), function () {
-        var liste = panneaux();
+      F.reconstruire(this._onglets, JSON.stringify([pid, ouverts.map(function (x) { return x.id; }), LTP.q.semaineCourante(etat), etat.options.toutDebloque]), function () {
+        var liste = ouverts;
         return liste.map(function (x, i) {
-          var ok = LTP.q.panneauDebloque(etat, x.id);
           var actif = x.id === pid;
+          var nouveau = estNouveau(etat, x.semaine || 1) && (x.semaine || 1) > 1;
           return h('button', {
-            type: 'button', role: 'tab', class: 'onglet' + (actif ? ' is-actif' : '') + (ok ? '' : ' is-verrou'),
+            type: 'button', role: 'tab', class: 'onglet' + (actif ? ' is-actif' : '') + (nouveau ? ' is-nouveau' : ''),
             'aria-selected': actif ? 'true' : 'false', tabindex: actif ? '0' : '-1', 'aria-controls': x.id === 'registre' ? null : 'panneau-contenu',
             'data-cle': 'onglet-' + x.id, 'data-panneau': x.id,
-            title: ok ? null : t('panneau.verrouAide', { trimestre: x.trimestre }),
+            title: nouveau ? t('panneau.nouveauAide', { semaine: x.semaine }) : null,
             onclick: function () { app.setUI({ panneau: x.id }); },
             onkeydown: function (ev) {
               var j = null;
@@ -528,7 +687,7 @@
                 if (b) b.focus();
               }
             },
-          }, x.libelle, ok ? null : h('span', { class: 'onglet-verrou mono' }, F.icone('cadenas', 11), t('panneau.verrou', { trimestre: x.trimestre })));
+          }, x.libelle, nouveau ? h('span', { class: 'onglet-nouveau', 'aria-hidden': 'true' }) : null, nouveau ? h('span', { class: 'sr-only' }, ' (' + t('panneau.nouveau').toLowerCase() + ')') : null);
         });
       });
 
@@ -577,6 +736,12 @@
         return fabriquerOuverture(etat, app);
       });
 
+      // Prochaine nouveauté du calendrier
+      var proch = LTP.q.prochainDeblocage(etat);
+      F.reconstruire(this._prochaine, JSON.stringify([proch && proch.semaine, !!etat.options.toutDebloque, etat.phase === 'fin']), function () {
+        return fabriquerProchaine(etat);
+      });
+
       // Contenu
       var estRegistre = pid === 'registre' && debloque;
       this._registre.hidden = !estRegistre;
@@ -589,20 +754,17 @@
         return;
       }
       if (!debloque) {
-        F.reconstruire(this._leviers, 'verrou:' + pid + ':' + etat.trimestre, function () { return fabriquerVerrou(p, etat); });
+        F.reconstruire(this._leviers, 'verrou:' + pid + ':' + LTP.q.semaineCourante(etat), function () { return fabriquerVerrou(p, etat); });
         return;
       }
       F.reconstruire(this._leviers, signatureLeviers(etat, ui, pid), function () {
-        var liste = leviersDu(pid);
-        // Les leviers débloqués d'abord ; en mode îlot, les leviers surchargeables d'abord.
-        liste = liste.slice().sort(function (a, b) {
-          var da = LTP.q.levierDebloque(etat, a.id) ? 0 : 1, db = LTP.q.levierDebloque(etat, b.id) ? 0 : 1;
-          if (da !== db) return da - db;
-          if (ui.ilotEdition) return (a.surchargeable ? 0 : 1) - (b.surchargeable ? 0 : 1);
-          return 0;
-        });
+        // Seulement les leviers déjà arrivés (tous en mode animateur « tout débloquer ») ;
+        // en mode îlot, les leviers surchargeables d'abord.
+        var liste = leviersDu(pid).filter(function (l) { return LTP.q.levierDebloque(etat, l.id); });
+        if (ui.ilotEdition) liste = liste.slice().sort(function (a, b) { return (a.surchargeable ? 0 : 1) - (b.surchargeable ? 0 : 1); });
         return liste.map(function (def) { return fabriquerLevier(def, etat, ui, app); });
       });
+      eclairer(this._leviers);
     },
   };
 })(globalThis.LTP = globalThis.LTP || {});

@@ -61,7 +61,8 @@
     etat.leviers.enAttente.forEach(function (a) {
       if (a.semaine <= etat.semaine) {
         ecrireLevier(etat, a.id, a.valeur, a.ilot);
-        noterChangement(etat, a.id, a.valeur, a.ilot, true);
+        // En vigueur au calcul de ce vendredi : la semaine qui vient de se terminer, jour 4.
+        noterChangement(etat, a.id, a.valeur, a.ilot, true, { semaine: etat.semaine, jour: 4, effectif: true });
         ctx.noter('levier', 'levier.effectif', { levier: a.id, valeur: a.valeur }, { ilot: a.ilot });
       } else restants.push(a);
     });
@@ -69,10 +70,12 @@
   }
 
   // Garde la trace des changements de leviers : les réflexions en parlent, le tableau de bord les marque.
-  function noterChangement(etat, id, valeur, ilot, differe) {
+  function noterChangement(etat, id, valeur, ilot, differe, quand) {
     var l = etat.leviers.changements || (etat.leviers.changements = []);
-    var c = { id: id, valeur: valeur, ilot: ilot || null, semaine: q.semaineCourante(etat), jour: etat.jour || 0 };
+    var c = { id: id, valeur: valeur, ilot: ilot || null,
+      semaine: quand ? quand.semaine : q.semaineCourante(etat), jour: quand ? quand.jour : (etat.jour || 0) };
     if (differe) c.differe = true;
+    if (quand && quand.effectif) c.effectif = true;
     l.push(c);
     var max = LTP.K.etat.changementsMax || 40;
     if (l.length > max) etat.leviers.changements = l.slice(l.length - max);

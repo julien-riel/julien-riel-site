@@ -165,6 +165,7 @@
 }
 .os-legende li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: center; }
 .os-leg-ico { width: 22px; height: 16px; border-radius: 3px; display: block; }
+.os-leg-ico--licence { width: 14px; height: 14px; margin: 0 4px; border-radius: 50%; background: radial-gradient(circle, var(--os-lueur) 0 28%, var(--os-plaque) 32%); }
 .os-leg-ico--ecrans { background: linear-gradient(90deg, #1b2838 0 30%, transparent 30% 35%, #1b2838 35% 65%, transparent 65% 70%, #1b2838 70%); box-shadow: 0 0 6px var(--os-lueur); }
 .os-leg-ico--pile { background: repeating-linear-gradient(180deg, var(--os-papier) 0 3px, var(--os-papier-ombre) 3px 4px); }
 .os-leg-ico--brouillard { background: radial-gradient(circle, var(--os-brouillard), transparent 70%); }
@@ -346,15 +347,24 @@
   transition: background 0.2s ease, color 0.2s ease;
 }
 .os-etat-texte { display: none; }
+/* Licence Copilot : une pastille étoilée près du nom ; sans licence, l'écran n'a pas de lueur d'agent. */
+.os-nom-ligne { display: inline-flex; align-items: center; justify-content: center; gap: 2px; max-width: 100%; }
+.os-licence { display: none; flex: none; width: 13px; height: 13px; border-radius: 50%; place-items: center;
+  background: var(--os-plaque); color: var(--os-lueur); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 5px -1px var(--os-lueur); }
+.os-licence svg { width: 9px; height: 9px; fill: currentColor; display: block; }
+.os-b--licence .os-licence { display: inline-grid; }
+.os-b--sans-licence .s-ecran-lueur, .os-b--sans-licence .s-flaque { visibility: hidden; }
+.os-b--sans-licence .s-code--1, .os-b--sans-licence .s-code--2 { fill: #c9c3b8; }
 .os-bureau:hover .os-nom { background: hsl(var(--os-teinte, 30) 50% 50% / 0.18); }
 .os-b--choisi .os-nom, .os-b--choisi:hover .os-nom { background: hsl(var(--os-teinte, 30) 65% 38%); color: #fff; }
 .os-b--vide .os-nom { opacity: 0.7; font-style: italic; }
 
-/* Bulle de pensée */
+/* Bulle de pensée : une réflexion du jour (42-ui-open-space.js en règle l'apparition et la durée).
+   --os-bulle-decal : hauteur de la bulle voisine du même îlot, pour que deux bulles ne se cachent pas. */
 .os-bulle {
   position: absolute; z-index: 6;
-  bottom: 40%;
-  width: max-content; max-width: min(156px, 230%);
+  bottom: calc(40% + var(--os-bulle-decal, 0px));
+  width: max-content; max-width: min(176px, 240%);
   padding: 6px 10px 7px;
   border-radius: 14px;
   background: var(--os-bulle-bg); color: var(--os-texte);
@@ -362,8 +372,13 @@
   font: 12px/1.32 var(--font-texte, system-ui, sans-serif);
   text-align: left; white-space: normal;
   opacity: 0; pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease, bottom 0.25s ease;
 }
+/* Le ton de la réflexion teinte à peine la bulle : un filet à gauche. */
+.os-bulle--plus { box-shadow: 0 8px 18px -8px rgba(40, 25, 10, 0.55), 0 0 0 1px var(--os-ligne), inset 3px 0 0 color-mix(in oklab, var(--ok, #276b37) 75%, transparent); }
+.os-bulle--moins { box-shadow: 0 8px 18px -8px rgba(40, 25, 10, 0.55), 0 0 0 1px var(--os-ligne), inset 3px 0 0 color-mix(in oklab, var(--crit, #b3261e) 60%, transparent); }
+.os-bulle--immediat { font-weight: 600; }
+.os-bulle--haut { z-index: 7; }
 .os-bulle::before, .os-bulle::after {
   content: ""; position: absolute; border-radius: 50%;
   background: var(--os-bulle-bg); box-shadow: 0 0 0 1px var(--os-ligne);
@@ -382,9 +397,8 @@
 .os-bureau--0 .os-bulle--vue, .os-bureau--0:hover .os-bulle, .os-bureau--0:focus-visible .os-bulle,
 .os-bureau--2 .os-bulle--vue, .os-bureau--2:hover .os-bulle, .os-bureau--2:focus-visible .os-bulle { transform: none; }
 .os-bureau--1 .os-bulle--vue, .os-bureau--1:hover .os-bulle, .os-bureau--1:focus-visible .os-bulle { transform: translate(-50%, 0); }
-.os-bureau:hover .os-bulle, .os-bureau:focus-visible .os-bulle { z-index: 7; animation: none; }
-.os-bulle--a { animation: os-bulle-a 6s ease forwards; }
-.os-bulle--b { animation: os-bulle-b 6s ease forwards; }
+/* Au survol, la bulle passe devant les autres (et montre la dernière réflexion de la personne). */
+.os-bureau:hover .os-bulle, .os-bureau:focus-visible .os-bulle { z-index: 8; }
 
 /* ---------- Scène SVG d'un bureau ---------- */
 .os-scene .s-cloison { fill: var(--os-cloison); }
@@ -511,8 +525,6 @@
 .c-fantome-base { fill: #b9bdc1; } .c-fantome-ecran { fill: #ff8fb8; } .c-fantome-autocollant { fill: #9be15d; }
 
 /* ---------- Animations ---------- */
-@keyframes os-bulle-a { 0% { opacity: 0; } 6%, 82% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes os-bulle-b { 0% { opacity: 0; } 6%, 82% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes os-frappe { 0% { transform: scaleX(0.08); } 85%, 100% { transform: scaleX(1); } }
 @keyframes os-lueur { from { opacity: 0.32; } to { opacity: 0.7; } }
 @keyframes os-clignote { from { opacity: 1; } to { opacity: 0.55; } }

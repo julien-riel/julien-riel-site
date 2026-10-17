@@ -28,25 +28,34 @@ Ton : celui du premier jeu, de l'humour de bureau québécois, bienveillant, jam
 
 ### 2.1 Campagne de quatre trimestres
 
-Une partie dure 52 semaines, en 4 trimestres de 13 semaines. Chaque trimestre a un thème dominant,
-qui oriente le tirage des événements et **débloque de nouveaux panneaux de leviers** (divulgation progressive :
-le joueur n'est jamais face à 40 leviers d'un coup).
+Une partie dure 52 semaines, en 4 trimestres de 13 semaines. Le joueur avance **une journée ouvrable
+à la fois** (du lundi au vendredi). Chaque trimestre a un thème dominant, qui oriente le tirage des événements.
 
-| Trimestre | Thème | Ce qui se débloque | Événements dominants |
+On part de peu : **sept licences GitHub Copilot de base** offertes à un groupe pilote (une personne volontaire
+par îlot), en autocomplétion seulement. Les contrôles arrivent ensuite **un à un**, selon une feuille de route
+(`js/08-donnees-calendrier.js`) : une nouveauté par semaine au plus, annoncée par une **note de service**
+signée (Mme Lavigueur, Régis, Me Bérubé, Ginette ou Kevin) qui dit ce qui change et quelles métriques
+surveiller. Le joueur peut ainsi isoler l'effet de chaque levier avant que le suivant n'arrive.
+
+| Trimestre | Thème | Ce qui se débloque (semaine) | Événements dominants |
 |---|---|---|---|
-| T1 | **L'euphorie** | Pratiques d'ingénierie, Utilisation de l'IA (autonomie, sessions, modèle) | Ruée vers les PR, multi-Clauding, Mathieu et ses PR de 4 000 lignes, revue submergée |
-| T2 | **La facture** | Budget et jetons, choix de modèle par tâche, formation, skills | Facture de jetons, boucle d'agent, bogues qui remontent, guerre des skills, gonflement fonctionnel |
-| T3 | **Les fuites** | Gouvernance des données, Registre (MCP), bac à sable et permissions, politique non-TI | Injection de prompt, slopsquatting, MCP empoisonné, application de Kevin, Loi 25 |
-| T4 | **La maturité** | Observabilité, relève et embauche, objectifs de la direction | Départ de Ginette, panne « personne ne comprend », vulnérabilité MCP publiée, bilan |
+| T1 | **Copilot de base** | Licences (S1), autonomie 0–1 : autocomplétion et clavardage (S3), réviseurs (S5), tests (S7), mode agent : autonomie 2 (S8), CI (S9), lint (S11), approbation (S12) | Groupe pilote, premières PR assistées, revue qui commence à s'empiler |
+| T2 | **Les agents et la facture** | Agents qui ouvrent leurs PR (autonomie 3) et registre des skills (S14), taille des PR (S15), modèle (S17), sessions parallèles 1–3 (S18), plafond de jetons (S20), formation (S22), discipline du « non » (S23), fusion automatique et 6 sessions (S24), specs (S25) | Facture de jetons, boucle d'agent, bogues qui remontent, guerre des skills, gonflement fonctionnel |
+| T3 | **Les fuites** | Accès à la prod (S27), bac à sable (S28), sorties externes (S30), politique du registre (S31), modèle par tâche (S32), classification (S33), catalogue (S34), passerelle MCP (S36), développement hors TI (S37) | Injection de prompt, slopsquatting, MCP empoisonné, application de Kevin, Loi 25 |
+| T4 | **La maturité** | Observabilité (S40), objectif de la direction (S42), revues d'explication (S44), binôme (S46), relève (S48) | Départ de Ginette, panne « personne ne comprend », vulnérabilité MCP publiée, bilan |
+
+Un levier pas encore débloqué garde sa valeur par défaut : les agents ont accès à la production, le registre
+est en libre-service et personne ne classe les données tant que le joueur ne peut pas y toucher.
 
 ### 2.2 Le rythme d'un trimestre
 
 1. **Planification** (pause) : le joueur règle ses leviers. Ginette commente en une ligne les choix risqués.
-2. **Exécution** : les semaines défilent (vitesse ×1, ×2, ×4 ; une semaine dure 3 s à ×1).
-   Les animations de l'open space interpolent entre deux semaines.
-   Une **carte d'événement** interrompt le défilement et demande une décision (2 ou 3 choix).
-   Le joueur peut mettre en pause et changer ses leviers à tout moment ; certains changements
-   ont un délai d'effet (formation : 4 semaines, MCP maison : 6 semaines de développement).
+2. **Exécution** : les journées défilent (vitesse ×1, ×2, ×4 ; une journée dure 4 s à ×1) ou s'avancent une à une.
+   Du lundi au jeudi, la journée vit : les développeurs pensent tout haut (réflexions, §8.3), une carte d'événement
+   peut arriver. Le **vendredi**, la semaine est calculée d'un coup : c'est le rapport hebdomadaire, et le
+   tableau de bord change. Une carte tirée le vendredi arrive un jour de la semaine suivante (du mardi au vendredi).
+   Le joueur peut mettre en pause et changer ses leviers à tout moment ; un changement compte pour le calcul
+   du vendredi suivant, et certains ont un délai d'effet (formation : 4 semaines, MCP maison : 6 semaines de développement).
 3. **Revue trimestrielle** : un comité (Régis, Me Bérubé, Mme Lavigueur, plus un directeur
    de ligne d'affaires selon l'actualité) pose 3 questions sur les chiffres. On réutilise
    l'esprit du comité du premier jeu : on choisit une réponse, on gagne ou perd de la confiance.
@@ -70,10 +79,10 @@ Une **confiance de la direction** (0–100) sert de garde-fou : sous 15, la part
 
 ### 2.4 Modes annexes
 
-- **Tutoriel** (2 minutes, avec Ginette) : une semaine guidée, un événement, un levier.
+- **Tutoriel** (2 minutes, avec Ginette) : une journée guidée, le levier des licences, les réflexions, la note de service.
 - **Mode animateur** : choix de la graine aléatoire, sauter au trimestre voulu, tout débloquer,
   afficher les métriques cachées. Utile en formation de groupe et pour les tests.
-- **Sauvegarde** automatique en fin de semaine (`localStorage`, protégé par try/catch).
+- **Sauvegarde** automatique à chaque journée (`localStorage`, protégée par try/catch).
 
 ## 3. Les personnages
 
@@ -150,7 +159,10 @@ Principes :
 
 ### 4.1 Les leviers
 
-Les leviers sont globaux, avec une **surcharge possible par îlot** pour ceux marqués ◆.
+Les leviers sont globaux, avec une **surcharge possible par îlot** pour ceux marqués ◆. Ils n'arrivent pas
+par panneau entier mais un à un, selon le calendrier du §2.1 (les trimestres indiqués ci-dessous sont les panneaux
+d'origine). Le premier levier est celui des **licences Copilot** : aucune · groupe pilote (7) · toute l'équipe (21).
+Sans licence, un développeur code comme avant : pas de session d'agent, pas de jetons, pas de gain de l'IA.
 
 **Pratiques d'ingénierie (T1)**
 
@@ -507,14 +519,20 @@ contredit par le tableau de bord). Effet sur la confiance.
 
 ## 8. Interface
 
-- **HUD collant** : semaine et trimestre, budget, jetons, confiance, lecture (pause, ×1, ×2, ×4), retour aux projets.
+- **HUD collant** : trimestre, semaine et jour, budget, jetons de la dernière semaine, confiance, lecture
+  (pause, ×1, ×2, ×4, « +1 jour »), retour aux projets.
 - **Open space** (centre) : vue de haut en SVG, 7 îlots en grille, avatars et signaux de la section 3.3.
-  Cliquer un développeur ouvre sa fiche, cliquer un îlot ouvre ses leviers et ses capacités.
-- **Panneau de leviers** (droite sur bureau, feuille du bas sur téléphone) : onglets Pratiques, IA, Produit,
-  Données et sécurité, Registre, Organisation. Les onglets verrouillés montrent le trimestre de déblocage.
-- **Tableau de bord** (bas ou onglet) : tuiles avec tendances sur 13 semaines, métriques cachées grisées.
+  Un poste sans licence n'a pas d'agent à l'écran. Cliquer un développeur ouvre sa fiche (licence,
+  dernières réflexions), cliquer un îlot ouvre ses leviers et ses capacités.
+- **Panneau de leviers** (droite sur bureau, feuille du bas sur téléphone) : seuls les onglets et les leviers
+  déjà débloqués sont visibles ; une valeur qui arrive plus tard (niveau d'autonomie, sessions) est grisée avec
+  sa semaine ; un levier arrivé récemment porte « Nouveau » ; la prochaine nouveauté est annoncée en bas.
+- **Note de service** : à chaque nouveauté du calendrier, une modale signée explique ce qui change et
+  quoi surveiller ; « Voir le levier » mène au levier.
+- **Tableau de bord** : le rapport du vendredi, tuiles avec tendances, métriques cachées grisées ; les métriques
+  à surveiller après une nouveauté sont mises en évidence, et les changements de leviers sont marqués sur les courbes.
 - **Registre** : cartes équipables par glisser ou par bouton, voyants de triade par îlot.
-- **Modales** : fiche de développeur, carte d'événement, comité, bilan.
+- **Modales** : fiche de développeur, carte d'événement, note de service, comité, bilan.
 - **Téléphone (≥ 360 px)** : l'open space devient une liste d'îlots repliables avec mini-bureaux ;
   pas de défilement horizontal.
 - **Accessibilité** : navigation clavier complète, `aria-live` pour les événements et le journal,
@@ -522,6 +540,22 @@ contredit par le tableau de bord). Effet sur la confiance.
 - **Identité visuelle** : même univers et mêmes polices auto-hébergées que le premier jeu
   (Chakra Petch, Instrument Sans, IBM Plex Mono), mais une ambiance plus chaude d'open space
   (moquette, post-it, lumière de fin d'après-midi) plutôt que la console de supervision.
+
+### 8.3 Réflexions des développeurs
+
+Chaque journée, cinq personnes pensent tout haut (bulles dans l'open space, et une liste lisible
+« Ce qu'on entend » avec la cause de chaque réflexion). Ce qu'elles disent a toujours une raison, par ordre de priorité :
+
+1. **un levier qui vient de changer et qui les touche** : ce qu'on anticipe avant le vendredi, puis ce que ça
+   change concrètement une fois en vigueur (pendant environ huit jours ouvrables) ; une ou deux réactions arrivent
+   tout de suite après la décision ;
+2. **la note de service** de la semaine (le lundi et le mardi) ;
+3. **une situation réelle** de la simulation : file de revue, fatigue, licence absente alors que le voisin en a une,
+   incident, compréhension en baisse, plafond de jetons, triade létale, applications hors TI… ;
+4. leur **activité** du moment (les bulles des personnages).
+
+Le choix est déterministe (graine, semaine, jour, personne) et n'utilise pas le hasard du moteur : les réflexions
+ne changent rien à la simulation. En pause ou en avance manuelle, les réflexions du jour restent affichées.
 
 ## 9. Hors périmètre (pour l'instant)
 
