@@ -501,7 +501,7 @@ export default function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
   // Rouges contre Bleus : jeu construit ailleurs (Vite, Three.js), copié tel quel (voir jeux/rouges-contre-bleus/LISEZMOI.md)
-  eleventyConfig.addPassthroughCopy({ "jeux/rouges-contre-bleus/dist": "projets/rouges-contre-bleus" });
+  eleventyConfig.addPassthroughCopy({ "jeux/rouges-contre-bleus/public": "projets/rouges-contre-bleus" });
 
   // Self-hosted fonts: copy specific woff2 files from @fontsource packages
   const fontFiles = {

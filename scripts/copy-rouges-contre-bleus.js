@@ -7,12 +7,12 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const racine = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const source = join(racine, "jeux/rouges-contre-bleus/dist");
+const source = join(racine, "jeux/rouges-contre-bleus/public");
 const cible = join(racine, "_site/projets/rouges-contre-bleus");
 
 if (!existsSync(join(source, "index.html"))) {
-  throw new Error("jeux/rouges-contre-bleus/dist/index.html est absent : reconstruire le jeu (voir LISEZMOI.md).");
+  throw new Error("jeux/rouges-contre-bleus/public/index.html est absent : reconstruire le jeu (voir LISEZMOI.md).");
 }
 rmSync(cible, { recursive: true, force: true });
 cpSync(source, cible, { recursive: true });
-console.log("Copied jeux/rouges-contre-bleus/dist → _site/projets/rouges-contre-bleus/");
+console.log("Copied jeux/rouges-contre-bleus/public → _site/projets/rouges-contre-bleus/");

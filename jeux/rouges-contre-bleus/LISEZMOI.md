@@ -10,10 +10,10 @@ Depuis le dépôt `army-game`, à côté de celui-ci :
 
 ```sh
 npx vite build --base=/projets/rouges-contre-bleus/ \
-  --outDir ../julien-riel-site/jeux/rouges-contre-bleus/dist --emptyOutDir
+  --outDir ../julien-riel-site/jeux/rouges-contre-bleus/public --emptyOutDir
 ```
 
-Puis, dans `dist/`, retirer les pages de développement (`demo.html`, `play.html`, `debug.html`)
+Puis, dans `public/`, retirer les pages de développement (`demo.html`, `play.html`, `debug.html`)
 et les fichiers de `assets/` que plus rien ne référence.
 
 ## Comment il arrive dans le site
