@@ -500,6 +500,9 @@ export default function(eleventyConfig) {
   // Copy static assets
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
+  // Rouges contre Bleus : jeu construit ailleurs (Vite, Three.js), copié tel quel (voir jeux/rouges-contre-bleus/LISEZMOI.md)
+  eleventyConfig.addPassthroughCopy({ "jeux/rouges-contre-bleus/dist": "projets/rouges-contre-bleus" });
+
   // Self-hosted fonts: copy specific woff2 files from @fontsource packages
   const fontFiles = {
     "node_modules/@fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2": "assets/fonts/dm-serif-display-400.woff2",

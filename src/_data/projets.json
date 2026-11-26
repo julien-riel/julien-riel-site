@@ -110,5 +110,19 @@
     "emoji": "🧑‍💻",
     "modele": "Claude Opus 5.5",
     "date": "2026-10-17"
+  },
+  {
+    "name": {
+      "fr": "Rouges contre Bleus",
+      "en": "Reds vs Blues"
+    },
+    "description": {
+      "fr": "Un jeu de stratégie de flux en 3D : des milliers de soldats de plomb sortent des casernes et se rencontrent sur trois routes. On ne commande pas les unités, on dirige les courants : portes qui ajoutent ou multiplient, armes qui se contrent (épée, lance, arc, canon), infirmerie, portes dorées, ralliement et ingénieurs qui bâtissent de nouvelles casernes. Quatre modes contre une IA à trois niveaux, avec une première partie guidée. Pensé pour l’ordinateur, à la souris et au clavier.",
+      "en": "A 3D flow-strategy game: thousands of tin soldiers pour out of barracks and meet on three roads. You do not command units, you steer the streams: gates that add or multiply, weapons that counter each other (sword, spear, bow, cannon), an infirmary, golden gates, a rally power and engineers who build new barracks. Four modes against an AI with three difficulty levels, and a guided first game. Made for desktop, mouse and keyboard. French only."
+    },
+    "url": "/projets/rouges-contre-bleus/",
+    "emoji": "⚔️",
+    "modele": "Claude Fable 5.2",
+    "date": "2026-11-26"
   }
 ]
